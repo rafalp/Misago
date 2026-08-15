@@ -193,7 +193,7 @@ class DetailView(BaseThreadView):
         if thread_events := result.thread_events:
             post_feed = self.get_post_feed(request, thread, [], thread_events)
             post_feed.set_animated_thread_events(
-                [update.id for update in thread_events]
+                [thread_event.id for thread_event in thread_events]
             )
             context_data[("thread_events")] = post_feed.get_context_data()["items"]
 
@@ -761,7 +761,7 @@ class DetailView(BaseThreadView):
             queryset = queryset.filter(
                 created_at__lt=page.next_page_first_item.posted_at
             )
-        return list(reversed(queryset[: request.settings.thread_updates_per_page]))
+        return list(reversed(queryset[: request.settings.thread_events_per_page]))
 
     def get_reply_context_data(self, request: HttpRequest, thread: Thread) -> dict:
         try:

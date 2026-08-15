@@ -1,24 +1,24 @@
 {% load i18n misago_avatars misago_formats %}
 <div
-  id="post-feed-item-thread-update-{{ thread_event.id }}"
+  id="post-feed-item-thread-event-{{ thread_event.id }}"
   class="post-feed-item{% if animate %} post-feed-item-animate{% endif %}"
   {% if htmx_swap %}
     hx-swap-oob="true"
   {% endif %}
 >
-  <a id="update-{{ thread_event.id }}" class="scroll-target"></a>
-  <div class="post-feed-item-thread-update{% if thread_event.hidden %} post-feed-item-thread-update-hidden{% endif %}">
-    <div class="post-feed-item-thread-update-post-bit">
+  <a id="event-{{ thread_event.id }}" class="scroll-target"></a>
+  <div class="post-feed-item-thread-event{% if thread_event.hidden %} post-feed-item-thread-event-hidden{% endif %}">
+    <div class="post-feed-item-thread-event-post-bit">
       <div>
-        <div class="post-feed-item-thread-update-icon">
+        <div class="post-feed-item-thread-event-icon">
           {% include icon %}
         </div>
       </div>
       <div>
-        <div class="post-feed-item-thread-update-actor-avatar">
+        <div class="post-feed-item-thread-event-actor-avatar">
           {% if actor %}
             <a
-              class="post-feed-item-thread-update-actor-avatar-link"
+              class="post-feed-item-thread-event-actor-avatar-link"
               href="{{ actor.get_absolute_url }}"
               title="{{ actor.username }}"
             >
@@ -32,26 +32,26 @@
               >
             </a>
           {% else %}
-            <span class="post-feed-item-thread-update-actor-avatar-link" title="{{ actor_name }}">
+            <span class="post-feed-item-thread-event-actor-avatar-link" title="{{ actor_name }}">
               <img src="{{ BLANK_AVATAR_URL }}" width="24" height="24" alt="{{ actor_name }}">
             </span>
           {% endif %}
         </div>
       </div>
     </div>
-    <div class="post-feed-item-thread-update-details">
-      <div class="post-feed-item-thread-update-details-top">
-        <span class="post-feed-item-thread-update-description">{{ description|safe }}</span>
-        <span class="post-feed-item-thread-update-separator">&bull;</span>
+    <div class="post-feed-item-thread-event-details">
+      <div class="post-feed-item-thread-event-details-top">
+        <span class="post-feed-item-thread-event-description">{{ description|safe }}</span>
+        <span class="post-feed-item-thread-event-separator">&bull;</span>
         <span
-          class="post-feed-item-thread-update-timestamp post-feed-item-thread-update-timestamp-full"
+          class="post-feed-item-thread-event-timestamp post-feed-item-thread-event-timestamp-full"
           title="{{ thread_event.created_at|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ thread_event.created_at.isoformat }}"
         >
           {{ thread_event.created_at|date_relative }}
         </span>
         <span
-          class="post-feed-item-thread-update-timestamp post-feed-item-thread-update-timestamp-short"
+          class="post-feed-item-thread-event-timestamp post-feed-item-thread-event-timestamp-short"
           title="{{ thread_event.created_at|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ thread_event.created_at.isoformat }}"
           misago-timestamp-format="short"
@@ -59,13 +59,13 @@
           {{ thread_event.created_at|date_relative_short }}
         </span>
         {% if thread_event.is_hidden %}
-          <span class="post-feed-item-thread-update-hidden-label" title="{% translate 'This thread update is hidden. Only moderators can see it.' context 'thread update hidden label' %}">
-            {% translate "Hidden" context "thread update hidden label" %}
+          <span class="post-feed-item-thread-event-hidden-label" title="{% translate 'This thread event is hidden. Only moderators can see it.' context 'thread event hidden label' %}">
+            {% translate "Hidden" context "thread event hidden label" %}
           </span>
         {% endif %}
       </div>
       {% if moderation %}
-        <div class="post-feed-item-thread-update-details-bottom">
+        <div class="post-feed-item-thread-event-details-bottom">
           {% if hide_url %}
             <form
               action="{{ hide_url }}"
@@ -74,9 +74,9 @@
               hx-swap="none"
             >
               {% csrf_token %}
-              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_event.id }}" />
-              <button type="submit" class="post-feed-item-thread-update-btn">
-                {% translate "Hide" context "thread update btn" %}
+              <input type="hidden" name="next" value="{{ full_path }}#event-{{ thread_event.id }}" />
+              <button type="submit" class="post-feed-item-thread-event-btn">
+                {% translate "Hide" context "thread event btn" %}
               </button>
             </form>
           {% endif %}
@@ -88,9 +88,9 @@
               hx-swap="none"
             >
               {% csrf_token %}
-              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_event.id }}" />
-              <button type="submit" class="post-feed-item-thread-update-btn">
-                {% translate "Unhide" context "thread update btn" %}
+              <input type="hidden" name="next" value="{{ full_path }}#event-{{ thread_event.id }}" />
+              <button type="submit" class="post-feed-item-thread-event-btn">
+                {% translate "Unhide" context "thread event btn" %}
               </button>
             </form>
           {% endif %}
@@ -98,7 +98,7 @@
             <form
               action="{{ delete_url }}"
               method="post"
-              hx-confirm="{% translate 'Are you sure you want to delete this thread update? This action cannot be undone.' context 'thread update delete confirmation' %}"
+              hx-confirm="{% translate 'Are you sure you want to delete this thread event? This action cannot be undone.' context 'thread event delete confirmation' %}"
               hx-on:htmx:after-settle="misago.slideUpElement(event.target.closest('.post-feed-item'))"
               hx-post="{{ delete_url }}"
               hx-swap="none"
@@ -107,8 +107,8 @@
               {% if previous_item %}
                 <input type="hidden" name="next" value="{{ full_path }}#{{ previous_item }}" />
               {% endif %}
-              <button type="submit" class="post-feed-item-thread-update-btn">
-                {% translate "Delete" context "thread update btn" %}
+              <button type="submit" class="post-feed-item-thread-event-btn">
+                {% translate "Delete" context "thread event btn" %}
               </button>
             </form>
           {% endif %}
