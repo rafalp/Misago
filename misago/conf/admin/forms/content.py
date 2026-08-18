@@ -45,7 +45,7 @@ class ContentSettingsForm(SettingsForm):
         "threads_lists_polling",
         "posts_per_page",
         "posts_per_page_orphans",
-        "thread_updates_per_page",
+        "thread_events_per_page",
     ]
 
     flood_control = forms.IntegerField(
@@ -178,10 +178,10 @@ class ContentSettingsForm(SettingsForm):
         min_value=0,
     )
 
-    thread_updates_per_page = forms.IntegerField(
+    thread_events_per_page = forms.IntegerField(
         label=pgettext_lazy(
             "admin content settings form",
-            "Maximum number of thread updates shown on a single page",
+            "Maximum number of thread events shown on a single page",
         ),
         help_text=pgettext_lazy(
             "admin content settings form",

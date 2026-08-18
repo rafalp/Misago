@@ -644,7 +644,7 @@ def test_thread_detail_view_shows_thread_events_on_last_page(
     assert_contains(response, f"[{last_page_thread_event.id}]")
 
 
-@override_dynamic_settings(thread_updates_per_page=4)
+@override_dynamic_settings(thread_events_per_page=4)
 def test_thread_detail_view_limits_displayed_thread_events_count(client, user, thread):
     thread_events = []
     for _ in range(5):

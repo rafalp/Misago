@@ -637,7 +637,7 @@ span.post-feed-item-hidden-post-poster {
 }
 
 // Thread update
-.post-feed-item-thread-update {
+.post-feed-item-thread-event {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: ceil(@grid-gutter-width / 2);
@@ -645,14 +645,14 @@ span.post-feed-item-hidden-post-poster {
   padding: @line-height-computed 0;
 }
 
-.post-feed-item-thread-update-post-bit {
+.post-feed-item-thread-event-post-bit {
   display: grid;
   grid-template-columns: 24px 24px;
   gap: ceil(@grid-gutter-width / 2);
   justify-content: end;
 }
 
-.post-feed-item-thread-update-icon {
+.post-feed-item-thread-event-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -660,10 +660,10 @@ span.post-feed-item-hidden-post-poster {
   width: 24px;
   height: 24px;
 
-  background-color: @thread-update-icon-bg;
+  background-color: @thread-event-icon-bg;
   border-radius: @border-radius-small;
 
-  color: @thread-update-icon-color;
+  color: @thread-event-icon-color;
 
   svg {
     width: 18px;
@@ -671,7 +671,7 @@ span.post-feed-item-hidden-post-poster {
   }
 }
 
-.post-feed-item-thread-update-actor-avatar-link {
+.post-feed-item-thread-event-actor-avatar-link {
   display: block;
   overflow: hidden;
 
@@ -686,12 +686,12 @@ span.post-feed-item-hidden-post-poster {
   }
 }
 
-.post-feed-item-thread-update-details-top {
+.post-feed-item-thread-event-details-top {
   padding-top: 2px;
 }
 
-.post-feed-item-thread-update-description {
-  color: @thread-update-description-color;
+.post-feed-item-thread-event-description {
+  color: @thread-event-description-color;
 
   a:link,
   a:active,
@@ -699,7 +699,7 @@ span.post-feed-item-hidden-post-poster {
   a:hover,
   a:focus,
   em {
-    color: @thread-update-context-color;
+    color: @thread-event-context-color;
     font-style: normal;
     font-weight: bold;
   }
@@ -710,39 +710,39 @@ span.post-feed-item-hidden-post-poster {
   }
 }
 
-.post-feed-item-thread-update-separator {
+.post-feed-item-thread-event-separator {
   display: inline-block;
   padding: 0 4px;
 
-  color: @thread-update-separator-color;
+  color: @thread-event-separator-color;
 }
 
-.post-feed-item-thread-update-timestamp {
-  color: @thread-update-timestamp-color;
+.post-feed-item-thread-event-timestamp {
+  color: @thread-event-timestamp-color;
 }
 
-.post-feed-item-thread-update-timestamp-full {
+.post-feed-item-thread-event-timestamp-full {
   display: none;
 }
 
-.post-feed-item-thread-update-hidden-label {
+.post-feed-item-thread-event-hidden-label {
   display: inline-block;
   padding: 1px 5px;
 
-  background-color: @thread-update-hidden-label-bg;
+  background-color: @thread-event-hidden-label-bg;
   border-radius: @border-radius-small;
 
-  color: @thread-update-hidden-label-color;
+  color: @thread-event-hidden-label-color;
   font-size: @font-size-small;
 }
 
-.post-feed-item-thread-update-details-bottom {
+.post-feed-item-thread-event-details-bottom {
   display: flex;
   gap: ceil(@grid-gutter-width / 2);
   margin-top: ceil(@line-height-computed / 2);
 }
 
-.post-feed-item-thread-update-btn {
+.post-feed-item-thread-event-btn {
   &,
   &:active,
   &:hover,
@@ -757,46 +757,46 @@ span.post-feed-item-hidden-post-poster {
   }
 
   & {
-    color: @thread-update-btn-color;
+    color: @thread-event-btn-color;
   }
 
   &:hover {
-    color: @thread-update-btn-hover-color;
+    color: @thread-event-btn-hover-color;
     text-decoration: underline;
   }
 
   &:active {
-    color: @thread-update-btn-active-color;
+    color: @thread-event-btn-active-color;
     text-decoration: underline;
   }
 }
 
 @media screen and (min-width: @screen-md-min) {
-  .post-feed-item-thread-update {
+  .post-feed-item-thread-event {
     grid-template-columns: @post-side-width 1fr;
     align-items: center;
   }
 
-  .post-feed-item-thread-update-details {
+  .post-feed-item-thread-event-details {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: ceil(@grid-gutter-width / 2);
     align-items: center;
   }
 
-  .post-feed-item-thread-update-details-top {
+  .post-feed-item-thread-event-details-top {
     padding-top: 0;
   }
 
-  .post-feed-item-thread-update-timestamp-short {
+  .post-feed-item-thread-event-timestamp-short {
     display: none;
   }
 
-  .post-feed-item-thread-update-timestamp-full {
+  .post-feed-item-thread-event-timestamp-full {
     display: inline;
   }
 
-  .post-feed-item-thread-update-details-bottom {
+  .post-feed-item-thread-event-details-bottom {
     margin-top: 0;
   }
 }

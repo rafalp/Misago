@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         CreateSetting(
-            setting="thread_updates_per_page",
+            setting="thread_events_per_page",
             python_type="int",
             dry_value=30,
         ),
