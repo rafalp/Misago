@@ -181,7 +181,7 @@ class ContentSettingsForm(SettingsForm):
     thread_events_per_page = forms.IntegerField(
         label=pgettext_lazy(
             "admin content settings form",
-            "Maximum number of thread updates shown on a single page",
+            "Maximum number of thread events shown on a single page",
         ),
         help_text=pgettext_lazy(
             "admin content settings form",
