@@ -15,37 +15,13 @@ from .delete import delete_thread_event
 from .hide import hide_thread_event, unhide_thread_event
 from .models import ThreadEvent
 from .threadeventtypes import (
-    BaseThreadEventType,
     private_thread_event_type,
     thread_event_type,
 )
 from .threadflag import sync_thread_has_events
 
 
-class BaseEventView(BaseThreadView):
-    thread_event_type: BaseThreadEventType
-
-    def get_thread_event_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-    ) -> QuerySet:
-        return self.thread_event_type.get_thread_event_queryset(request, thread)
-
-    def get_thread_event(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        thread_event_id: int,
-        *,
-        select_related: bool | Iterable[str] = False,
-    ) -> ThreadEvent:
-        return self.thread_event_type.get_thread_event(
-            request, thread, thread_event_id, select_related=select_related
-        )
-
-
-class EventVisibilityView(BaseEventView):
+class EventVisibilityView(BaseThreadView):
     template_name: str = "misago/thread_events/event.html"
     success_message: str
 
@@ -140,7 +116,7 @@ class PrivateThreadEventUnhideView(EventUnhideView):
     thread_event_type = private_thread_event_type
 
 
-class EventDeleteView(BaseEventView):
+class EventDeleteView(BaseThreadView):
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
     success_message = pgettext_lazy("thread event deleted", "Thread event deleted")
