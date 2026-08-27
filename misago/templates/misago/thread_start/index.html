@@ -29,18 +29,19 @@
           </h3>
         </div>
         {% if formset.has_multiple_tabs %}
-          <div class="panel-body tab-group">
+          <div class="panel-body" m-tabs>
             {% include "misago/posting/errors.html" %}
-            <div class="tab-group-nav">
-              <div class="tab-group-nav-scroll">
+            <div class="panel-tabs-nav">
+              <div class="panel-tabs-nav-scroll">
                 {% for tab in formset.get_tabs %}
                   <a
                     href="#{{ tab.id }}"
-                    class="tab-group-nav-item{% if formset.is_bound and not tab.is_valid %} tab-group-nav-item-error{% endif %}{% if forloop.first %} active{% endif %}"
+                    class="panel-tabs-nav-item{% if formset.is_bound and not tab.is_valid %} panel-tabs-nav-item-error{% endif %}{% if forloop.first %} active{% endif %}"
                     {% if formset.is_bound and not tab.is_valid %}title="{% translate 'Contains validation errors' context 'posting form' %}"{% endif %}
+                    m-tab
                   >
                     {% if formset.is_bound and not tab.is_valid %}
-                      <span class="tab-group-nav-bullet-danger"></span>
+                      <span class="panel-tabs-nav-bullet-danger"></span>
                     {% endif %}
                     {{ tab }}
                   </a>
@@ -48,8 +49,8 @@
               </div>
             </div>
             {% for tab in formset.get_tabs %}
-              <div class="tab-group-tab{% if forloop.first %} visible{% endif %}" misago-tab-group-tab="{{ tab.id }}">
-                <h4 class="tab-group-tab-header">{{ tab }}</h4>
+              <div class="panel-tabs-item{% if forloop.first %} active{% endif %}" m-tab-pane="{{ tab.id }}">
+                <h4 class="panel-tabs-item-header">{{ tab }}</h4>
                 {% for form in tab.get_forms %}
                   {% include form.template_name with form=form post_control_large=True %}
                 {% endfor %}

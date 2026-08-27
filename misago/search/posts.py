@@ -9,7 +9,7 @@ from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .backends import SearchBackend
-from .enums import SearchMode, SearchOrder
+from .enums import SearchMode, SearchSort
 from .types import PostSearchResults
 
 if TYPE_CHECKING:
@@ -66,7 +66,7 @@ class PostsSearch:
         users: list["User"] | None = None,
         started_after: datetime | None = None,
         started_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -95,7 +95,7 @@ class PostsSearch:
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -124,7 +124,7 @@ class PostsSearch:
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
