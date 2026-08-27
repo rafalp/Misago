@@ -18,7 +18,7 @@ from django.db.models import F, Max, Q, Value
 from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
-from .enums import SearchOrder
+from .enums import SearchSort
 from .models import PostSearch, ThreadSearch
 from .types import PostSearchResult, PostSearchResults
 
@@ -46,7 +46,7 @@ class SearchBackend(ABC):
         users: list["User"] | None = None,
         started_after: datetime | None = None,
         started_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -64,7 +64,7 @@ class SearchBackend(ABC):
         users: Iterable["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -82,7 +82,7 @@ class SearchBackend(ABC):
         users: Iterable["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -165,7 +165,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         users: list["User"] | None = None,
         started_after: datetime | None = None,
         started_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -186,22 +186,22 @@ class PostgreSQLSearchBackend(SearchBackend):
         )
 
         if threads:
-            queryset = queryset.filter(thread_id__in=[thread.it for thread in threads])
+            queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
         if users:
-            queryset = queryset.filter(starter_id__in=[user.it for user in users])
+            queryset = queryset.filter(starter_id__in=[user.id for user in users])
         if started_after:
             queryset = queryset.filter(started_at__gte=started_after)
         if started_before:
             queryset = queryset.filter(started_at__lte=started_before)
 
-        if order_by == SearchOrder.RELEVANCE or self.min_rank:
+        if order_by == SearchSort.RELEVANCE or self.min_rank:
             queryset = queryset.annotate(
                 rank=SearchRank(F("search_vector"), search_query),
             )
         if self.min_rank is not None:
             queryset = queryset.filter(rank__gt=self.min_rank)
 
-        if order_by == SearchOrder.RELEVANCE:
+        if order_by == SearchSort.RELEVANCE:
             queryset = queryset.order_by("-rank")
         else:
             queryset = queryset.order_by("-thread_id")
@@ -276,7 +276,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -286,9 +286,9 @@ class PostgreSQLSearchBackend(SearchBackend):
         queryset = self._filter_categories(PostSearch.objects, permissions, categories)
 
         if threads:
-            queryset = queryset.filter(thread_id__in=[thread.it for thread in threads])
+            queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
         if users:
-            queryset = queryset.filter(poster_id__in=[user.it for user in users])
+            queryset = queryset.filter(poster_id__in=[user.id for user in users])
         if posted_after:
             queryset = queryset.filter(posted_at__gte=posted_after)
         if posted_before:
@@ -296,7 +296,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         queryset = queryset.filter(thread_search_vector=search_query)
 
-        if order_by == SearchOrder.RELEVANCE:
+        if order_by == SearchSort.RELEVANCE:
             queryset = queryset.annotate(
                 rank=SearchRank(F("thread_search_vector"), search_query)
             )
@@ -316,7 +316,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             .values_list("thread_id", flat=True)[offset : offset + limit + 1]
         )
 
-        if order_by != SearchOrder.RELEVANCE:
+        if order_by != SearchSort.RELEVANCE:
             queryset = queryset.annotate(
                 rank=SearchRank(F("thread_search_vector"), search_query),
             )
@@ -391,7 +391,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -401,9 +401,9 @@ class PostgreSQLSearchBackend(SearchBackend):
         queryset = self._filter_categories(PostSearch.objects, permissions, categories)
 
         if threads:
-            queryset = queryset.filter(thread_id__in=[thread.it for thread in threads])
+            queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
         if users:
-            queryset = queryset.filter(poster_id__in=[user.it for user in users])
+            queryset = queryset.filter(poster_id__in=[user.id for user in users])
         if posted_after:
             queryset = queryset.filter(posted_at__gte=posted_after)
         if posted_before:
@@ -424,14 +424,14 @@ class PostgreSQLSearchBackend(SearchBackend):
             ),
         )
 
-        if order_by == SearchOrder.RELEVANCE or self.min_rank:
+        if order_by == SearchSort.RELEVANCE or self.min_rank:
             queryset = queryset.annotate(
                 rank=SearchRank(F("post_search_vector"), search_query),
             )
         if self.min_rank is not None:
             queryset = queryset.filter(rank__gt=self.min_rank)
 
-        if order_by == SearchOrder.RELEVANCE:
+        if order_by == SearchSort.RELEVANCE:
             queryset = queryset.order_by("-rank")
         else:
             queryset = queryset.order_by("-post_id")
