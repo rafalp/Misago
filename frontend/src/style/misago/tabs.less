@@ -49,7 +49,6 @@
 }
 
 .main-tab-list-scroll {
-  position: relative;
   display: flex;
   gap: ceil(@grid-gutter-width / 2);
 
@@ -67,7 +66,7 @@
 }
 
 // In-panel tabs
-.panel-tabs-nav {
+.panel-tab-list {
   height: @tab-group-nav-height;
   margin-bottom: @line-height-computed;
 
@@ -78,7 +77,7 @@
   border-bottom: 1px solid @tab-group-nav-border;
 }
 
-.panel-tabs-nav-scroll {
+.panel-tab-list-scroll {
   display: flex;
   align-items: start;
 
@@ -86,12 +85,15 @@
   padding: 0 @tab-group-nav-gap;
 
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
 
-  text-wrap: nowrap;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-.panel-tabs-nav-item {
+.panel-tab-list-item {
   display: flex;
   align-items: center;
 
@@ -135,7 +137,7 @@
   }
 }
 
-.panel-tabs-nav-bullet-danger {
+.panel-tab-list-bullet-danger {
   display: block;
   width: @tab-group-nav-item-bullet;
   height: @tab-group-nav-item-bullet;
@@ -147,19 +149,19 @@
 }
 
 // Tab header is used for visual distinction between tabs for noscript clients
-.panel-tabs-item-header {
+.panel-tab-pane-header {
   padding-bottom: ceil(@line-height-computed / 2);
 
   border-bottom: 1px solid @gray-lighter;
 }
 
-.panel-tabs-item + .panel-tabs-item .panel-tabs-item-header {
+.panel-tab-pane + .panel-tab-pane .panel-tab-pane-header {
   margin-top: @line-height-computed;
 }
 
 // Hide navs if JS is disabled
 .main-tab-list,
-.panel-tabs-nav {
+.panel-tab-list {
   display: none;
 }
 
@@ -168,7 +170,7 @@
     display: flex;
   }
 
-  .panel-tabs-nav {
+  .panel-tab-list {
     display: block;
   }
 }
@@ -176,8 +178,8 @@
 // Hide all tabs if client has JS
 .misago-javascript {
   .main-tab-pane,
-  .panel-tabs-item,
-  .panel-tabs-item-header {
+  .panel-tab-pane,
+  .panel-tab-pane-header {
     display: none;
   }
 }
@@ -189,7 +191,7 @@
   }
 
   .main-tab-pane.active,
-  .panel-tabs-item.active {
+  .panel-tab-pane.active {
     display: block;
   }
 }
