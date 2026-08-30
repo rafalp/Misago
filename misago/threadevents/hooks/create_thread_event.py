@@ -30,16 +30,16 @@ class CreateThreadEventHookAction(Protocol):
     The actor who performed the action: a `User` instance, a `str` with a name,
     or `None` if not available.
 
-    ## `context: str | None = None`
+    ## `detail: str | None = None`
 
-    A `str` with context, e.g., a previous thread title or the name of
-    `context_object`. `None` if not available or not used for this `event_type`.
+    A `str` with detail, e.g., a previous thread title or the name of
+    `content_object`. `None` if not available or not used for this `event_type`.
 
-    ## `context_object: Model | None = None`
+    ## `content_object: Model | None = None`
 
     A `Model` instance that this event object should store a generic relation to.
 
-    ## `context_items: int | None = None`
+    ## `items: int | None = None`
 
     A number of items affected by the event.
 
@@ -64,9 +64,9 @@ class CreateThreadEventHookAction(Protocol):
         event_type: str,
         actor: Union["User", None, str] = None,
         *,
-        context: str | None = None,
-        context_object: Model | None = None,
-        context_items: int | None = None,
+        detail: str | None = None,
+        content_object: Model | None = None,
+        items: int | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> "ThreadEvent": ...
@@ -98,16 +98,16 @@ class CreateThreadEventHookFilter(Protocol):
     The actor who performed the action: a `User` instance, a `str` with a name,
     or `None` if not available.
 
-    ## `context: str | None = None`
+    ## `detail: str | None = None`
 
-    A `str` with context, e.g., a previous thread title or the name of
-    `context_object`. `None` if not available or not used for this `event_type`.
+    A `str` with detail, e.g., a previous thread title or the name of
+    `content_object`. `None` if not available or not used for this `event_type`.
 
-    ## `context_object: Model | None = None`
+    ## `content_object: Model | None = None`
 
     A `Model` instance that this event object should store a generic relation to.
 
-    ## `context_items: int | None = None`
+    ## `items: int | None = None`
 
     A number of items affected by the event.
 
@@ -133,9 +133,9 @@ class CreateThreadEventHookFilter(Protocol):
         event_type: str,
         actor: Union["User", None, str] = None,
         *,
-        context: str | None = None,
-        context_object: Model | None = None,
-        context_items: int | None = None,
+        detail: str | None = None,
+        content_object: Model | None = None,
+        items: int | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> "ThreadEvent": ...
@@ -198,9 +198,9 @@ class CreateThreadEventHook(
         event_type: str,
         actor: Union["User", None, str] = None,
         *,
-        context: str | None = None,
-        context_object: Model | None = None,
-        context_items: int | None = None,
+        detail: str | None = None,
+        content_object: Model | None = None,
+        items: int | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> "ThreadEvent":
@@ -209,9 +209,9 @@ class CreateThreadEventHook(
             thread,
             event_type,
             actor,
-            context=context,
-            context_object=context_object,
-            context_items=context_items,
+            detail=detail,
+            content_object=content_object,
+            items=items,
             commit=commit,
             request=request,
         )

@@ -21,9 +21,9 @@ def create_thread_event(
     event_type: str,
     actor: Union["User", str, None] = None,
     *,
-    context: str | None = None,
-    context_object: Model | None = None,
-    context_items: int | None = None,
+    detail: str | None = None,
+    content_object: Model | None = None,
+    items: int | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadEvent:
@@ -32,9 +32,9 @@ def create_thread_event(
         thread,
         event_type,
         actor,
-        context=context,
-        context_object=context_object,
-        context_items=context_items,
+        detail=detail,
+        content_object=content_object,
+        items=items,
         commit=commit,
         request=request,
     )
@@ -45,17 +45,17 @@ def _create_thread_event_action(
     event_type: str,
     actor: Union["User", None, str] = None,
     *,
-    context: str | None = None,
-    context_object: Model | None = None,
-    context_items: int | None = None,
+    detail: str | None = None,
+    content_object: Model | None = None,
+    items: int | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadEvent:
     actor_id = None
     actor_name = None
     actor_slug = None
-    context_type = None
-    context_id = None
+    # content_type = None
+    # object_id = None
 
     if isinstance(actor, str):
         actor_name = actor
@@ -65,14 +65,14 @@ def _create_thread_event_action(
         actor_name = actor.username
         actor_slug = actor.slug
 
-    if context_object:
-        context_type = ".".join(
-            (
-                context_object._meta.app_label,
-                context_object._meta.model_name,
-            )
-        )
-        context_id = context_object.id
+    # if content_object:
+    #     content_type = ".".join(
+    #         (
+    #             content_object._meta.app_label,
+    #             content_object._meta.model_name,
+    #         )
+    #     )
+    #     object_id = content_object.id
 
     thread_event = ThreadEvent(
         category_id=thread.category_id,
@@ -81,10 +81,11 @@ def _create_thread_event_action(
         actor_name=actor_name,
         actor_slug=actor_slug,
         event_type=event_type,
-        context=context,
-        context_type=context_type,
-        context_id=context_id,
-        context_items=context_items,
+        detail=detail,
+        # content_type=content_type,
+        # context_id=object_id,
+        content_object=content_object,
+        items=items,
         created_at=timezone.now(),
     )
 
@@ -97,8 +98,8 @@ def _create_thread_event_action(
 def create_test_thread_event(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    context: str | None = None,
-    context_object: Model | None = None,
+    detail: str | None = None,
+    content_object: Model | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadEvent:
@@ -106,8 +107,8 @@ def create_test_thread_event(
         thread,
         ThreadEventTypeName.TEST,
         actor,
-        context=context,
-        context_object=context_object,
+        detail=detail,
+        content_object=content_object,
         commit=commit,
         request=request,
     )
@@ -274,8 +275,8 @@ def create_moved_thread_event(
         thread,
         ThreadEventTypeName.MOVED,
         actor,
-        context=old_category.name,
-        context_object=old_category,
+        detail=old_category.name,
+        content_object=old_category,
         commit=commit,
         request=request,
     )
@@ -292,8 +293,8 @@ def create_merged_thread_event(
         thread,
         ThreadEventTypeName.MERGED,
         actor,
-        context=other_thread.title,
-        context_object=other_thread,
+        detail=other_thread.title,
+        content_object=other_thread,
         commit=commit,
         request=request,
     )
@@ -310,7 +311,7 @@ def create_changed_title_thread_event(
         thread,
         ThreadEventTypeName.CHANGED_TITLE,
         actor,
-        context=old_title,
+        detail=old_title,
         commit=commit,
         request=request,
     )
@@ -328,9 +329,9 @@ def create_moved_posts_to_thread_event(
         thread,
         ThreadEventTypeName.MOVED_POSTS_TO,
         actor,
-        context=other_thread.title,
-        context_object=other_thread,
-        context_items=posts,
+        detail=other_thread.title,
+        content_object=other_thread,
+        items=posts,
         commit=commit,
         request=request,
     )
@@ -348,9 +349,9 @@ def create_moved_posts_from_thread_event(
         thread,
         ThreadEventTypeName.MOVED_POSTS_FROM,
         actor,
-        context=other_thread.title,
-        context_object=other_thread,
-        context_items=posts,
+        detail=other_thread.title,
+        content_object=other_thread,
+        items=posts,
         commit=commit,
         request=request,
     )
@@ -368,9 +369,9 @@ def create_split_posts_into_thread_event(
         thread,
         ThreadEventTypeName.SPLIT_POSTS_INTO,
         actor,
-        context=other_thread.title,
-        context_object=other_thread,
-        context_items=posts,
+        detail=other_thread.title,
+        content_object=other_thread,
+        items=posts,
         commit=commit,
         request=request,
     )
@@ -388,9 +389,9 @@ def create_split_posts_from_thread_event(
         thread,
         ThreadEventTypeName.SPLIT_POSTS_FROM,
         actor,
-        context=other_thread.title,
-        context_object=other_thread,
-        context_items=posts,
+        detail=other_thread.title,
+        content_object=other_thread,
+        items=posts,
         commit=commit,
         request=request,
     )
@@ -407,7 +408,7 @@ def create_deleted_posts_thread_event(
         thread,
         ThreadEventTypeName.DELETED_POSTS,
         actor,
-        context_items=posts,
+        items=posts,
         commit=commit,
         request=request,
     )
@@ -424,7 +425,7 @@ def create_started_poll_thread_event(
         thread,
         ThreadEventTypeName.STARTED_POLL,
         actor,
-        context=poll.question,
+        detail=poll.question,
         commit=commit,
         request=request,
     )
@@ -471,7 +472,7 @@ def create_deleted_poll_thread_event(
         thread,
         ThreadEventTypeName.DELETED_POLL,
         actor,
-        context=poll.question,
+        detail=poll.question,
         commit=commit,
         request=request,
     )
@@ -518,8 +519,8 @@ def create_added_member_thread_event(
         thread,
         ThreadEventTypeName.ADDED_MEMBER,
         actor,
-        context=member.username,
-        context_object=member,
+        detail=member.username,
+        content_object=member,
         commit=commit,
         request=request,
     )
@@ -551,8 +552,8 @@ def create_removed_member_thread_event(
         thread,
         ThreadEventTypeName.REMOVED_MEMBER,
         actor,
-        context=member.username,
-        context_object=member,
+        detail=member.username,
+        content_object=member,
         commit=commit,
         request=request,
     )
@@ -569,8 +570,8 @@ def create_changed_owner_thread_event(
         thread,
         ThreadEventTypeName.CHANGED_OWNER,
         actor,
-        context=new_owner.username,
-        context_object=new_owner,
+        detail=new_owner.username,
+        content_object=new_owner,
         commit=commit,
         request=request,
     )

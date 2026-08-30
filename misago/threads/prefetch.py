@@ -251,7 +251,7 @@ def find_category_ids(
             data["category_ids"].add(thread.category_id)
 
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_context_id("misago_categories.category"):
+        if context_id := thread_event.get_object_id("misago_categories.category"):
             data["category_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
@@ -279,7 +279,7 @@ def find_thread_ids(
             data["thread_ids"].add(post.thread_id)
 
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_context_id("misago_threads.thread"):
+        if context_id := thread_event.get_object_id("misago_threads.thread"):
             data["thread_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
@@ -318,7 +318,7 @@ def find_post_ids(
     permissions: UserPermissionsProxy,
 ):
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_context_id("misago_threads.post"):
+        if context_id := thread_event.get_object_id("misago_threads.post"):
             data["post_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
@@ -356,7 +356,7 @@ def find_attachment_ids(
         data["attachment_ids"].update(post.metadata.get("attachments", []))
 
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_context_id("misago_attachments.attachment"):
+        if context_id := thread_event.get_object_id("misago_attachments.attachment"):
             data["attachment_ids"].add(context_id)
 
     if extra_attachments := data["metadata"].get("attachments"):
@@ -533,7 +533,7 @@ def find_users_ids(
     for thread_event in data["thread_events"].values():
         if thread_event.actor_id:
             data["user_ids"].add(thread_event.actor_id)
-        if context_id := thread_event.get_context_id("misago_users.user"):
+        if context_id := thread_event.get_object_id("misago_users.user"):
             data["user_ids"].add(context_id)
 
 

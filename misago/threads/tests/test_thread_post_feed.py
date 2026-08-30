@@ -328,34 +328,34 @@ def test_post_feed_sets_action_data_in_thread_update_data(
 
 
 def test_post_feed_marks_thread_update_as_animated(
-    request_factory, user, thread, post, thread_event, thread_event_context
+    request_factory, user, thread, post, thread_event, thread_event_detail
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(request, thread, [post], [thread_event, thread_event_context])
-    post_feed.set_animated_thread_events([thread_event_context.id])
+    post_feed = PostFeed(request, thread, [post], [thread_event, thread_event_detail])
+    post_feed.set_animated_thread_events([thread_event_detail.id])
     feed_data = post_feed.get_context_data()
 
     assert feed_data["items"][1]["thread_event"] == thread_event
     assert not feed_data["items"][1]["animate"]
 
-    assert feed_data["items"][2]["thread_event"] == thread_event_context
+    assert feed_data["items"][2]["thread_event"] == thread_event_detail
     assert feed_data["items"][2]["animate"]
 
 
 def test_post_feed_marks_thread_update_as_animated(
-    request_factory, user, thread, post, thread_event, thread_event_context
+    request_factory, user, thread, post, thread_event, thread_event_detail
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(request, thread, [post], [thread_event, thread_event_context])
-    post_feed.set_animated_thread_events([thread_event_context.id])
+    post_feed = PostFeed(request, thread, [post], [thread_event, thread_event_detail])
+    post_feed.set_animated_thread_events([thread_event_detail.id])
     feed_data = post_feed.get_context_data()
 
     assert feed_data["items"][1]["thread_event"] == thread_event
     assert not feed_data["items"][1]["animate"]
 
-    assert feed_data["items"][2]["thread_event"] == thread_event_context
+    assert feed_data["items"][2]["thread_event"] == thread_event_detail
     assert feed_data["items"][2]["animate"]
 
 

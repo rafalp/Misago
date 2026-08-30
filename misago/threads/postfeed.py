@@ -450,22 +450,23 @@ class PostFeed:
             thread_event.actor = prefetched_data["users"].get(thread_event.actor_id)
             item["actor"] = thread_event.actor
 
-        if thread_event.context_type and thread_event.context_id:
+        if thread_event.content_type and thread_event.object_id:
             relation_name = None
-            if thread_event.context_type == "misago_attachments.attachment":
+            content_type_name = f"{thread_event.content_type.app_label}.{thread_event.content_type.name}"
+            if content_type_name == "misago_attachments.attachment":
                 relation_name = "attachment"
-            if thread_event.context_type == "misago_categories.category":
+            if content_type_name == "misago_categories.category":
                 relation_name = "categories"
-            if thread_event.context_type == "misago_threads.thread":
+            if content_type_name == "misago_threads.thread":
                 relation_name = "threads"
-            if thread_event.context_type == "misago_threads.post":
+            if content_type_name == "misago_threads.post":
                 relation_name = "posts"
-            if thread_event.context_type == "misago_users.user":
+            if content_type_name == "misago_users.user":
                 relation_name = "users"
 
             if relation_name:
-                item["context_object"] = prefetched_data[relation_name].get(
-                    thread_event.context_id
+                item["content_object"] = prefetched_data[relation_name].get(
+                    thread_event.object_id
                 )
 
         if thread_event_data := thread_events_renderer.render_thread_event(

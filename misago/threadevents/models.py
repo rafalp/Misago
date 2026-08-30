@@ -8,18 +8,17 @@ from ..plugins.models import PluginDataModel
 
 
 class ThreadEventQuerySet(models.QuerySet):
-    def context_object(self, obj: models.Model):
+    def content_object(self, obj: models.Model):
         return self.filter(
-            context_type=f"{obj._meta.app_label}.{obj._meta.model_name}",
-            context_id=obj.pk,
+            content_type=ContentType.objects.get_for_model(obj),
+            object_id=obj.pk,
         )
 
-    def context_type(self, obj: models.Model | type[models.Model]):
-        context_type = f"{obj._meta.app_label}.{obj._meta.model_name}"
-        return self.filter(context_type=context_type)
+    def content_type(self, obj: models.Model | type[models.Model]):
+        return self.filter(content_type=ContentType.objects.get_for_model(obj))
 
-    def clear_context_objects(self) -> int:
-        return self.update(context_type=None, context_id=None)
+    def clear_content_objects(self) -> int:
+        return self.update(content_type=None, object_id=None)
 
 
 class ThreadEvent(PluginDataModel):
@@ -56,7 +55,9 @@ class ThreadEvent(PluginDataModel):
     event_type = models.CharField(max_length=32)
 
     detail = models.CharField(max_length=255, blank=True, null=True)
-    content_type = models.ForeignKey(ContentType,blank=True,null=True, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType, blank=True, null=True, on_delete=models.CASCADE
+    )
     object_id = models.PositiveBigIntegerField(blank=True, null=True)
     content_object = GenericForeignKey("content_type", "object_id")
     items = models.PositiveIntegerField(blank=True, null=True)
@@ -86,18 +87,18 @@ class ThreadEvent(PluginDataModel):
         if not self.content_type:
             return None
 
-        try:
-            app_label, model_name = self.content_type.split(".")
-            return apps.get_model(app_label, model_name)
-        except LookupError:
-            return None
+        return self.content_type.model_class()
 
-    def get_content_id(self, content_type: str) -> int | None:
-        if self.content_type == content_type:
+    def get_object_id(self, content_type: str) -> int | None:
+        if (
+            self.content_type
+            and f"{self.content_type.app_label}.{self.content_type.name}"
+            == content_type
+        ):
             return self.object_id
 
         return None
 
-    def clear_context_object(self):
+    def clear_content_object(self):
         self.content_type = None
         self.object_id = None

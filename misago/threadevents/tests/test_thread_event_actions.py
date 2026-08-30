@@ -59,11 +59,11 @@ def test_create_test_thread_event_with_context(client, thread, user):
     assert_contains(response, "LOREM IPSUM DOLOR")
 
 
-def test_create_test_thread_event_with_context_object(
+def test_create_test_thread_event_with_content_object(
     client, thread, user, default_category
 ):
     thread_event = create_test_thread_event(
-        thread, user, context_object=default_category
+        thread, user, content_object=default_category
     )
 
     thread.has_events = True
@@ -208,12 +208,12 @@ def test_create_moved_thread_event(client, thread, user, default_category):
     assert_contains(response, default_category.name)
 
 
-def test_create_moved_thread_event_without_context_object(
+def test_create_moved_thread_event_without_content_object(
     client, thread, user, default_category
 ):
     thread_event = create_moved_thread_event(thread, default_category, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -240,12 +240,12 @@ def test_create_merged_thread_event(client, thread, user_thread, user):
     assert_contains(response, user_thread.title)
 
 
-def test_create_merged_thread_event_without_context_object(
+def test_create_merged_thread_event_without_content_object(
     client, thread, user_thread, user
 ):
     thread_event = create_merged_thread_event(thread, user_thread, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -285,12 +285,12 @@ def test_create_moved_posts_to_thread_event(client, thread, user_thread, user):
     assert_contains(response, user_thread.title)
 
 
-def test_create_moved_posts_to_thread_event_without_context_object(
+def test_create_moved_posts_to_thread_event_without_content_object(
     client, thread, user_thread, user
 ):
     thread_event = create_moved_posts_to_thread_event(thread, user_thread, 21, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -316,12 +316,12 @@ def test_create_moved_posts_from_thread_event(client, thread, user_thread, user)
     assert_contains(response, user_thread.title)
 
 
-def test_create_moved_posts_from_thread_event_without_context_object(
+def test_create_moved_posts_from_thread_event_without_content_object(
     client, thread, user_thread, user
 ):
     thread_event = create_moved_posts_from_thread_event(thread, user_thread, 21, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -362,12 +362,12 @@ def test_create_split_posts_into_thread_event_without_items(
     assert_contains(response, user_thread.title)
 
 
-def test_create_split_posts_into_thread_event_without_context_object(
+def test_create_split_posts_into_thread_event_without_content_object(
     client, thread, user_thread, user
 ):
     thread_event = create_split_posts_into_thread_event(thread, user_thread, 21, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -408,12 +408,12 @@ def test_create_split_posts_from_thread_event_without_items(
     assert_contains(response, user_thread.title)
 
 
-def test_create_split_thread_event_without_context_object(
+def test_create_split_thread_event_without_content_object(
     client, thread, user_thread, user
 ):
     thread_event = create_split_posts_from_thread_event(thread, user_thread, 21, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -501,12 +501,12 @@ def test_create_changed_owner_thread_event(client, thread, user, other_user):
     assert_contains(response, other_user.username)
 
 
-def test_create_changed_owner_thread_event_without_context_object(
+def test_create_changed_owner_thread_event_without_content_object(
     client, thread, user, other_user
 ):
     thread_event = create_changed_owner_thread_event(thread, other_user, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -568,12 +568,12 @@ def test_create_added_member_thread_event(client, thread, user, other_user):
     assert_contains(response, other_user.username)
 
 
-def test_create_invited_thread_event_without_context_object(
+def test_create_invited_thread_event_without_content_object(
     client, thread, user, other_user
 ):
     thread_event = create_added_member_thread_event(thread, other_user, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True
@@ -599,12 +599,12 @@ def test_create_removed_member_thread_event(client, thread, user, other_user):
     assert_contains(response, other_user.username)
 
 
-def test_create_removed_member_thread_event_without_context_object(
+def test_create_removed_member_thread_event_without_content_object(
     client, thread, user, other_user
 ):
     thread_event = create_removed_member_thread_event(thread, other_user, user)
 
-    thread_event.clear_context_object()
+    thread_event.clear_content_object()
     thread_event.save()
 
     thread.has_events = True

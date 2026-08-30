@@ -1,5 +1,6 @@
 from typing import Type
 
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Model
 from django.http import HttpRequest
 
@@ -67,10 +68,13 @@ def _delete_categories_action(
     delete_all(CategoryGroupPermission, category_id=categories)
     delete_all(ReadCategory, category_id=categories)
 
+    content_type = ContentType.objects.get(
+        app_label="misago_categories", model="category"
+    )
     ThreadEvent.objects.filter(
-        context_type="misago_categories.category",
-        context_id__in=[c.id for c in categories],
-    ).clear_context_objects()
+        content_type=content_type,
+        object_id__in=[c.id for c in categories],
+    ).clear_content_objects()
 
     Category.objects.filter(archive_pruned_in__in=categories).update(
         archive_pruned_in=None, last_thread=None
