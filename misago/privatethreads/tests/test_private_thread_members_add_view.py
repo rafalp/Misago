@@ -58,7 +58,7 @@ def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_a
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users_chip": [user.username, other_user.username]},
+        {"users": f"{user.username}, {other_user.username}"},
     )
 
     assert response.status_code == 302
@@ -85,40 +85,7 @@ def test_private_thread_members_add_view_adds_new_thread_members(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users_chip": [admin.username]},
-    )
-
-    assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
-    )
-
-    PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
-
-    ThreadEvent.objects.get(
-        thread=user_private_thread,
-        event_type=ThreadEventTypeName.ADDED_MEMBER,
-        context=admin.username,
-    )
-
-    mock_notify_on_new_private_thread.delay.assert_called_once_with(
-        user.id, user_private_thread.id, [admin.id]
-    )
-
-
-def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_fallback(
-    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
-):
-    response = user_client.post(
-        reverse(
-            "misago:private-thread-members-add",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        ),
-        {"users_text": admin.username},
+        {"users": admin.username},
     )
 
     assert response.status_code == 302
@@ -151,7 +118,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users_chip": [admin.username]},
+        {"users": admin.username},
         headers={"hx-request": "true"},
     )
 
@@ -194,7 +161,7 @@ def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
             },
         ),
         {
-            "users_chip": [admin.username],
+            "users": admin.username,
             "next": next_url,
         },
     )
@@ -215,7 +182,7 @@ def test_private_thread_members_add_view_returns_redirect_to_default_thread_url_
             },
         ),
         {
-            "users_chip": [admin.username],
+            "users": admin.username,
             "next": "invalid",
         },
     )
@@ -315,7 +282,7 @@ def test_private_thread_members_add_view_checks_locked_thread_permission(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users_chip": [admin.username]},
+        {"users": admin.username},
     )
     assert_contains(response, "This thread is locked.", 403)
 
@@ -339,7 +306,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_locked_threa
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users_chip": [admin.username]},
+        {"users": admin.username},
     )
 
     assert response.status_code == 302

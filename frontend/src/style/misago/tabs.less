@@ -165,7 +165,7 @@
   display: none;
 }
 
-.misago-javascript {
+@media (scripting: enabled) {
   .main-tab-list {
     display: flex;
   }
@@ -175,17 +175,15 @@
   }
 }
 
-// Hide all tabs if client has JS
-.misago-javascript {
+@media (scripting: enabled) {
+  // Hide all tabs if client has JS
   .main-tab-pane,
   .panel-tab-pane,
   .panel-tab-pane-header {
     display: none;
   }
-}
 
-// Show active tab
-.misago-javascript {
+  // Show active tab
   .main-tab-pane {
     margin: 0;
   }
