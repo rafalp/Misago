@@ -1,120 +1,147 @@
-from collections import defaultdict
+from collections.abc import ItemsView, Iterator, KeysView, Mapping, ValuesView
+from dataclasses import dataclass, replace
 from functools import cached_property
+from typing import Union
 
 from ..permissions.proxy import UserPermissionsProxy
-from .categories import get_categories
+from .categoriesdata import get_categories_data
+from .models import Category
 
 
-class CategoriesProxy:
+@dataclass(frozen=True)
+class CategoryProxy:
+    id: int
+    parent_id: int | None
+    level: int
+    lft: int
+    rght: int
+    name: str
+    slug: str
+    short_name: str
+    color: str
+    css_class: str
+    delay_browse_check: bool
+    show_started_only: bool
+    is_vanilla: bool
+    plugin_data: dict
+
+    @property
+    def is_top_level(self) -> bool:
+        return not self.level
+
+    @property
+    def is_leaf(self) -> bool:
+        return self.lft + 1 == self.rght
+
+    @property
+    def has_children(self) -> bool:
+        return self.lft + 1 < self.rght
+
+    def is_parent(self, category: Union[Category, "CategoryProxy"]) -> bool:
+        return self.id == category.parent_id
+
+    def is_child(self, category: Union[Category, "CategoryProxy"]) -> bool:
+        return self.parent_id == category.id
+
+    def is_ancestor(self, category: Union[Category, "CategoryProxy"]) -> bool:
+        return self.lft < category.lft and self.rght > category.rght
+
+    def is_descendant(self, category: Union[Category, "CategoryProxy"]) -> bool:
+        return self.lft > category.lft and self.rght < category.rght
+
+    def replace(self, **kwargs):
+        return replace(self, **kwargs)
+
+
+class CategoriesProxy(Mapping[int, CategoryProxy]):
     user_permissions: UserPermissionsProxy
-    cache_versions: dict
-    _threads_paths: dict[list[dict]]
+    cache_versions: dict[str, str]
 
-    def __init__(self, user_permissions: UserPermissionsProxy, cache_versions: dict):
+    def __init__(
+        self, user_permissions: UserPermissionsProxy, cache_versions: dict[str, str]
+    ):
         self.user_permissions = user_permissions
         self.cache_versions = cache_versions
 
-        self._threads_paths: dict[int, list[dict]] = {}
-
     @cached_property
-    def categories(self) -> dict[int, dict]:
-        return get_categories(self.user_permissions, self.cache_versions)
+    def _data(self) -> dict[int, CategoryProxy]:
+        categories = get_categories_data(self.user_permissions, self.cache_versions)
 
-    @cached_property
-    def category_list(self) -> list[dict]:
-        return list(self.categories.values())
+        return {
+            category_id: CategoryProxy(**category)
+            for category_id, category in categories.items()
+        }
 
-    def get_categories_menu(self) -> list[dict]:
-        top_categories: list[dict] = []
-        children: dict[int, list[dict]] = defaultdict(list)
+    def __contains__(self, category: Category | CategoryProxy | int) -> bool:
+        category_id = category if isinstance(category, int) else category.id
+        return category_id in self._data
 
-        for item in self.category_list:
-            category = item.copy()
+    def __getitem__(self, category_id: int) -> CategoryProxy:
+        return self._data[category_id]
 
-            if category["parent_id"] is None:
-                children[item["id"]] = []
-                top_categories.append(category)
+    def __iter__(self) -> Iterator[int]:
+        return iter(self._data)
 
-            elif category["parent_id"] in children:
-                children[category["parent_id"]].append(category)
+    def __len__(self) -> int:
+        return len(self._data)
 
-        # Flatten menu for React.js
-        menu_items: list[dict] = []
-        for category in top_categories:
-            category_children = children.get(category["id"])
-            if not category["is_vanilla"] or category_children:
-                menu_items.append(category)
-                if category_children:
-                    menu_items += category_children
-                    menu_items[-1]["last"] = True
+    def keys(self) -> KeysView[int]:
+        return self._data.keys()
 
-        if menu_items:
-            menu_items[-1].pop("last", None)
+    def values(self) -> ValuesView[CategoryProxy]:
+        return self._data.values()
 
-        return menu_items
+    def items(self) -> ItemsView[int, CategoryProxy]:
+        return self._data.items()
 
-    def get_category_parents(
-        self, category_id: int, include_self: bool = True
-    ) -> list[dict]:
-        parents: list[dict] = []
+    def get(self, category_id: int) -> CategoryProxy | None:
+        return self._data.get(category_id)
 
-        category = self.categories[category_id]
-        while True:
-            if category["id"] != category_id or include_self:
-                parents.append(category)
-            if not category["parent_id"]:
-                break
-            category = self.categories[category["parent_id"]]
+    def get_parent(
+        self, category: Category | CategoryProxy | int
+    ) -> CategoryProxy | None:
+        category_id = category if isinstance(category, int) else category.id
+        category_obj = self[category_id]
 
-        return parents
+        if category_obj.parent_id is not None:
+            return self.get(category_obj.parent_id)
 
-    def get_category_path(
-        self, category_id: int, include_self: bool = True
-    ) -> list[dict]:
-        parents = self.get_category_parents(category_id, include_self)
-        return list(reversed(parents))
+        return None
 
-    def get_category_descendants(
-        self, category_id: int, include_self: bool = True
-    ) -> list[dict]:
-        parent = self.categories[category_id]
-        items: list[dict] = []
+    def get_children(
+        self, category: Category | CategoryProxy | int, include_self: bool = False
+    ) -> list[CategoryProxy]:
+        category_id = category if isinstance(category, int) else category.id
 
-        if include_self:
-            items.append(parent)
-        for item in self.category_list:
-            if item["lft"] > parent["lft"] and item["rght"] < parent["rght"]:
-                items.append(item)
+        return [
+            item
+            for item in self.values()
+            if item.parent_id == category_id
+            or (include_self and item.id == category_id)
+        ]
 
-        return items
+    def get_ancestors(
+        self, category: Category | CategoryProxy | int, include_self: bool = False
+    ) -> list[CategoryProxy]:
+        category_id = category if isinstance(category, int) else category.id
+        category_obj = self[category_id]
 
-    def get_thread_categories(
-        self, thread_category_id: int, current_category_id: int | None = None
-    ) -> list[dict]:
-        if thread_category_id in self._threads_paths:
-            return self._threads_paths[thread_category_id]
+        return [
+            item
+            for item in self.values()
+            if item.is_ancestor(category_obj)
+            or (include_self and item.id == category_obj.id)
+        ]
 
-        path: list[dict] = self.get_category_path(thread_category_id)
-        if current_category_id:
-            cutoff = next(
-                (
-                    i + 1
-                    for i, category in enumerate(path)
-                    if category["id"] == current_category_id
-                ),
-                None,
-            )
-            if cutoff:
-                path = path[cutoff:]
+    def get_descendants(
+        self, category: Category | CategoryProxy | int, include_self: bool = False
+    ) -> list[CategoryProxy]:
+        category_id = category if isinstance(category, int) else category.id
+        category_obj = self[category_id]
 
-        self._threads_paths[thread_category_id] = path
-        return path
-
-    def get_choices(self, include_empty: bool = False) -> list[tuple[int, str]]:
-        choices: list[tuple[int, str]] = []
-        if include_empty:
-            choices.append(("", ""))
-        for category in self.category_list:
-            prefix = "⭢ " * category["level"]
-            choices.append((category["id"], f"{prefix}{category['name']}"))
-        return choices
+        return [
+            item
+            for item in self.values()
+            if item.is_descendant(category_obj)
+            or (include_self and item.id == category_obj.id)
+        ]
