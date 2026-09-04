@@ -476,9 +476,7 @@ def check_filter_threads_queryset_case(
         is_hidden=thread_hidden,
     )
 
-    queryset = filter_threads_queryset(
-        permissions, categories.category_list, Thread.objects
-    )
+    queryset = filter_threads_queryset(permissions, categories.values(), Thread.objects)
     if thread in queryset:
         assert_threads_queryset_contains(user, category, thread)
     else:

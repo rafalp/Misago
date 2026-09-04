@@ -31,209 +31,6 @@ THREAD_URLS = (
 )
 
 
-def get_invalid_category_choices(
-    user_permissions: UserPermissionsProxy,
-    categories: CategoriesProxy,
-) -> set[int]:
-    valid_categories = user_permissions.categories[CategoryPermission.BROWSE]
-
-    choices: set[int] = set()
-    for category in categories.category_list:
-        if (
-            category["is_vanilla"]
-            or category["id"] not in valid_categories
-            or not user_permissions.is_category_moderator(category["id"])
-        ):
-            choices.add(category["id"])
-    return choices
-
-
-def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) -> int:
-    try:
-        parsed_url = urllib.parse.urlsplit(value)
-    except ValueError:
-        parsed_url = None
-
-    if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
-        raise forms.ValidationError(
-            pgettext("moderation form thread url validation", "Enter a valid link."),
-            code="invalid",
-        )
-
-    if parsed_url.netloc != request.get_host():
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form thread url validation",
-                "Enter a link to this site.",
-            ),
-            code="invalid",
-        )
-
-    try:
-        resolved_url = resolve(parsed_url.path)
-    except Resolver404:
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form thread url validation",
-                "Enter a valid thread link.",
-            ),
-            code="invalid",
-        )
-
-    url_name = resolved_url.url_name
-    if resolved_url.namespaces:
-        namespace = ":".join(resolved_url.namespaces)
-        url_name = f"{namespace}:{url_name}"
-
-    if url_name not in valid_urls:
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form thread url validation",
-                "Enter a valid thread link.",
-            ),
-            code="invalid",
-        )
-
-    try:
-        return int(resolved_url.kwargs.get("thread_id"))
-    except (TypeError, ValueError):
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form thread url validation",
-                "Enter a valid thread link.",
-            ),
-            code="invalid",
-        )
-
-
-def parse_thread_post_url(
-    value: str,
-    request: HttpRequest,
-    valid_urls: list[str],
-    current_thread_id: int,
-) -> int:
-    try:
-        parsed_url = urllib.parse.urlsplit(value)
-    except ValueError:
-        parsed_url = None
-
-    if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
-        raise forms.ValidationError(
-            pgettext("moderation form post url validation", "Enter a valid link."),
-            code="invalid",
-        )
-
-    if parsed_url.netloc != request.get_host():
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form post url validation",
-                "Enter a link to this site.",
-            ),
-            code="invalid",
-        )
-
-    try:
-        resolved_url = resolve(parsed_url.path)
-    except Resolver404:
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form post url validation",
-                "Enter a valid post link.",
-            ),
-            code="invalid",
-        )
-
-    url_name = resolved_url.url_name
-    if resolved_url.namespaces:
-        namespace = ":".join(resolved_url.namespaces)
-        url_name = f"{namespace}:{url_name}"
-
-    if url_name not in valid_urls:
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form post url validation",
-                "Enter a valid post link.",
-            ),
-            code="invalid",
-        )
-
-    try:
-        post_int = int(resolved_url.kwargs.get("post_id"))
-    except (TypeError, ValueError):
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form post url validation",
-                "Enter a valid post link.",
-            ),
-            code="invalid",
-        )
-
-    if "thread_id" in resolved_url.kwargs:
-        try:
-            thread_id = int(resolved_url.kwargs.get("thread_id"))
-        except (TypeError, ValueError):
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form post url validation",
-                    "Enter a valid thread post link.",
-                ),
-                code="invalid",
-            )
-
-        if thread_id != current_thread_id:
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form post url validation",
-                    "Enter a link to a post in the current thread.",
-                ),
-                code="invalid",
-            )
-
-    return post_int
-
-
-def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
-    from ..threads.threadtypes import thread_type
-
-    try:
-        thread = thread_type.get_thread(request, thread_id)
-    except (Http404, PermissionDenied):
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form thread validation",
-                "Thread doesn't exist or you don't have permission to see it.",
-            ),
-            code="invalid",
-        )
-
-    is_moderator = thread_type.has_moderator_permission(
-        request.user_permissions, thread
-    )
-    if not is_moderator:
-        raise forms.ValidationError(
-            pgettext(
-                "moderation form thread validation",
-                "You can't moderate this thread.",
-            ),
-            code="permission_denied",
-        )
-
-    return thread
-
-
-def get_conflicts_resolutions(
-    conflicts: dict[str, list[Model]], cleaned_data: dict
-) -> dict[str, int]:
-    resolutions: dict[str, Model] = {}
-    for conflict, objects in conflicts.items():
-        if len(objects) > 1:
-            choices = {obj.id: obj for obj in objects}
-            resolutions[conflict] = choices[cleaned_data[conflict]]
-        else:
-            resolutions[conflict] = objects[0]
-    return resolutions
-
-
 class LockForm(forms.Form):
     lock_reason = forms.CharField(max_length=255, required=False)
 
@@ -273,7 +70,7 @@ class MoveThreadsForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-        self.fields["category"].choices = request.categories.get_choices()
+        self.fields["category"].choices = get_category_choices(request.categories)
 
     def clean_category(self) -> int:
         data = self.cleaned_data["category"]
@@ -317,7 +114,7 @@ class MergeThreadsForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields.update(get_thread_merge_form_fields(conflicts, request))
-        self.fields["category"].choices = request.categories.get_choices()
+        self.fields["category"].choices = get_category_choices(request.categories)
 
         self.invalid_category_choices = get_invalid_category_choices(
             request.user_permissions, request.categories
@@ -478,7 +275,7 @@ class SplitPostsForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-        self.fields["category"].choices = request.categories.get_choices()
+        self.fields["category"].choices = get_category_choices(request.categories)
         self.invalid_category_choices = get_invalid_category_choices(
             request.user_permissions, request.categories
         )
@@ -756,3 +553,214 @@ class MergePostConflictsForm(forms.Form):
 
     def get_conflicts_resolutions(self):
         return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
+
+
+def get_category_choices(categories: CategoriesProxy) -> list[tuple[int, str]]:
+    choices: list[tuple[int, str]] = []
+    for category in categories.values():
+        prefix = "⭢ " * category.level
+        choices.append((category.id, f"{prefix}{category.name}"))
+    return choices
+
+
+def get_invalid_category_choices(
+    user_permissions: UserPermissionsProxy,
+    categories: CategoriesProxy,
+) -> set[int]:
+    valid_categories = user_permissions.categories[CategoryPermission.BROWSE]
+
+    choices: set[int] = set()
+    for category in categories.values():
+        if (
+            category.is_vanilla
+            or category.id not in valid_categories
+            or not user_permissions.is_category_moderator(category)
+        ):
+            choices.add(category.id)
+    return choices
+
+
+def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) -> int:
+    try:
+        parsed_url = urllib.parse.urlsplit(value)
+    except ValueError:
+        parsed_url = None
+
+    if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
+        raise forms.ValidationError(
+            pgettext("moderation form thread url validation", "Enter a valid link."),
+            code="invalid",
+        )
+
+    if parsed_url.netloc != request.get_host():
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "Enter a link to this site.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        resolved_url = resolve(parsed_url.path)
+    except Resolver404:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "Enter a valid thread link.",
+            ),
+            code="invalid",
+        )
+
+    url_name = resolved_url.url_name
+    if resolved_url.namespaces:
+        namespace = ":".join(resolved_url.namespaces)
+        url_name = f"{namespace}:{url_name}"
+
+    if url_name not in valid_urls:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "Enter a valid thread link.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        return int(resolved_url.kwargs.get("thread_id"))
+    except (TypeError, ValueError):
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "Enter a valid thread link.",
+            ),
+            code="invalid",
+        )
+
+
+def parse_thread_post_url(
+    value: str,
+    request: HttpRequest,
+    valid_urls: list[str],
+    current_thread_id: int,
+) -> int:
+    try:
+        parsed_url = urllib.parse.urlsplit(value)
+    except ValueError:
+        parsed_url = None
+
+    if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
+        raise forms.ValidationError(
+            pgettext("moderation form post url validation", "Enter a valid link."),
+            code="invalid",
+        )
+
+    if parsed_url.netloc != request.get_host():
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a link to this site.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        resolved_url = resolve(parsed_url.path)
+    except Resolver404:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a valid post link.",
+            ),
+            code="invalid",
+        )
+
+    url_name = resolved_url.url_name
+    if resolved_url.namespaces:
+        namespace = ":".join(resolved_url.namespaces)
+        url_name = f"{namespace}:{url_name}"
+
+    if url_name not in valid_urls:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a valid post link.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        post_int = int(resolved_url.kwargs.get("post_id"))
+    except (TypeError, ValueError):
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a valid post link.",
+            ),
+            code="invalid",
+        )
+
+    if "thread_id" in resolved_url.kwargs:
+        try:
+            thread_id = int(resolved_url.kwargs.get("thread_id"))
+        except (TypeError, ValueError):
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post url validation",
+                    "Enter a valid thread post link.",
+                ),
+                code="invalid",
+            )
+
+        if thread_id != current_thread_id:
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post url validation",
+                    "Enter a link to a post in the current thread.",
+                ),
+                code="invalid",
+            )
+
+    return post_int
+
+
+def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
+    from ..threads.threadtypes import thread_type
+
+    try:
+        thread = thread_type.get_thread(request, thread_id)
+    except (Http404, PermissionDenied):
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread validation",
+                "Thread doesn't exist or you don't have permission to see it.",
+            ),
+            code="invalid",
+        )
+
+    is_moderator = thread_type.has_moderator_permission(
+        request.user_permissions, thread
+    )
+    if not is_moderator:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread validation",
+                "You can't moderate this thread.",
+            ),
+            code="permission_denied",
+        )
+
+    return thread
+
+
+def get_conflicts_resolutions(
+    conflicts: dict[str, list[Model]], cleaned_data: dict
+) -> dict[str, int]:
+    resolutions: dict[str, Model] = {}
+    for conflict, objects in conflicts.items():
+        if len(objects) > 1:
+            choices = {obj.id: obj for obj in objects}
+            resolutions[conflict] = choices[cleaned_data[conflict]]
+        else:
+            resolutions[conflict] = objects[0]
+    return resolutions

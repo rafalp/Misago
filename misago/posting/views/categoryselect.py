@@ -34,7 +34,7 @@ class ThreadStartCategorySelectView(View):
 
     def get_category_choices(self, request: HttpRequest) -> list[dict]:
         queryset = Category.objects.filter(
-            id__in=list(request.categories.categories),
+            id__in=request.categories,
         ).order_by("lft")
 
         choices: list[dict] = []
