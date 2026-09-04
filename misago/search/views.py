@@ -1,5 +1,6 @@
 from datetime import datetime, time, timedelta
 
+from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -15,6 +16,7 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.privatethreads import check_private_threads_permission
 from ..permissions.search import check_search_permission
 from ..plugins import extensions
+from .categories import get_searchable_category_ids
 from .enums import SearchSort
 from .forms import (
     PrivateThreadsSearchForm,
@@ -38,16 +40,21 @@ class SearchView(View):
         check_search_permission(self.request.user_permissions)
 
     def get_context_data(self):
+        search_forms = self.get_search_forms()
+
         return {
             "header": self.get_header_data(),
-            "search_forms": self.get_search_forms(),
+            "search_forms": search_forms,
         }
 
     def get_header_data(self) -> dict:
         return {"template_name": self.header_template_name}
 
     def get_search_forms(self) -> list[SearchForm]:
-        forms = [self.get_threads_search_form()]
+        forms = []
+
+        if threads_search_form := self.get_threads_search_form():
+            forms.append(threads_search_form)
 
         if private_threads_form := self.get_private_threads_search_form():
             forms.append(private_threads_form)
@@ -55,11 +62,26 @@ class SearchView(View):
         if users_form := self.get_users_search_form():
             forms.append(users_form)
 
+        if not forms:
+            raise PermissionDenied(
+                pgettext(
+                    "search permission error",
+                    "You can't search this site.",
+                )
+            )
+
         return forms
 
     def get_threads_search_form(self) -> ThreadsSearchForm:
-        form_class = extensions.get(ThreadsSearchForm)
-        return form_class(request=self.request)
+        request = self.request
+
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
+        )
+
+        if searchable_categories:
+            form_class = extensions.get(ThreadsSearchForm)
+            return form_class(request=self.request)
 
     def get_private_threads_search_form(self) -> PrivateThreadsSearchForm | None:
         with check_permissions():
@@ -177,21 +199,21 @@ class ThreadsSearchView(BaseSearchView):
     def get_categories_filter(self, filters: dict) -> list[Category | CategoryProxy]:
         request = self.request
 
-        valid_categories = request.user_permissions.categories[
-            CategoryPermission.BROWSE
-        ]
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
+        )
 
         if category_ids := filters.get("categories"):
             return [
                 request.categories[category_id]
                 for category_id in category_ids
-                if category_id in valid_categories
+                if category_id in searchable_categories
             ]
 
         return [
             category
             for category in request.categories.values()
-            if category.id in valid_categories
+            if category.id in searchable_categories
         ]
 
 
