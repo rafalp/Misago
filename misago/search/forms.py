@@ -7,6 +7,7 @@ from ..categories.display import get_categories_with_branches
 from ..categories.proxy import CategoryProxy
 from ..permissions.enums import CategoryPermission
 from ..users.fields import UserMultipleChoiceField
+from .categories import get_searchable_category_ids
 from .enums import SearchMode, SearchSort
 
 User = get_user_model()
@@ -84,36 +85,29 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
         required=False,
         widget=forms.CheckboxSelectMultiple(),
     )
+    searchable_categories: set[int]
     disabled_categories: set[int]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.searchable_categories = self.get_searchable_categories()
         self.disabled_categories = self.get_disabled_categories()
         self.fields["categories"].choices = self.get_category_choices()
 
-    def get_disabled_categories(self) -> set[int]:
-        request = self.request
-
-        return (
-            set(request.categories)
-            .difference(request.user_permissions.categories[CategoryPermission.BROWSE])
-            .union(
-                category.id
-                for category in request.categories.values()
-                if category.is_vanilla
-            )
+    def get_searchable_categories(self) -> set[int]:
+        return get_searchable_category_ids(
+            self.request.user_permissions, self.request.categories
         )
+
+    def get_disabled_categories(self) -> set[int]:
+        return set(self.request.categories).difference(self.searchable_categories)
 
     def get_category_choices(self) -> tuple[tuple[int, str]]:
-        searchable_categories = set(
-            self.request.user_permissions.categories[CategoryPermission.BROWSE]
-        )
-
         return tuple(
             (category.id, category.name)
             for category in self.request.categories.values()
-            if category.id in searchable_categories and not category.is_vanilla
+            if category.id in self.searchable_categories
         )
 
     def get_categories_with_branches(self) -> list[tuple[str, CategoryProxy]]:
