@@ -1,9 +1,9 @@
 import pytest
 
-from ...categories.models import Category
 from ...permissions.enums import CategoryPermission
 from ...testutils import grant_category_group_permissions
 from ..categoriesdata import serialize_category_data
+from ..models import Category
 from ..proxy import CategoriesProxy, CategoryProxy
 
 

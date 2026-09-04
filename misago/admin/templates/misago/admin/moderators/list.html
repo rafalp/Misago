@@ -153,8 +153,8 @@
     event.preventDefault()
 
     const formData = new FormData(event.target)
-    const group = formData.get("group").trim()
-    const user = formData.get("user").trim()
+    const group = formData.get("group")
+    const user = formData.get("user")
 
     if (formData.get("moderator_type") == "group") {
       const url = "{% url 'misago:admin:moderators:new-group' group=1 %}"

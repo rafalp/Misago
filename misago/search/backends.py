@@ -16,6 +16,7 @@ from django.db import transaction
 from django.db.models import F, Max, Q, Value
 
 from ..categories.models import Category
+from ..categories.proxy import CategoryProxy
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .enums import SearchSort
@@ -41,7 +42,7 @@ class SearchBackend(ABC):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category] | None = None,
+        categories: list[Category | CategoryProxy] | None = None,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         started_after: datetime | None = None,
@@ -59,7 +60,7 @@ class SearchBackend(ABC):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: Iterable[Category] | None = None,
+        categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
         users: Iterable["User"] | None = None,
         posted_after: datetime | None = None,
@@ -77,7 +78,7 @@ class SearchBackend(ABC):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: Iterable[Category] | None = None,
+        categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
         users: Iterable["User"] | None = None,
         posted_after: datetime | None = None,
@@ -100,9 +101,9 @@ class SearchBackend(ABC):
     @abstractmethod
     def update_category(
         self,
-        new_category: Category,
+        new_category: Category | CategoryProxy,
         *,
-        categories: Iterable[Category] | None = None,
+        categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
     ) -> int:
         pass
@@ -160,7 +161,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category] | None = None,
+        categories: list[Category | CategoryProxy] | None = None,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         started_after: datetime | None = None,
@@ -271,7 +272,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category] | None = None,
+        categories: list[Category | CategoryProxy] | None = None,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
@@ -386,7 +387,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category] | None = None,
+        categories: list[Category | CategoryProxy] | None = None,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
@@ -486,14 +487,17 @@ class PostgreSQLSearchBackend(SearchBackend):
         return SearchQuery(query, config=self.search_config, search_type=search_type)
 
     def _filter_categories(
-        self, queryset, permissions: UserPermissionsProxy, categories: list[Category]
+        self,
+        queryset,
+        permissions: UserPermissionsProxy,
+        categories: list[Category | CategoryProxy],
     ):
         all_posts = []
         visible_or_owned = []
         visible_only = []
 
         for category in categories:
-            if permissions.is_category_moderator(category.id):
+            if permissions.is_category_moderator(category):
                 all_posts.append(category.id)
             elif permissions.user.is_authenticated:
                 visible_or_owned.append(category.id)
@@ -627,9 +631,9 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     def update_category(
         self,
-        new_category: Category,
+        new_category: Category | CategoryProxy,
         *,
-        categories: Iterable[Category] | None = None,
+        categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
     ) -> int:
         filters = {}
@@ -667,7 +671,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     # Delete operations
 
-    def delete_categories(self, categories: Iterable[Category]) -> int:
+    def delete_categories(self, categories: Iterable[Category | CategoryProxy]) -> int:
         filters = {"category_id__in": [category.id for category in categories]}
 
         deleted_threads, _ = ThreadSearch.objects.filter(**filters).delete()

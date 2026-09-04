@@ -111,12 +111,16 @@ class ThreadsSearchView(View):
         mode = filters["mode"]
         sort = filters["sort"]
 
-        users = None
+        if category_ids := filters.get("categories"):
+            categories = [
+                request.categories[category_id] for category_id in category_ids
+            ]
+        else:
+            categories = list(request.categories.values())
+
+        users = filters.get("users")
         date_from = None
         date_to = None
-
-        if user := filters.get("user"):
-            users = [user]
 
         if date_from := filters.get("date_from"):
             date_from = timezone.make_aware(datetime.combine(date_from, time.min))
@@ -124,10 +128,6 @@ class ThreadsSearchView(View):
             date_to = timezone.make_aware(
                 datetime.combine(date_to + timedelta(days=1), time.min)
             )
-
-        categories = []
-        for category in request.categories.category_list:
-            categories.append(CategoryProxy(category["id"]))
 
         if mode == "threads":
             results = posts_search.search_threads(
@@ -174,21 +174,14 @@ class UsersSearchView(View):
     pass
 
 
-class CategoryProxy:
-    id: int
-
-    def __init__(self, id: int):
-        self.id = id
-
-
 def debug_search(request: HttpRequest) -> HttpResponse:
     query = (request.GET.get("q") or "").strip()
     mode = (request.GET.get("mode") or "").strip()
     sorting = (request.GET.get("sorting") or "").strip()
 
     categories = []
-    for category in request.categories.category_list:
-        categories.append(CategoryProxy(category["id"]))
+    for category in request.categories.values():
+        categories.append(category)
 
     valid_modes = ("threads", "posts", "thread_titles")
     if mode not in valid_modes:

@@ -102,7 +102,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
         {pgettext("site nav section", "Categories")}
       </DropdownSubheader>
       {categories.map((category) =>
-        category.is_vanilla ? (
+        category.isVanilla ? (
           <DropdownMenuItem
             className="site-nav-category-header"
             key={category.id}
@@ -125,7 +125,7 @@ function SiteNavMenu({ isAnonymous, close, dropdown, overlay }) {
                 )}
                 style={{ "--label-color": category.color }}
               >
-                {category.short_name || category.name}
+                {category.shortName || category.name}
               </span>
             </a>
           </DropdownMenuItem>

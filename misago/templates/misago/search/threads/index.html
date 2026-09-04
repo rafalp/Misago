@@ -11,34 +11,50 @@
 <div class="page page-search">
   {% includecomponent header %}
   <div class="container page-container">
-    <form action="{% url form.url_name %}" method="get">
-      <div class="panel panel-default panel-form">
-        <div class="panel-heading">
-          <h3 class="panel-title">{% translate "Search options" context "search threads form title" %}</h3>
-        </div>
-        <div class="panel-body">
-          {% include form.template_name %}
-        </div>
-        <div class="panel-footer">
-          <button class="btn btn-primary">
-            {% translate "Search" context "search form submit btn" %}
-          </button>
-        </div>
+
+    <details{% if not form.is_valid %} open{% endif %}>
+      <summary>
+          <span class="btn btn-default with-svg-icon inline-flex">
+            {% include "tabler/adjustments-horizontal.svg" %}
+            <span>
+              {% translate "Toggle options" context "search threads form toggle btn" %}
+            </span>
+          </span>
+      </summary>
+      <div class="section">
+        <form action="{% url form.url_name %}" method="get">
+          <div class="panel panel-default panel-form">
+            <div class="panel-heading">
+              <h3 class="panel-title">{% translate "Search options" context "search threads form title" %}</h3>
+            </div>
+            <div class="panel-body">
+              {% include form.template_name %}
+            </div>
+            <div class="panel-footer panel-footer-center">
+              <button class="btn btn-primary">
+                {% translate "Search" context "search form submit btn" %}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
-  
-    {% if results %}
-      <ul>
-        {% for result in results.results %}
-          <li>
-            <div><a href="{% url 'misago:post' post_id=result.post_id %}">{{ result.thread_title|safe }}</a></div>
-            <div>{{ result.post_content|safe }}</div>
-            <div>{{ result.post_id }} {{ result.rank }}</div>
-          </li>
-        {% endfor %}
-      </ul>
-      <p>Time: {{ results.results.time }}s</p>
-    {% endif %}
+    </details>
+
+    <section class="section">
+      {% if results %}
+        <ul>
+          {% for result in results.results %}
+            <li>
+              <div><a href="{% url 'misago:post' post_id=result.post_id %}">{{ result.thread_title|safe }}</a></div>
+              <div>{{ result.post_content|safe }}</div>
+              <div>{{ result.post_id }} {{ result.rank }}</div>
+            </li>
+          {% endfor %}
+        </ul>
+        <p>Time: {{ results.results.time }}s</p>
+      {% endif %}
+    </section>
+
   </div>
 </div>
 {% endblock %}
