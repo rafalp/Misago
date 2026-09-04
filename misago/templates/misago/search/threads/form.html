@@ -27,7 +27,7 @@
           {% translate "Categories:" context "search threads form" %}
         </label>
         <ul class="form-control-category-tree">
-          {% for branch, category in form.get_category_tree %}
+          {% for branch, category in form.get_categories_with_branches %}
             <li>
               {% if branch %}
                 <div class="form-control-category-tree-branch">
@@ -44,9 +44,9 @@
                   {% endfor %}
                 </div>
               {% endif %}
-              <label class="form-control-category-tree-label">
+              <label class="form-control-category-tree-label{% if not category.is_vanilla and category.id in form.disabled_categories %} disabled{% endif %}">
                 {% if not category.is_vanilla %}
-                  <input type="checkbox" name="{{ field.html_name }}" value="{{ category.id }}"{% if category.id in form.cleaned_data.categories %} checked{% endif %}>
+                  <input type="checkbox" name="{{ field.html_name }}" value="{{ category.id }}"{% if category.id in form.disabled_categories %} disabled{% elif category.id in form.cleaned_data.categories %} checked{% endif %}>
                 {% endif %}
                 {{ category.name }}
               </label>

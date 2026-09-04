@@ -3,7 +3,9 @@ from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
-from ..categories.tree import get_category_tree
+from ..categories.display import get_categories_with_branches
+from ..categories.proxy import CategoryProxy
+from ..permissions.enums import CategoryPermission
 from ..users.fields import UserMultipleChoiceField
 from .enums import SearchMode, SearchSort
 
@@ -87,21 +89,49 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.setup_categories_field()
+        self.disabled_categories = self.get_disabled_categories()
+        self.fields["categories"].choices = self.get_category_choices()
 
-    def setup_categories_field(self):
+    def get_disabled_categories(self) -> set[int]:
         request = self.request
 
-        disabled_choices = set()
-
-        self.fields["categories"].choices = tuple(
-            (category.id, category.name) for category in request.categories.values()
+        return (
+            set(request.categories)
+            .difference(request.user_permissions.categories[CategoryPermission.BROWSE])
+            .union(
+                category.id
+                for category in request.categories.values()
+                if category.is_vanilla
+            )
         )
 
-        self.disabled_categories = disabled_choices
+    def get_category_choices(self) -> tuple[tuple[int, str]]:
+        searchable_categories = set(
+            self.request.user_permissions.categories[CategoryPermission.BROWSE]
+        )
 
-    def get_category_tree(self):
-        return get_category_tree(self.request.categories.values())
+        return tuple(
+            (category.id, category.name)
+            for category in self.request.categories.values()
+            if category.id in searchable_categories and not category.is_vanilla
+        )
+
+    def get_categories_with_branches(self) -> list[tuple[str, CategoryProxy]]:
+        categories = self.request.categories.values()
+        visible_categories: set[int] = set()
+
+        for category in categories:
+            if category.id not in self.disabled_categories:
+                if category.parent_id:
+                    visible_categories.add(category.parent_id)
+
+                visible_categories.add(category.id)
+
+        return get_categories_with_branches(
+            tuple(
+                category for category in categories if category.id in visible_categories
+            )
+        )
 
 
 class PrivateThreadsSearchForm(BaseThreadsSearchForm):

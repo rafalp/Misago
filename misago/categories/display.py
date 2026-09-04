@@ -4,7 +4,7 @@ from .models import Category
 from .proxy import CategoryProxy
 
 
-def get_category_tree(
+def get_categories_with_branches(
     categories: Sequence[Category | CategoryProxy],
 ) -> list[tuple[str, Category | CategoryProxy]]:
     if not categories:
