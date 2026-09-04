@@ -18,7 +18,7 @@ from misago.permissions.hooks import get_threads_category_query_hook
 def custom_get_threads_category_query_filter(
     action: GetThreadsCategoryQueryHookAction,
     permissions: 'UserPermissionsProxy',
-    category: dict,
+    category: Union['Category', 'CategoryProxy'],
 ) -> str | list[str] | None:
     ...
 ```
@@ -40,9 +40,9 @@ See the [action](#action) section for details.
 A proxy object with the current user's permissions.
 
 
-#### `category: dict`
+#### `category: Category | CategoryProxy`
 
-A `dict` with category data.
+A `Category` or `CategoryProxy` instance.
 
 
 ### Return value
@@ -54,7 +54,8 @@ A `CategoryThreadsQuery` member or a `str` with a custom clause name. If `None`,
 
 ```python
 def get_threads_category_query_action(
-    permissions: 'UserPermissionsProxy', category: dict
+    permissions: 'UserPermissionsProxy',
+    category: Union['Category', 'CategoryProxy'],
 ) -> str | list[str] | None:
     ...
 ```
@@ -75,9 +76,9 @@ from misago.permissions.enums import CategoryThreadsQuery
 A proxy object with the current user's permissions.
 
 
-#### `category: dict`
+#### `category: Category | CategoryProxy`
 
-A `dict` with category data.
+A `Category` or `CategoryProxy` instance.
 
 
 ### Return value
@@ -90,6 +91,8 @@ A `CategoryThreadsQuery` member or a `str` with a custom clause name. If `None`,
 The code below implements a custom filter function that specifies a custom `WHERE` clause supported by the `get_threads_query_orm_filter_hook`.
 
 ```python
+from misago.categories.models import Category
+from misago.categories.proxy import CategoryProxy
 from misago.permissions.hooks import get_threads_category_query_hook
 from misago.permissions.proxy import UserPermissionsProxy
 
@@ -97,9 +100,9 @@ from misago.permissions.proxy import UserPermissionsProxy
 def get_threads_category_query(
     action,
     permissions: UserPermissionsProxy,
-    category: dict,
+    category: Category | CategoryProxy,
 ) -> str | list[str] | None:
-    if category.get("plugin_flag"):
+    if category.plugin_data.get("plugin_flag"):
         return "plugin-where"
 
     return action(permissions, category)
