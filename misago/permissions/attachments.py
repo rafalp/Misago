@@ -163,7 +163,7 @@ def _check_delete_attachment_permission_action(
     ):
         if (
             category.tree_id == CategoryTree.THREADS
-            and permissions.is_category_moderator(category.id)
+            and permissions.is_category_moderator(category)
         ) or (
             category.tree_id == CategoryTree.PRIVATE_THREADS
             and permissions.is_private_threads_moderator

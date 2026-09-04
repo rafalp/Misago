@@ -72,6 +72,9 @@ class CategoriesProxy(Mapping[int, CategoryProxy]):
             for category_id, category in categories.items()
         }
 
+    def __bool__(self) -> bool:
+        return bool(self._data)
+
     def __contains__(self, category: Category | CategoryProxy | int) -> bool:
         category_id = category if isinstance(category, int) else category.id
         return category_id in self._data

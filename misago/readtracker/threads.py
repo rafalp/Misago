@@ -21,7 +21,7 @@ def is_category_read(
     queryset = (
         filter_category_threads_queryset(
             request.user_permissions,
-            request.categories.categories[category.id],
+            request.categories[category.id],
             threads_select_related_user_readthread(Thread.objects, request.user),
         )
         .filter(last_posted_at__gt=read_time)

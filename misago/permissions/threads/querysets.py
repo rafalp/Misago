@@ -1,7 +1,9 @@
-from typing import Iterable, Iterator, TypedDict
+from typing import Iterable, Iterator, Sequence
 
 from django.db.models import Q, QuerySet
 
+from ...categories.models import Category
+from ...categories.proxy import CategoryProxy
 from ...threads.enums import ThreadPinned
 from ...threads.models import Thread
 from ..enums import (
@@ -22,11 +24,6 @@ from ..hooks import (
 from ..proxy import UserPermissionsProxy
 
 
-class CategoryDict(TypedDict):
-    id: int
-    delay_browse_check: bool
-
-
 class CategoryQueries:
     _queries: dict[str, set[int]]
 
@@ -39,14 +36,14 @@ class CategoryQueries:
     def add(
         self,
         query: str | list[str],
-        category: CategoryDict,
+        category: Category | CategoryProxy,
     ) -> None:
         queries = self._queries
 
         if isinstance(query, str):
             if query not in queries:
                 queries[query] = set()
-            queries[query].add(category["id"])
+            queries[query].add(category.id)
 
         else:
             for q in query:
@@ -58,20 +55,20 @@ class CategoryQueries:
 
 class ThreadsQuerysetFilter:
     permissions: UserPermissionsProxy
-    all_categories: list[CategoryDict]
+    all_categories: Sequence[Category | CategoryProxy]
 
     def __init__(
         self,
         permissions: UserPermissionsProxy,
-        all_categories: list[CategoryDict],
+        all_categories: Sequence[Category | CategoryProxy],
     ) -> QuerySet:
         self.permissions = permissions
         self.all_categories = []
 
         for category in all_categories:
-            if category["id"] in permissions.categories[CategoryPermission.BROWSE] or (
-                category["id"] in permissions.categories[CategoryPermission.SEE]
-                and category["delay_browse_check"]
+            if category.id in permissions.categories[CategoryPermission.BROWSE] or (
+                category.id in permissions.categories[CategoryPermission.SEE]
+                and category.delay_browse_check
             ):
                 self.all_categories.append(category)
 
@@ -117,17 +114,17 @@ class ThreadsQuerysetFilter:
 
 
 class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
-    current_category: CategoryDict
-    child_categories: list[CategoryDict]
-    other_categories: list[CategoryDict]
+    current_category: Category | CategoryProxy
+    child_categories: Sequence[Category | CategoryProxy]
+    other_categories: Sequence[Category | CategoryProxy]
     include_children: bool
 
     def __init__(
         self,
         permissions: UserPermissionsProxy,
-        categories: list[CategoryDict],
-        current_category: CategoryDict,
-        child_categories: list[CategoryDict],
+        categories: Sequence[Category | CategoryProxy],
+        current_category: Category | CategoryProxy,
+        child_categories: Sequence[Category | CategoryProxy],
         include_children: bool,
     ) -> QuerySet:
         super().__init__(permissions, categories)
@@ -136,12 +133,12 @@ class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
         self.child_categories = []
         self.other_categories = []
 
-        children_ids = set(c["id"] for c in child_categories)
+        children_ids = set(category.id for category in child_categories)
 
         for category in self.all_categories:
-            if category["id"] == current_category["id"]:
+            if category.id == current_category.id:
                 continue
-            elif category["id"] in children_ids:
+            elif category.id in children_ids:
                 self.child_categories.append(category)
             else:
                 self.other_categories.append(category)
@@ -196,14 +193,14 @@ class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
 
 def filter_threads_queryset(
     permissions: UserPermissionsProxy,
-    categories: list[CategoryDict],
+    categories: Sequence[Category | CategoryProxy],
     queryset: QuerySet,
 ):
     valid_categories = []
     for category in categories:
-        if category["id"] in permissions.categories[CategoryPermission.BROWSE] or (
-            category["id"] in permissions.categories[CategoryPermission.SEE]
-            and category["delay_browse_check"]
+        if category.id in permissions.categories[CategoryPermission.BROWSE] or (
+            category.id in permissions.categories[CategoryPermission.SEE]
+            and category.delay_browse_check
         ):
             valid_categories.append(category)
 
@@ -227,11 +224,13 @@ def filter_threads_queryset(
 
 
 def filter_category_threads_queryset(
-    permissions: UserPermissionsProxy, category: CategoryDict, queryset: QuerySet
+    permissions: UserPermissionsProxy,
+    category: Category | CategoryProxy,
+    queryset: QuerySet,
 ):
     user_id = permissions.user.id
     query = get_category_threads_query(permissions, category)
-    category_id = category["id"]
+    category_id = category.id
 
     if not query:
         return queryset.none()
@@ -247,7 +246,7 @@ def filter_category_threads_queryset(
 
 
 def get_category_threads_query(
-    permissions: UserPermissionsProxy, category: CategoryDict
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy
 ) -> str | list[str] | None:
     return get_category_threads_query_hook(
         _get_category_threads_query_action, permissions, category
@@ -255,12 +254,12 @@ def get_category_threads_query(
 
 
 def _get_category_threads_query_action(
-    permissions: UserPermissionsProxy, category: CategoryDict
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy
 ) -> str | list[str] | None:
-    if permissions.is_category_moderator(category["id"]):
+    if permissions.is_category_moderator(category):
         return CategoryThreadsQuery.ALL
 
-    if category["show_started_only"]:
+    if category.show_started_only:
         if permissions.user.is_authenticated:
             return [
                 CategoryThreadsQuery.USER_PINNED,
@@ -276,7 +275,7 @@ def _get_category_threads_query_action(
 
 
 def get_threads_category_query(
-    permissions: UserPermissionsProxy, category: CategoryDict
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy
 ) -> str | list[str] | None:
     return get_threads_category_query_hook(
         _get_threads_category_query_action, permissions, category
@@ -284,12 +283,12 @@ def get_threads_category_query(
 
 
 def _get_threads_category_query_action(
-    permissions: UserPermissionsProxy, category: CategoryDict
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy
 ) -> str | list[str] | None:
-    if permissions.is_category_moderator(category["id"]):
+    if permissions.is_category_moderator(category):
         return CategoryThreadsQuery.ALL_NOT_PINNED_EVERYWHERE
 
-    if category["show_started_only"]:
+    if category.show_started_only:
         if permissions.user.is_authenticated:
             return [
                 CategoryThreadsQuery.USER_PINNED_CATEGORY,
@@ -305,7 +304,7 @@ def _get_threads_category_query_action(
 
 
 def get_threads_pinned_category_query(
-    permissions: UserPermissionsProxy, category: CategoryDict
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy
 ) -> str | list[str] | None:
     return get_threads_pinned_category_query_hook(
         _get_threads_pinned_category_query_action, permissions, category
@@ -313,9 +312,9 @@ def get_threads_pinned_category_query(
 
 
 def _get_threads_pinned_category_query_action(
-    permissions: UserPermissionsProxy, category: CategoryDict
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy
 ) -> str | list[str] | None:
-    if permissions.is_category_moderator(category["id"]):
+    if permissions.is_category_moderator(category):
         return CategoryThreadsQuery.ALL_PINNED_EVERYWHERE
 
     if permissions.user.is_authenticated:
@@ -325,7 +324,7 @@ def _get_threads_pinned_category_query_action(
 
 
 def get_category_threads_category_query(
-    permissions: UserPermissionsProxy, category: CategoryDict, context: str
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy, context: str
 ) -> str | list[str] | None:
     return get_category_threads_category_query_hook(
         _get_category_threads_category_query_action,
@@ -336,18 +335,18 @@ def get_category_threads_category_query(
 
 
 def _get_category_threads_category_query_action(
-    permissions: UserPermissionsProxy, category: CategoryDict, context: str
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy, context: str
 ) -> str | list[str] | None:
     if context == CategoryQueryContext.OTHER:
         return None  # We don't display non-category items on category pages
 
-    if permissions.is_category_moderator(category["id"]):
+    if permissions.is_category_moderator(category):
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.ALL_NOT_PINNED
 
         return CategoryThreadsQuery.ALL_NOT_PINNED_EVERYWHERE
 
-    if category["show_started_only"]:
+    if category.show_started_only:
         if context == CategoryQueryContext.CURRENT:
             if permissions.user.is_authenticated:
                 return CategoryThreadsQuery.USER_STARTED_NOT_PINNED
@@ -375,7 +374,7 @@ def _get_category_threads_category_query_action(
 
 
 def get_category_threads_pinned_category_query(
-    permissions: UserPermissionsProxy, category: CategoryDict, context: str
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy, context: str
 ) -> str | list[str] | None:
     return get_category_threads_pinned_category_query_hook(
         _get_category_threads_pinned_category_query_action,
@@ -386,9 +385,9 @@ def get_category_threads_pinned_category_query(
 
 
 def _get_category_threads_pinned_category_query_action(
-    permissions: UserPermissionsProxy, category: CategoryDict, context: str
+    permissions: UserPermissionsProxy, category: Category | CategoryProxy, context: str
 ) -> str | list[str] | None:
-    if permissions.is_category_moderator(category["id"]):
+    if permissions.is_category_moderator(category):
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.ALL_PINNED
 

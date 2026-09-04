@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, Union
 
 from ...plugins.hooks import FilterHook
-from ..enums import CategoryQueryContext
 
 if TYPE_CHECKING:
+    from ...categories.models import Category
+    from ...categories.proxy import CategoryProxy
     from ..proxy import UserPermissionsProxy
 
 
@@ -26,9 +27,9 @@ class GetCategoryThreadsQueryHookAction(Protocol):
 
     A proxy object with the current user's permissions.
 
-    ## `category: dict`
+    ## `category: Category | CategoryProxy`
 
-    A `dict` with category data.
+    A `Category` or `CategoryProxy` instance.
 
     # Return value
 
@@ -41,7 +42,7 @@ class GetCategoryThreadsQueryHookAction(Protocol):
     def __call__(
         self,
         permissions: "UserPermissionsProxy",
-        category: dict,
+        category: Union["Category", "CategoryProxy"],
     ) -> str | list[str] | None: ...
 
 
@@ -62,9 +63,9 @@ class GetCategoryThreadsQueryHookFilter(Protocol):
 
     A proxy object with the current user's permissions.
 
-    ## `category: dict`
+    ## `category: Category | CategoryProxy`
 
-    A `dict` with category data.
+    A `Category` or `CategoryProxy` instance.
 
     # Return value
 
@@ -78,7 +79,7 @@ class GetCategoryThreadsQueryHookFilter(Protocol):
         self,
         action: GetCategoryThreadsQueryHookAction,
         permissions: "UserPermissionsProxy",
-        category: dict,
+        category: Union["Category", "CategoryProxy"],
     ) -> str | list[str] | None: ...
 
 
@@ -99,6 +100,8 @@ class GetCategoryThreadsQueryHook(
     `WHERE` clause supported by the `get_threads_query_orm_filter_hook`.
 
     ```python
+    from misago.categories.models import Category
+    from misago.categories.proxy import CategoryProxy
     from misago.permissions.hooks import get_category_threads_query_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
@@ -106,10 +109,11 @@ class GetCategoryThreadsQueryHook(
     def get_category_threads_query(
         action,
         permissions: UserPermissionsProxy,
-        category: dict,
+        category: Category | CategoryProxy,
     ) -> str | list[str] | None:
         if (
-            category.get("plugin_flag") and context == CategoryQueryContext.CURRENT
+            category.plugin_data.get("plugin_flag")
+            and context == CategoryQueryContext.CURRENT
         ):
             return "plugin-where"
 
@@ -123,7 +127,7 @@ class GetCategoryThreadsQueryHook(
         self,
         action: GetCategoryThreadsQueryHookAction,
         permissions: "UserPermissionsProxy",
-        category: dict,
+        category: Union["Category", "CategoryProxy"],
     ) -> str | list[str] | None:
         return super().__call__(action, permissions, category)
 
