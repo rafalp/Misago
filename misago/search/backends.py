@@ -515,7 +515,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         if visible_only:
             expressions.append(
                 Q(
-                    category_id__in=visible_or_owned,
+                    category_id__in=visible_only,
                     is_hidden=False,
                     is_unapproved=False,
                 )
