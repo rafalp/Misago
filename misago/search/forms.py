@@ -5,7 +5,6 @@ from django.utils.translation import pgettext_lazy
 
 from ..categories.display import get_categories_with_branches
 from ..categories.proxy import CategoryProxy
-from ..permissions.enums import CategoryPermission
 from ..users.fields import UserMultipleChoiceField
 from .categories import get_searchable_category_ids
 from .enums import SearchMode, SearchSort
