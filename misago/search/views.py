@@ -68,7 +68,17 @@ class SearchView(View):
         return form_class(request=self.request)
 
 
-class ThreadsSearchView(View):
+class BaseSearchView(View):
+    breadcrumbs_template_name = "misago/search/breadcrumbs.html"
+
+    def get_breadcrumbs(self):
+        return {
+            "id": "breadcrumbs",
+            "template_name": self.breadcrumbs_template_name,
+        }
+
+
+class ThreadsSearchView(BaseSearchView):
     template_name = "misago/search/threads/index.html"
     header_template_name = "misago/search/threads/header.html"
 
@@ -90,6 +100,7 @@ class ThreadsSearchView(View):
 
         return {
             "page_title": form.name,
+            "breadcrumbs": self.get_breadcrumbs(),
             "header": self.get_header_data(),
             "form": form,
             "results": results,
@@ -170,59 +181,5 @@ class PrivateThreadsSearchView(ThreadsSearchView):
     pass
 
 
-class UsersSearchView(View):
+class UsersSearchView(BaseSearchView):
     pass
-
-
-def debug_search(request: HttpRequest) -> HttpResponse:
-    query = (request.GET.get("q") or "").strip()
-    mode = (request.GET.get("mode") or "").strip()
-    sorting = (request.GET.get("sorting") or "").strip()
-
-    categories = []
-    for category in request.categories.values():
-        categories.append(category)
-
-    valid_modes = ("threads", "posts", "thread_titles")
-    if mode not in valid_modes:
-        mode = valid_modes[0]
-
-    valid_sortings = ("relevance", "newest")
-    if sorting not in valid_sortings:
-        sorting = valid_sortings[0]
-
-    if query:
-        if mode == "threads":
-            results = posts_search.search_threads(
-                query,
-                request.user_permissions,
-                categories=categories,
-                order_by=SearchSort(sorting),
-            )
-        elif mode == "posts":
-            results = posts_search.search_posts(
-                query,
-                request.user_permissions,
-                categories=categories,
-                order_by=SearchSort(sorting),
-            )
-        elif mode == "thread_titles":
-            results = posts_search.search_thread_titles(
-                query,
-                request.user_permissions,
-                categories=categories,
-                order_by=SearchSort(sorting),
-            )
-    else:
-        results = None
-
-    return render(
-        request,
-        "misago/search/debug.html",
-        {
-            "query": query,
-            "mode": mode,
-            "sorting": sorting,
-            "results": results,
-        },
-    )
