@@ -1,19 +1,21 @@
+from ..display import get_categories_with_branches
 from ..models import Category
-from ..tree import get_category_tree
 
 
-def test_get_category_tree_returns_empty_list_for_no_categories():
-    assert get_category_tree([]) == []
+def test_get_categories_with_branches_returns_empty_list_for_no_categories():
+    assert get_categories_with_branches([]) == []
 
 
-def test_get_category_tree_returns_list_with_only_top_level_categories(root_category):
+def test_get_categories_with_branches_returns_list_with_only_top_level_categories(
+    root_category,
+):
     top_category_1 = Category(name="Category", slug="category")
     top_category_1.insert_at(root_category, position="last-child", save=True)
 
     top_category_2 = Category(name="Category", slug="category")
     top_category_2.insert_at(root_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category_1,
             top_category_2,
@@ -24,7 +26,7 @@ def test_get_category_tree_returns_list_with_only_top_level_categories(root_cate
     ]
 
 
-def test_get_category_tree_returns_list_with_top_level_category_with_child(
+def test_get_categories_with_branches_returns_list_with_top_level_category_with_child(
     root_category,
 ):
     top_category = Category(name="Category", slug="category")
@@ -33,7 +35,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_child(
     child_category = Category(name="Category", slug="category")
     child_category.insert_at(top_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category,
             child_category,
@@ -44,7 +46,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_child(
     ]
 
 
-def test_get_category_tree_returns_list_with_top_level_category_with_multiple_children(
+def test_get_categories_with_branches_returns_list_with_top_level_category_with_multiple_children(
     root_category,
 ):
     top_category = Category(name="Category", slug="category")
@@ -56,7 +58,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_multiple_ch
     child_category_2 = Category(name="Category", slug="category")
     child_category_2.insert_at(top_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category,
             child_category_1,
@@ -69,7 +71,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_multiple_ch
     ]
 
 
-def test_get_category_tree_returns_list_with_top_level_category_with_multiple_children_and_sibling_category(
+def test_get_categories_with_branches_returns_list_with_top_level_category_with_multiple_children_and_sibling_category(
     root_category,
 ):
     top_category_1 = Category(name="Category", slug="category")
@@ -84,7 +86,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_multiple_ch
     top_category_2 = Category(name="Category", slug="category")
     top_category_2.insert_at(root_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category_1,
             child_category_1,
@@ -99,7 +101,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_multiple_ch
     ]
 
 
-def test_get_category_tree_returns_list_with_top_level_category_with_children_two_levels_deep(
+def test_get_categories_with_branches_returns_list_with_top_level_category_with_children_two_levels_deep(
     root_category,
 ):
     top_category = Category(name="Category", slug="category")
@@ -111,7 +113,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_children_tw
     child_child_category = Category(name="Category", slug="category")
     child_child_category.insert_at(child_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category,
             child_category,
@@ -124,7 +126,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_children_tw
     ]
 
 
-def test_get_category_tree_returns_list_with_top_level_category_with_middle_child_with_child(
+def test_get_categories_with_branches_returns_list_with_top_level_category_with_middle_child_with_child(
     root_category,
 ):
     top_category = Category(name="Category", slug="category")
@@ -139,7 +141,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_middle_chil
     child_category_2 = Category(name="Category", slug="category")
     child_category_2.insert_at(top_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category,
             child_category_1,
@@ -154,7 +156,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_middle_chil
     ]
 
 
-def test_get_category_tree_returns_list_with_top_level_category_with_middle_child_with_child_with_child(
+def test_get_categories_with_branches_returns_list_with_top_level_category_with_middle_child_with_child_with_child(
     root_category,
 ):
     top_category = Category(name="Category", slug="category")
@@ -174,7 +176,7 @@ def test_get_category_tree_returns_list_with_top_level_category_with_middle_chil
     child_category_2 = Category(name="Category", slug="category")
     child_category_2.insert_at(top_category, position="last-child", save=True)
 
-    assert get_category_tree(
+    assert get_categories_with_branches(
         [
             top_category,
             child_category_1,
