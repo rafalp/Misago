@@ -8,6 +8,6 @@ __all__ = [
     "delete_categories_hook",
     "get_categories_page_component_hook",
     "get_categories_page_metatags_hook",
-    "serialize_category_hook",
+    "serialize_category_data_hook",
     "synchronize_category_hook",
 ]
