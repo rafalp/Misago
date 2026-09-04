@@ -16,6 +16,7 @@ from django.views import View
 from ...categories.components import get_categories_data, get_subcategories_data
 from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.models import Category
+from ...categories.proxy import CategoryProxy
 from ...core.exceptions import OutdatedSlug
 from ...metatags.default import get_default_metatags
 from ...metatags.forumindex import get_forum_index_metatags
@@ -418,8 +419,9 @@ class ThreadListView(ListView):
                 {"breadcrumbs": get_threads_breadcrumbs(request)},
             )
 
-        categories_ids = list(request.categories.categories)
-        self.read_categories(request.user, categories_ids)
+        if request.categories:
+            self.read_categories(request.user, request.categories)
+
         messages.success(
             request, pgettext("mark threads as read", "Threads marked as read")
         )
@@ -433,7 +435,7 @@ class ThreadListView(ListView):
         )
 
         queryset = filter_threads_queryset(
-            request.user_permissions, request.categories.category_list, Thread.objects
+            request.user_permissions, request.categories.values(), Thread.objects
         )
         selected_threads = self.get_selected_threads(request, queryset)
 
@@ -496,7 +498,9 @@ class ThreadListView(ListView):
         if component == CategoryChildrenComponent.DROPDOWN:
             return {
                 "categories": [
-                    c for c in request.categories.category_list if c["level"] < 2
+                    category
+                    for category in request.categories.values()
+                    if category.level < 2
                 ],
                 "template_name": None,
             }
@@ -542,10 +546,16 @@ class ThreadListView(ListView):
         else:
             unread = get_unread_threads(request, threads_list)
 
+        thread_categories: dict[int, list[CategoryProxy]] = {}
+
         items: list[dict] = []
         for thread in threads_list:
-            categories = request.categories.get_thread_categories(thread.category_id)
             moderation = self.allow_thread_moderation(request, thread)
+
+            if thread.category_id not in thread_categories:
+                thread_categories[thread.category_id] = self.get_thread_categories(
+                    thread
+                )
 
             thread_data = {
                 "thread": thread,
@@ -553,7 +563,7 @@ class ThreadListView(ListView):
                 "starter": users.get(thread.starter_id),
                 "last_poster": users.get(thread.last_poster_id),
                 "pages": self.get_thread_pages_count(request, thread),
-                "categories": categories,
+                "categories": thread_categories[thread.category_id],
                 "moderation": moderation,
                 "animate": animate.get(thread.id, False),
                 "selected": thread.id in selected,
@@ -579,6 +589,12 @@ class ThreadListView(ListView):
                 self.get_moderation_actions(request)
             ),
         }
+
+    def get_thread_categories(self, thread: Thread) -> list[CategoryProxy]:
+        return self.request.categories.get_ancestors(
+            thread.category_id,
+            include_self=True,
+        )
 
     def get_filters_base_url(self) -> str:
         return reverse("misago:thread-list")
@@ -631,7 +647,7 @@ class ThreadListView(ListView):
         self, request: HttpRequest
     ) -> ThreadsQuerysetFilter:
         return ThreadsQuerysetFilter(
-            request.user_permissions, request.categories.category_list
+            request.user_permissions, request.categories.values()
         )
 
     def get_threads_paginator(
@@ -752,8 +768,10 @@ class CategoryThreadListView(ListView):
 
         if category.list_children_threads:
             categories_ids = [
-                c["id"]
-                for c in request.categories.get_category_descendants(category.id)
+                category.id
+                for category in request.categories.get_descendants(
+                    category, include_self=True
+                )
             ]
         else:
             categories_ids = [category.id]
@@ -775,7 +793,7 @@ class CategoryThreadListView(ListView):
         )
 
         queryset = filter_threads_queryset(
-            request.user_permissions, request.categories.category_list, Thread.objects
+            request.user_permissions, request.categories.values(), Thread.objects
         )
         selected_threads = self.get_selected_threads(request, queryset)
 
@@ -893,15 +911,9 @@ class CategoryThreadListView(ListView):
     def get_subcategories_dropdown_items(
         self, request: HttpRequest, category: Category
     ):
-        for c in request.categories.category_list:
-            if (
-                c["lft"] > category.lft
-                and c["rght"] < category.rght
-                and c["level"] - category.level < 3
-            ):
-                category_data = c.copy()
-                category_data["level"] -= category.level
-                yield category_data
+        for child in request.categories.values():
+            if child.is_descendant(category) and child.level - category.level < 3:
+                yield child.replace(level=child.level - category.level)
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
         filters_base_url = self.get_filters_base_url(category)
@@ -946,15 +958,18 @@ class CategoryThreadListView(ListView):
 
         mark_read = bool(threads_list)
 
+        thread_categories: dict[int, list[CategoryProxy]] = {}
+
         items: list[dict] = []
         for thread in threads_list:
-            categories = request.categories.get_thread_categories(
-                thread.category_id, category.id
-            )
-
             moderation = self.allow_thread_moderation(request, thread)
 
-            if thread.category_id == category and thread.id in unread:
+            if thread.category_id not in thread_categories:
+                thread_categories[thread.category_id] = self.get_thread_categories(
+                    category, thread
+                )
+
+            if thread.category_id == category.id and thread.id in unread:
                 mark_read = False
 
             thread_data = {
@@ -963,7 +978,7 @@ class CategoryThreadListView(ListView):
                 "starter": users.get(thread.starter_id),
                 "last_poster": users.get(thread.last_poster_id),
                 "pages": self.get_thread_pages_count(request, thread),
-                "categories": categories,
+                "categories": thread_categories[thread.category_id],
                 "moderation": moderation,
                 "animate": animate.get(thread.id, False),
                 "selected": thread.id in selected,
@@ -997,6 +1012,22 @@ class CategoryThreadListView(ListView):
             ),
             "enable_polling": self.is_threads_polling_enabled(request),
         }
+
+    def get_thread_categories(
+        self, category: Category, thread: Thread
+    ) -> list[CategoryProxy]:
+        if category.id == thread.category_id:
+            return []
+
+        categories = self.request.categories
+
+        if not categories[category.id].is_ancestor(categories[thread.category_id]):
+            return categories.get_ancestors(thread.category_id, include_self=True)
+
+        return categories.get_ancestors(
+            thread.category_id,
+            include_self=True,
+        )[category.level + 1 :]
 
     def get_filters_base_url(self, category: Category) -> str:
         return category.get_absolute_url()
@@ -1035,7 +1066,7 @@ class CategoryThreadListView(ListView):
             MyThreadsFilter(request),
         ]
 
-        if request.user_permissions.is_category_moderator(category.id):
+        if request.user_permissions.is_category_moderator(category):
             filters.append(UnapprovedThreadsFilter(request))
 
         return filters
@@ -1046,11 +1077,11 @@ class CategoryThreadListView(ListView):
     def get_threads_permissions_queryset_filter(
         self, request: HttpRequest, category: Category
     ) -> CategoryThreadsQuerysetFilter:
-        categories = request.categories.get_category_descendants(category.id)
+        categories = request.categories.get_descendants(category, include_self=True)
 
         return CategoryThreadsQuerysetFilter(
             request.user_permissions,
-            request.categories.category_list,
+            request.categories.values(),
             current_category=categories[0],
             child_categories=categories[1:],
             include_children=category.list_children_threads,
