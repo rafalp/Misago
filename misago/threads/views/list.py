@@ -1027,7 +1027,7 @@ class CategoryThreadListView(ListView):
         return categories.get_ancestors(
             thread.category_id,
             include_self=True,
-        )[category.level + 1 :]
+        )[category.level :]
 
     def get_filters_base_url(self, category: Category) -> str:
         return category.get_absolute_url()

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n misago_component %}
 
 <div class="container page-header-container">
   <div class="page-header page-header-search-threads">
@@ -8,6 +8,7 @@
         <div class="page-header-banner page-header-banner-search-threads">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
+              {% includecomponent breadcrumbs %}
               <h1>{{ form.name }}</h1>
             </div>
           </div>
