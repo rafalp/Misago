@@ -7,7 +7,11 @@ from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
+from ..categories.enums import CategoryTree
+from ..categories.models import Category
+from ..categories.proxy import CategoryProxy
 from ..permissions.checkutils import check_permissions
+from ..permissions.enums import CategoryPermission
 from ..permissions.privatethreads import check_private_threads_permission
 from ..permissions.search import check_search_permission
 from ..plugins import extensions
@@ -122,13 +126,7 @@ class ThreadsSearchView(BaseSearchView):
         mode = filters["mode"]
         sort = filters["sort"]
 
-        if category_ids := filters.get("categories"):
-            categories = [
-                request.categories[category_id] for category_id in category_ids
-            ]
-        else:
-            categories = list(request.categories.values())
-
+        categories = self.get_categories_filter(filters)
         users = filters.get("users")
         date_from = None
         date_to = None
@@ -176,9 +174,30 @@ class ThreadsSearchView(BaseSearchView):
             "more_url": None,
         }
 
+    def get_categories_filter(self, filters: dict) -> list[Category | CategoryProxy]:
+        request = self.request
+
+        valid_categories = request.user_permissions.categories[
+            CategoryPermission.BROWSE
+        ]
+
+        if category_ids := filters.get("categories"):
+            return [
+                request.categories[category_id]
+                for category_id in category_ids
+                if category_id in valid_categories
+            ]
+
+        return [
+            category
+            for category in request.categories.values()
+            if category.id in valid_categories
+        ]
+
 
 class PrivateThreadsSearchView(ThreadsSearchView):
-    pass
+    def get_categories_filter(self, filters: dict) -> list[Category]:
+        return [Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS)]
 
 
 class UsersSearchView(BaseSearchView):
