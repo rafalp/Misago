@@ -1,6 +1,7 @@
 import pytest
 
 from ...permissions.enums import CategoryPermission
+from ...permissions.models import CategoryGroupPermission
 from ...testutils import grant_category_group_permissions
 from ..categoriesdata import serialize_category_data
 from ..models import Category
@@ -39,6 +40,24 @@ def test_categories_proxy_excludes_categories_inaccessible_by_user(
     proxy = CategoriesProxy(user_permissions, cache_versions)
 
     assert sibling_category not in proxy
+
+
+def test_categories_proxy_evaluates_to_true_if_it_contains_categories(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+    assert proxy
+
+
+def test_categories_proxy_evaluates_to_false_if_it_contains_no_categories(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    CategoryGroupPermission.objects.all().delete()
+
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+    assert not proxy
 
 
 def test_categories_proxy_contains_returns_true_for_contained_category(
