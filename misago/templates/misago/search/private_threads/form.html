@@ -43,7 +43,7 @@
     {% with field=form.mode %}
       <div class="form-group{% if field.errors %} has-error{% endif %}">
         <label class="control-label">
-          {% translate "Search in:" context "search threads form" %}
+          {% translate "Search for:" context "search threads form" %}
         </label>
         <div class="form-control-choices">
           {% for choice in field.subwidgets %}
