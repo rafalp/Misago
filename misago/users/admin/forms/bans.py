@@ -49,7 +49,7 @@ class BanForm(forms.ModelForm):
             )
         },
     )
-    team_message = forms.CharField(
+    team_reason = forms.CharField(
         label=pgettext_lazy("admin ban form", "Team message"),
         required=False,
         max_length=1000,
@@ -75,7 +75,7 @@ class BanForm(forms.ModelForm):
             "registration_only",
             "banned_value",
             "user_message",
-            "team_message",
+            "team_reason",
             "expires_on",
         ]
 

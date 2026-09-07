@@ -21,7 +21,7 @@ export default class extends Form {
 
       is_avatar_locked: "",
       avatar_lock_user_message: "",
-      avatar_lock_team_message: "",
+      avatar_lock_team_reason: "",
     }
   }
 
@@ -33,7 +33,7 @@ export default class extends Form {
 
           is_avatar_locked: options.is_avatar_locked,
           avatar_lock_user_message: options.avatar_lock_user_message || "",
-          avatar_lock_team_message: options.avatar_lock_team_message || "",
+          avatar_lock_team_reason: options.avatar_lock_team_reason || "",
         })
       },
       (rejection) => {
@@ -58,7 +58,7 @@ export default class extends Form {
     return ajax.post(this.props.profile.api.moderate_avatar, {
       is_avatar_locked: this.state.is_avatar_locked,
       avatar_lock_user_message: this.state.avatar_lock_user_message,
-      avatar_lock_team_message: this.state.avatar_lock_team_message,
+      avatar_lock_team_reason: this.state.avatar_lock_team_reason,
     })
   }
 
@@ -126,15 +126,15 @@ export default class extends Form {
               "profile avatar moderation field",
               "Optional message for forum team members explaining why the user is prohibited form changing their avatar."
             )}
-            for="id_avatar_lock_team_message"
+            for="id_avatar_lock_team_reason"
           >
             <textarea
-              id="id_avatar_lock_team_message"
+              id="id_avatar_lock_team_reason"
               className="form-control"
               rows="4"
               disabled={this.state.isLoading}
-              onChange={this.bindInput("avatar_lock_team_message")}
-              value={this.state.avatar_lock_team_message}
+              onChange={this.bindInput("avatar_lock_team_reason")}
+              value={this.state.avatar_lock_team_reason}
             />
           </FormGroup>
         </div>

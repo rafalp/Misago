@@ -139,7 +139,7 @@ class UsersList(UserAdmin, generic.ListView):
 
                 ban_kwargs = {
                     "user_message": cleaned_data.get("user_message"),
-                    "team_message": cleaned_data.get("team_message"),
+                    "team_reason": cleaned_data.get("team_reason"),
                     "expires_on": cleaned_data.get("expires_on"),
                 }
 
@@ -362,9 +362,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         if not form.fields["is_active"].disabled:
             target.is_active = form.cleaned_data["is_active"]
-        if not form.fields["is_active_team_message"].disabled:
-            target.is_active_team_message = form.cleaned_data.get(
-                "is_active_team_message"
+        if not form.fields["is_active_team_reason"].disabled:
+            target.is_active_team_reason = form.cleaned_data.get(
+                "is_active_team_reason"
             )
 
         target.set_groups(

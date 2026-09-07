@@ -13,5 +13,5 @@ class ModerateAvatarSerializer(serializers.ModelSerializer):
         fields = [
             "is_avatar_locked",
             "avatar_lock_user_message",
-            "avatar_lock_team_message",
+            "avatar_lock_team_reason",
         ]

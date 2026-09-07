@@ -319,8 +319,8 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_team_message"],
-            self.other_user.avatar_lock_team_message,
+            options["avatar_lock_team_reason"],
+            self.other_user.avatar_lock_team_reason,
         )
 
         response = self.client.post(
@@ -329,7 +329,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
                 {
                     "is_avatar_locked": True,
                     "avatar_lock_user_message": "Test user message.",
-                    "avatar_lock_team_message": "Test staff message.",
+                    "avatar_lock_team_reason": "Test staff message.",
                 }
             ),
             content_type="application/json",
@@ -342,7 +342,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(self.other_user.is_avatar_locked, True)
         self.assertEqual(self.other_user.avatar_lock_user_message, "Test user message.")
         self.assertEqual(
-            self.other_user.avatar_lock_team_message, "Test staff message."
+            self.other_user.avatar_lock_team_reason, "Test staff message."
         )
 
         self.assertEqual(options["avatars"], self.other_user.avatars)
@@ -352,8 +352,8 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_team_message"],
-            self.other_user.avatar_lock_team_message,
+            options["avatar_lock_team_reason"],
+            self.other_user.avatar_lock_team_reason,
         )
 
         response = self.client.post(
@@ -362,7 +362,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
                 {
                     "is_avatar_locked": False,
                     "avatar_lock_user_message": None,
-                    "avatar_lock_team_message": None,
+                    "avatar_lock_team_reason": None,
                 }
             ),
             content_type="application/json",
@@ -372,7 +372,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.other_user.refresh_from_db()
         self.assertFalse(self.other_user.is_avatar_locked)
         self.assertIsNone(self.other_user.avatar_lock_user_message)
-        self.assertIsNone(self.other_user.avatar_lock_team_message)
+        self.assertIsNone(self.other_user.avatar_lock_team_reason)
 
         options = response.json()
         self.assertEqual(options["avatars"], self.other_user.avatars)
@@ -382,8 +382,8 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_team_message"],
-            self.other_user.avatar_lock_team_message,
+            options["avatar_lock_team_reason"],
+            self.other_user.avatar_lock_team_reason,
         )
 
         response = self.client.post(
@@ -392,7 +392,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
                 {
                     "is_avatar_locked": True,
                     "avatar_lock_user_message": "",
-                    "avatar_lock_team_message": "",
+                    "avatar_lock_team_reason": "",
                 }
             ),
             content_type="application/json",
@@ -402,7 +402,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.other_user.refresh_from_db()
         self.assertTrue(self.other_user.is_avatar_locked)
         self.assertEqual(self.other_user.avatar_lock_user_message, "")
-        self.assertEqual(self.other_user.avatar_lock_team_message, "")
+        self.assertEqual(self.other_user.avatar_lock_team_reason, "")
 
         options = response.json()
         self.assertEqual(options["avatars"], self.other_user.avatars)
@@ -412,8 +412,8 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_team_message"],
-            self.other_user.avatar_lock_team_message,
+            options["avatar_lock_team_reason"],
+            self.other_user.avatar_lock_team_reason,
         )
 
         response = self.client.post(
@@ -426,7 +426,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.other_user.refresh_from_db()
         self.assertFalse(self.other_user.is_avatar_locked)
         self.assertEqual(self.other_user.avatar_lock_user_message, "")
-        self.assertEqual(self.other_user.avatar_lock_team_message, "")
+        self.assertEqual(self.other_user.avatar_lock_team_reason, "")
 
         options = response.json()
         self.assertEqual(options["avatars"], self.other_user.avatars)
@@ -436,8 +436,8 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_team_message"],
-            self.other_user.avatar_lock_team_message,
+            options["avatar_lock_team_reason"],
+            self.other_user.avatar_lock_team_reason,
         )
 
     @patch_user_acl({"can_moderate_avatars": 1})

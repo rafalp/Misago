@@ -141,7 +141,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         Ban.objects.create(
             banned_value=test_user.username,
             user_message="User m3ss4ge.",
-            team_message="Staff m3ss4ge.",
+            team_reason="Staff m3ss4ge.",
             is_checked=True,
         )
         test_user.ban_cache.delete()
