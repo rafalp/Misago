@@ -69,12 +69,12 @@ def _set_user_ban_cache(user, cache_versions):
         ban_cache.ban = user_ban
         ban_cache.expires_on = user_ban.expires_on
         ban_cache.user_message = user_ban.user_message
-        ban_cache.staff_message = user_ban.staff_message
+        ban_cache.team_message = user_ban.team_message
     except Ban.DoesNotExist:
         ban_cache.ban = None
         ban_cache.expires_on = None
         ban_cache.user_message = None
-        ban_cache.staff_message = None
+        ban_cache.team_message = None
 
     ban_cache.save()
     return ban_cache
@@ -140,21 +140,21 @@ def _hydrate_session_cache(ban_cache):
 
 
 # Utilities for front-end based bans
-def ban_user(user, user_message=None, staff_message=None, length=None, expires_on=None):
+def ban_user(user, user_message=None, team_message=None, length=None, expires_on=None):
     if not expires_on and length:
         expires_on = timezone.now() + timedelta(**length)
 
     ban = Ban.objects.create(
         banned_value=user.username.lower(),
         user_message=user_message,
-        staff_message=staff_message,
+        team_message=team_message,
         expires_on=expires_on,
     )
     Ban.objects.invalidate_cache()
     return ban
 
 
-def ban_ip(ip, user_message=None, staff_message=None, length=None, expires_on=None):
+def ban_ip(ip, user_message=None, team_message=None, length=None, expires_on=None):
     if not expires_on and length:
         expires_on = timezone.now() + timedelta(**length)
 
@@ -162,7 +162,7 @@ def ban_ip(ip, user_message=None, staff_message=None, length=None, expires_on=No
         check_type=Ban.IP,
         banned_value=ip,
         user_message=user_message,
-        staff_message=staff_message,
+        team_message=team_message,
         expires_on=expires_on,
     )
     Ban.objects.invalidate_cache()

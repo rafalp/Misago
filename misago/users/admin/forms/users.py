@@ -146,7 +146,7 @@ class EditUserForm(BaseUserForm):
             "Designates whether this user should be treated as active. Turning this off is non-destructible way to remove user accounts.",
         ),
     )
-    is_active_staff_message = forms.CharField(
+    is_active_team_message = forms.CharField(
         label=pgettext_lazy("admin user form", "Staff message"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -180,7 +180,7 @@ class EditUserForm(BaseUserForm):
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
-    avatar_lock_staff_message = forms.CharField(
+    avatar_lock_team_message = forms.CharField(
         label=pgettext_lazy("admin user form", "Staff message"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -211,7 +211,7 @@ class EditUserForm(BaseUserForm):
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
-    signature_lock_staff_message = forms.CharField(
+    signature_lock_team_message = forms.CharField(
         label=pgettext_lazy("admin user form", "Staff message"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -288,17 +288,17 @@ class EditUserForm(BaseUserForm):
             "title",
             "is_misago_root",
             "is_active",
-            "is_active_staff_message",
+            "is_active_team_message",
             "require_content_approval",
             "is_avatar_locked",
             "avatar_lock_user_message",
-            "avatar_lock_staff_message",
+            "avatar_lock_team_message",
             "signature",
             "is_signature_locked",
             "is_hiding_presence",
             "allow_new_private_threads_by",
             "signature_lock_user_message",
-            "signature_lock_staff_message",
+            "signature_lock_team_message",
             "watch_started_threads",
             "watch_replied_threads",
             "watch_new_private_threads_by_followed",
@@ -330,7 +330,7 @@ class EditUserForm(BaseUserForm):
             or (self.instance.is_misago_admin and not request_user.is_misago_root)
         ):
             self.fields["is_active"].disabled = True
-            self.fields["is_active_staff_message"].disabled = True
+            self.fields["is_active_team_message"].disabled = True
 
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
@@ -643,7 +643,7 @@ class BanUsersForm(forms.Form):
             )
         },
     )
-    staff_message = forms.CharField(
+    team_message = forms.CharField(
         label=pgettext_lazy("admin ban users form", "Team message"),
         required=False,
         max_length=1000,

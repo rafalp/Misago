@@ -228,7 +228,7 @@ def moderate_avatar_endpoint(request, profile):
                 "avatars": profile.avatars,
                 "is_avatar_locked": int(profile.is_avatar_locked),
                 "avatar_lock_user_message": profile.avatar_lock_user_message,
-                "avatar_lock_staff_message": profile.avatar_lock_staff_message,
+                "avatar_lock_team_message": profile.avatar_lock_team_message,
             }
         )
 
@@ -236,6 +236,6 @@ def moderate_avatar_endpoint(request, profile):
         {
             "is_avatar_locked": int(profile.is_avatar_locked),
             "avatar_lock_user_message": profile.avatar_lock_user_message,
-            "avatar_lock_staff_message": profile.avatar_lock_staff_message,
+            "avatar_lock_team_message": profile.avatar_lock_team_message,
         }
     )

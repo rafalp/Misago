@@ -97,14 +97,14 @@ export default class extends React.Component {
   }
 
   getStaffMessage() {
-    if (this.state.ban.staff_message) {
+    if (this.state.ban.team_message) {
       return (
         <div className="panel-body ban-message ban-staff-message">
           <h4>{pgettext("profile ban details", "Team-shown ban message")}</h4>
           <div
             className="lead"
             dangerouslySetInnerHTML={{
-              __html: this.state.ban.staff_message.html,
+              __html: this.state.ban.team_message.html,
             }}
           />
         </div>

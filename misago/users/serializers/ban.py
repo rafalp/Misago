@@ -32,14 +32,14 @@ class BanMessageSerializer(serializers.ModelSerializer):
 
 class BanDetailsSerializer(serializers.ModelSerializer):
     user_message = serializers.SerializerMethodField()
-    staff_message = serializers.SerializerMethodField()
+    team_message = serializers.SerializerMethodField()
 
     class Meta:
         model = Ban
-        fields = ["user_message", "staff_message", "expires_on"]
+        fields = ["user_message", "team_message", "expires_on"]
 
     def get_user_message(self, obj):
         return serialize_message(obj.user_message)
 
-    def get_staff_message(self, obj):
-        return serialize_message(obj.staff_message)
+    def get_team_message(self, obj):
+        return serialize_message(obj.team_message)
