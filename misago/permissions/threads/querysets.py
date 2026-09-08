@@ -5,20 +5,25 @@ from django.db.models import Q, QuerySet
 from ...categories.models import Category
 from ...categories.proxy import CategoryProxy
 from ...threads.enums import ThreadPinned
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..enums import (
     CategoryPermission,
     CategoryQueryContext,
     CategoryThreadsQuery,
+    ThreadPostsQuery,
 )
 from ..hooks import (
     filter_thread_events_queryset_hook,
     filter_thread_posts_queryset_hook,
+    filter_threads_posts_queryset_hook,
+    filter_threads_queryset_hook,
     get_category_threads_category_query_hook,
     get_category_threads_pinned_category_query_hook,
     get_category_threads_query_hook,
     get_threads_category_query_hook,
     get_threads_pinned_category_query_hook,
+    get_threads_posts_queries_hook,
+    get_threads_queries_hook,
     get_threads_query_orm_filter_hook,
 )
 from ..proxy import UserPermissionsProxy
@@ -73,7 +78,7 @@ class ThreadsQuerysetFilter:
                 self.all_categories.append(category)
 
     def filter(self, queryset: QuerySet) -> QuerySet:
-        categories_queries = self.get_categories_threads_queries()
+        categories_queries = self.get_threads_queries()
         if not categories_queries:
             return queryset.none()
 
@@ -88,7 +93,7 @@ class ThreadsQuerysetFilter:
         filters: list[Q] = self.get_queryset_filters(categories_queries)
         return queryset.filter(_or_q(filters))
 
-    def get_categories_threads_queries(self) -> CategoryQueries:
+    def get_threads_queries(self) -> CategoryQueries:
         queries = CategoryQueries()
         for category in self.all_categories:
             if query := get_threads_category_query(self.permissions, category):
@@ -145,7 +150,7 @@ class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
 
         self.include_children = include_children
 
-    def get_categories_threads_queries(self) -> CategoryQueries:
+    def get_threads_queries(self) -> CategoryQueries:
         queries = CategoryQueries()
 
         if query := get_category_threads_category_query(
@@ -194,8 +199,21 @@ class CategoryThreadsQuerysetFilter(ThreadsQuerysetFilter):
 def filter_threads_queryset(
     permissions: UserPermissionsProxy,
     categories: Sequence[Category | CategoryProxy],
-    queryset: QuerySet,
+    queryset: QuerySet | None = None,
 ):
+    return filter_threads_queryset_hook(
+        _filter_threads_queryset_action, permissions, categories, queryset
+    )
+
+
+def _filter_threads_queryset_action(
+    permissions: UserPermissionsProxy,
+    categories: Sequence[Category | CategoryProxy],
+    queryset: QuerySet | None = None,
+):
+    if not queryset:
+        queryset = Thread.objects
+
     valid_categories = []
     for category in categories:
         if category.id in permissions.categories[CategoryPermission.BROWSE] or (
@@ -243,6 +261,33 @@ def filter_category_threads_queryset(
         expression = get_threads_query_orm_filter(query, [category_id], user_id)
 
     return queryset.filter(expression)
+
+
+def get_threads_queries(
+    permissions: UserPermissionsProxy, categories: Sequence[Category | CategoryProxy]
+) -> dict[int, set[str]]:
+    return get_threads_queries_hook(
+        _get_threads_queries_action, permissions, categories
+    )
+
+
+def _get_threads_queries_action(
+    permissions: UserPermissionsProxy, categories: Sequence[Category | CategoryProxy]
+) -> dict[int, set[str]]:
+    queries: dict[int, set[str]] = {}
+    for category in categories:
+        if category.id not in permissions.categories[CategoryPermission.BROWSE]:
+            continue
+
+        if query := get_category_threads_query(permissions, category):
+            if category.id not in queries:
+                queries[category.id] = set()
+            if isinstance(query, list):
+                queries[category.id].update(query)
+            else:
+                queries[category.id].add(query)
+
+    return queries
 
 
 def get_category_threads_query(
@@ -602,6 +647,92 @@ def _get_threads_query_orm_filter_action(
         )
 
     return None
+
+
+def get_threads_posts_queries(
+    permissions: UserPermissionsProxy,
+    categories: Sequence[Category | CategoryProxy],
+) -> dict[ThreadPostsQuery, set[int]]:
+    return get_threads_posts_queries_hook(
+        _get_threads_posts_queries_action, permissions, categories
+    )
+
+
+def _get_threads_posts_queries_action(
+    permissions: UserPermissionsProxy,
+    categories: Sequence[Category | CategoryProxy],
+) -> dict[ThreadPostsQuery, set[int]]:
+    browseable_categories = set(category.id for category in categories).intersection(
+        permissions.categories[CategoryPermission.BROWSE]
+    )
+
+    if not browseable_categories:
+        return {}
+
+    if permissions.user.is_anonymous:
+        return {ThreadPostsQuery.ANON: browseable_categories}
+
+    if permissions.is_global_moderator:
+        return {ThreadPostsQuery.ALL: browseable_categories}
+
+    queries: dict[int, set[ThreadPostsQuery]] = {}
+
+    for category_id in browseable_categories:
+        if permissions.is_category_moderator(category_id):
+            if ThreadPostsQuery.ALL not in queries:
+                queries[ThreadPostsQuery.ALL] = set()
+            queries[ThreadPostsQuery.ALL].add(category_id)
+        else:
+            if ThreadPostsQuery.USER not in queries:
+                queries[ThreadPostsQuery.USER] = set()
+            queries[ThreadPostsQuery.USER].add(category_id)
+
+    return queries
+
+
+def filter_threads_posts_queryset(
+    permissions: UserPermissionsProxy,
+    categories: Sequence[Category | CategoryProxy],
+    queryset: QuerySet | None = None,
+) -> QuerySet:
+    return filter_threads_posts_queryset_hook(
+        _filter_threads_posts_queryset_action, permissions, categories, queryset
+    )
+
+
+def _filter_threads_posts_queryset_action(
+    permissions: UserPermissionsProxy,
+    categories: Sequence[Category | CategoryProxy],
+    queryset: QuerySet | None = None,
+) -> QuerySet:
+    if not queryset:
+        queryset = Post.objects
+
+    queries = get_threads_posts_queries(permissions, categories)
+    if not queries:
+        return queryset.none()
+
+    filters: list[Q] = []
+    for query, categories in queries.items():
+        if query == ThreadPostsQuery.ALL:
+            filters.append(Q(category_id__in=categories))
+
+        elif query == ThreadPostsQuery.ANON:
+            filters.append(
+                Q(
+                    category_id__in=categories,
+                    is_hidden=False,
+                    is_unapproved=False,
+                )
+            )
+
+        elif query == ThreadPostsQuery.USER:
+            filters.append(
+                Q(category_id__in=categories, is_hidden=False)
+                & Q(Q(is_unapproved=False) | Q(poster_id=permissions.user.id))
+            )
+
+    return queryset.filter(_or_q(filters))
 
 
 def filter_thread_posts_queryset(

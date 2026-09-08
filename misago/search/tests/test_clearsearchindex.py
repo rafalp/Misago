@@ -1,9 +1,11 @@
 from io import StringIO
 
+import pytest
 from django.core import management
 
 from ..exceptions import SearchBackendError
 from ..management.commands import clearsearchindex
+from ..models import PostSearch, ThreadSearch
 
 
 def call_command():
@@ -19,7 +21,24 @@ def call_command():
     )
 
 
-def test_clearsearchindex_command_clears_search_index(db):
+def test_clearsearchindex_command_clears_search_index(thread, post):
+    thread_search = ThreadSearch.objects.create(
+        category_id=thread.category_id,
+        thread_id=thread.id,
+        starter_id=None,
+        title=thread.title,
+        started_at=thread.started_at,
+    )
+
+    post_search = PostSearch.objects.create(
+        category_id=post.category_id,
+        thread_id=post.thread_id,
+        post_id=post.id,
+        poster_id=None,
+        content=post.content,
+        posted_at=post.posted_at,
+    )
+
     stdout, stderr = call_command()
 
     assert stdout == (
@@ -28,6 +47,12 @@ def test_clearsearchindex_command_clears_search_index(db):
         "Time: 0.00s",
     )
     assert not stderr
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        thread_search.refresh_from_db()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        post_search.refresh_from_db()
 
 
 def test_clearsearchindex_command_prints_backend_error(mocker):
