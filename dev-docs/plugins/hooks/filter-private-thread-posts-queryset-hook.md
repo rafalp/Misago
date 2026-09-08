@@ -53,7 +53,7 @@ A queryset returning thread's posts.
 
 #### Return value
 
-A `queryset` filtered to show only thread posts that the user can see.
+A `QuerySet` filtered to show only thread posts that the user can see.
 
 
 ## Action
@@ -89,7 +89,7 @@ A queryset returning thread's posts.
 
 #### Return value
 
-A `queryset` filtered to show only thread posts that the user can see.
+A `QuerySet` filtered to show only thread posts that the user can see.
 
 
 ## Example

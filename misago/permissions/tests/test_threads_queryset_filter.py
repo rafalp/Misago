@@ -539,3 +539,11 @@ def assert_threads_queryset_not_contains(user, category, thread):
         raise AssertionError(
             "threads queryset result for a user is missing a thread started by them"
         )
+
+
+def test_filter_threads_queryset_uses_default_queryset_if_not_set(
+    user_permissions_factory, user, default_category, thread
+):
+    permissions = user_permissions_factory(user)
+    queryset = filter_threads_queryset(permissions, [default_category])
+    assert list(queryset) == [thread]

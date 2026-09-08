@@ -31,18 +31,6 @@ def search_index(
     first_post.content = "I am looking for a good forum software for my next project. Any recommendations?"
     first_post.save()
 
-    hidden_reply = thread_reply_factory(
-        thread,
-        poster="HiddenUser",
-        content="phpBB by Przemo",
-        is_hidden=True,
-    )
-    unapproved_reply = thread_reply_factory(
-        thread,
-        poster=other_user,
-        content="Try FluxBB",
-        is_hidden=False,
-    )
     reply = thread_reply_factory(
         thread,
         poster=other_user,
@@ -69,8 +57,6 @@ def search_index(
 
     posts = [
         first_post,
-        hidden_reply,
-        unapproved_reply,
         reply,
         other_thread_first_post,
         other_thread_reply,
@@ -85,8 +71,6 @@ def search_index(
     return {
         "thread": thread,
         "first_post": first_post,
-        "hidden_reply": hidden_reply,
-        "unapproved_reply": unapproved_reply,
         "reply": reply,
         "other_thread": other_thread,
         "other_thread_reply": other_thread_reply,
@@ -124,7 +108,6 @@ def test_postgresql_backend_index_threads_indexes_threads(
     assert thread_search.starter_id == user.id
     assert thread_search.title == thread.title
     assert thread_search.started_at == thread.started_at
-    assert not thread_search.is_pinned
 
     deleted_user_thread_search = ThreadSearch.objects.get(
         thread_id=deleted_user_thread.id
@@ -133,14 +116,6 @@ def test_postgresql_backend_index_threads_indexes_threads(
     assert deleted_user_thread_search.starter_id is None
     assert deleted_user_thread_search.title == deleted_user_thread.title
     assert deleted_user_thread_search.started_at == deleted_user_thread.started_at
-    assert not deleted_user_thread_search.is_pinned
-
-    pinned_thread_search = ThreadSearch.objects.get(thread_id=pinned_thread.id)
-    assert pinned_thread_search.category_id == default_category.id
-    assert pinned_thread_search.starter_id == other_user.id
-    assert pinned_thread_search.title == pinned_thread.title
-    assert pinned_thread_search.started_at == pinned_thread.started_at
-    assert pinned_thread_search.is_pinned
 
 
 def test_postgresql_backend_index_threads_escapes_thread_titles(
@@ -159,7 +134,6 @@ def test_postgresql_backend_index_threads_escapes_thread_titles(
     assert thread_search.starter_id is None
     assert thread_search.title == "&lt;mark&gt;&lt;/mark&gt; in search results"
     assert thread_search.started_at == thread.started_at
-    assert not thread_search.is_pinned
 
 
 def test_postgresql_backend_index_posts_indexes_posts(
@@ -178,12 +152,6 @@ def test_postgresql_backend_index_posts_indexes_posts(
     )
     first_post.save()
 
-    hidden_reply = thread_reply_factory(
-        thread,
-        poster="HiddenUser",
-        content="Test test test",
-        is_hidden=True,
-    )
     reply = thread_reply_factory(
         thread,
         poster=other_user,
@@ -192,9 +160,7 @@ def test_postgresql_backend_index_posts_indexes_posts(
 
     synchronize_thread(first_post.thread)
 
-    backend.index_posts(
-        [(post, post.content) for post in [first_post, hidden_reply, reply]]
-    )
+    backend.index_posts([(post, post.content) for post in [first_post, reply]])
 
     first_post_search = PostSearch.objects.get(post_id=first_post.id)
     assert first_post_search.category_id == first_post.category_id
@@ -202,21 +168,6 @@ def test_postgresql_backend_index_posts_indexes_posts(
     assert first_post_search.poster_id == first_post.poster_id
     assert first_post_search.content
     assert first_post_search.posted_at == first_post.posted_at
-    assert not first_post_search.is_thread_pinned
-    assert not first_post_search.incoming_links
-    assert not first_post_search.is_hidden
-    assert not first_post_search.is_unapproved
-
-    hidden_reply_search = PostSearch.objects.get(post_id=hidden_reply.id)
-    assert hidden_reply_search.category_id == hidden_reply.category_id
-    assert hidden_reply_search.thread_id == hidden_reply.thread_id
-    assert not hidden_reply_search.poster_id
-    assert hidden_reply_search.content
-    assert hidden_reply_search.posted_at == hidden_reply.posted_at
-    assert not hidden_reply_search.is_thread_pinned
-    assert not hidden_reply_search.incoming_links
-    assert hidden_reply_search.is_hidden
-    assert not hidden_reply_search.is_unapproved
 
     reply_search = PostSearch.objects.get(post_id=reply.id)
     assert reply_search.category_id == reply_search.category_id
@@ -224,10 +175,6 @@ def test_postgresql_backend_index_posts_indexes_posts(
     assert reply_search.poster_id == reply_search.poster_id
     assert reply_search.content
     assert reply_search.posted_at == reply_search.posted_at
-    assert not reply_search.is_thread_pinned
-    assert not reply_search.incoming_links
-    assert not reply_search.is_hidden
-    assert not reply_search.is_unapproved
 
 
 def test_postgresql_backend_index_posts_reindexes_existing_posts(
@@ -237,15 +184,15 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
     backend.index_posts([(post, post.content)])
 
     post_search = PostSearch.objects.get(post_id=post.id)
-    assert not post_search.is_hidden
+    assert post_search.content == "Hello world"
 
-    post.is_hidden = True
+    post.content = "Updated"
     post.save()
 
     backend.index_posts([(post, post.content)])
 
     post_search.refresh_from_db()
-    assert post_search.is_hidden
+    assert post_search.content == "Updated"
 
 
 def test_postgresql_backend_index_posts_escapes_posts_html(

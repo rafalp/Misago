@@ -1,19 +1,25 @@
+from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 
+from ..categories.models import Category
+from ..threads.models import Post, Thread
+
 
 class ThreadSearch(models.Model):
-    category_id = models.PositiveIntegerField(db_index=True)
-    thread_id = models.PositiveIntegerField(primary_key=True)
-    starter_id = models.PositiveIntegerField(null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    thread = models.OneToOneField(Thread, on_delete=models.CASCADE, primary_key=True)
+    starter = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     title = models.TextField()
     search_vector = SearchVectorField()
 
     started_at = models.DateTimeField(db_index=True)
-
-    is_pinned = models.BooleanField(default=False)
 
     class Meta:
         indexes = [
@@ -27,10 +33,18 @@ class ThreadSearch(models.Model):
 
 
 class PostSearch(models.Model):
-    category_id = models.PositiveIntegerField(db_index=True)
-    thread_id = models.PositiveIntegerField(db_index=True)
-    post_id = models.PositiveIntegerField(primary_key=True)
-    poster_id = models.PositiveIntegerField(null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    post = models.OneToOneField(
+        Post,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    poster = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     content = models.TextField()
     thread_search_vector = SearchVectorField()
@@ -38,12 +52,7 @@ class PostSearch(models.Model):
 
     posted_at = models.DateTimeField(db_index=True)
 
-    is_thread_pinned = models.BooleanField(default=False)
-    incoming_links = models.PositiveIntegerField(default=0)
-
     is_first_post = models.BooleanField(default=False)
-    is_hidden = models.BooleanField(default=False)
-    is_unapproved = models.BooleanField(default=False)
 
     class Meta:
         indexes = [
@@ -53,10 +62,5 @@ class PostSearch(models.Model):
                 fields=["thread_id"],
                 condition=models.Q(is_first_post=True),
                 name="search_post_search_is_firs_idx",
-            ),
-            models.Index(
-                fields=["poster_id"],
-                condition=models.Q(poster_id__isnull=False),
-                name="search_post_search_poster_idx",
             ),
         ]

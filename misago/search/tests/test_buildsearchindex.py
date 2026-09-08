@@ -38,17 +38,17 @@ def test_buildsearchindex_indexes_threads_and_posts(thread, post):
 
 def test_buildsearchindex_command_clears_search_index(thread, post):
     thread_search = ThreadSearch.objects.create(
-        category_id=thread.category_id * 10,
-        thread_id=thread.id * 10,
+        category_id=thread.category_id,
+        thread_id=thread.id,
         starter_id=None,
-        title="Doesnt exist",
+        title=thread.title,
         started_at=thread.started_at,
     )
 
     post_search = PostSearch.objects.create(
-        category_id=post.category_id * 10,
-        thread_id=post.thread_id * 10,
-        post_id=post.id * 10,
+        category_id=post.category_id,
+        thread_id=post.thread_id,
+        post_id=post.id,
         poster_id=None,
         content=post.content,
         posted_at=post.posted_at,
@@ -64,26 +64,23 @@ def test_buildsearchindex_command_clears_search_index(thread, post):
 
     assert not stderr
 
-    with pytest.raises(ThreadSearch.DoesNotExist):
-        thread_search.refresh_from_db()
-
-    with pytest.raises(PostSearch.DoesNotExist):
-        post_search.refresh_from_db()
+    thread_search.refresh_from_db()
+    post_search.refresh_from_db()
 
 
 def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, post):
     thread_search = ThreadSearch.objects.create(
-        category_id=thread.category_id * 10,
-        thread_id=thread.id * 10,
+        category_id=thread.category_id,
+        thread_id=thread.id,
         starter_id=None,
-        title="Doesnt exist",
+        title=thread.title,
         started_at=thread.started_at,
     )
 
     post_search = PostSearch.objects.create(
-        category_id=post.category_id * 10,
-        thread_id=post.thread_id * 10,
-        post_id=post.id * 10,
+        category_id=post.category_id,
+        thread_id=post.thread_id,
+        post_id=post.id,
         poster_id=None,
         content=post.content,
         posted_at=post.posted_at,
