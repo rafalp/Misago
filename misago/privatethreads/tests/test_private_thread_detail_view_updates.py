@@ -27,7 +27,7 @@ def test_private_thread_detail_view_doesnt_show_thread_event_to_user_if_thread_f
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_thread_event_to_user_if_thread_flag_is_set(
@@ -48,7 +48,7 @@ def test_private_thread_detail_view_shows_thread_event_to_user_if_thread_flag_is
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_thread_event_to_private_threads_moderator(
@@ -75,7 +75,7 @@ def test_private_thread_detail_view_shows_thread_event_to_private_threads_modera
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_thread_event_to_global_moderator(
@@ -96,7 +96,7 @@ def test_private_thread_detail_view_shows_thread_event_to_global_moderator(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_deleted_user_thread_event_to_user(
@@ -117,7 +117,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_event_to_user(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_deleted_user_thread_event_to_private_threads_moderator(
@@ -144,7 +144,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_event_to_private_t
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_deleted_user_thread_event_to_global_moderator(
@@ -165,7 +165,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_event_to_global_mo
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_doesnt_show_hidden_thread_event_to_user(
@@ -188,7 +188,7 @@ def test_private_thread_detail_view_doesnt_show_hidden_thread_event_to_user(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_hidden_thread_event_to_category_moderator(
@@ -217,7 +217,7 @@ def test_private_thread_detail_view_shows_hidden_thread_event_to_category_modera
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_shows_hidden_thread_event_to_global_moderator(
@@ -240,7 +240,7 @@ def test_private_thread_detail_view_shows_hidden_thread_event_to_global_moderato
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_private_thread_detail_view_doesnt_show_hide_thread_event_button_to_user(
@@ -261,7 +261,7 @@ def test_private_thread_detail_view_doesnt_show_hide_thread_event_button_to_user
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -299,7 +299,7 @@ def test_private_thread_detail_view_shows_hide_thread_event_button_to_private_th
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -331,7 +331,7 @@ def test_private_thread_detail_view_shows_hide_thread_event_button_to_global_mod
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -371,7 +371,7 @@ def test_private_thread_detail_view_shows_unhide_thread_event_button_to_category
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -405,7 +405,7 @@ def test_private_thread_detail_view_shows_unhide_thread_event_button_to_global_m
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -437,7 +437,7 @@ def test_private_thread_detail_view_doesnt_show_delete_thread_event_button_to_us
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -475,7 +475,7 @@ def test_private_thread_detail_view_shows_delete_thread_event_button_to_category
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -507,7 +507,7 @@ def test_private_thread_detail_view_shows_delete_thread_event_button_to_global_m
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(

@@ -39,7 +39,7 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
         is_deleted=True,
     )
 
-    content_type = ContentType.objects.get(app_label="misago_threads", model="thread")
+    content_type = ContentType.objects.get_for_model(Thread)
     ThreadEvent.objects.filter(
         content_type=content_type,
         object_id=thread.id,

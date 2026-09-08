@@ -58,7 +58,7 @@ class ThreadEvent(PluginDataModel):
     content_type = models.ForeignKey(
         ContentType, blank=True, null=True, on_delete=models.CASCADE
     )
-    object_id = models.PositiveBigIntegerField(blank=True, null=True)
+    object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey("content_type", "object_id")
     items = models.PositiveIntegerField(blank=True, null=True)
 
@@ -87,18 +87,12 @@ class ThreadEvent(PluginDataModel):
         if not self.content_type:
             return None
 
-        return self.content_type.model_class()
+        return ContentType.objects.get_for_id(self.content_type_id).model_class()
 
-    def get_object_id(self, content_type: str) -> int | None:
-        if (
-            self.content_type
-            and f"{self.content_type.app_label}.{self.content_type.name}"
-            == content_type
+    def get_object_id_for_type(self, obj_type: models.Model) -> int | None:
+        if self.content_type and self.content_type == ContentType.objects.get_for_model(
+            obj_type
         ):
             return self.object_id
 
         return None
-
-    def clear_content_object(self):
-        self.content_type = None
-        self.object_id = None

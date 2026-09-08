@@ -1,9 +1,11 @@
 from html import escape
 from typing import Iterable
 
+from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.urls import reverse
 
+from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..likes.postfeed import get_post_feed_post_likes_data
 from ..moderation.actions import PostModerationAction
@@ -452,16 +454,16 @@ class PostFeed:
 
         if thread_event.content_type and thread_event.object_id:
             relation_name = None
-            content_type_name = f"{thread_event.content_type.app_label}.{thread_event.content_type.name}"
-            if content_type_name == "misago_attachments.attachment":
+            content_type_model = thread_event.content_type.model_class()
+            if issubclass(content_type_model, Attachment):
                 relation_name = "attachment"
-            if content_type_name == "misago_categories.category":
+            if issubclass(content_type_model, Category):
                 relation_name = "categories"
-            if content_type_name == "misago_threads.thread":
+            if issubclass(content_type_model, Thread):
                 relation_name = "threads"
-            if content_type_name == "misago_threads.post":
+            if issubclass(content_type_model, Post):
                 relation_name = "posts"
-            if content_type_name == "misago_users.user":
+            if issubclass(content_type_model, get_user_model()):
                 relation_name = "users"
 
             if relation_name:

@@ -182,7 +182,7 @@ def archive_user_thread_events(sender, archive=None, **kwargs):
             item_name,
             {
                 pgettext("archived thread event", "Action"): thread_event.event_type,
-                pgettext("archived thread event", "Context"): thread_event.detail,
+                pgettext("archived thread event", "Detail"): thread_event.detail,
             },
             date=thread_event.created_at,
         )

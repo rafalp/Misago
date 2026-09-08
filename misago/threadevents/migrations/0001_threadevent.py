@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                         to="contenttypes.ContentType",
                     ),
                 ),
-                ("object_id", models.PositiveBigIntegerField(blank=True, null=True)),
+                ("object_id", models.PositiveIntegerField(blank=True, null=True)),
                 ("items", models.PositiveIntegerField(blank=True, null=True)),
                 ("is_hidden", models.BooleanField(default=False)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),

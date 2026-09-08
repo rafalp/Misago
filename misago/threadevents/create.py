@@ -54,8 +54,6 @@ def _create_thread_event_action(
     actor_id = None
     actor_name = None
     actor_slug = None
-    # content_type = None
-    # object_id = None
 
     if isinstance(actor, str):
         actor_name = actor
@@ -65,15 +63,6 @@ def _create_thread_event_action(
         actor_name = actor.username
         actor_slug = actor.slug
 
-    # if content_object:
-    #     content_type = ".".join(
-    #         (
-    #             content_object._meta.app_label,
-    #             content_object._meta.model_name,
-    #         )
-    #     )
-    #     object_id = content_object.id
-
     thread_event = ThreadEvent(
         category_id=thread.category_id,
         thread_id=thread.id,
@@ -82,8 +71,6 @@ def _create_thread_event_action(
         actor_slug=actor_slug,
         event_type=event_type,
         detail=detail,
-        # content_type=content_type,
-        # context_id=object_id,
         content_object=content_object,
         items=items,
         created_at=timezone.now(),

@@ -68,9 +68,7 @@ def _delete_categories_action(
     delete_all(CategoryGroupPermission, category_id=categories)
     delete_all(ReadCategory, category_id=categories)
 
-    content_type = ContentType.objects.get(
-        app_label="misago_categories", model="category"
-    )
+    content_type = ContentType.objects.get_for_model(Category)
     ThreadEvent.objects.filter(
         content_type=content_type,
         object_id__in=[c.id for c in categories],

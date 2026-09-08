@@ -2,6 +2,7 @@ from ...parser.parse import parse
 from ...threadevents.create import create_split_posts_from_thread_event
 from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
+from ...threads.models import Thread
 from ..state import PostEditState
 
 
@@ -220,4 +221,4 @@ def test_post_edit_state_save_updates_context_in_existing_thread_events(
 
     thread_event.refresh_from_db()
     assert thread_event.detail == "Updated title"
-    assert thread_event.get_object_id("misago_threads.thread") == other_user_thread.id
+    assert thread_event.get_object_id_for_type(Thread) == other_user_thread.id
