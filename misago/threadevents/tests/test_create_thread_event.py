@@ -59,7 +59,4 @@ def test_create_thread_event_creates_thread_event_with_full_content(
 
     thread_event.refresh_from_db()
 
-    assert (
-        thread_event.content_model.objects.get(id=thread_event.object_id)
-        == sibling_category
-    )
+    assert thread_event.content_object == sibling_category
