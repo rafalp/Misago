@@ -151,3 +151,9 @@ class CategoryThreadsQuery(StrEnum):
     USER_STARTED_PINNED_EVERYWHERE = "user_started_pinned_everywhere"
     USER_STARTED_PINNED_CATEGORY = "user_started_pinned_in_category"
     USER_STARTED_NOT_PINNED = "user_started_not_pinned"
+
+
+class ThreadPostsQuery(StrEnum):
+    ALL = "all"
+    ANON = "anon"
+    USER = "user"

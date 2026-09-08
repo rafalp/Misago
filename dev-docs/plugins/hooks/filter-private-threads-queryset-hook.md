@@ -47,7 +47,7 @@ A queryset returning all private threads.
 
 #### Return value
 
-A `queryset` filtered to show only private threads that the user has access to.
+A `QuerySet` filtered to show only private threads that the user has access to.
 
 
 ## Action
@@ -76,7 +76,7 @@ A queryset returning all private threads.
 
 #### Return value
 
-A `queryset` filtered to show only private threads that the user has access to.
+A `QuerySet` filtered to show only private threads that the user has access to.
 
 
 ## Example

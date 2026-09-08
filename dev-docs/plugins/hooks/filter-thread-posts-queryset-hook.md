@@ -1,6 +1,6 @@
 # `filter_thread_posts_queryset_hook`
 
-This hook wraps the standard function that Misago uses set filters on thread's posts queryset to limit it only to posts that the user can see.
+This hook wraps the standard function that Misago uses to set filters on thread's posts queryset to limit it only to posts that the user can see.
 
 
 ## Location
@@ -53,7 +53,7 @@ A queryset returning thread's posts.
 
 #### Return value
 
-A `queryset` filtered to show only thread posts that the user can see.
+A `QuerySet` filtered to show only thread posts that the user can see.
 
 
 ## Action
@@ -89,7 +89,7 @@ A queryset returning thread's posts.
 
 #### Return value
 
-A `queryset` filtered to show only thread posts that the user can see.
+A `QuerySet` filtered to show only thread posts that the user can see.
 
 
 ## Example

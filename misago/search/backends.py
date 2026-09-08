@@ -18,6 +18,7 @@ from django.db.models import F, Max, Q, Value
 from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
 from ..permissions.proxy import UserPermissionsProxy
+from ..permissions.threads import filter_threads_queryset
 from ..threads.models import Post, Thread
 from .enums import SearchSort
 from .models import PostSearch, ThreadSearch
@@ -161,7 +162,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category | CategoryProxy] | None = None,
+        categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         started_after: datetime | None = None,
@@ -174,7 +175,9 @@ class PostgreSQLSearchBackend(SearchBackend):
         search_query = self._get_search_query(query)
 
         queryset = ThreadSearch.objects.filter(
-            category_id__in=[category.id for category in categories],
+            thread_id__in=filter_threads_queryset(
+                permissions, categories, Thread.objects
+            ).values("id"),
             search_vector=search_query,
         ).annotate(
             headline=SearchHeadline(
@@ -284,7 +287,11 @@ class PostgreSQLSearchBackend(SearchBackend):
     ) -> PostSearchResults:
         search_query = self._get_search_query(query)
 
-        queryset = self._filter_categories(PostSearch.objects, permissions, categories)
+        queryset = PostSearch.objects.filter(
+            thread_id__in=filter_threads_queryset(
+                permissions, categories, Thread.objects
+            ).values("id")
+        )
 
         if threads:
             queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
@@ -387,7 +394,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         query: str,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category | CategoryProxy] | None = None,
+        categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
@@ -399,7 +406,11 @@ class PostgreSQLSearchBackend(SearchBackend):
     ) -> PostSearchResults:
         search_query = self._get_search_query(query)
 
-        queryset = self._filter_categories(PostSearch.objects, permissions, categories)
+        queryset = PostSearch.objects.filter(
+            thread_id__in=filter_threads_queryset(
+                permissions, categories, Thread.objects
+            ).values("id")
+        )
 
         if threads:
             queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
@@ -486,46 +497,6 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return SearchQuery(query, config=self.search_config, search_type=search_type)
 
-    def _filter_categories(
-        self,
-        queryset,
-        permissions: UserPermissionsProxy,
-        categories: list[Category | CategoryProxy],
-    ):
-        all_posts = []
-        visible_or_owned = []
-        visible_only = []
-
-        for category in categories:
-            if permissions.is_category_moderator(category):
-                all_posts.append(category.id)
-            elif permissions.user.is_authenticated:
-                visible_or_owned.append(category.id)
-            else:
-                visible_only.append(category.id)
-
-        expressions = []
-        if all_posts:
-            expressions.append(Q(category_id__in=all_posts))
-        if visible_or_owned:
-            expressions.append(
-                Q(category_id__in=visible_or_owned, is_hidden=False)
-                & (Q(is_unapproved=False) | Q(poster_id=permissions.user.id))
-            )
-        if visible_only:
-            expressions.append(
-                Q(
-                    category_id__in=visible_only,
-                    is_hidden=False,
-                    is_unapproved=False,
-                )
-            )
-
-        if not expressions:
-            return queryset.empty()
-
-        return queryset.filter(reduce(lambda l, r: l | r, expressions))
-
     def _get_thread_headlines(
         self, query: SearchQuery, thread_ids: Iterable[int]
     ) -> dict[int, str]:
@@ -567,7 +538,6 @@ class PostgreSQLSearchBackend(SearchBackend):
                         )
                     ),
                     started_at=thread.started_at,
-                    is_pinned=bool(thread.pinned),
                 )
                 for thread in threads
             ]
@@ -591,10 +561,8 @@ class PostgreSQLSearchBackend(SearchBackend):
         thread = post.thread
 
         if post.id == thread.first_post_id:
-            is_thread_pinned = bool(post.thread.pinned)
             is_first_post = True
         else:
-            is_thread_pinned = False
             is_first_post = False
 
         return PostSearch(
@@ -620,11 +588,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                 )
             ),
             posted_at=post.posted_at,
-            is_thread_pinned=is_thread_pinned,
-            incoming_links=0,
             is_first_post=is_first_post,
-            is_hidden=post.is_hidden,
-            is_unapproved=post.is_unapproved,
         )
 
     # Update operation

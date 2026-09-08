@@ -25,7 +25,7 @@ class FilterPrivateThreadsQuerysetHookAction(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only private threads that the user has access to.
+    A `QuerySet` filtered to show only private threads that the user has access to.
     """
 
     def __call__(
@@ -58,7 +58,7 @@ class FilterPrivateThreadsQuerysetHookFilter(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only private threads that the user has access to.
+    A `QuerySet` filtered to show only private threads that the user has access to.
     """
 
     def __call__(
