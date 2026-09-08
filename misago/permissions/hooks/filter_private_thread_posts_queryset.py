@@ -16,7 +16,7 @@ class FilterPrivateThreadPostsQuerysetHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -30,7 +30,7 @@ class FilterPrivateThreadPostsQuerysetHookAction(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only thread posts that the user can see.
+    A `QuerySet` filtered to show only thread posts that the user can see.
     """
 
     def __call__(
@@ -54,7 +54,7 @@ class FilterPrivateThreadPostsQuerysetHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,7 +68,7 @@ class FilterPrivateThreadPostsQuerysetHookFilter(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only thread posts that the user can see.
+    A `QuerySet` filtered to show only thread posts that the user can see.
     """
 
     def __call__(

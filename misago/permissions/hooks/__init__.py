@@ -67,6 +67,9 @@ from .check_reply_thread_permission import check_reply_thread_permission_hook
 from .check_restore_post_edit_permission import (
     check_restore_post_edit_permission_hook,
 )
+from .check_search_permission import (
+    check_search_permission_hook,
+)
 from .check_see_category_permission import check_see_category_permission_hook
 from .check_see_post_edit_history_permission import (
     check_see_post_edit_history_permission_hook,
@@ -111,6 +114,8 @@ from .filter_private_thread_posts_queryset import (
 from .filter_private_threads_queryset import filter_private_threads_queryset_hook
 from .filter_thread_events_queryset import filter_thread_events_queryset_hook
 from .filter_thread_posts_queryset import filter_thread_posts_queryset_hook
+from .filter_threads_posts_queryset import filter_threads_posts_queryset_hook
+from .filter_threads_queryset import filter_threads_queryset_hook
 from .get_admin_category_permissions import get_admin_category_permissions_hook
 from .get_category_threads_category_query import (
     get_category_threads_category_query_hook,
@@ -121,6 +126,8 @@ from .get_category_threads_pinned_category_query import (
 from .get_category_threads_query import get_category_threads_query_hook
 from .get_threads_category_query import get_threads_category_query_hook
 from .get_threads_pinned_category_query import get_threads_pinned_category_query_hook
+from .get_threads_posts_queries import get_threads_posts_queries_hook
+from .get_threads_queries import get_threads_queries_hook
 from .get_threads_query_orm_filter import get_threads_query_orm_filter_hook
 from .get_user_permissions import get_user_permissions_hook
 
@@ -160,6 +167,7 @@ __all__ = [
     "check_reply_private_thread_permission_hook",
     "check_reply_thread_permission_hook",
     "check_restore_post_edit_permission_hook",
+    "check_search_permission_hook",
     "check_see_category_permission_hook",
     "check_see_post_edit_history_permission_hook",
     "check_see_post_likes_permission_hook",
@@ -179,17 +187,21 @@ __all__ = [
     "copy_category_permissions_hook",
     "copy_group_permissions_hook",
     "filter_accessible_thread_posts_hook",
-    "filter_private_thread_posts_queryset_hook",
     "filter_private_thread_events_queryset_hook",
+    "filter_private_thread_posts_queryset_hook",
     "filter_private_threads_queryset_hook",
-    "filter_thread_posts_queryset_hook",
     "filter_thread_events_queryset_hook",
+    "filter_thread_posts_queryset_hook",
+    "filter_threads_posts_queryset_hook",
+    "filter_threads_queryset_hook",
     "get_admin_category_permissions_hook",
     "get_category_threads_category_query_hook",
     "get_category_threads_pinned_category_query_hook",
     "get_category_threads_query_hook",
     "get_threads_category_query_hook",
     "get_threads_pinned_category_query_hook",
+    "get_threads_posts_queries_hook",
+    "get_threads_queries_hook",
     "get_threads_query_orm_filter_hook",
     "get_user_permissions_hook",
 ]

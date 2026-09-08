@@ -13,7 +13,7 @@ from ...core.validators import validate_color_hex, validate_sluggable
 class AdminCategoryFieldMixin:
     def __init__(self, *args, **kwargs):
         self.base_level = kwargs.pop("base_level", 1)
-        kwargs["level_indicator"] = kwargs.get("level_indicator", "- - ")
+        kwargs.setdefault("level_indicator", "⭢ ")
 
         queryset = Category.objects.filter(tree_id=CategoryTree.THREADS)
         if not kwargs.pop("include_root", False):

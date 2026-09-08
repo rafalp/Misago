@@ -36,7 +36,7 @@ Misago function used to check if the user has a permission to see a private thre
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -65,7 +65,7 @@ Misago function used to check if the user has a permission to see a private thre
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
