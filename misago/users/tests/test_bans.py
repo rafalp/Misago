@@ -135,13 +135,13 @@ class UserBansTests(TestCase):
         Ban.objects.create(
             banned_value="User",
             user_message="User reason",
-            staff_message="Staff reason",
+            team_reason="Staff reason",
         )
 
         user_ban = get_user_ban(self.user, cache_versions)
         self.assertIsNotNone(user_ban)
         self.assertEqual(user_ban.user_message, "User reason")
-        self.assertEqual(user_ban.staff_message, "Staff reason")
+        self.assertEqual(user_ban.team_reason, "Staff reason")
         self.assertTrue(self.user.ban_cache.is_banned)
 
     def test_temporary_ban(self):
@@ -149,14 +149,14 @@ class UserBansTests(TestCase):
         Ban.objects.create(
             banned_value="us*",
             user_message="User reason",
-            staff_message="Staff reason",
+            team_reason="Staff reason",
             expires_on=timezone.now() + timedelta(days=7),
         )
 
         user_ban = get_user_ban(self.user, cache_versions)
         self.assertIsNotNone(user_ban)
         self.assertEqual(user_ban.user_message, "User reason")
-        self.assertEqual(user_ban.staff_message, "Staff reason")
+        self.assertEqual(user_ban.team_reason, "Staff reason")
         self.assertTrue(self.user.ban_cache.is_banned)
 
     def test_expired_ban(self):
@@ -246,7 +246,7 @@ class BanUserTests(TestCase):
 
         ban = ban_user(user, "User reason", "Staff reason")
         self.assertEqual(ban.user_message, "User reason")
-        self.assertEqual(ban.staff_message, "Staff reason")
+        self.assertEqual(ban.team_reason, "Staff reason")
 
         db_ban = get_user_ban(user, cache_versions)
         self.assertEqual(ban.pk, db_ban.ban_id)
@@ -257,7 +257,7 @@ class BanIpTests(TestCase):
         """ban_ip utility bans IP address"""
         ban = ban_ip("127.0.0.1", "User reason", "Staff reason")
         self.assertEqual(ban.user_message, "User reason")
-        self.assertEqual(ban.staff_message, "Staff reason")
+        self.assertEqual(ban.team_reason, "Staff reason")
 
         db_ban = get_ip_ban("127.0.0.1")
         self.assertEqual(ban.pk, db_ban.pk)

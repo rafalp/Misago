@@ -49,12 +49,12 @@ class BanForm(forms.ModelForm):
             )
         },
     )
-    staff_message = forms.CharField(
-        label=pgettext_lazy("admin ban form", "Team message"),
+    team_reason = forms.CharField(
+        label=pgettext_lazy("admin ban form", "Team reason"),
         required=False,
         max_length=1000,
         help_text=pgettext_lazy(
-            "admin ban form", "Optional ban message for moderators and administrators."
+            "admin ban form", "Optional ban reason for moderators and administrators."
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         error_messages={
@@ -75,7 +75,7 @@ class BanForm(forms.ModelForm):
             "registration_only",
             "banned_value",
             "user_message",
-            "staff_message",
+            "team_reason",
             "expires_on",
         ]
 

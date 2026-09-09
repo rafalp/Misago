@@ -237,7 +237,7 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
             "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
         ),
     )
-    is_active_staff_message = models.TextField(null=True, blank=True)
+    deactivated_reason = models.TextField(null=True, blank=True)
 
     is_deleting_account = models.BooleanField(default=False)
 
@@ -251,14 +251,14 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     avatars = models.JSONField(null=True, blank=True)
     is_avatar_locked = models.BooleanField(default=False)
     avatar_lock_user_message = models.TextField(null=True, blank=True)
-    avatar_lock_staff_message = models.TextField(null=True, blank=True)
+    avatar_lock_team_reason = models.TextField(null=True, blank=True)
 
     signature = models.TextField(null=True, blank=True)
     signature_parsed = models.TextField(null=True, blank=True)
     signature_checksum = models.CharField(max_length=64, null=True, blank=True)
     is_signature_locked = models.BooleanField(default=False)
     signature_lock_user_message = models.TextField(null=True, blank=True)
-    signature_lock_staff_message = models.TextField(null=True, blank=True)
+    signature_lock_team_reason = models.TextField(null=True, blank=True)
 
     followers = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)

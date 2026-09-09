@@ -146,11 +146,11 @@ class EditUserForm(BaseUserForm):
             "Designates whether this user should be treated as active. Turning this off is non-destructible way to remove user accounts.",
         ),
     )
-    is_active_staff_message = forms.CharField(
-        label=pgettext_lazy("admin user form", "Staff message"),
+    deactivated_reason = forms.CharField(
+        label=pgettext_lazy("admin user form", "Deactivation reason"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Optional message for forum team members explaining why user's account has been disabled.",
+            "Optional reason explaining why user's account has been disabled.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
@@ -180,11 +180,11 @@ class EditUserForm(BaseUserForm):
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
-    avatar_lock_staff_message = forms.CharField(
-        label=pgettext_lazy("admin user form", "Staff message"),
+    avatar_lock_team_reason = forms.CharField(
+        label=pgettext_lazy("admin user form", "Team reason"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Optional message for forum team members explaining why user is banned form changing avatar.",
+            "Optional reason explaining why user is banned form changing avatar.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
@@ -211,11 +211,11 @@ class EditUserForm(BaseUserForm):
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
-    signature_lock_staff_message = forms.CharField(
-        label=pgettext_lazy("admin user form", "Staff message"),
+    signature_lock_team_reason = forms.CharField(
+        label=pgettext_lazy("admin user form", "Team reason"),
         help_text=pgettext_lazy(
             "admin user form",
-            "Optional message to team members explaining why user signature is locked.",
+            "Optional reason explaining why user signature is locked.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
@@ -288,17 +288,17 @@ class EditUserForm(BaseUserForm):
             "title",
             "is_misago_root",
             "is_active",
-            "is_active_staff_message",
+            "deactivated_reason",
             "require_content_approval",
             "is_avatar_locked",
             "avatar_lock_user_message",
-            "avatar_lock_staff_message",
+            "avatar_lock_team_reason",
             "signature",
             "is_signature_locked",
             "is_hiding_presence",
             "allow_new_private_threads_by",
             "signature_lock_user_message",
-            "signature_lock_staff_message",
+            "signature_lock_team_reason",
             "watch_started_threads",
             "watch_replied_threads",
             "watch_new_private_threads_by_followed",
@@ -330,7 +330,7 @@ class EditUserForm(BaseUserForm):
             or (self.instance.is_misago_admin and not request_user.is_misago_root)
         ):
             self.fields["is_active"].disabled = True
-            self.fields["is_active_staff_message"].disabled = True
+            self.fields["deactivated_reason"].disabled = True
 
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
@@ -643,13 +643,13 @@ class BanUsersForm(forms.Form):
             )
         },
     )
-    staff_message = forms.CharField(
-        label=pgettext_lazy("admin ban users form", "Team message"),
+    team_reason = forms.CharField(
+        label=pgettext_lazy("admin ban users form", "Team reason"),
         required=False,
         max_length=1000,
         help_text=pgettext_lazy(
             "admin ban users form",
-            "Optional ban message for moderators and administrators.",
+            "Optional ban reason for moderators and administrators.",
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         error_messages={

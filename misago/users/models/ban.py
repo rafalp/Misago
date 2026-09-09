@@ -79,7 +79,7 @@ class Ban(models.Model):
     registration_only = models.BooleanField(default=False, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)
     user_message = models.TextField(null=True, blank=True)
-    staff_message = models.TextField(null=True, blank=True)
+    team_reason = models.TextField(null=True, blank=True)
     expires_on = models.DateTimeField(null=True, blank=True, db_index=True)
     is_checked = models.BooleanField(default=True, db_index=True)
 
@@ -126,7 +126,7 @@ class BanCache(models.Model):
     ban = models.ForeignKey(Ban, null=True, blank=True, on_delete=models.SET_NULL)
     cache_version = models.CharField(max_length=8)
     user_message = models.TextField(null=True, blank=True)
-    staff_message = models.TextField(null=True, blank=True)
+    team_reason = models.TextField(null=True, blank=True)
     expires_on = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -142,7 +142,7 @@ class BanCache(models.Model):
             id=1,
             check_type=Ban.USERNAME,
             user_message=self.user_message,
-            staff_message=self.staff_message,
+            team_reason=self.team_reason,
             expires_on=self.expires_on,
         )
         return BanMessageSerializer(temp_ban).data

@@ -26,11 +26,11 @@
         </div>
       {% endif %}
 
-      {% if ban.staff_message %}
+      {% if ban.team_reason %}
         <div class="panel-body ban-message ban-staff-message">
           <h4>{% translate "Team-shown ban message" context "user profile page ban details" %}</h4>
           <div class="lead">
-            {{ ban.staff_message|force_escape|urlize|linebreaks }}
+            {{ ban.team_reason|force_escape|urlize|linebreaks }}
           </div>
         </div>
       {% endif %}

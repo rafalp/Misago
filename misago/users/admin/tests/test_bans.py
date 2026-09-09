@@ -80,7 +80,7 @@ def test_new_ban_can_be_created(admin_client):
             "check_type": Ban.EMAIL,
             "banned_value": "test@test.com",
             "user_message": "Lorem ipsum dolor met",
-            "staff_message": "Sit amet elit",
+            "team_reason": "Sit amet elit",
             "expires_on": test_date.isoformat(),
         },
     )
@@ -89,7 +89,7 @@ def test_new_ban_can_be_created(admin_client):
     assert ban.check_type == Ban.EMAIL
     assert ban.banned_value == "test@test.com"
     assert ban.user_message == "Lorem ipsum dolor met"
-    assert ban.staff_message == "Sit amet elit"
+    assert ban.team_reason == "Sit amet elit"
     assert ban.expires_on.isoformat() == test_date.isoformat()
 
 
@@ -117,7 +117,7 @@ def test_ban_can_be_edited(admin_client, ban):
             "check_type": Ban.EMAIL,
             "banned_value": "test@test.com",
             "user_message": "Lorem ipsum dolor met",
-            "staff_message": "Sit amet elit",
+            "team_reason": "Sit amet elit",
             "expires_on": test_date.isoformat(),
         },
     )
@@ -126,7 +126,7 @@ def test_ban_can_be_edited(admin_client, ban):
     assert ban.check_type == Ban.EMAIL
     assert ban.banned_value == "test@test.com"
     assert ban.user_message == "Lorem ipsum dolor met"
-    assert ban.staff_message == "Sit amet elit"
+    assert ban.team_reason == "Sit amet elit"
     assert ban.expires_on.isoformat() == test_date.isoformat()
 
 

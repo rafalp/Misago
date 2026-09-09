@@ -327,7 +327,7 @@ def get_default_edit_form_data(user):
         "is_signature_locked": str(user.is_signature_locked),
         "is_hiding_presence": str(user.is_hiding_presence),
         "allow_new_private_threads_by": str(user.allow_new_private_threads_by),
-        "signature_lock_staff_message": str(user.signature_lock_staff_message or ""),
+        "signature_lock_team_reason": str(user.signature_lock_team_reason or ""),
         "signature_lock_user_message": str(user.signature_lock_user_message or ""),
         "watch_started_threads": str(user.watch_started_threads),
         "watch_replied_threads": str(user.watch_replied_threads),
@@ -939,7 +939,7 @@ def test_admin_cant_remove_other_user_root_status(admin_client, root_admin):
 def test_admin_can_activate_user_account(admin_client, inactive_user):
     form_data = get_default_edit_form_data(inactive_user)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": inactive_user.pk}),
@@ -948,17 +948,17 @@ def test_admin_can_activate_user_account(admin_client, inactive_user):
 
     inactive_user.refresh_from_db()
     assert inactive_user.is_active
-    assert inactive_user.is_active_staff_message == "Message"
+    assert inactive_user.deactivated_reason == "Message"
 
 
 def test_root_admin_can_activate_admin_account(root_admin_client, admin):
     admin.is_active = False
-    admin.is_active_staff_message = None
+    admin.deactivated_reason = None
     admin.save()
 
     form_data = get_default_edit_form_data(admin)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}),
@@ -967,19 +967,19 @@ def test_root_admin_can_activate_admin_account(root_admin_client, admin):
 
     admin.refresh_from_db()
     assert admin.is_active
-    assert admin.is_active_staff_message == "Message"
+    assert admin.deactivated_reason == "Message"
 
 
 def test_root_admin_can_activate_other_root_admin_account(
     root_admin_client, other_root_admin
 ):
     other_root_admin.is_active = False
-    other_root_admin.is_active_staff_message = None
+    other_root_admin.deactivated_reason = None
     other_root_admin.save()
 
     form_data = get_default_edit_form_data(other_root_admin)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
@@ -988,17 +988,17 @@ def test_root_admin_can_activate_other_root_admin_account(
 
     other_root_admin.refresh_from_db()
     assert other_root_admin.is_active
-    assert other_root_admin.is_active_staff_message == "Message"
+    assert other_root_admin.deactivated_reason == "Message"
 
 
 def test_admin_cant_activate_other_admin_account(admin_client, other_admin):
     other_admin.is_active = False
-    other_admin.is_active_staff_message = None
+    other_admin.deactivated_reason = None
     other_admin.save()
 
     form_data = get_default_edit_form_data(other_admin)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk}),
@@ -1007,17 +1007,17 @@ def test_admin_cant_activate_other_admin_account(admin_client, other_admin):
 
     other_admin.refresh_from_db()
     assert not other_admin.is_active
-    assert not other_admin.is_active_staff_message
+    assert not other_admin.deactivated_reason
 
 
 def test_admin_cant_activate_root_admin_account(admin_client, root_admin):
     root_admin.is_active = False
-    root_admin.is_active_staff_message = None
+    root_admin.deactivated_reason = None
     root_admin.save()
 
     form_data = get_default_edit_form_data(root_admin)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}),
@@ -1026,13 +1026,13 @@ def test_admin_cant_activate_root_admin_account(admin_client, root_admin):
 
     root_admin.refresh_from_db()
     assert not root_admin.is_active
-    assert not root_admin.is_active_staff_message
+    assert not root_admin.deactivated_reason
 
 
 def test_admin_can_deactivate_user_account(admin_client, user):
     form_data = get_default_edit_form_data(user)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": user.pk}),
@@ -1041,13 +1041,13 @@ def test_admin_can_deactivate_user_account(admin_client, user):
 
     user.refresh_from_db()
     assert not user.is_active
-    assert user.is_active_staff_message == "Message"
+    assert user.deactivated_reason == "Message"
 
 
 def test_root_admin_can_deactivate_admin_account(root_admin_client, admin):
     form_data = get_default_edit_form_data(admin)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}),
@@ -1056,7 +1056,7 @@ def test_root_admin_can_deactivate_admin_account(root_admin_client, admin):
 
     admin.refresh_from_db()
     assert not admin.is_active
-    assert admin.is_active_staff_message == "Message"
+    assert admin.deactivated_reason == "Message"
 
 
 def test_root_admin_can_deactivate_other_root_admin_account(
@@ -1064,7 +1064,7 @@ def test_root_admin_can_deactivate_other_root_admin_account(
 ):
     form_data = get_default_edit_form_data(other_root_admin)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_root_admin.pk}),
@@ -1073,13 +1073,13 @@ def test_root_admin_can_deactivate_other_root_admin_account(
 
     other_root_admin.refresh_from_db()
     assert not other_root_admin.is_active
-    assert other_root_admin.is_active_staff_message == "Message"
+    assert other_root_admin.deactivated_reason == "Message"
 
 
 def test_admin_cant_deactivate_other_admin_account(admin_client, other_admin):
     form_data = get_default_edit_form_data(other_admin)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": other_admin.pk}),
@@ -1088,13 +1088,13 @@ def test_admin_cant_deactivate_other_admin_account(admin_client, other_admin):
 
     other_admin.refresh_from_db()
     assert other_admin.is_active
-    assert not other_admin.is_active_staff_message
+    assert not other_admin.deactivated_reason
 
 
 def test_admin_cant_deactivate_root_admin_account(admin_client, root_admin):
     form_data = get_default_edit_form_data(root_admin)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}),
@@ -1103,13 +1103,13 @@ def test_admin_cant_deactivate_root_admin_account(admin_client, root_admin):
 
     root_admin.refresh_from_db()
     assert root_admin.is_active
-    assert not root_admin.is_active_staff_message
+    assert not root_admin.deactivated_reason
 
 
 def test_admin_cant_deactivate_own_account(admin_client, admin):
     form_data = get_default_edit_form_data(admin)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": admin.pk}),
@@ -1118,13 +1118,13 @@ def test_admin_cant_deactivate_own_account(admin_client, admin):
 
     admin.refresh_from_db()
     assert admin.is_active
-    assert not admin.is_active_staff_message
+    assert not admin.deactivated_reason
 
 
 def test_root_admin_cant_deactivate_own_account(root_admin_client, root_admin):
     form_data = get_default_edit_form_data(root_admin)
     form_data.pop("is_active")
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": root_admin.pk}),
@@ -1133,7 +1133,7 @@ def test_root_admin_cant_deactivate_own_account(root_admin_client, root_admin):
 
     root_admin.refresh_from_db()
     assert root_admin.is_active
-    assert not root_admin.is_active_staff_message
+    assert not root_admin.deactivated_reason
 
 
 def test_admin_cant_activate_user_deleting_their_account(admin_client, user):
@@ -1141,7 +1141,7 @@ def test_admin_cant_activate_user_deleting_their_account(admin_client, user):
 
     form_data = get_default_edit_form_data(user)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
@@ -1149,7 +1149,7 @@ def test_admin_cant_activate_user_deleting_their_account(admin_client, user):
 
     user.refresh_from_db()
     assert not user.is_active
-    assert not user.is_active_staff_message
+    assert not user.deactivated_reason
 
 
 def test_root_admin_cant_activate_user_deleting_their_account(root_admin_client, user):
@@ -1157,7 +1157,7 @@ def test_root_admin_cant_activate_user_deleting_their_account(root_admin_client,
 
     form_data = get_default_edit_form_data(user)
     form_data["is_active"] = "1"
-    form_data["is_active_staff_message"] = "Message"
+    form_data["deactivated_reason"] = "Message"
 
     root_admin_client.post(
         reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
@@ -1165,7 +1165,7 @@ def test_root_admin_cant_activate_user_deleting_their_account(root_admin_client,
 
     user.refresh_from_db()
     assert not user.is_active
-    assert not user.is_active_staff_message
+    assert not user.deactivated_reason
 
 
 def test_user_agreements_are_displayed_on_edit_form(admin_client, user):
