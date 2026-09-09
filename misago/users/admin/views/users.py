@@ -362,9 +362,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         if not form.fields["is_active"].disabled:
             target.is_active = form.cleaned_data["is_active"]
-        if not form.fields["is_active_team_reason"].disabled:
-            target.is_active_team_reason = form.cleaned_data.get(
-                "is_active_team_reason"
+        if not form.fields["deactivated_reason"].disabled:
+            target.deactivated_reason = form.cleaned_data.get(
+                "deactivated_reason"
             )
 
         target.set_groups(

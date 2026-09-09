@@ -237,7 +237,7 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
             "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
         ),
     )
-    is_active_team_reason = models.TextField(null=True, blank=True)
+    deactivated_reason = models.TextField(null=True, blank=True)
 
     is_deleting_account = models.BooleanField(default=False)
 
