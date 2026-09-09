@@ -1,23 +1,24 @@
 from django.apps import apps
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from ..plugins.models import PluginDataModel
 
 
 class ThreadEventQuerySet(models.QuerySet):
-    def context_object(self, obj: models.Model):
+    def content_object(self, obj: models.Model):
         return self.filter(
-            context_type=f"{obj._meta.app_label}.{obj._meta.model_name}",
-            context_id=obj.pk,
+            content_type=ContentType.objects.get_for_model(obj),
+            object_id=obj.pk,
         )
 
-    def context_type(self, obj: models.Model | type[models.Model]):
-        context_type = f"{obj._meta.app_label}.{obj._meta.model_name}"
-        return self.filter(context_type=context_type)
+    def content_type(self, obj: models.Model | type[models.Model]):
+        return self.filter(content_type=ContentType.objects.get_for_model(obj))
 
-    def clear_context_objects(self) -> int:
-        return self.update(context_type=None, context_id=None)
+    def clear_content_objects(self) -> int:
+        return self.update(content_type=None, object_id=None)
 
 
 class ThreadEvent(PluginDataModel):
@@ -53,10 +54,13 @@ class ThreadEvent(PluginDataModel):
 
     event_type = models.CharField(max_length=32)
 
-    context = models.CharField(max_length=255, blank=True, null=True)
-    context_type = models.CharField(max_length=255, blank=True, null=True)
-    context_id = models.PositiveIntegerField(blank=True, null=True)
-    context_items = models.PositiveIntegerField(blank=True, null=True)
+    detail = models.CharField(max_length=255, blank=True, null=True)
+    content_type = models.ForeignKey(
+        ContentType, blank=True, null=True, on_delete=models.CASCADE
+    )
+    object_id = models.PositiveIntegerField(blank=True, null=True)
+    content_object = GenericForeignKey("content_type", "object_id")
+    items = models.PositiveIntegerField(blank=True, null=True)
 
     is_hidden = models.BooleanField(default=False)
 
@@ -72,29 +76,21 @@ class ThreadEvent(PluginDataModel):
                 fields=["thread", "created_at"],
             ),
             models.Index(
-                name="misago_thread_event_context",
-                fields=["context_type", "context_id"],
-                condition=models.Q(context_id__isnull=False),
+                name="misago_thread_event_content",
+                fields=["content_type", "object_id"],
+                condition=models.Q(object_id__isnull=False),
             ),
         ]
 
     @property
-    def context_model(self) -> type[models.Model] | None:
-        if not self.context_type:
+    def content_type_model(self) -> type[models.Model] | None:
+        if not self.content_type_id:
             return None
 
-        try:
-            app_label, model_name = self.context_type.split(".")
-            return apps.get_model(app_label, model_name)
-        except LookupError:
-            return None
+        return ContentType.objects.get_for_id(self.content_type_id).model_class()
 
-    def get_context_id(self, context_type: str) -> int | None:
-        if self.context_type == context_type:
-            return self.context_id
+    def get_object_id_for_type(self, obj_type: models.Model) -> int | None:
+        if self.content_type_model == obj_type:
+            return self.object_id
 
         return None
-
-    def clear_context_object(self):
-        self.context_type = None
-        self.context_id = None

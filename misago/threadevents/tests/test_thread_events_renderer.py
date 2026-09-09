@@ -43,7 +43,7 @@ def test_thread_events_renderer_renders_action_with_deleted_category_context(
     thread, user, default_category
 ):
     thread_event = create_moved_thread_event(thread, default_category, user)
-    thread_event.clear_context_object()
+    thread_event.content_object = None
     thread_event.save()
 
     data = thread_events_renderer.render_thread_event(thread_event, {"categories": {}})
@@ -105,7 +105,7 @@ def test_thread_events_renderer_renders_action_with_deleted_thread_context(
     thread_event = create_split_posts_from_thread_event(
         thread, other_thread, actor=user
     )
-    thread_event.clear_context_object()
+    thread_event.content_object = None
     thread_event.save()
 
     data = thread_events_renderer.render_thread_event(thread_event, {"threads": {}})
@@ -147,7 +147,7 @@ def test_thread_events_renderer_renders_action_with_deleted_user_context(
     thread, user, other_user
 ):
     thread_event = create_added_member_thread_event(thread, other_user, user)
-    thread_event.clear_context_object()
+    thread_event.content_object = None
     thread_event.save()
 
     data = thread_events_renderer.render_thread_event(thread_event, {"users": {}})

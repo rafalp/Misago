@@ -167,7 +167,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_categories(
     anonymous_user,
     guests_group,
     sibling_category,
-    thread_event_category_context,
+    thread_event_category_content,
 ):
     CategoryGroupPermission.objects.create(
         category=sibling_category,
@@ -175,8 +175,8 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_categories(
         permission=CategoryPermission.SEE,
     )
 
-    thread_event_category_context.context_id = sibling_category.id
-    thread_event_category_context.save()
+    thread_event_category_content.context_id = sibling_category.id
+    thread_event_category_content.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
     permissions.permissions
@@ -187,7 +187,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_categories(
             dynamic_settings,
             permissions,
             [],
-            thread_events=[thread_event_category_context],
+            thread_events=[thread_event_category_content],
         )
         assert data["categories"] == {sibling_category.id: sibling_category}
 
@@ -295,7 +295,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_threads(
     cache_versions,
     anonymous_user,
     other_thread,
-    thread_event_thread_context,
+    thread_event_thread_content,
 ):
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
     permissions.permissions
@@ -306,7 +306,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_threads(
             dynamic_settings,
             permissions,
             [],
-            thread_events=[thread_event_thread_context],
+            thread_events=[thread_event_thread_content],
         )
         assert data["threads"] == {other_thread.id: other_thread}
 
@@ -995,7 +995,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_users(
     cache_versions,
     user,
     other_user,
-    thread_event_user_context,
+    thread_event_user_content,
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
     permissions.permissions
@@ -1006,7 +1006,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_users(
             dynamic_settings,
             permissions,
             [],
-            thread_events=[thread_event_user_context],
+            thread_events=[thread_event_user_content],
         )
         assert data["users"] == {user.id: user, other_user.id: other_user}
 

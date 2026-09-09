@@ -21,7 +21,7 @@ def test_thread_detail_view_doesnt_show_thread_event_to_anonymous_user_if_thread
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_doesnt_show_thread_event_to_user_if_thread_flag_is_set(
@@ -33,7 +33,7 @@ def test_thread_detail_view_doesnt_show_thread_event_to_user_if_thread_flag_is_s
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_doesnt_show_thread_event_to_category_moderator_if_thread_flag_is_not_set(
@@ -51,7 +51,7 @@ def test_thread_detail_view_doesnt_show_thread_event_to_category_moderator_if_th
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_doesnt_show_thread_event_to_global_moderator_if_thread_flag_is_not_set(
@@ -63,7 +63,7 @@ def test_thread_detail_view_doesnt_show_thread_event_to_global_moderator_if_thre
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_thread_event_to_anonymous_user_if_thread_flag_is_set(
@@ -78,7 +78,7 @@ def test_thread_detail_view_shows_thread_event_to_anonymous_user_if_thread_flag_
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_thread_event_to_user_if_thread_flag_is_set(
@@ -93,7 +93,7 @@ def test_thread_detail_view_shows_thread_event_to_user_if_thread_flag_is_set(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_thread_event_to_category_moderator_if_thread_flag_is_set(
@@ -114,7 +114,7 @@ def test_thread_detail_view_shows_thread_event_to_category_moderator_if_thread_f
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_thread_event_to_global_moderator_if_thread_flag_is_set(
@@ -129,7 +129,7 @@ def test_thread_detail_view_shows_thread_event_to_global_moderator_if_thread_fla
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_deleted_user_thread_event_to_anonymous_user(
@@ -144,7 +144,7 @@ def test_thread_detail_view_shows_deleted_user_thread_event_to_anonymous_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_deleted_user_thread_event_to_user(
@@ -159,7 +159,7 @@ def test_thread_detail_view_shows_deleted_user_thread_event_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_deleted_user_thread_event_to_category_moderator(
@@ -180,7 +180,7 @@ def test_thread_detail_view_shows_deleted_user_thread_event_to_category_moderato
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_deleted_user_thread_event_to_global_moderator(
@@ -195,7 +195,7 @@ def test_thread_detail_view_shows_deleted_user_thread_event_to_global_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_doesnt_show_hidden_thread_event_to_anonymous_user(
@@ -212,7 +212,7 @@ def test_thread_detail_view_doesnt_show_hidden_thread_event_to_anonymous_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_doesnt_show_hidden_thread_event_to_user(
@@ -229,7 +229,7 @@ def test_thread_detail_view_doesnt_show_hidden_thread_event_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_not_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_hidden_thread_event_to_category_moderator(
@@ -252,7 +252,7 @@ def test_thread_detail_view_shows_hidden_thread_event_to_category_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_shows_hidden_thread_event_to_global_moderator(
@@ -269,7 +269,7 @@ def test_thread_detail_view_shows_hidden_thread_event_to_global_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
 
 
 def test_thread_detail_view_doesnt_show_hide_thread_event_button_to_anonymous_user(
@@ -284,7 +284,7 @@ def test_thread_detail_view_doesnt_show_hide_thread_event_button_to_anonymous_us
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -310,7 +310,7 @@ def test_thread_detail_view_doesnt_show_hide_thread_event_button_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -342,7 +342,7 @@ def test_thread_detail_view_shows_hide_thread_event_button_to_category_moderator
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -368,7 +368,7 @@ def test_thread_detail_view_shows_hide_thread_event_button_to_global_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -402,7 +402,7 @@ def test_thread_detail_view_shows_unhide_thread_event_button_to_category_moderat
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -430,7 +430,7 @@ def test_thread_detail_view_shows_unhide_thread_event_button_to_global_moderator
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -456,7 +456,7 @@ def test_thread_detail_view_doesnt_show_delete_thread_event_button_to_anonymous_
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -482,7 +482,7 @@ def test_thread_detail_view_doesnt_show_delete_thread_event_button_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -514,7 +514,7 @@ def test_thread_detail_view_shows_delete_thread_event_button_to_category_moderat
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -540,7 +540,7 @@ def test_thread_detail_view_shows_delete_thread_event_button_to_global_moderator
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_event.id}]")
+    assert_contains(response, f"EVENT [{thread_event.id}]")
     assert_contains(
         response,
         reverse(

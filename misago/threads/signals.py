@@ -92,7 +92,7 @@ def delete_user_threads(sender, **kwargs):
     ).delete()
 
     ThreadEvent.objects.filter(actor=sender).delete()
-    ThreadEvent.objects.context_object(sender).clear_context_objects()
+    ThreadEvent.objects.content_object(sender).clear_content_objects()
 
     WatchedThread.objects.filter(thread__starter=sender).delete()
 
@@ -182,15 +182,15 @@ def archive_user_thread_events(sender, archive=None, **kwargs):
             item_name,
             {
                 pgettext("archived thread event", "Action"): thread_event.event_type,
-                pgettext("archived thread event", "Context"): thread_event.context,
+                pgettext("archived thread event", "Detail"): thread_event.detail,
             },
             date=thread_event.created_at,
         )
 
 
 @receiver(archive_user_data)
-def archive_user_context_thread_events(sender, archive=None, **kwargs):
-    queryset = ThreadEvent.objects.context_object(sender).order_by("id")
+def archive_user_content_thread_events(sender, archive=None, **kwargs):
+    queryset = ThreadEvent.objects.content_object(sender).order_by("id")
 
     for thread_event in queryset.iterator(chunk_size=50):
         item_name = thread_event.created_at.strftime("%H%M%S-thread-event")
@@ -198,7 +198,7 @@ def archive_user_context_thread_events(sender, archive=None, **kwargs):
             item_name,
             {
                 pgettext("archived thread event", "Action"): thread_event.event_type,
-                pgettext("archived thread event", "Context"): thread_event.context,
+                pgettext("archived thread event", "Detail"): thread_event.detail,
             },
             date=thread_event.created_at,
         )
@@ -208,7 +208,7 @@ def archive_user_context_thread_events(sender, archive=None, **kwargs):
 def anonymize_user_in_thread_events(sender, **kwargs):
     ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
     ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadEvent.objects.context_object(sender).update(context=sender.username)
+    ThreadEvent.objects.content_object(sender).update(detail=sender.username)
 
 
 @receiver([anonymize_user_data])
@@ -242,7 +242,7 @@ def update_usernames(sender, **kwargs):
 
     ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
     ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadEvent.objects.context_object(sender).update(context=sender.username)
+    ThreadEvent.objects.content_object(sender).update(detail=sender.username)
 
     Post.objects.filter(poster=sender).update(poster_name=sender.username)
     Post.objects.filter(last_editor=sender).update(

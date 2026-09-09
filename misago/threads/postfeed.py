@@ -1,9 +1,11 @@
 from html import escape
 from typing import Iterable
 
+from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.urls import reverse
 
+from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..likes.postfeed import get_post_feed_post_likes_data
 from ..moderation.actions import PostModerationAction
@@ -450,22 +452,23 @@ class PostFeed:
             thread_event.actor = prefetched_data["users"].get(thread_event.actor_id)
             item["actor"] = thread_event.actor
 
-        if thread_event.context_type and thread_event.context_id:
+        if thread_event.content_type and thread_event.object_id:
             relation_name = None
-            if thread_event.context_type == "misago_attachments.attachment":
+            content_type_model = thread_event.content_type.model_class()
+            if issubclass(content_type_model, Attachment):
                 relation_name = "attachment"
-            if thread_event.context_type == "misago_categories.category":
+            if issubclass(content_type_model, Category):
                 relation_name = "categories"
-            if thread_event.context_type == "misago_threads.thread":
+            if issubclass(content_type_model, Thread):
                 relation_name = "threads"
-            if thread_event.context_type == "misago_threads.post":
+            if issubclass(content_type_model, Post):
                 relation_name = "posts"
-            if thread_event.context_type == "misago_users.user":
+            if issubclass(content_type_model, get_user_model()):
                 relation_name = "users"
 
             if relation_name:
-                item["context_object"] = prefetched_data[relation_name].get(
-                    thread_event.context_id
+                item["content_object"] = prefetched_data[relation_name].get(
+                    thread_event.object_id
                 )
 
         if thread_event_data := thread_events_renderer.render_thread_event(

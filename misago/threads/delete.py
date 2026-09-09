@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.http import HttpRequest
 
@@ -38,10 +39,11 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
         is_deleted=True,
     )
 
+    content_type = ContentType.objects.get_for_model(Thread)
     ThreadEvent.objects.filter(
-        context_type="misago_threads.thread",
-        context_id=thread.id,
-    ).clear_context_objects()
+        content_type=content_type,
+        object_id=thread.id,
+    ).clear_content_objects()
 
     delete_all(PollVote, thread_id=thread.id)
     delete_all(Poll, thread_id=thread.id)

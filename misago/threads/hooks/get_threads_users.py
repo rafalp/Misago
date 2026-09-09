@@ -86,11 +86,11 @@ class GetThreadsUsersHook(
 
     @get_threads_users_hook.append_filter
     def include_custom_context(action, request: HttpRequest, kwargs: dict) -> dict:
-        context = action(request, kwargs)
+        detail = action(request, kwargs)
 
-        context["plugin_data"] = "..."
+        detail["plugin_data"] = "..."
 
-        return context
+        return detail
     ```
     """
 
