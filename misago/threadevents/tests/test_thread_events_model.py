@@ -9,7 +9,7 @@ from ..models import ThreadEvent
 def test_thread_event_model_content_model_returns_model_type():
     ct = ContentType.objects.get_for_model(Category)
     thread_event = ThreadEvent(content_type=ct)
-    assert thread_event.content_model == Category
+    assert thread_event.content_type_model == Category
 
 
 @mark.django_db

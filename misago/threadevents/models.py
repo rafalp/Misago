@@ -83,16 +83,14 @@ class ThreadEvent(PluginDataModel):
         ]
 
     @property
-    def content_model(self) -> type[models.Model] | None:
-        if not self.content_type:
+    def content_type_model(self) -> type[models.Model] | None:
+        if not self.content_type_id:
             return None
 
         return ContentType.objects.get_for_id(self.content_type_id).model_class()
 
     def get_object_id_for_type(self, obj_type: models.Model) -> int | None:
-        if self.content_type and self.content_type == ContentType.objects.get_for_model(
-            obj_type
-        ):
+        if self.content_type_model == obj_type:
             return self.object_id
 
         return None
