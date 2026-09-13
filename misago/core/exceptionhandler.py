@@ -124,6 +124,14 @@ def handle_misago_htmx_exception(
     if not exception.args:
         return HttpResponse(status=status)
 
+    if isinstance(exception, Http404):
+        from django.utils.translation import pgettext
+
+        return JsonResponse(
+            {"error": pgettext("htmx 404 error", "Page not found.")},
+            status=status,
+        )
+
     return JsonResponse({"error": str(exception.args[0])}, status=status)
 
 
