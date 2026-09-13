@@ -153,6 +153,12 @@ class CategoryThreadsQuery(StrEnum):
     USER_STARTED_NOT_PINNED = "user_started_not_pinned"
 
 
+class PrivateThreadsQuery(StrEnum):
+    ALL = "all"
+    MODERATED = "moderated"
+    USER = "user"
+
+
 class ThreadPostsQuery(StrEnum):
     ALL = "all"
     ANON = "anon"

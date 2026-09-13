@@ -47,7 +47,7 @@ A list of `Category` and `CategoryProxy` instances.
 
 ### Return value
 
-A dict of sets of `CategoryThreadsQuery` members grouped by category id. When set contains more than one `CategoryThreadsQuery`, resulting `Q` expressions should be `OR` together.
+A dict of sets of `CategoryThreadsQuery` members grouped by category id. When a set contains more than one `CategoryThreadsQuery`, resulting `Q` expressions should be `OR` together.
 
 
 ## Action
@@ -83,7 +83,7 @@ A list of `Category` and `CategoryProxy` instances.
 
 ### Return value
 
-A dict of sets of `CategoryThreadsQuery` members grouped by category id. When set contains more than one `CategoryThreadsQuery`, resulting `Q` expressions should be `OR` together.
+A dict of sets of `CategoryThreadsQuery` members grouped by category id. When a set contains more than one `CategoryThreadsQuery`, resulting `Q` expressions should be `OR` together.
 
 
 ## Example
