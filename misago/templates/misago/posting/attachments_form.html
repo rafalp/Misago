@@ -9,7 +9,7 @@
 >
   {% if form.show_attachments_upload %}
     {% with upload_field=form.upload %}
-      <div class="form-group{% if upload_field.errors %} has-error{% endif %}">
+      <div class="form-group{% if upload_field.errors %} has-error{% endif %}"{% if upload_field.errors %} aria-invalid="true"{% endif %}>
         <noscript>
           <label class="control-label" for="{{ upload_field.id_for_label }}">
             {% translate "Upload files:" context "posting title form" %}

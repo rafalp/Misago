@@ -1,6 +1,6 @@
 {% load i18n misago_admin_form %}
 {% if field_image %}
-  <div class="form-group">
+  <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
     <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
       {{ field.label }}:
     </label>
