@@ -14,6 +14,8 @@ from ..permissions.likes import (
     check_see_post_likes_permission,
     check_unlike_post_permission,
 )
+from ..permissions.privatethreads import check_see_private_thread_post_permission
+from ..permissions.threads import check_see_thread_post_permission
 from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Post, Thread
 from ..threads.redirect import redirect_to_post
@@ -276,9 +278,63 @@ class PostLikeView(BaseThreadView):
 class ThreadPostLikeView(PostLikeView):
     thread_type = thread_type
 
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            post = self.get_post(request, thread, post_id, for_update=True)
+            check_see_thread_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+            check_like_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+
+            if not Like.objects.filter(post=post, user=request.user).exists():
+                like_post(post, request.user, request=True)
+
+        if not request.is_htmx:
+            messages.success(request, pgettext("post like view", "Post liked"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_post_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, True)
+        context_data["post_number"] = self.get_post_number(self.request, post)
+
+        return render(request, context_data["template_name"], context_data)
+
 
 class PrivateThreadPostLikeView(PostLikeView):
     thread_type = private_thread_type
+
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            post = self.get_post(request, thread, post_id, for_update=True)
+            check_see_private_thread_post_permission(
+                request.user_permissions, thread, post
+            )
+            check_like_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+
+            if not Like.objects.filter(post=post, user=request.user).exists():
+                like_post(post, request.user, request=True)
+
+        if not request.is_htmx:
+            messages.success(request, pgettext("post like view", "Post liked"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_post_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, True)
+        context_data["post_number"] = self.get_post_number(self.request, post)
+
+        return render(request, context_data["template_name"], context_data)
 
 
 class PostUnlikeView(BaseThreadView):
@@ -308,6 +364,56 @@ class PostUnlikeView(BaseThreadView):
 class ThreadPostUnlikeView(PostUnlikeView):
     thread_type = thread_type
 
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            post = self.get_post(request, thread, post_id, for_update=True)
+            check_see_thread_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+            check_unlike_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+            remove_post_like(post, request.user, request=True)
+
+        if not request.is_htmx:
+            messages.success(request, pgettext("post unlike view", "Post like removed"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_post_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, False)
+        context_data["post_number"] = self.get_post_number(self.request, post)
+
+        return render(request, context_data["template_name"], context_data)
+
 
 class PrivateThreadPostUnlikeView(PostUnlikeView):
     thread_type = private_thread_type
+
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            post = self.get_post(request, thread, post_id, for_update=True)
+            check_see_private_thread_post_permission(
+                request.user_permissions, thread, post
+            )
+            check_unlike_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+            remove_post_like(post, request.user, request=True)
+
+        if not request.is_htmx:
+            messages.success(request, pgettext("post unlike view", "Post like removed"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_post_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, False)
+        context_data["post_number"] = self.get_post_number(self.request, post)
+
+        return render(request, context_data["template_name"], context_data)
