@@ -14,7 +14,6 @@ from ...enums import DefaultGroupId, UserNewPrivateThreadsPreference
 from ...models import Group, Rank
 from ...profilefields import profilefields
 from ...utils import slugify_username
-from ...validators import validate_email, validate_username
 
 User = get_user_model()
 
@@ -42,13 +41,24 @@ class BaseUserForm(forms.ModelForm):
     def clean_username(self):
         data = self.cleaned_data["username"]
         if data != self.instance.username:
-            validate_username(self.settings, data, exclude=self.instance)
+            from ...validators import (
+                validate_username_available,
+                validate_username_content,
+                validate_username_length,
+            )
+
+            validate_username_length(self.settings, data)
+            validate_username_content(data)
+            validate_username_available(data, exclude=self.instance)
         return data
 
     def clean_email(self):
         data = self.cleaned_data["email"]
         if data != self.instance.email:
-            validate_email(data, exclude=self.instance)
+            from ...validators import dj_validate_email, validate_email_available
+
+            dj_validate_email(data)
+            validate_email_available(data, exclude=self.instance)
         return data
 
     def clean_new_password(self):
