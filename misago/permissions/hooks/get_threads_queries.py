@@ -34,7 +34,7 @@ class GetThreadsQueriesHookAction(Protocol):
     # Return value
 
     A dict of sets of `CategoryThreadsQuery` members grouped by category id.
-    When set contains more than one `CategoryThreadsQuery`, resulting `Q`
+    When a set contains more than one `CategoryThreadsQuery`, resulting `Q`
     expressions should be `OR` together.
     """
 
@@ -69,7 +69,7 @@ class GetThreadsQueriesHookFilter(Protocol):
     # Return value
 
     A dict of sets of `CategoryThreadsQuery` members grouped by category id.
-    When set contains more than one `CategoryThreadsQuery`, resulting `Q`
+    When a set contains more than one `CategoryThreadsQuery`, resulting `Q`
     expressions should be `OR` together.
     """
 

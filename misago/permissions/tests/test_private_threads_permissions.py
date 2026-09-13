@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ...privatethreads.models import PrivateThreadMember
-from ..enums import PermissionValue
+from ..enums import PermissionValue, PrivateThreadsQuery
 from ..models import Moderator
 from ..privatethreads import (
     check_add_private_thread_members_permission,
@@ -19,6 +19,7 @@ from ..privatethreads import (
     check_start_private_threads_permission,
     filter_private_thread_posts_queryset,
     filter_private_threads_queryset,
+    get_private_threads_queries,
 )
 from ..proxy import UserPermissionsProxy
 
@@ -1004,6 +1005,47 @@ def test_check_remove_private_thread_member_permission_fails_for_thread_member_i
             user_private_thread,
             user_permissions_factory(user),
         )
+
+
+def test_get_private_threads_queries_returns_user_and_moderated_queries_for_global_moderator(
+    user_permissions_factory, moderator
+):
+    permissions = user_permissions_factory(moderator)
+    assert get_private_threads_queries(permissions) == {
+        PrivateThreadsQuery.USER,
+        PrivateThreadsQuery.MODERATED,
+    }
+
+
+def test_get_private_threads_queries_returns_user_and_moderated_queries_for_private_threads_moderator(
+    user_permissions_factory, user
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    permissions = user_permissions_factory(user)
+
+    assert get_private_threads_queries(permissions) == {
+        PrivateThreadsQuery.USER,
+        PrivateThreadsQuery.MODERATED,
+    }
+
+
+def test_get_private_threads_queries_returns_user_aqueries_for_user(
+    user_permissions_factory, user
+):
+    permissions = user_permissions_factory(user)
+    assert get_private_threads_queries(permissions) == {PrivateThreadsQuery.USER}
+
+
+def test_get_private_threads_queries_returns_no_queries_for_anonymous_user(
+    user_permissions_factory, anonymous_user
+):
+    permissions = user_permissions_factory(anonymous_user)
+    assert not get_private_threads_queries(permissions)
 
 
 def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
