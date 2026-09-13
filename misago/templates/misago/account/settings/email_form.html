@@ -22,7 +22,7 @@
       </div>
       <div class="panel-body">
         {% with field=form.current_password %}
-          <div class="form-group{% if field.errors %} has-error{% endif %}">
+          <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
             <label class="control-label" for="{{ field.id_for_label }}">
               {% translate "Current password:" context "account settings form" %}
             </label>
@@ -35,7 +35,7 @@
         {% endwith %}
         {% with field=form.new_email %}
           <div
-            class="form-group{% if field.errors %} has-error{% endif %}"
+            class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}
             misago-validate="{% url 'misago:account-validate-email' %}"
             misago-validate-user="{{ user.id }}"
           >
@@ -49,7 +49,7 @@
           </div>
         {% endwith %}
         {% with field=form.confirm_email %}
-          <div class="form-group{% if field.errors %} has-error{% endif %}">
+          <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
             <label class="control-label" for="{{ field.id_for_label }}">
               {% translate "Confirm new email address:" context "account email page form" %}
             </label>

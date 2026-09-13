@@ -1,7 +1,7 @@
 {% load i18n misago_forms %}
 
 {% with field=form.other_post %}
-  <div class="form-group{% if field.errors %} has-error{% endif %}">
+  <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Other post link:" context "moderation merge post form" %}
     </label>
@@ -18,7 +18,7 @@
 {% endwith %}
 {% if form.direction %}
   {% with field=form.direction %}
-    <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
       <label class="control-label" for="{{ field.id_for_label }}">
         {% translate "Merge direction:" context "moderation merge post form" %}
       </label>
@@ -39,7 +39,7 @@
   {% endwith %}
 {% endif %}
 {% with field=form.edit_reason %}
-  <div class="form-group{% if field.errors %} has-error{% endif %}">
+  <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Reason for merging:" context "moderation merge post form" %}
     </label>

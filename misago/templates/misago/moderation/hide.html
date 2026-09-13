@@ -1,7 +1,7 @@
 {% load i18n %}
 
 {% with field=form.hide_reason %}
-  <div class="form-group{% if field.errors %} has-error{% endif %}">
+  <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Reason for hiding:" context "moderation hide form" %}
     </label>

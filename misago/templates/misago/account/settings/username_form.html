@@ -24,7 +24,7 @@
         <div class="panel-body">
           {% with field=form.username %}
             <div
-              class="form-group{% if field.errors %} has-error{% endif %}"
+              class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}
               misago-validate="{% url 'misago:account-validate-username' %}"
               misago-validate-user="{{ user.id }}"
             >

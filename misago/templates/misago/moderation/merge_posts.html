@@ -1,7 +1,7 @@
 {% load i18n misago_forms %}
 
 {% with field=form.edit_reason %}
-  <div class="form-group{% if field.errors %} has-error{% endif %}">
+  <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Reason for merging:" context "moderation merge posts form" %}
     </label>
@@ -15,7 +15,7 @@
   </div>
 {% endwith %}
 {% for field in form.conflicts_fields %}
-  <div class="form-group{% if field.errors %} has-error{% endif %}">
+  <div class="form-group{% if field.errors %} has-error{% endif %}"{% if field.errors %} aria-invalid="true"{% endif %}>
     <label class="control-label" for="{{ field.id_for_label }}">
       {{ field.label }}:
     </label>
