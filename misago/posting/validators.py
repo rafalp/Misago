@@ -6,7 +6,7 @@ from django.utils.translation import npgettext, pgettext
 
 from ..core.utils import slugify
 from ..parser.parse import ParsingResult
-from .floodcontrol import flood_control
+from .floodcontrol import check_duplicate_submission, flood_control
 from .hooks import (
     validate_post_content_hook,
     validate_posting_hook,
@@ -171,6 +171,16 @@ def validate_flood_control(
 ) -> bool:
     try:
         flood_control(state.request)
+    except ValidationError as e:
+        formset.add_error(e)
+        return not bool(formset.errors)
+
+    # Check for duplicate submissions (double-posting prevention)
+    title = None
+    if hasattr(state, "title"):
+        title = state.title
+    try:
+        check_duplicate_submission(state.request, title)
     except ValidationError as e:
         formset.add_error(e)
     return not bool(formset.errors)
