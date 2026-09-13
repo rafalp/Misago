@@ -340,7 +340,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
 
         messages.success(
             request,
-            pgettext("posts moderation success", "Posts were split into a new thread."),
+            pgettext("posts moderation success", "Posts split into a new thread"),
         )
 
         if form.cleaned_data["redirect_to"] == "new":

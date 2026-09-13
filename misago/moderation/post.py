@@ -351,7 +351,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
         messages.success(
             request,
-            pgettext("post moderation success", "Post was split into a new thread."),
+            pgettext("post moderation success", "Post split into a new thread"),
         )
 
         if form.cleaned_data["redirect_to"] == "new":
@@ -426,7 +426,7 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
 
         messages.success(
             request,
-            pgettext("post moderation success", "Post was split into a new thread."),
+            pgettext("post moderation success", "Post split into a new thread"),
         )
 
         if form.cleaned_data["redirect_to"] == "target":

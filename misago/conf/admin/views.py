@@ -40,7 +40,7 @@ class SettingsView(AdminView):
             if form.is_valid():
                 form.save(settings)
                 messages.success(
-                    request, pgettext("admin settings", "Settings have been saved.")
+                    request, pgettext("admin settings", "Settings saved")
                 )
                 return redirect(request.path_info)
         return self.render(request, {"form": form, "form_settings": settings})
