@@ -446,12 +446,14 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     def get_real_name(self):
         # Bug: https://github.com/rafalp/Misago/issues/1352
         # On some very rare cases self.profile_fields is deserialized as string
-        # by Django's ORM. I am unable to reproduce this, but in case when this
-        # bug occurs, this code branch will print extra information about it
+        # by Django's ORM. We handle this gracefully by converting back to dict.
         if not isinstance(self.profile_fields, dict):
             from django.contrib.postgres.signals import get_hstore_oids
             from django.db import connections
             from django.db.backends.signals import connection_created
+            import logging
+
+            logger = logging.getLogger("misago.users")
 
             receivers = ", ".join([str(r[1]()) for r in connection_created.receivers])
             dead_receivers = "TRUE" if connection_created._dead_receivers else "FALSE"
@@ -473,12 +475,30 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                     array_oids.append(row[1])
                 valid_oids = tuple(oids), tuple(array_oids)
 
-            raise RuntimeError(
-                f"'profile_fields' has wrong type! Please post this WHOLE message on https://github.com/rafalp/Misago/issues/1352 "
-                f"OID: '{cached_oids}' (valid: '{valid_oids}') "
-                f"Receivers: '{receivers}' (has dead: {dead_receivers}) "
-                f"Repr: {repr(self.profile_fields)}"
+            logger.warning(
+                "'profile_fields' has wrong type for user %s! "
+                "OID: '%s' (valid: '%s') "
+                "Receivers: '%s' (has dead: %s) "
+                "Repr: %r. Attempting to fix by converting to dict.",
+                self.pk,
+                cached_oids,
+                valid_oids,
+                receivers,
+                dead_receivers,
+                self.profile_fields,
             )
+
+            if isinstance(self.profile_fields, str):
+                import json
+
+                try:
+                    self.profile_fields = json.loads(self.profile_fields)
+                except (json.JSONDecodeError, TypeError):
+                    self.profile_fields = {}
+                if not isinstance(self.profile_fields, dict):
+                    self.profile_fields = {}
+            else:
+                self.profile_fields = {}
 
         return self.profile_fields.get("real_name")
 
