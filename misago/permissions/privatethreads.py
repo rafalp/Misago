@@ -8,6 +8,7 @@ from django.utils.translation import npgettext, pgettext
 
 from ..privatethreads.models import PrivateThreadMember
 from ..threads.models import Post, Thread
+from .enums import PrivateThreadsQuery
 from .hooks import (
     check_add_private_thread_members_permission_hook,
     check_change_private_thread_owner_permission_hook,
@@ -23,6 +24,7 @@ from .hooks import (
     filter_private_thread_events_queryset_hook,
     filter_private_thread_posts_queryset_hook,
     filter_private_threads_queryset_hook,
+    get_private_threads_queries_hook,
 )
 from .proxy import UserPermissionsProxy
 
@@ -417,36 +419,64 @@ def _check_remove_private_thread_member_permission_action(
         )
 
 
-def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):
+def get_private_threads_queries(
+    permissions: UserPermissionsProxy,
+) -> set[PrivateThreadsQuery]:
+    return get_private_threads_queries_hook(
+        _get_private_threads_queries_action, permissions
+    )
+
+
+def _get_private_threads_queries_action(
+    permissions: UserPermissionsProxy,
+) -> set[PrivateThreadsQuery]:
+    if permissions.user.is_anonymous:
+        return set()
+
+    if permissions.is_private_threads_moderator:
+        return {PrivateThreadsQuery.USER, PrivateThreadsQuery.MODERATED}
+
+    return {PrivateThreadsQuery.USER}
+
+
+def filter_private_threads_queryset(
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
     return filter_private_threads_queryset_hook(
         _filter_private_threads_queryset_action, permissions, queryset
     )
 
 
 def _filter_private_threads_queryset_action(
-    permissions: UserPermissionsProxy, queryset
-):
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
+    queries = get_private_threads_queries(permissions)
+
     if permissions.user.is_anonymous:
         return queryset.none()
 
-    if permissions.is_private_threads_moderator:
+    if PrivateThreadsQuery.ALL in queries:
+        return queryset
+
+    member_threads = PrivateThreadMember.objects.filter(user=permissions.user).values(
+        "thread_id"
+    )
+
+    if PrivateThreadsQuery.MODERATED in queries and PrivateThreadsQuery.USER in queries:
         return queryset.filter(
-            Q(
-                id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
-                    "thread_id"
-                )
-            )
+            Q(id__in=member_threads)
             | Q(is_hidden=True)
             | Q(is_unapproved=True)
             | Q(has_unapproved_posts=True)
         )
 
-    return queryset.filter(
-        id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
-            "thread_id"
-        ),
-        is_hidden=False,
-    ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
+    if PrivateThreadsQuery.USER in queries:
+        return queryset.filter(
+            id__in=member_threads,
+            is_hidden=False,
+        ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
+
+    return queryset.none()
 
 
 def filter_private_thread_posts_queryset(

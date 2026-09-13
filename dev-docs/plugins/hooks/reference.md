@@ -181,6 +181,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_category_threads_category_query_hook`](./get-category-threads-category-query-hook.md)
 - [`get_category_threads_pinned_category_query_hook`](./get-category-threads-pinned-category-query-hook.md)
 - [`get_category_threads_query_hook`](./get-category-threads-query-hook.md)
+- [`get_private_threads_queries_hook`](./get-private-threads-queries-hook.md)
 - [`get_threads_category_query_hook`](./get-threads-category-query-hook.md)
 - [`get_threads_pinned_category_query_hook`](./get-threads-pinned-category-query-hook.md)
 - [`get_threads_posts_queries_hook`](./get-threads-posts-queries-hook.md)
