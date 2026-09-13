@@ -2,6 +2,11 @@
 // Misago Global Scaffolding
 // --------------------------------------------------
 
+// Hide default arrow from details summary element in Safari
+summary::-webkit-details-marker {
+  display: none;
+}
+
 // top margin utils
 @media screen and (min-width: @screen-md-min) {
   .md-margin-top-no {
