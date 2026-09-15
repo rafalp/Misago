@@ -111,6 +111,9 @@ from .filter_private_thread_events_queryset import (
 from .filter_private_thread_posts_queryset import (
     filter_private_thread_posts_queryset_hook,
 )
+from .filter_private_threads_posts_queryset import (
+    filter_private_threads_posts_queryset_hook,
+)
 from .filter_private_threads_queryset import filter_private_threads_queryset_hook
 from .filter_thread_events_queryset import filter_thread_events_queryset_hook
 from .filter_thread_posts_queryset import filter_thread_posts_queryset_hook
@@ -124,7 +127,6 @@ from .get_category_threads_pinned_category_query import (
     get_category_threads_pinned_category_query_hook,
 )
 from .get_category_threads_query import get_category_threads_query_hook
-from .get_private_threads_queries import get_private_threads_queries_hook
 from .get_threads_category_query import get_threads_category_query_hook
 from .get_threads_pinned_category_query import get_threads_pinned_category_query_hook
 from .get_threads_posts_queries import get_threads_posts_queries_hook
@@ -190,6 +192,7 @@ __all__ = [
     "filter_accessible_thread_posts_hook",
     "filter_private_thread_events_queryset_hook",
     "filter_private_thread_posts_queryset_hook",
+    "filter_private_threads_posts_queryset_hook",
     "filter_private_threads_queryset_hook",
     "filter_thread_events_queryset_hook",
     "filter_thread_posts_queryset_hook",
@@ -199,7 +202,6 @@ __all__ = [
     "get_category_threads_category_query_hook",
     "get_category_threads_pinned_category_query_hook",
     "get_category_threads_query_hook",
-    "get_private_threads_queries_hook",
     "get_threads_category_query_hook",
     "get_threads_pinned_category_query_hook",
     "get_threads_posts_queries_hook",

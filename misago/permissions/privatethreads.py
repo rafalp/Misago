@@ -6,9 +6,9 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
+from ..categories.models import Category
 from ..privatethreads.models import PrivateThreadMember
 from ..threads.models import Post, Thread
-from .enums import PrivateThreadsQuery
 from .hooks import (
     check_add_private_thread_members_permission_hook,
     check_change_private_thread_owner_permission_hook,
@@ -23,8 +23,8 @@ from .hooks import (
     check_start_private_threads_permission_hook,
     filter_private_thread_events_queryset_hook,
     filter_private_thread_posts_queryset_hook,
+    filter_private_threads_posts_queryset_hook,
     filter_private_threads_queryset_hook,
-    get_private_threads_queries_hook,
 )
 from .proxy import UserPermissionsProxy
 
@@ -419,26 +419,6 @@ def _check_remove_private_thread_member_permission_action(
         )
 
 
-def get_private_threads_queries(
-    permissions: UserPermissionsProxy,
-) -> set[PrivateThreadsQuery]:
-    return get_private_threads_queries_hook(
-        _get_private_threads_queries_action, permissions
-    )
-
-
-def _get_private_threads_queries_action(
-    permissions: UserPermissionsProxy,
-) -> set[PrivateThreadsQuery]:
-    if permissions.user.is_anonymous:
-        return set()
-
-    if permissions.is_private_threads_moderator:
-        return {PrivateThreadsQuery.USER, PrivateThreadsQuery.MODERATED}
-
-    return {PrivateThreadsQuery.USER}
-
-
 def filter_private_threads_queryset(
     permissions: UserPermissionsProxy, queryset: QuerySet
 ) -> QuerySet:
@@ -450,19 +430,14 @@ def filter_private_threads_queryset(
 def _filter_private_threads_queryset_action(
     permissions: UserPermissionsProxy, queryset: QuerySet
 ) -> QuerySet:
-    queries = get_private_threads_queries(permissions)
-
     if permissions.user.is_anonymous:
         return queryset.none()
-
-    if PrivateThreadsQuery.ALL in queries:
-        return queryset
 
     member_threads = PrivateThreadMember.objects.filter(user=permissions.user).values(
         "thread_id"
     )
 
-    if PrivateThreadsQuery.MODERATED in queries and PrivateThreadsQuery.USER in queries:
+    if permissions.is_private_threads_moderator:
         return queryset.filter(
             Q(id__in=member_threads)
             | Q(is_hidden=True)
@@ -470,13 +445,29 @@ def _filter_private_threads_queryset_action(
             | Q(has_unapproved_posts=True)
         )
 
-    if PrivateThreadsQuery.USER in queries:
-        return queryset.filter(
-            id__in=member_threads,
-            is_hidden=False,
-        ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
+    return queryset.filter(
+        id__in=member_threads,
+        is_hidden=False,
+    ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
 
-    return queryset.none()
+
+def filter_private_threads_posts_queryset(
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
+    return filter_private_threads_posts_queryset_hook(
+        _filter_private_threads_posts_queryset_action, permissions, queryset
+    )
+
+
+def _filter_private_threads_posts_queryset_action(
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
+    if permissions.is_private_threads_moderator:
+        return queryset.all()
+
+    return queryset.filter(is_hidden=False).filter(
+        Q(is_unapproved=False) | Q(poster=permissions.user)
+    )
 
 
 def filter_private_thread_posts_queryset(
@@ -495,7 +486,7 @@ def _filter_private_thread_posts_queryset_action(
     queryset: QuerySet,
 ) -> QuerySet:
     if permissions.is_private_threads_moderator:
-        return queryset
+        return queryset.all()
 
     if permissions.user.is_authenticated:
         return queryset.filter(Q(is_unapproved=False) | Q(poster=permissions.user))
@@ -519,6 +510,6 @@ def _filter_private_thread_events_queryset_action(
     queryset: QuerySet,
 ) -> QuerySet:
     if permissions.is_private_threads_moderator:
-        return queryset
+        return queryset.all()
 
     return queryset.filter(is_hidden=False)

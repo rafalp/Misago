@@ -87,6 +87,7 @@ class FilterPrivateThreadsQuerysetHook(
     ```python
     from datetime import timedelta
 
+    from django.db.models import Queryset
     from django.utils import timezone
     from misago.permissions.hooks import filter_private_threads_queryset_hook
     from misago.permissions.proxy import UserPermissionsProxy
@@ -95,8 +96,8 @@ class FilterPrivateThreadsQuerysetHook(
     def exclude_old_private_threads_queryset_hook(
         action,
         permissions: UserPermissionsProxy,
-        queryset,
-    ) -> None:
+        queryset: Queryset,
+    ) -> Queryset:
        queryset = action(permissions, queryset)
 
         if permissions.is_private_threads_moderator:

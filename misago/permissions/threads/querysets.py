@@ -705,7 +705,7 @@ def _filter_threads_posts_queryset_action(
     categories: Sequence[Category | CategoryProxy],
     queryset: QuerySet | None = None,
 ) -> QuerySet:
-    if not queryset:
+    if queryset is None:
         queryset = Post.objects
 
     queries = get_threads_posts_queries(permissions, categories)
@@ -751,7 +751,7 @@ def _filter_thread_posts_queryset_action(
     queryset: QuerySet,
 ) -> QuerySet:
     if permissions.is_category_moderator(thread.category_id):
-        return queryset
+        return queryset.all()
 
     if permissions.user.is_authenticated:
         return queryset.filter(
@@ -777,6 +777,6 @@ def _filter_thread_events_queryset_action(
     queryset: QuerySet,
 ):
     if permissions.is_category_moderator(thread.category_id):
-        return queryset
+        return queryset.all()
 
     return queryset.filter(is_hidden=False)

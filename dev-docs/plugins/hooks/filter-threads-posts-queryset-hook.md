@@ -1,8 +1,8 @@
 # `filter_threads_posts_queryset_hook`
 
-This hook wraps the standard function that Misago uses to filter a queryset to retrieve posts user can see.
+This hook wraps the standard function that Misago uses to filter a queryset to retrieve posts the user can see.
 
-This function is usually combined with the filter_threads_queryset to retrieve all posts the user can see from visible threads, e.g. for search results or user activity feeds.
+This function is usually combined with the `filter_threads_queryset` to retrieve all posts the user can see from visible threads, e.g. for search results or user activity feeds.
 
 
 ## Location
@@ -69,7 +69,7 @@ def filter_threads_posts_queryset_action(
     ...
 ```
 
-Misago function used to filter a queryset to retrieve posts user can see.
+Misago function used to filter a queryset to retrieve posts the user can see.
 
 
 ### Arguments
@@ -96,7 +96,7 @@ A `QuerySet` filtered to return only posts that the user can see.
 
 ## Example
 
-The code below implements a custom filter function that hides too old posts from anonymous user.
+The code below implements a custom filter function that hides too old posts from the anonymous user.
 
 ```python
 from datetime import timedetla

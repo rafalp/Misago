@@ -97,16 +97,18 @@ A `QuerySet` filtered to show only thread events that the user can see.
 The code below implements a custom filter function that hides events from users who are not the private thread's owners.
 
 ```python
+from django.db.models import Queryset
 from misago.permissions.hooks import filter_private_thread_events_queryset_hook
 from misago.permissions.proxy import UserPermissionsProxy
+from misago.threads.models import Thread
 
 @filter_private_thread_events_queryset_hook.append_filter
 def hide_private_thread_events_from_non_owner(
     action,
     permissions: UserPermissionsProxy,
-    thread,
-    queryset,
-) -> None:
+    thread: Thread,
+    queryset: Queryset,
+) -> Queryset:
     queryset = action(permissions, thread, queryset)
 
     if permissions.user.id != thread.private_thread_owner_id:
