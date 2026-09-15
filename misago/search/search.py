@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Iterable
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.utils.module_loading import import_string
 
 from ..categories.models import Category
@@ -143,17 +142,29 @@ class Search:
     def update_thread_members(self, thread: Thread, members: Iterable[int]):
         return self.backend.update_thread_members(thread, members)
 
-    def update_threads(
+    def update_thread(
         self,
-        threads: Thread | Iterable[Thread],
+        thread: Thread,
         *,
         is_hidden: bool | None = None,
         is_unapproved: bool | None = None,
         **kwargs,
     ):
-        if isinstance(threads, Thread):
-            threads = [threads]
+        return self.backend.update_threads(
+            [thread],
+            is_hidden=is_hidden,
+            is_unapproved=is_unapproved,
+            **kwargs,
+        )
 
+    def update_threads(
+        self,
+        threads: Iterable[Thread],
+        *,
+        is_hidden: bool | None = None,
+        is_unapproved: bool | None = None,
+        **kwargs,
+    ):
         return self.backend.update_threads(
             threads,
             is_hidden=is_hidden,
@@ -161,17 +172,29 @@ class Search:
             **kwargs,
         )
 
-    def update_posts(
+    def update_post(
         self,
-        posts: Post | Iterable[Post],
+        post: Post,
         *,
         is_hidden: bool | None = None,
         is_unapproved: bool | None = None,
         **kwargs,
     ):
-        if isinstance(posts, Post):
-            posts = [posts]
+        return self.backend.update_posts(
+            [post],
+            is_hidden=is_hidden,
+            is_unapproved=is_unapproved,
+            **kwargs,
+        )
 
+    def update_posts(
+        self,
+        posts: Iterable[Post],
+        *,
+        is_hidden: bool | None = None,
+        is_unapproved: bool | None = None,
+        **kwargs,
+    ):
         return self.backend.update_posts(
             posts,
             is_hidden=is_hidden,
@@ -179,29 +202,28 @@ class Search:
             **kwargs,
         )
 
-    def delete_categories(self, categories: Category | Iterable[Category]):
-        if isinstance(categories, Category):
-            categories = [categories]
+    def delete_category(self, category: Category):
+        return self.backend.delete_categories([category])
 
+    def delete_categories(self, categories: Iterable[Category]):
         return self.backend.delete_categories(categories)
 
-    def delete_threads(self, threads: Thread | Iterable[Thread]):
-        if isinstance(threads, Thread):
-            threads = [threads]
+    def delete_thread(self, thread: Thread):
+        return self.backend.delete_threads([thread])
 
+    def delete_threads(self, threads: Iterable[Thread]):
         return self.backend.delete_threads(threads)
 
-    def delete_posts(self, posts: Post | Iterable[Post]):
-        if isinstance(posts, Post):
-            posts = [posts]
+    def delete_post(self, post: Post):
+        return self.backend.delete_posts([post])
 
+    def delete_posts(self, posts: Iterable[Post]):
         return self.backend.delete_posts(posts)
 
-    def delete_users(self, users: "User | Iterable[User]"):
-        user_model = get_user_model()
-        if isinstance(users, user_model):
-            users = [users]
+    def delete_user(self, user: "User"):
+        return self.backend.delete_users([user])
 
+    def delete_users(self, users: Iterable["User"]):
         return self.backend.delete_users(users)
 
     def clear(self):
