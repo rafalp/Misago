@@ -81,22 +81,50 @@ class SearchBackend(ABC):
         pass
 
     @abstractmethod
-    def update_category(
-        self,
-        new_category: Category | CategoryProxy,
-        *,
-        categories: Iterable[Category | CategoryProxy] | None = None,
-        threads: Iterable[Thread] | None = None,
+    def move_category_posts(
+        self, categories: Iterable[Category], new_category: Category
     ):
         pass
 
     @abstractmethod
-    def update_thread(
+    def move_threads(self, threads: Iterable[Thread], new_category: Category):
+        pass
+
+    @abstractmethod
+    def move_thread_posts(self, threads: Iterable[Thread], new_thread: Thread):
+        pass
+
+    @abstractmethod
+    def move_posts(self, posts: Iterable[Post], new_thread: Thread):
+        pass
+
+    @abstractmethod
+    def update_thread_title(self, thread: Thread):
+        pass
+
+    @abstractmethod
+    def update_thread_members(self, thread: Thread, members: Iterable[int]):
+        pass
+
+    @abstractmethod
+    def update_threads(
         self,
-        new_thread: Thread,
+        threads: Iterable[Thread],
         *,
-        threads: Iterable[Thread] | None = None,
-        posts: Iterable[Post] | None = None,
+        is_hidden: bool | None = None,
+        is_unapproved: bool | None = None,
+        **kwargs,
+    ):
+        pass
+
+    @abstractmethod
+    def update_posts(
+        self,
+        posts: Iterable[Post],
+        *,
+        is_hidden: bool | None = None,
+        is_unapproved: bool | None = None,
+        **kwargs,
     ):
         pass
 
@@ -110,6 +138,10 @@ class SearchBackend(ABC):
 
     @abstractmethod
     def delete_posts(self, posts: Iterable[Post]):
+        pass
+
+    @abstractmethod
+    def delete_users(self, users: Iterable["User"]):
         pass
 
     @abstractmethod
