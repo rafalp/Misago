@@ -94,19 +94,21 @@ A `QuerySet` filtered to show only thread posts that the user can see.
 
 ## Example
 
-The code below implements a custom filter function hides deleted posts from anonymous user.
+The code below implements a custom filter function removes hidden posts for the anonymous user.
 
 ```python
+from django.db.models import Queryset
 from misago.permissions.hooks import filter_private_thread_posts_queryset_hook
 from misago.permissions.proxy import UserPermissionsProxy
+from misago.threads.models import Thread
 
 @filter_private_thread_posts_queryset_hook.append_filter
-def exclude_old_private_threads_queryset_hook(
+def remove_hidden_posts_for_anonymous_user(
     action,
     permissions: UserPermissionsProxy,
-    thread,
-    queryset,
-) -> None:
+    thread: Thread,
+    queryset: Queryset,
+) -> Queryset:
     queryset = action(permissions, thread, queryset)
 
     if permissions.user.is_anonymous:

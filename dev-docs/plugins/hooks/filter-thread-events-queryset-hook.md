@@ -97,16 +97,18 @@ A `QuerySet` filtered to show only thread events that the user can see.
 The code below implements a custom filter function hides all events from anonymous user.
 
 ```python
+from django.db.models import Queryset
 from misago.permissions.hooks import filter_thread_events_queryset_hook
 from misago.permissions.proxy import UserPermissionsProxy
+from misago.threads.models import Thread
 
 @filter_thread_events_queryset_hook.append_filter
-def exclude_old_private_threads_queryset_hook(
+def hide_thread_events_for_anonymous_user(
     action,
     permissions: UserPermissionsProxy,
-    thread,
-    queryset,
-) -> None:
+    thread: Thread,
+    queryset: Queryset,
+) -> Queryset:
     queryset = action(permissions, thread, queryset)
 
     if permissions.user.is_anonymous:

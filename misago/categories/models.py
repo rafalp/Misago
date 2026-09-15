@@ -12,6 +12,9 @@ from .enums import CategoryChildrenComponent, CategoryTree
 
 
 class CategoryManager(TreeManager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def private_threads(self):
         return self.get(level=0, tree_id=CategoryTree.PRIVATE_THREADS)
 
