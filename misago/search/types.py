@@ -2,11 +2,8 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class PostSearchResults:
-    results: list["PostSearchResult"]
-    offset: int
-    limit: int
-    count: int
+class ThreadsSearchResults:
+    results: list["ThreadsSearchResultItem"]
     has_more: bool
     time: float
 
@@ -15,8 +12,8 @@ class PostSearchResults:
 
 
 @dataclass(frozen=True)
-class PostSearchResult:
+class ThreadsSearchResultItem:
     post_id: int
-    thread_title: str | None
+    thread_title: str
     post_content: str
     rank: float | None = None
