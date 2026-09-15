@@ -1,0 +1,28 @@
+{% load i18n %}
+
+<ul class="breadcrumbs breadcrumbs-full">
+  <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
+    <a href="{% url 'misago:search' %}">
+      <span class="breadcrumbs-item-icon">
+        {% include "tabler/search.svg" %}
+      </span>
+      <span class="breadcrumbs-item-name">
+        {% translate "Search" context "search page breadcrumbs" %}
+      </span>
+    </a>
+  </li>
+</ul>
+<ul class="breadcrumbs breadcrumbs-compact">
+  {% with item=items|last %}
+    <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
+      <a href="{% url 'misago:search' %}">
+        <span class="breadcrumbs-item-icon">
+          {% include "tabler/search.svg" %}
+        </span>
+        <span class="breadcrumbs-item-name">
+          {% translate "Search" context "search page breadcrumbs" %}
+        </span>
+      </a>
+    </li>
+  {% endwith %}
+</ul>

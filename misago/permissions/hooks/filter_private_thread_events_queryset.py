@@ -16,7 +16,7 @@ class FilterPrivateThreadEventsQuerysetHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -30,7 +30,7 @@ class FilterPrivateThreadEventsQuerysetHookAction(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only thread events that the user can see.
+    A `QuerySet` filtered to show only thread events that the user can see.
     """
 
     def __call__(
@@ -54,7 +54,7 @@ class FilterPrivateThreadEventsQuerysetHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,7 +68,7 @@ class FilterPrivateThreadEventsQuerysetHookFilter(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only thread events that the user can see.
+    A `QuerySet` filtered to show only thread events that the user can see.
     """
 
     def __call__(
@@ -96,16 +96,18 @@ class FilterPrivateThreadEventsQuerysetHook(
     who are not the private thread's owners.
 
     ```python
+    from django.db.models import Queryset
     from misago.permissions.hooks import filter_private_thread_events_queryset_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.threads.models import Thread
 
     @filter_private_thread_events_queryset_hook.append_filter
     def hide_private_thread_events_from_non_owner(
         action,
         permissions: UserPermissionsProxy,
-        thread,
-        queryset,
-    ) -> None:
+        thread: Thread,
+        queryset: Queryset,
+    ) -> Queryset:
         queryset = action(permissions, thread, queryset)
 
         if permissions.user.id != thread.private_thread_owner_id:

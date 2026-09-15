@@ -1,48 +1,39 @@
 {% load i18n misago_avatars misago_forms %}
-<ul class="form-chips-control d-js-flex" maxchoices="{{ widget.attrs.maxchoices }}" m-user-multiple-choice>
-  {% if widget.chips %}
-    {% for chip in widget.chips %}
+<input type="text" class="form-control d-js-none" id="{{ widget.attrs.id }}" name="{{ widget.name }}" value="{% for user in widget.value %}{{ user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}" {{ widget|requiredhtml }}>
+<ul class="form-chips-control d-js-flex" maxchoices="{{ widget.attrs.maxchoices }}" m-user-multiple-choice="{{ widget.attrs.id }}">
+  {% for chip in widget.value %}
+    <li m-user-multiple-choice-item m-user-name="{{ chip.username }}"{% if chip.id %} m-user-id="{{ chip.id }}"{% endif %}>
       {% if chip.id %}
-        <li m-user-multiple-choice-item m-user-id="{{ chip.id }}">
-          <input type="hidden" name="{{ widget.name }}_chip" value="{{ chip.username }}">
-          <button class="form-chips-control-item" type="button" aria-label="{% translate 'Remove this user' context 'user multiple choice delete button' %}">
-            <img class="form-chips-control-item-image" src="{{ chip|avatar:32 }}" alt="">
-            <span class="form-chips-control-item-name">
-              {{ chip.username }}
-            </span>
-            <span class="form-chips-control-item-close-icon">
-              <span class="material-icon">clear</span>
-            </span>
-          </button>
-        </li>
+        <button class="form-chips-control-item" type="button" aria-label="{% translate 'Remove this user' context 'user multiple choice delete button' %}">
+          <img class="form-chips-control-item-image" src="{{ chip|avatar:32 }}" alt="">
+          <span class="form-chips-control-item-name">
+            {{ chip.username }}
+          </span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
+        </button>
       {% else %}
-        <li m-user-multiple-choice-item>
-          <input type="hidden" name="{{ widget.name }}_chip" value="{{ chip.username }}">
-          <button class="form-chips-control-item-not-found" type="button" aria-label="{% translate 'Remove this user' context 'user multiple choice delete button' %}">
-            <span class="form-chips-control-item-not-found-icon">
-              <span class="material-icon">person_outline</span>
-            </span>
-            <span class="form-chips-control-item-name">
-              {{ chip.username }}
-            </span>
-            <span class="form-chips-control-item-close-icon">
-              <span class="material-icon">clear</span>
-            </span>
-          </button>
-        </li>
+        <button class="form-chips-control-item-not-found" type="button" aria-label="{% translate 'Remove this user' context 'user multiple choice delete button' %}">
+          <span class="form-chips-control-item-not-found-icon">
+            <span class="material-icon">person_outline</span>
+          </span>
+          <span class="form-chips-control-item-name">
+            {{ chip.username }}
+          </span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
+        </button>
       {% endif %}
-    {% endfor %}
-  {% endif %}
+    </li>
+  {% endfor %}
   <li>
-    <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
+    <input type="text" class="form-chips-control-search" m-user-multiple-choice-search>
   </li>
 </ul>
-<noscript>
-  <input type="text" class="form-control" id="{{ widget.attrs.id }}_text" name="{{ widget.name }}_text" value="{{ widget.value|default:'' }}" {{ widget|requiredhtml }}>
-</noscript>
 <template id="m-user-multiple-choice-template">
   <li m-user-multiple-choice-item>
-    <input type="hidden" name="{{ widget.name }}_chip" value="">
     <button class="form-chips-control-item" type="button" aria-label="{% translate 'Remove this choice' context 'user multiple choice delete button' %}">
       <img class="form-chips-control-item-image" src="" alt="">
       <span class="form-chips-control-item-name">

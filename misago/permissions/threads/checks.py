@@ -74,7 +74,7 @@ def check_see_thread_permission(
 def _check_see_thread_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread
 ):
-    if not permissions.is_category_moderator(category.id):
+    if not permissions.is_category_moderator(category):
         if thread.is_hidden:
             raise Http404()
 
@@ -229,7 +229,7 @@ def check_see_thread_post_permission(
 def _check_see_thread_post_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
 ):
-    if not permissions.is_category_moderator(category.id):
+    if not permissions.is_category_moderator(category):
         if post.is_unapproved and (
             post.poster_id is None
             or permissions.user.is_anonymous

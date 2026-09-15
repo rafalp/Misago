@@ -10,6 +10,8 @@ from .moderator import ModeratorPermissions
 from .user import get_user_permissions
 
 if TYPE_CHECKING:
+    from ..categories.models import Category
+    from ..categories.proxy import CategoryProxy
     from ..users.models import User
 
 
@@ -57,6 +59,7 @@ class UserPermissionsProxy:
     username_changes_expire: int
     username_changes_span: int
     can_see_user_profiles: bool
+    can_search: bool
 
     def __init__(self, user: Union["User", AnonymousUser], cache_versions: dict):
         self.user = user
@@ -125,12 +128,19 @@ class UserPermissionsProxy:
 
         return browsed_categories.intersection(self.moderator.categories_ids)
 
-    def is_category_moderator(self, category_id: int) -> bool:
+    def is_category_moderator(
+        self, category: Union["Category", "CategoryProxy", int]
+    ) -> bool:
         if self.user.is_anonymous:
             return False
 
         if self.is_global_moderator:
             return True
+
+        if isinstance(category, int):
+            category_id = category
+        else:
+            category_id = category.id
 
         return category_id in self.moderated_categories
 

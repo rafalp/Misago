@@ -88,9 +88,6 @@ def test_reply_state_updates_existing_post(user, user_request, user_thread):
     post.refresh_from_db()
     assert post.content == f"{post_original}\n\nTest reply"
     assert post.content_parsed == f"{post_parsed}\n<p>Test reply</p>"
-    assert post.search_document == (
-        f"{user_thread.title}\n\n{post_original}\n\nTest reply"
-    )
     assert post.updated_at == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user

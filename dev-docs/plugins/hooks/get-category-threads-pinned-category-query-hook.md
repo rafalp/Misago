@@ -18,7 +18,7 @@ from misago.permissions.hooks import get_category_threads_pinned_category_query_
 def custom_get_category_threads_pinned_category_query_filter(
     action: GetCategoryThreadsPinnedCategoryQueryHookAction,
     permissions: 'UserPermissionsProxy',
-    category: dict,
+    category: Union['Category', 'CategoryProxy'],
     context: CategoryQueryContext,
 ) -> str | list[str] | None:
     ...
@@ -36,14 +36,14 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
 
-#### `category: dict`
+#### `category: Category | CategoryProxy`
 
-A `dict` with category data.
+A `Category` or `CategoryProxy` instance.
 
 
 #### `context: CategoryQueryContext`
@@ -65,7 +65,7 @@ A `CategoryThreadsQuery` member or a `str` with a custom clause name. If `None`,
 ```python
 def get_category_threads_pinned_category_query_action(
     permissions: 'UserPermissionsProxy',
-    category: dict,
+    category: Union['Category', 'CategoryProxy'],
     context: CategoryQueryContext,
 ) -> str | list[str] | None:
     ...
@@ -82,14 +82,14 @@ from misago.permissions.enums import CategoryThreadsQuery
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
 
-#### `category: dict`
+#### `category: Category | CategoryProxy`
 
-A `dict` with category data.
+A `Category` or `CategoryProxy` instance.
 
 
 #### `context: CategoryQueryContext`
@@ -111,6 +111,8 @@ A `CategoryThreadsQuery` member or a `str` with a custom clause name. If `None`,
 The code below implements a custom filter function that specifies a custom `WHERE` clause supported by the `get_threads_query_orm_filter_hook`.
 
 ```python
+from misago.categories.models import Category
+from misago.categories.proxy import CategoryProxy
 from misago.permissions.enums import CategoryQueryContext
 from misago.permissions.hooks import get_category_threads_pinned_category_query_hook
 from misago.permissions.proxy import UserPermissionsProxy
@@ -119,11 +121,12 @@ from misago.permissions.proxy import UserPermissionsProxy
 def get_category_threads_pinned_category_query(
     action,
     permissions: UserPermissionsProxy,
-    category: dict,
+    category: Category | CategoryProxy,
     context: CategoryQueryContext,
 ) -> str | list[str] | None:
     if (
-        category.get("plugin_flag") and context == CategoryQueryContext.CURRENT
+        category.plugin_data.get("plugin_flag")
+        and context == CategoryQueryContext.CURRENT
     ):
         return "plugin-where"
 

@@ -18,7 +18,7 @@ class FilterAccessibleThreadPostsHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -61,7 +61,7 @@ class FilterAccessibleThreadPostsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -105,20 +105,22 @@ class FilterAccessibleThreadPostsHook(
 
     # Example
 
-    The code below implements a custom filter function removes hidden posts for
-    anonymous user.
+    The code below implements a custom filter function that removes hidden posts
+    for the anonymous user.
 
     ```python
+    from django.db.models import Queryset
     from misago.permissions.hooks import filter_accessible_thread_posts_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.threads.models import Thread
 
     @filter_accessible_thread_posts_hook.append_filter
-    def exclude_old_private_threads_queryset_hook(
+    def remove_hidden_posts(
         action,
         permissions: UserPermissionsProxy,
-        thread,
-        queryset,
-    ) -> None:
+        thread: Thread,
+        queryset: Queryset,
+    ) -> Queryset:
         queryset = action(permissions, thread, queryset)
 
         if permissions.user.is_anonymous:

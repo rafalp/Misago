@@ -103,7 +103,7 @@ def _check_restore_post_edit_permission_action(
     category = post_edit.category
 
     if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
-        category.id
+        category
     ):
         return
 
@@ -142,7 +142,7 @@ def _check_hide_post_edit_permission_action(
     category = post_edit.category
 
     if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
-        category.id
+        category
     ):
         return
 
@@ -231,7 +231,7 @@ def _check_unhide_post_edit_permission_action(
     category = post_edit.category
 
     if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
-        category.id
+        category
     ):
         return
 
@@ -269,7 +269,7 @@ def _check_delete_post_edit_permission_action(
     category = post_edit.category
 
     if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
-        category.id
+        category
     ):
         return
 

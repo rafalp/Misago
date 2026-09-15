@@ -4,9 +4,9 @@ __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
     "MISAGO_ATTACHMENTS_SERVER",
-    "MISAGO_DEFAULT_OG_IMAGE",
-    "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
     "MISAGO_DEFAULT_OG_IMAGE_HEIGHT",
+    "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
+    "MISAGO_DEFAULT_OG_IMAGE",
     "MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES",
     "MISAGO_MIDDLEWARE",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
@@ -14,6 +14,7 @@ __all__ = [
     "MISAGO_POST_ATTACHMENTS_LIMIT",
     "MISAGO_POST_LAST_LIKES_LIMIT",
     "MISAGO_POST_MENTIONS_LIMIT",
+    "MISAGO_POSTS_SEARCH",
     "MISAGO_PYGMENTS_LANGUAGES",
     "MISAGO_PYGMENTS_STYLE",
     "MISAGO_QUOTED_POSTS_LIMIT",
@@ -111,7 +112,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.core.context_processors.misago_version",
     "misago.core.context_processors.momentjs_locale",
     "misago.icons.context_processors.icons",
-    "misago.search.context_processors.search_providers",
     "misago.themes.context_processors.theme",
     "misago.legal.context_processors.legal_links",
     "misago.menus.context_processors.menus",
@@ -247,3 +247,11 @@ MISAGO_PYGMENTS_LANGUAGES = (
 
 # For use in tests only
 MISAGO_PARSER_CLEAN_AST = True
+
+# Posts search configuration
+MISAGO_POSTS_SEARCH = {
+    "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
+    "INDEX_BATCH_SIZE": 50,
+    "MAX_LIMIT": 100,
+    "PG_SEARCH_CONFIG": "simple",
+}

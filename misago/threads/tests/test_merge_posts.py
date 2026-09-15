@@ -18,13 +18,11 @@ def posts(thread_reply_factory, thread):
         thread,
         content="Lorem ipsum",
         content_parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
     )
     other_post = thread_reply_factory(
         thread,
         content="Dolor met",
         content_parsed="<p>Dolor met</p>",
-        search_document="Dolor",
     )
 
     return (target, other_post)
@@ -55,7 +53,6 @@ def test_get_merge_posts_merges_posts_contents(user, target, other_post):
 
     assert target.content == "Lorem ipsum\n\nDolor met"
     assert target.content_parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
-    assert target.search_document == "Lorem\n\nDolor"
 
 
 def test_get_merge_posts_merges_posts_contents_chronologically(
@@ -65,7 +62,6 @@ def test_get_merge_posts_merges_posts_contents_chronologically(
 
     assert other_post.content == "Lorem ipsum\n\nDolor met"
     assert other_post.content_parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
-    assert other_post.search_document == "Lorem\n\nDolor"
 
 
 def test_get_merge_posts_merges_posts_metadata(user, target, other_post):

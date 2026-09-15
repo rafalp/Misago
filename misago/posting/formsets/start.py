@@ -74,7 +74,7 @@ def _get_thread_start_formset_action(
             create_poll_form(request),
         )
 
-    if request.user_permissions.is_category_moderator(category.id):
+    if request.user_permissions.is_category_moderator(category):
         formset.add_form(
             ThreadStartFormsetTabs.CONTENT,
             create_thread_moderation_form(

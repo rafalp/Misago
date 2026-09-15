@@ -55,12 +55,7 @@ class StartState(State):
         self.thread.save()
 
     def save_post(self):
-        self.post.set_search_document(self.thread, self.parsing_result.text)
         update_post_checksum(self.post)
-
-        self.post.set_search_vector()
-        self.post.save()
-
         self.schedule_post_content_upgrade()
 
     def save_category(self):

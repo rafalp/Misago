@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -47,7 +47,7 @@ A queryset returning all private threads.
 
 #### Return value
 
-A `queryset` filtered to show only private threads that the user has access to.
+A `QuerySet` filtered to show only private threads that the user has access to.
 
 
 ## Action
@@ -64,7 +64,7 @@ Misago function used to set filters on a private threads queryset to limit it on
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -76,7 +76,7 @@ A queryset returning all private threads.
 
 #### Return value
 
-A `queryset` filtered to show only private threads that the user has access to.
+A `QuerySet` filtered to show only private threads that the user has access to.
 
 
 ## Example
@@ -86,6 +86,7 @@ The code below implements a custom filter function that makes old private thread
 ```python
 from datetime import timedelta
 
+from django.db.models import Queryset
 from django.utils import timezone
 from misago.permissions.hooks import filter_private_threads_queryset_hook
 from misago.permissions.proxy import UserPermissionsProxy
@@ -94,8 +95,8 @@ from misago.permissions.proxy import UserPermissionsProxy
 def exclude_old_private_threads_queryset_hook(
     action,
     permissions: UserPermissionsProxy,
-    queryset,
-) -> None:
+    queryset: Queryset,
+) -> Queryset:
    queryset = action(permissions, queryset)
 
     if permissions.is_private_threads_moderator:

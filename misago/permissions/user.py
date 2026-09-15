@@ -82,6 +82,7 @@ def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
 if_true = lambda x: bool(max())
 
 PERMISSION_RULES = {
+    "can_search": yes_no_never,
     "can_use_private_threads": yes_no_never,
     "can_start_private_threads": yes_no_never,
     "private_thread_members_limit": max,
@@ -142,6 +143,7 @@ PERMISSION_DEFAULTS = {
 
 def _build_user_permissions_action(groups: list[Group]) -> dict:
     groups_permissions = {
+        "can_search": set(),
         "can_use_private_threads": set(),
         "can_start_private_threads": set(),
         "private_thread_members_limit": {1},
@@ -182,6 +184,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
     }
 
     for group in groups:
+        groups_permissions["can_search"].add(group.can_search)
         groups_permissions["can_use_private_threads"].add(group.can_use_private_threads)
         groups_permissions["can_start_private_threads"].add(
             group.can_start_private_threads

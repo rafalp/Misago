@@ -6,6 +6,10 @@
   display: inline-block;
 }
 
+.inline-flex {
+  display: inline-flex;
+}
+
 .d-xs-block,
 .d-xs-inline-block {
   display: none;
@@ -22,5 +26,35 @@
 
   .d-xs-inline-block {
     display: inline-block;
+  }
+}
+
+.d-details-open-inline,
+.d-details-open-inline-block,
+.d-details-open-block,
+.d-details-open-flex {
+  display: none;
+}
+
+details:open,
+details[open] {
+  .d-details-open-none {
+    display: none;
+  }
+
+  .d-details-open-inline {
+    display: inline;
+  }
+
+  .d-details-open-inline-block {
+    display: inline-block;
+  }
+
+  .d-details-open-block {
+    display: block;
+  }
+
+  .d-details-open-flex {
+    display: flex;
   }
 }

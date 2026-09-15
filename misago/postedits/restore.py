@@ -53,7 +53,6 @@ def _restore_post_edit_action(
     post.content = parsing_result.markup
     post.content_parsed = parsing_result.html
     post.metadata = parsing_result.metadata
-    post.set_search_document(post.thread, parsing_result.text)
 
     post.updated_at = timestamp
     post.edits = F("edits") + 1

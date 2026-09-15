@@ -16,7 +16,6 @@ MISAGO_ACL_EXTENSIONS = [
     "misago.users.permissions.moderation",
     "misago.users.permissions.delete",
     "misago.categories.permissions",
-    "misago.search.permissions",
 ]
 
 

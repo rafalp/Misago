@@ -1,0 +1,154 @@
+{% load i18n misago_forms %}
+
+{% with field=form.query %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Search:" context "search threads form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">
+      {% translate 'Surround your search with quotations ("search") to search for phrases.' context "search threads form" %}
+    </p>
+  </div>
+{% endwith %}
+
+<h4 class="panel-fieldset-legend">
+  {% translate 'Optional' context "search threads form legend" %}
+</h4>
+
+<div class="search-threads-form-row">
+  <div class="search-threads-form-row-start">
+    {% with field=form.categories %}
+      <div class="form-group{% if field.errors %} has-error{% endif %}">
+        <label class="control-label">
+          {% translate "Categories:" context "search threads form" %}
+        </label>
+        <ul class="form-control-category-tree">
+          {% for branch, category in form.get_categories_with_branches %}
+            <li>
+              {% if branch %}
+                <div class="form-control-category-tree-branch">
+                  {% for image in branch %}
+                    {% if image == "I" %}
+                      {% include "tree-branch/i.svg" %}
+                    {% elif image == "T" %}
+                      {% include "tree-branch/t.svg" %}
+                    {% elif image == "L" %}
+                      {% include "tree-branch/l.svg" %}
+                    {% elif image == "S" %}
+                      {% include "tree-branch/s.svg" %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <label class="form-control-category-tree-label{% if not category.is_vanilla and category.id in form.disabled_categories %} disabled{% endif %}">
+                {% if not category.is_vanilla %}
+                  <input type="checkbox" name="{{ field.html_name }}" value="{{ category.id }}"{% if category.id in form.disabled_categories %} disabled{% elif category.id in form.cleaned_data.categories %} checked{% endif %}>
+                {% endif %}
+                {{ category.name }}
+              </label>
+            </li>
+          {% endfor %}
+          </ul>
+        {% for error in field.errors %}
+          <p class="help-block">{{ error }}</p>
+        {% endfor %}
+        <p class="help-block">
+          {% translate "Select categories to limit the search to them." context "search threads form" %}
+        </p>
+      </div>
+    {% endwith %}
+  </div>
+  <div class="search-threads-form-row-end">
+    {% with field=form.users %}
+      <div class="form-group{% if field.errors %} has-error{% endif %}">
+        <label class="control-label" for="{{ field.id_for_label }}">
+          {% translate "Users:" context "search threads form" %}
+        </label>
+        {{ field }}
+        {% for error in field.errors %}
+          <p class="help-block">{{ error }}</p>
+        {% endfor %}
+        <p class="help-block">
+          {% translate "To limit the search to content by specific users, enter their names." context "search threads form" %}
+          {% blocktranslate trimmed count users=field.max_choices context "search threads form" %}
+            You can enter {{ users }} user.
+          {% plural %}
+            You can enter up to {{ users }} users.
+          {% endblocktranslate %}
+        </p>
+      </div>
+    {% endwith %}
+    <div class="search-threads-form-row-mode">
+      <div class="search-threads-form-row-mode-start">
+        {% with field=form.mode %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label">
+              {% translate "Search for:" context "search threads form" %}
+            </label>
+            <div class="form-control-choices">
+              {% for choice in field.subwidgets %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+                    {{ choice.choice_label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endwith %}
+      </div>
+      <div class="search-threads-form-row-mode-end">
+        {% with field=form.sort %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label">
+              {% translate "Sort results:" context "search threads form" %}
+            </label>
+            <div class="form-control-choices">
+              {% for choice in field.subwidgets %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="{{ field.html_name }}" id="{{ choice.id_for_label }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+                    {{ choice.choice_label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endwith %}
+      </div>
+    </div>
+    <div class="search-threads-form-row-date">
+      <div class="search-threads-form-row-date-start">
+        {% with field=form.date_from %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label" for="{{ field.id_for_label }}">
+              {% translate "From date:" context "search threads form" %}
+            </label>
+            <input type="date" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endwith %}
+      </div>
+      <div class="search-threads-form-row-date-end">
+        {% with field=form.date_to %}
+          <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label class="control-label" for="{{ field.id_for_label }}">
+              {% translate "To date:" context "search threads form" %}
+            </label>
+            <input type="date" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endwith %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -36,6 +36,8 @@ class Group(PluginDataModel):
 
     ordering = models.PositiveIntegerField(default=0)
 
+    can_search = models.PositiveIntegerField(default=PermissionValue.NO)
+
     can_edit_own_threads = models.PositiveIntegerField(default=PermissionValue.NO)
     own_threads_edit_time_limit = models.PositiveIntegerField(default=0)
     can_edit_own_posts = models.PositiveIntegerField(default=PermissionValue.NO)
