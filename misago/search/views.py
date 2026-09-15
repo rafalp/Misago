@@ -12,19 +12,18 @@ from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
 from ..permissions.checkutils import check_permissions
-from ..permissions.enums import CategoryPermission
 from ..permissions.privatethreads import check_private_threads_permission
 from ..permissions.search import check_search_permission
 from ..plugins import extensions
 from .categories import get_searchable_category_ids
-from .enums import SearchSort
+from .enums import SearchMode, SearchSort
 from .forms import (
     PrivateThreadsSearchForm,
     SearchForm,
     ThreadsSearchForm,
     UsersSearchForm,
 )
-from .posts import posts_search
+from .search import search
 
 
 class SearchView(View):
@@ -160,36 +159,16 @@ class ThreadsSearchView(BaseSearchView):
                 datetime.combine(date_to + timedelta(days=1), time.min)
             )
 
-        if mode == "threads":
-            results = posts_search.search_threads(
-                query,
-                request.user_permissions,
-                categories=categories,
-                users=users,
-                posted_after=date_from,
-                posted_before=date_to,
-                order_by=SearchSort(sort),
-            )
-        elif mode == "posts":
-            results = posts_search.search_posts(
-                query,
-                request.user_permissions,
-                categories=categories,
-                users=users,
-                posted_after=date_from,
-                posted_before=date_to,
-                order_by=SearchSort(sort),
-            )
-        elif mode == "thread_titles":
-            results = posts_search.search_thread_titles(
-                query,
-                request.user_permissions,
-                categories=categories,
-                users=users,
-                started_after=date_from,
-                started_before=date_to,
-                order_by=SearchSort(sort),
-            )
+        results = search.search_threads(
+            query,
+            request.user_permissions,
+            categories=categories,
+            users=users,
+            after=date_from,
+            before=date_to,
+            mode=SearchMode(mode),
+            order_by=SearchSort(sort),
+        )
 
         return {
             "results": results,

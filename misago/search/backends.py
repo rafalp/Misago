@@ -20,9 +20,9 @@ from ..categories.proxy import CategoryProxy
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.threads import filter_threads_queryset
 from ..threads.models import Post, Thread
-from .enums import SearchSort
+from .enums import SearchMode, SearchSort
 from .models import PostSearch, ThreadSearch
-from .types import PostSearchResult, PostSearchResults
+from .types import ThreadsSearchResultItem, ThreadsSearchResults
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -38,57 +38,38 @@ class SearchBackend(ABC):
         pass
 
     @abstractmethod
-    def search_thread_titles(
-        self,
-        query: str,
-        permissions: UserPermissionsProxy,
-        *,
-        categories: list[Category | CategoryProxy] | None = None,
-        threads: list[Thread] | None = None,
-        users: list["User"] | None = None,
-        started_after: datetime | None = None,
-        started_before: datetime | None = None,
-        order_by: SearchSort = SearchSort.RELEVANCE,
-        offset: int = 0,
-        limit: int = 50,
-        **kwargs,
-    ) -> PostSearchResults:
-        pass
-
-    @abstractmethod
     def search_threads(
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        *,
-        categories: Iterable[Category | CategoryProxy] | None = None,
-        threads: Iterable[Thread] | None = None,
-        users: Iterable["User"] | None = None,
-        posted_after: datetime | None = None,
-        posted_before: datetime | None = None,
+        categories: list[Category | CategoryProxy] | None = None,
+        threads: list[Thread] | None = None,
+        users: list["User"] | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
+    ) -> ThreadsSearchResults:
         pass
 
     @abstractmethod
-    def search_posts(
+    def search_private_threads(
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        *,
-        categories: Iterable[Category | CategoryProxy] | None = None,
-        threads: Iterable[Thread] | None = None,
-        users: Iterable["User"] | None = None,
-        posted_after: datetime | None = None,
-        posted_before: datetime | None = None,
+        threads: list[Thread] | None = None,
+        users: list["User"] | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
+    ) -> ThreadsSearchResults:
         pass
 
     @abstractmethod
@@ -106,7 +87,7 @@ class SearchBackend(ABC):
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
-    ) -> int:
+    ):
         pass
 
     @abstractmethod
@@ -116,19 +97,19 @@ class SearchBackend(ABC):
         *,
         threads: Iterable[Thread] | None = None,
         posts: Iterable[Post] | None = None,
-    ) -> int:
+    ):
         pass
 
     @abstractmethod
-    def delete_categories(self, categories: Iterable[Category]) -> int:
+    def delete_categories(self, categories: Iterable[Category]):
         pass
 
     @abstractmethod
-    def delete_threads(self, threads: Iterable[Thread]) -> int:
+    def delete_threads(self, threads: Iterable[Thread]):
         pass
 
     @abstractmethod
-    def delete_posts(self, posts: Iterable[Post]) -> int:
+    def delete_posts(self, posts: Iterable[Post]):
         pass
 
     @abstractmethod
@@ -599,7 +580,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
-    ) -> int:
+    ):
         filters = {}
         if categories:
             filters["category_id__in"] = [category.id for category in categories]
@@ -621,7 +602,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         *,
         threads: Iterable[Thread] | None = None,
         posts: Iterable[Post] | None = None,
-    ) -> int:
+    ):
         filters = {}
         if threads:
             filters["thread_id__in"] = [thread.id for thread in threads]
@@ -635,7 +616,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     # Delete operations
 
-    def delete_categories(self, categories: Iterable[Category | CategoryProxy]) -> int:
+    def delete_categories(self, categories: Iterable[Category | CategoryProxy]):
         filters = {"category_id__in": [category.id for category in categories]}
 
         deleted_threads, _ = ThreadSearch.objects.filter(**filters).delete()
@@ -643,7 +624,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return deleted_threads + deleted_posts
 
-    def delete_threads(self, threads: Iterable[Thread]) -> int:
+    def delete_threads(self, threads: Iterable[Thread]):
         filters = {"thread_id__in": [thread.id for thread in threads]}
 
         deleted_threads, _ = ThreadSearch.objects.filter(**filters).delete()
@@ -651,7 +632,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return deleted_threads + deleted_posts
 
-    def delete_posts(self, posts: Iterable[Post]) -> int:
+    def delete_posts(self, posts: Iterable[Post]):
         deleted_posts, _ = PostSearch.objects.filter(
             post_id__in=[post.id for post in posts],
         ).delete()

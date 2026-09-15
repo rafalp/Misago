@@ -1,34 +1,33 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, Iterable, Union
+from typing import TYPE_CHECKING, Iterable
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.module_loading import import_string
 
 from ..categories.models import Category
+from ..categories.proxy import CategoryProxy
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .backends import SearchBackend
 from .enums import SearchMode, SearchSort
-from .types import PostSearchResults
+from .types import ThreadsSearchResults
 
 if TYPE_CHECKING:
     from ..users.models import User
 
 
-class PostsSearch:
+class Search:
     backend: SearchBackend
-    index_batch_size: int
-    max_limit: int
 
     def __init__(self, options: dict):
         if not isinstance(options, dict):
-            raise TypeError("MISAGO_POSTS_SEARCH must be a dictionary")
+            raise TypeError("MISAGO_SEARCH must be a dictionary")
 
         try:
             backend_name = options["BACKEND"]
         except KeyError:
-            raise ValueError("MISAGO_POSTS_SEARCH is missing the 'BACKEND' option")
+            raise ValueError("MISAGO_SEARCH is missing the 'BACKEND' option")
 
         try:
             backend_class = import_string(backend_name)
@@ -39,104 +38,61 @@ class PostsSearch:
 
         self.backend = backend_class(options)
 
-        try:
-            self.index_batch_size = int(options.get("INDEX_BATCH_SIZE", 50))
-        except (TypeError, ValueError) as exc:
-            raise ValueError(
-                f"PostsSearch was initialized with invalid 'INDEX_BATCH_SIZE': {exc}"
-            ) from exc
-
-        try:
-            self.max_limit = int(options.get("MAX_LIMIT", 50))
-        except (TypeError, ValueError) as exc:
-            raise ValueError(
-                f"PostsSearch was initialized with invalid 'MAX_LIMIT': {exc}"
-            ) from exc
-
     def initialize(self):
-        self.backend.initialize()
-
-    def search_thread_titles(
-        self,
-        query: str,
-        permissions: UserPermissionsProxy,
-        *,
-        categories: list[Category],
-        threads: list[Thread] | None = None,
-        users: list["User"] | None = None,
-        started_after: datetime | None = None,
-        started_before: datetime | None = None,
-        order_by: SearchSort = SearchSort.RELEVANCE,
-        offset: int = 0,
-        limit: int = 50,
-        **kwargs,
-    ) -> PostSearchResults:
-        return self.backend.search_thread_titles(
-            query,
-            permissions,
-            categories=categories,
-            threads=threads,
-            users=users,
-            started_after=started_after,
-            started_before=started_before,
-            order_by=order_by,
-            offset=offset,
-            limit=limit,
-            **kwargs,
-        )
+        return self.backend.initialize()
 
     def search_threads(
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        *,
-        categories: list[Category],
+        categories: list[Category | CategoryProxy] | None = None,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
-        posted_after: datetime | None = None,
-        posted_before: datetime | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
+    ) -> ThreadsSearchResults:
         return self.backend.search_threads(
-            query,
-            permissions,
+            query=query,
+            permissions=permissions,
             categories=categories,
             threads=threads,
             users=users,
-            posted_after=posted_after,
-            posted_before=posted_before,
+            after=after,
+            before=before,
+            mode=mode,
             order_by=order_by,
             offset=offset,
             limit=limit,
             **kwargs,
         )
 
-    def search_posts(
+    def search_private_threads(
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        *,
-        categories: list[Category],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
-        posted_after: datetime | None = None,
-        posted_before: datetime | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
-        return self.backend.search_posts(
-            query,
-            permissions,
-            categories=categories,
+    ) -> ThreadsSearchResults:
+        return self.backend.search_private_threads(
+            query=query,
+            permissions=permissions,
             threads=threads,
             users=users,
-            posted_after=posted_after,
-            posted_before=posted_before,
+            after=after,
+            before=before,
+            mode=mode,
             order_by=order_by,
             offset=offset,
             limit=limit,
@@ -144,66 +100,104 @@ class PostsSearch:
         )
 
     def index_thread(self, thread: Thread):
-        self.backend.index_threads([thread])
+        return self.backend.index_threads([thread])
 
     def index_threads(self, threads: Iterable[Thread]):
-        self.backend.index_threads(threads)
+        return self.backend.index_threads(threads)
 
     def index_post(self, post: Post, search_document: str):
-        self.backend.index_posts([(post, search_document)])
+        return self.backend.index_posts([(post, search_document)])
 
     def index_posts(self, posts: Iterable[tuple[Post, str]]):
-        self.backend.index_posts(posts)
+        return self.backend.index_posts(posts)
 
     def move_category_posts(
         self, categories: Category | Iterable[Category], new_category: Category
-    ) -> int:
+    ):
         if isinstance(categories, Category):
             categories = [categories]
 
         return self.backend.move_category_posts(categories, new_category)
 
-    def move_thread_posts(
-        self, threads: Thread | Iterable[Thread], new_thread: Thread
-    ) -> int:
+    def move_thread_posts(self, threads: Thread | Iterable[Thread], new_thread: Thread):
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.move_thread_posts(threads, new_thread)
 
-    def move_threads(
-        self, threads: Thread | Iterable[Thread], new_category: Category
-    ) -> int:
+    def move_threads(self, threads: Thread | Iterable[Thread], new_category: Category):
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.move_threads(threads, new_category)
 
-    def move_posts(self, posts: Post | Iterable[Post], new_thread: Thread) -> int:
+    def move_posts(self, posts: Post | Iterable[Post], new_thread: Thread):
         if isinstance(posts, Post):
             posts = [posts]
 
         return self.backend.move_posts(posts, new_thread)
 
-    def delete_categories(self, categories: Category | Iterable[Category]) -> int:
+    def update_thread_title(self, thread: Thread):
+        return self.backend.update_thread_title(thread)
+
+    def update_thread_members(self, thread: Thread, members: Iterable[int]):
+        return self.backend.update_thread_members(thread, members)
+
+    def update_threads(
+        self,
+        threads: Thread | Iterable[Thread],
+        *,
+        is_hidden: bool | None = None,
+        is_unapproved: bool | None = None,
+        **kwargs,
+    ):
+        if isinstance(threads, Thread):
+            threads = [threads]
+
+        return self.backend.update_threads(
+            threads,
+            is_hidden=is_hidden,
+            is_unapproved=is_unapproved,
+            **kwargs,
+        )
+
+    def update_posts(
+        self,
+        posts: Post | Iterable[Post],
+        *,
+        is_hidden: bool | None = None,
+        is_unapproved: bool | None = None,
+        **kwargs,
+    ):
+        if isinstance(posts, Post):
+            posts = [posts]
+
+        return self.backend.update_posts(
+            posts,
+            is_hidden=is_hidden,
+            is_unapproved=is_unapproved,
+            **kwargs,
+        )
+
+    def delete_categories(self, categories: Category | Iterable[Category]):
         if isinstance(categories, Category):
             categories = [categories]
 
         return self.backend.delete_categories(categories)
 
-    def delete_threads(self, threads: Thread | Iterable[Thread]) -> int:
+    def delete_threads(self, threads: Thread | Iterable[Thread]):
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.delete_threads(threads)
 
-    def delete_posts(self, posts: Post | Iterable[Post]) -> int:
+    def delete_posts(self, posts: Post | Iterable[Post]):
         if isinstance(posts, Post):
             posts = [posts]
 
         return self.backend.delete_posts(posts)
 
-    def delete_users(self, users: Union["User", Iterable["User"]]) -> int:
+    def delete_users(self, users: "User | Iterable[User]"):
         user_model = get_user_model()
         if isinstance(users, user_model):
             users = [users]
@@ -211,7 +205,7 @@ class PostsSearch:
         return self.backend.delete_users(users)
 
     def clear(self):
-        self.backend.clear()
+        return self.backend.clear()
 
 
-posts_search = PostsSearch(settings.MISAGO_POSTS_SEARCH)
+search = Search(settings.MISAGO_SEARCH)
