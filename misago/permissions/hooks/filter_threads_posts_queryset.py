@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 class FilterThreadsPostsQuerysetHookAction(Protocol):
     """
-    Misago function used to filter a queryset to retrieve posts user can see.
+    Misago function used to filter a queryset to retrieve posts the user can see.
 
     # Arguments
 
@@ -88,16 +88,16 @@ class FilterThreadsPostsQuerysetHook(
 ):
     """
     This hook wraps the standard function that Misago uses to filter a queryset
-    to retrieve posts user can see.
+    to retrieve posts the user can see.
 
-    This function is usually combined with the filter_threads_queryset
+    This function is usually combined with the `filter_threads_queryset`
     to retrieve all posts the user can see from visible threads, e.g. for search
     results or user activity feeds.
 
     # Example
 
     The code below implements a custom filter function that hides too old posts
-    from anonymous user.
+    from the anonymous user.
 
     ```python
     from datetime import timedetla
