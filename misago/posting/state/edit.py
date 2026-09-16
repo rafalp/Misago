@@ -111,8 +111,8 @@ class PostEditState(State):
                 request=request,
             )
 
-            ThreadEvent.objects.context_object(self.thread).update(
-                context=self.thread.title
+            ThreadEvent.objects.content_object(self.thread).update(
+                detail=self.thread.title
             )
 
         self.save_attachments()

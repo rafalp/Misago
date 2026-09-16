@@ -99,7 +99,7 @@ def test_private_thread_members_add_view_adds_new_thread_members(
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.ADDED_MEMBER,
-        context=admin.username,
+        detail=admin.username,
     )
 
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
@@ -132,7 +132,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.ADDED_MEMBER,
-        context=admin.username,
+        detail=admin.username,
     )
 
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
@@ -163,7 +163,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.ADDED_MEMBER,
-        context=admin.username,
+        detail=admin.username,
     )
 
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
@@ -353,7 +353,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_locked_threa
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.ADDED_MEMBER,
-        context=admin.username,
+        detail=admin.username,
     )
 
     mock_notify_on_new_private_thread.delay.assert_called_once_with(

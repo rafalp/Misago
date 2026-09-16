@@ -386,7 +386,7 @@ def test_thread_edit_view_creates_changed_title_thread_event(
         thread=user_thread,
         actor=user,
         event_type=ThreadEventTypeName.CHANGED_TITLE,
-        context=user_thread.title,
+        detail=user_thread.title,
     )
 
     user_thread.refresh_from_db()

@@ -395,7 +395,7 @@ def test_private_thread_edit_view_creates_changed_title_thread_event(
         thread=user_private_thread,
         actor=user,
         event_type=ThreadEventTypeName.CHANGED_TITLE,
-        context=user_private_thread.title,
+        detail=user_private_thread.title,
     )
 
     user_private_thread.refresh_from_db()

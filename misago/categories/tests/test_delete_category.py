@@ -151,8 +151,8 @@ def test_delete_category_clears_thread_event_generic_relation(
     category_relations.assert_relations_deleted()
 
     thread_event.refresh_from_db()
-    assert thread_event.context_type == None
-    assert thread_event.context_id == None
+    assert thread_event.content_type == None
+    assert thread_event.object_id == None
 
 
 # A list of parametrized test params for category deletion

@@ -205,8 +205,8 @@ def test_delete_thread_removes_clears_related_thread_event_context(
     delete_thread(thread)
 
     thread_event.refresh_from_db()
-    assert not thread_event.context_type
-    assert not thread_event.context_id
+    assert not thread_event.content_type
+    assert not thread_event.object_id
 
 
 def test_delete_thread_deletes_thread_events(thread):

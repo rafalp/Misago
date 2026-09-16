@@ -119,7 +119,7 @@ class EditCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
     def handle_form(self, form, request, target):
         # Todo: add plugin hooks for admin form updates
         if "name" in form.changed_data:
-            ThreadEvent.objects.context_object(target).update(context=target.name)
+            ThreadEvent.objects.content_object(target).update(detail=target.name)
 
         super().handle_form(form, request, target)
 

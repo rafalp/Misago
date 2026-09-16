@@ -17,45 +17,45 @@ class ThreadEventType:
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
         return escape(self.description)
 
-    def get_context_text(self, context: str):
+    def get_detail_text(self, context: str):
         return f"<em>{escape(context)}</em>"
 
-    def get_context_link(self, context_url, context: str):
+    def get_detail_link(self, context_url, context: str):
         return f'<a href="{escape(context_url)}">{escape(context)}</a>'
 
-    def get_context_obj_from_data(
+    def get_content_object_from_data(
         self, thread_event: ThreadEvent, data: dict
     ) -> Model | None:
-        if not thread_event.context_id:
+        if not thread_event.object_id:
             return None
-        return data.get(thread_event.context_id)
+        return data.get(thread_event.object_id)
 
 
-class TextContextThreadEventType(ThreadEventType):
+class TextDetailThreadEventType(ThreadEventType):
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        replacements = {"context": self.get_context_text(thread_event.context)}
+        replacements = {"detail": self.get_detail_text(thread_event.detail)}
         return escape(self.description) % replacements
 
 
-class CategoryContextThreadEventType(ThreadEventType):
+class CategoryDetailThreadEventType(ThreadEventType):
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        category = self.get_context_obj_from_data(thread_event, data["categories"])
+        category = self.get_content_object_from_data(thread_event, data["categories"])
 
         if category:
             replacements = {
-                "context": self.get_context_link(
+                "detail": self.get_detail_link(
                     category.get_absolute_url(), category.name
                 )
             }
         else:
-            replacements = {"context": self.get_context_text(thread_event.context)}
+            replacements = {"detail": self.get_detail_text(thread_event.detail)}
 
         return escape(self.description) % replacements
 
 
-class ThreadContextThreadEventType(ThreadEventType):
+class ThreadDetailThreadEventType(ThreadEventType):
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        thread = self.get_context_obj_from_data(thread_event, data["threads"])
+        thread = self.get_content_object_from_data(thread_event, data["threads"])
         category = None
 
         if thread:
@@ -63,26 +63,26 @@ class ThreadContextThreadEventType(ThreadEventType):
 
         if thread and category:
             replacements = {
-                "context": self.get_context_link(
+                "detail": self.get_detail_link(
                     get_thread_url(thread, category), thread.title
                 )
             }
         else:
-            replacements = {"context": self.get_context_text(thread_event.context)}
+            replacements = {"detail": self.get_detail_text(thread_event.detail)}
 
         return escape(self.description) % replacements
 
 
-class UserContextThreadEventType(ThreadEventType):
+class UserDetailThreadEventType(ThreadEventType):
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        user = self.get_context_obj_from_data(thread_event, data["users"])
+        user = self.get_content_object_from_data(thread_event, data["users"])
 
         if user:
             replacements = {
-                "context": self.get_context_link(user.get_absolute_url(), user.username)
+                "detail": self.get_detail_link(user.get_absolute_url(), user.username)
             }
         else:
-            replacements = {"context": self.get_context_text(thread_event.context)}
+            replacements = {"detail": self.get_detail_text(thread_event.detail)}
 
         return escape(self.description) % replacements
 
@@ -95,10 +95,10 @@ class TestThreadEventType(ThreadEventType):
     def get_description(
         self, thread_event: ThreadEvent, data: dict | None = None
     ) -> str:
-        if thread_event.context:
-            return f"UPDATE [{thread_event.id}] - {escape(thread_event.context)}"
+        if thread_event.detail:
+            return f"EVENT [{thread_event.id}] - {escape(thread_event.detail)}"
 
-        return f"UPDATE [{thread_event.id}]"
+        return f"EVENT [{thread_event.id}]"
 
 
 @thread_events_renderer.register_thread_event_type
@@ -176,103 +176,103 @@ class RemovedReplyApprovalThreadEventType(ThreadEventType):
 
 
 @thread_events_renderer.register_thread_event_type
-class MovedThreadEventType(CategoryContextThreadEventType):
+class MovedThreadEventType(CategoryDetailThreadEventType):
     event_type = ThreadEventTypeName.MOVED
     icon = "tabler/arrow-right.svg"
     description = pgettext_lazy(
-        "thread event type description", "Moved from %(context)s"
+        "thread event type description", "Moved from %(detail)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
-class MergedThreadEventType(ThreadContextThreadEventType):
+class MergedThreadEventType(ThreadDetailThreadEventType):
     event_type = ThreadEventTypeName.MERGED
     icon = "tabler/arrows-join-2.svg"
     description = pgettext_lazy(
         "thread event type description",
-        "Merged %(context)s with this thread",
+        "Merged %(detail)s with this thread",
     )
 
 
 @thread_events_renderer.register_thread_event_type
-class ChangedTitleThreadEventType(TextContextThreadEventType):
+class ChangedTitleThreadEventType(TextDetailThreadEventType):
     event_type = ThreadEventTypeName.CHANGED_TITLE
     icon = "tabler/pencil.svg"
     description = pgettext_lazy(
-        "thread event type description", "Changed title from %(context)s"
+        "thread event type description", "Changed title from %(detail)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
-class MovedPostsToThreadEventType(ThreadContextThreadEventType):
+class MovedPostsToThreadEventType(ThreadDetailThreadEventType):
     event_type = ThreadEventTypeName.MOVED_POSTS_TO
     icon = "tabler/arrows-right.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        thread = self.get_context_obj_from_data(thread_event, data["threads"])
+        thread = self.get_content_object_from_data(thread_event, data["threads"])
         category = None
 
         if thread:
             category = data["categories"].get(thread.category_id)
 
-        replacements = {"posts": thread_event.context_items}
+        replacements = {"posts": thread_event.items}
 
         if thread and category:
-            replacements["context"] = self.get_context_link(
+            replacements["detail"] = self.get_detail_link(
                 get_thread_url(thread, category), thread.title
             )
         else:
-            replacements["context"] = self.get_context_text(thread_event.context)
+            replacements["detail"] = self.get_detail_text(thread_event.detail)
 
-        replacements["posts"] = thread_event.context_items
+        replacements["posts"] = thread_event.items
         description = npgettext(
             "thread event type description",
-            "Moved %(posts)s post to %(context)s",
-            "Moved %(posts)s posts to %(context)s",
-            thread_event.context_items,
+            "Moved %(posts)s post to %(detail)s",
+            "Moved %(posts)s posts to %(detail)s",
+            thread_event.items,
         )
 
         return escape(description) % replacements
 
 
 @thread_events_renderer.register_thread_event_type
-class MovedPostsFromThreadEventType(ThreadContextThreadEventType):
+class MovedPostsFromThreadEventType(ThreadDetailThreadEventType):
     event_type = ThreadEventTypeName.MOVED_POSTS_FROM
     icon = "tabler/arrows-right.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        thread = self.get_context_obj_from_data(thread_event, data["threads"])
+        thread = self.get_content_object_from_data(thread_event, data["threads"])
         category = None
 
         if thread:
             category = data["categories"].get(thread.category_id)
 
-        replacements = {"posts": thread_event.context_items}
+        replacements = {"posts": thread_event.items}
 
         if thread and category:
-            replacements["context"] = self.get_context_link(
+            replacements["detail"] = self.get_detail_link(
                 get_thread_url(thread, category), thread.title
             )
         else:
-            replacements["context"] = self.get_context_text(thread_event.context)
+            replacements["detail"] = self.get_detail_text(thread_event.detail)
 
         description = npgettext(
             "thread event type description",
-            "Moved %(posts)s post from %(context)s",
-            "Moved %(posts)s posts from %(context)s",
-            thread_event.context_items,
+            "Moved %(posts)s post from %(detail)s",
+            "Moved %(posts)s posts from %(detail)s",
+            thread_event.items,
         )
 
         return escape(description) % replacements
 
 
 @thread_events_renderer.register_thread_event_type
-class SplitPostsIntoThreadEventType(ThreadContextThreadEventType):
+class SplitPostsIntoThreadEventType(ThreadDetailThreadEventType):
     event_type = ThreadEventTypeName.SPLIT_POSTS_INTO
     icon = "tabler/arrows-split-2.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        thread = self.get_context_obj_from_data(thread_event, data["threads"])
+        thread = self.get_content_object_from_data(thread_event, data["threads"])
         category = None
 
         if thread:
@@ -281,35 +281,35 @@ class SplitPostsIntoThreadEventType(ThreadContextThreadEventType):
         replacements = {}
 
         if thread and category:
-            replacements["context"] = self.get_context_link(
+            replacements["detail"] = self.get_detail_link(
                 get_thread_url(thread, category), thread.title
             )
         else:
-            replacements["context"] = self.get_context_text(thread_event.context)
+            replacements["detail"] = self.get_detail_text(thread_event.detail)
 
-        if thread_event.context_items:
-            replacements["posts"] = thread_event.context_items
+        if thread_event.items:
+            replacements["posts"] = thread_event.items
             description = npgettext(
                 "thread event type description",
-                "Split %(posts)s post into %(context)s",
-                "Split %(posts)s posts into %(context)s",
-                thread_event.context_items,
+                "Split %(posts)s post into %(detail)s",
+                "Split %(posts)s posts into %(detail)s",
+                thread_event.items,
             )
         else:
             description = pgettext(
-                "thread event type description", "Split into %(context)s"
+                "thread event type description", "Split into %(detail)s"
             )
 
         return escape(description) % replacements
 
 
 @thread_events_renderer.register_thread_event_type
-class SplitPostsFromThreadEventType(ThreadContextThreadEventType):
+class SplitPostsFromThreadEventType(ThreadDetailThreadEventType):
     event_type = ThreadEventTypeName.SPLIT_POSTS_FROM
     icon = "tabler/arrows-split-2.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
-        thread = self.get_context_obj_from_data(thread_event, data["threads"])
+        thread = self.get_content_object_from_data(thread_event, data["threads"])
         category = None
 
         if thread:
@@ -318,23 +318,23 @@ class SplitPostsFromThreadEventType(ThreadContextThreadEventType):
         replacements = {}
 
         if thread and category:
-            replacements["context"] = self.get_context_link(
+            replacements["detail"] = self.get_detail_link(
                 get_thread_url(thread, category), thread.title
             )
         else:
-            replacements["context"] = self.get_context_text(thread_event.context)
+            replacements["detail"] = self.get_detail_text(thread_event.detail)
 
-        if thread_event.context_items:
-            replacements["posts"] = thread_event.context_items
+        if thread_event.items:
+            replacements["posts"] = thread_event.items
             description = npgettext(
                 "thread event type description",
-                "Split %(posts)s post from %(context)s",
-                "Split %(posts)s posts from %(context)s",
-                thread_event.context_items,
+                "Split %(posts)s post from %(detail)s",
+                "Split %(posts)s posts from %(detail)s",
+                thread_event.items,
             )
         else:
             description = pgettext(
-                "thread event type description", "Split from %(context)s"
+                "thread event type description", "Split from %(detail)s"
             )
 
         return escape(description) % replacements
@@ -350,18 +350,18 @@ class DeletedPostsThreadEventType(ThreadEventType):
             "thread event type description",
             "Deleted %(posts)s post",
             "Deleted %(posts)s posts",
-            thread_event.context_items,
-        ) % {"posts": thread_event.context_items}
+            thread_event.items,
+        ) % {"posts": thread_event.items}
 
         return escape(description)
 
 
 @thread_events_renderer.register_thread_event_type
-class StartedPollThreadEventType(TextContextThreadEventType):
+class StartedPollThreadEventType(TextDetailThreadEventType):
     event_type = ThreadEventTypeName.STARTED_POLL
     icon = "tabler/chart-bar.svg"
     description = pgettext_lazy(
-        "thread event type description", "Started poll: %(context)s"
+        "thread event type description", "Started poll: %(detail)s"
     )
 
 
@@ -380,11 +380,11 @@ class OpenedPollThreadEventType(ThreadEventType):
 
 
 @thread_events_renderer.register_thread_event_type
-class DeletedPollThreadEventType(TextContextThreadEventType):
+class DeletedPollThreadEventType(TextDetailThreadEventType):
     event_type = ThreadEventTypeName.DELETED_POLL
     icon = "tabler/chart-bar.svg"
     description = pgettext_lazy(
-        "thread event type description", "Deleted poll: %(context)s"
+        "thread event type description", "Deleted poll: %(detail)s"
     )
 
 
@@ -396,11 +396,11 @@ class TookOwnershipThreadEventType(ThreadEventType):
 
 
 @thread_events_renderer.register_thread_event_type
-class ChangedOwnerThreadEventType(UserContextThreadEventType):
+class ChangedOwnerThreadEventType(UserDetailThreadEventType):
     event_type = ThreadEventTypeName.CHANGED_OWNER
     icon = "tabler/user.svg"
     description = pgettext_lazy(
-        "thread event type description", "Changed owner to %(context)s"
+        "thread event type description", "Changed owner to %(detail)s"
     )
 
 
@@ -419,14 +419,14 @@ class MemberLeftThreadEventType(ThreadEventType):
 
 
 @thread_events_renderer.register_thread_event_type
-class AddedMemberThreadEventType(UserContextThreadEventType):
+class AddedMemberThreadEventType(UserDetailThreadEventType):
     event_type = ThreadEventTypeName.ADDED_MEMBER
     icon = "tabler/user.svg"
-    description = pgettext_lazy("thread event type description", "Added %(context)s")
+    description = pgettext_lazy("thread event type description", "Added %(detail)s")
 
 
 @thread_events_renderer.register_thread_event_type
-class RemovedMemberThreadEventType(UserContextThreadEventType):
+class RemovedMemberThreadEventType(UserDetailThreadEventType):
     event_type = ThreadEventTypeName.REMOVED_MEMBER
     icon = "tabler/user-off.svg"
-    description = pgettext_lazy("thread event type description", "Removed %(context)s")
+    description = pgettext_lazy("thread event type description", "Removed %(detail)s")
