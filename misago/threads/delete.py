@@ -39,11 +39,7 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
         is_deleted=True,
     )
 
-    content_type = ContentType.objects.get_for_model(Thread)
-    ThreadEvent.objects.filter(
-        content_type=content_type,
-        object_id=thread.id,
-    ).clear_content_objects()
+    ThreadEvent.objects.content_object(thread).clear_content_objects()
 
     delete_all(PollVote, thread_id=thread.id)
     delete_all(Poll, thread_id=thread.id)

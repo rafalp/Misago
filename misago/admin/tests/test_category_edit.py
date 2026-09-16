@@ -67,7 +67,7 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
     return data
 
 
-def test_edit_category_form_updates_context_on_thread_updates(
+def test_edit_category_form_updates_detail_on_thread_updates(
     default_category, sibling_category, admin_client, thread
 ):
     thread_update = create_test_thread_event(

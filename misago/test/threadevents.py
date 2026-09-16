@@ -30,7 +30,7 @@ def thread_event_detail(user, thread):
 
 
 @pytest.fixture
-def thread_event_category_content(user, thread, sibling_category):
+def thread_event_category_content_object(user, thread, sibling_category):
     content_type = ContentType.objects.get_for_model(sibling_category)
     return ThreadEvent.objects.create(
         category=thread.category,
@@ -45,7 +45,7 @@ def thread_event_category_content(user, thread, sibling_category):
 
 
 @pytest.fixture
-def thread_event_thread_content(user, thread, other_thread):
+def thread_event_thread_content_object(user, thread, other_thread):
     content_type = ContentType.objects.get_for_model(other_thread)
     return ThreadEvent.objects.create(
         category=thread.category,
@@ -60,7 +60,7 @@ def thread_event_thread_content(user, thread, other_thread):
 
 
 @pytest.fixture
-def thread_event_user_content(user, thread, other_user):
+def thread_event_user_content_object(user, thread, other_user):
     content_type = ContentType.objects.get_for_model(other_user)
     return ThreadEvent.objects.create(
         category=thread.category,

@@ -189,7 +189,7 @@ def archive_user_thread_events(sender, archive=None, **kwargs):
 
 
 @receiver(archive_user_data)
-def archive_user_content_thread_events(sender, archive=None, **kwargs):
+def archive_user_content_object_thread_events(sender, archive=None, **kwargs):
     queryset = ThreadEvent.objects.content_object(sender).order_by("id")
 
     for thread_event in queryset.iterator(chunk_size=50):

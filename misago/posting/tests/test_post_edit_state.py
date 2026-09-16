@@ -205,7 +205,7 @@ def test_post_edit_state_save_creates_thread_event_object_for_changed_title(
     assert not thread_event.content_type
 
 
-def test_post_edit_state_save_updates_context_in_existing_thread_events(
+def test_post_edit_state_save_updates_detail_in_existing_thread_events(
     user_request,
     user,
     thread,

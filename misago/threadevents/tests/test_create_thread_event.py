@@ -37,7 +37,7 @@ def test_create_thread_event_creates_thread_event_without_actor(thread):
     thread_event.refresh_from_db()
 
 
-def test_create_thread_event_creates_thread_event_with_content(thread):
+def test_create_thread_event_creates_thread_event_with_detail(thread):
     thread_event = create_thread_event(thread, "closed", detail="Old title")
     assert thread_event.detail == "Old title"
     assert thread_event.content_type is None
@@ -46,7 +46,7 @@ def test_create_thread_event_creates_thread_event_with_content(thread):
     thread_event.refresh_from_db()
 
 
-def test_create_thread_event_creates_thread_event_with_full_content(
+def test_create_thread_event_creates_thread_event_with_content_object(
     thread, sibling_category
 ):
     thread_event = create_thread_event(

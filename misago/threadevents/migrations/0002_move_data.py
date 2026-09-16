@@ -34,7 +34,7 @@ def convert_events_to_thread_events(apps, _):
         content_type = None
         object_id = None
 
-        if parsed_context := get_event_content_data(apps, post.event_context):
+        if parsed_context := get_event_content_object(apps, post.event_context):
             detail, content_type, object_id = parsed_context
 
         thread_event = ThreadEvent.objects.create(
@@ -57,7 +57,7 @@ def convert_events_to_thread_events(apps, _):
         ThreadEvent.objects.filter(id=thread_event.id).update(created_at=post.posted_on)
 
 
-def get_event_content_data(
+def get_event_content_object(
     apps, event_context: dict | None
 ) -> tuple[str, int, str] | None:
     if not event_context:

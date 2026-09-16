@@ -452,7 +452,7 @@ class PostFeed:
             thread_event.actor = prefetched_data["users"].get(thread_event.actor_id)
             item["actor"] = thread_event.actor
 
-        if thread_event.content_type and thread_event.object_id:
+        if thread_event.content_type_id and thread_event.object_id:
             relation_name = None
             content_type_model = thread_event.content_type.model_class()
             if issubclass(content_type_model, Attachment):
