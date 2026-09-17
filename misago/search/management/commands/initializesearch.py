@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from ...exceptions import SearchBackendError
-from ...posts import posts_search
+from ...search import search
 
 
 class Command(BaseCommand):
@@ -9,13 +9,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            posts_search.initialize()
+            search.initialize()
         except SearchBackendError as exc:
             self.stderr.write(
-                f'Error initializing the search backend "{posts_search.backend.name}":'
+                f'Error initializing the search backend "{search.backend.name}":'
                 f"\n\n{exc}"
             )
         else:
-            self.stdout.write(
-                f"Initialized the search backend: {posts_search.backend.name}"
-            )
+            self.stdout.write(f"Initialized the search backend: {search.backend.name}")

@@ -10,7 +10,7 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .backends import SearchBackend
 from .enums import SearchMode, SearchSort
-from .types import ThreadsSearchResults
+from .types import ThreadsSearchResult
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -44,7 +44,7 @@ class Search:
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        categories: list[Category | CategoryProxy] | None = None,
+        categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         after: datetime | None = None,
@@ -54,11 +54,11 @@ class Search:
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> ThreadsSearchResults:
+    ) -> ThreadsSearchResult:
         return self.backend.search_threads(
-            query=query,
-            permissions=permissions,
-            categories=categories,
+            query,
+            permissions,
+            categories,
             threads=threads,
             users=users,
             after=after,
@@ -83,10 +83,10 @@ class Search:
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> ThreadsSearchResults:
+    ) -> ThreadsSearchResult:
         return self.backend.search_private_threads(
-            query=query,
-            permissions=permissions,
+            query,
+            permissions,
             threads=threads,
             users=users,
             after=after,
@@ -101,36 +101,40 @@ class Search:
     def index_thread(self, thread: Thread):
         return self.backend.index_threads([thread])
 
-    def index_threads(self, threads: Iterable[Thread]):
+    def bulk_index_threads(self, threads: Iterable[Thread]):
         return self.backend.index_threads(threads)
 
     def index_post(self, post: Post, search_document: str):
         return self.backend.index_posts([(post, search_document)])
 
-    def index_posts(self, posts: Iterable[tuple[Post, str]]):
+    def bulk_index_posts(self, posts: Iterable[tuple[Post, str]]):
         return self.backend.index_posts(posts)
 
-    def move_category_posts(
+    def bulk_move_categories(
         self, categories: Category | Iterable[Category], new_category: Category
     ):
         if isinstance(categories, Category):
             categories = [categories]
 
-        return self.backend.move_category_posts(categories, new_category)
+        return self.backend.move_categories(categories, new_category)
 
-    def move_thread_posts(self, threads: Thread | Iterable[Thread], new_thread: Thread):
+    def bulk_move_thread_posts(
+        self, threads: Thread | Iterable[Thread], new_thread: Thread
+    ):
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.move_thread_posts(threads, new_thread)
 
-    def move_threads(self, threads: Thread | Iterable[Thread], new_category: Category):
+    def bulk_move_threads(
+        self, threads: Thread | Iterable[Thread], new_category: Category
+    ):
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.move_threads(threads, new_category)
 
-    def move_posts(self, posts: Post | Iterable[Post], new_thread: Thread):
+    def bulk_move_posts(self, posts: Post | Iterable[Post], new_thread: Thread):
         if isinstance(posts, Post):
             posts = [posts]
 
@@ -157,7 +161,7 @@ class Search:
             **kwargs,
         )
 
-    def update_threads(
+    def bulk_update_threads(
         self,
         threads: Iterable[Thread],
         *,
@@ -187,7 +191,7 @@ class Search:
             **kwargs,
         )
 
-    def update_posts(
+    def bulk_update_posts(
         self,
         posts: Iterable[Post],
         *,
@@ -205,25 +209,25 @@ class Search:
     def delete_category(self, category: Category):
         return self.backend.delete_categories([category])
 
-    def delete_categories(self, categories: Iterable[Category]):
+    def bulk_delete_categories(self, categories: Iterable[Category]):
         return self.backend.delete_categories(categories)
 
     def delete_thread(self, thread: Thread):
         return self.backend.delete_threads([thread])
 
-    def delete_threads(self, threads: Iterable[Thread]):
+    def bulk_delete_threads(self, threads: Iterable[Thread]):
         return self.backend.delete_threads(threads)
 
     def delete_post(self, post: Post):
         return self.backend.delete_posts([post])
 
-    def delete_posts(self, posts: Iterable[Post]):
+    def bulk_delete_posts(self, posts: Iterable[Post]):
         return self.backend.delete_posts(posts)
 
     def delete_user(self, user: "User"):
         return self.backend.delete_users([user])
 
-    def delete_users(self, users: Iterable["User"]):
+    def bulk_delete_users(self, users: Iterable["User"]):
         return self.backend.delete_users(users)
 
     def clear(self):
