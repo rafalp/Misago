@@ -4,8 +4,9 @@ from functools import reduce
 from html import escape
 from itertools import batched
 from time import time
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING, Iterable, TypedDict
 
+from django.conf import settings
 from django.contrib.postgres.search import (
     SearchHeadline,
     SearchQuery,
@@ -13,19 +14,40 @@ from django.contrib.postgres.search import (
     SearchVector,
 )
 from django.db import transaction
-from django.db.models import F, Max, Q, Value
+from django.db.models import F, Max, QuerySet, Value
 
 from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
+from ..permissions.privatethreads import (
+    filter_private_threads_posts_queryset,
+    filter_private_threads_queryset,
+)
 from ..permissions.proxy import UserPermissionsProxy
-from ..permissions.threads import filter_threads_queryset
+from ..permissions.threads import filter_threads_posts_queryset, filter_threads_queryset
 from ..threads.models import Post, Thread
 from .enums import SearchMode, SearchSort
 from .models import PostSearch, ThreadSearch
-from .types import ThreadsSearchResultItem, ThreadsSearchResults
+from .types import ThreadsSearchResult, ThreadsSearchResultItem
 
 if TYPE_CHECKING:
     from ..users.models import User
+
+
+class ThreadsSearchUpdate(TypedDict, total=False):
+    category: Category
+    thread: Thread
+    user: "User"
+
+    is_hidden: bool
+    is_unapproved: bool
+
+
+class PostsSearchUpdate(TypedDict, total=False):
+    thread: Thread
+    user: "User"
+
+    is_hidden: bool
+    is_unapproved: bool
 
 
 class SearchBackend(ABC):
@@ -42,7 +64,7 @@ class SearchBackend(ABC):
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        categories: list[Category | CategoryProxy] | None = None,
+        categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         after: datetime | None = None,
@@ -52,7 +74,7 @@ class SearchBackend(ABC):
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> ThreadsSearchResults:
+    ) -> ThreadsSearchResult:
         pass
 
     @abstractmethod
@@ -69,7 +91,7 @@ class SearchBackend(ABC):
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> ThreadsSearchResults:
+    ) -> ThreadsSearchResult:
         pass
 
     @abstractmethod
@@ -81,67 +103,45 @@ class SearchBackend(ABC):
         pass
 
     @abstractmethod
-    def move_category_posts(
-        self, categories: Iterable[Category], new_category: Category
-    ):
-        pass
-
-    @abstractmethod
-    def move_threads(self, threads: Iterable[Thread], new_category: Category):
-        pass
-
-    @abstractmethod
-    def move_thread_posts(self, threads: Iterable[Thread], new_thread: Thread):
-        pass
-
-    @abstractmethod
-    def move_posts(self, posts: Iterable[Post], new_thread: Thread):
-        pass
-
-    @abstractmethod
     def update_thread_title(self, thread: Thread):
         pass
 
     @abstractmethod
-    def update_thread_members(self, thread: Thread, members: Iterable[int]):
+    def update_thread_members(self, thread: Thread, members: Iterable["User | int"]):
         pass
 
     @abstractmethod
     def update_threads(
         self,
-        threads: Iterable[Thread],
+        update: ThreadsSearchUpdate,
         *,
-        is_hidden: bool | None = None,
-        is_unapproved: bool | None = None,
-        **kwargs,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        users: Iterable["User"] | None = None,
     ):
         pass
 
     @abstractmethod
     def update_posts(
         self,
-        posts: Iterable[Post],
+        update: PostsSearchUpdate,
         *,
-        is_hidden: bool | None = None,
-        is_unapproved: bool | None = None,
-        **kwargs,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        posts: Iterable[Post] | None = None,
+        users: Iterable["User"] | None = None,
     ):
         pass
 
     @abstractmethod
-    def delete_categories(self, categories: Iterable[Category]):
-        pass
-
-    @abstractmethod
-    def delete_threads(self, threads: Iterable[Thread]):
-        pass
-
-    @abstractmethod
-    def delete_posts(self, posts: Iterable[Post]):
-        pass
-
-    @abstractmethod
-    def delete_users(self, users: Iterable["User"]):
+    def delete(
+        self,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        posts: Iterable[Post] | None = None,
+        users: Iterable["User"] | None = None,
+    ):
         pass
 
     @abstractmethod
@@ -154,62 +154,175 @@ class PostgreSQLSearchBackend(SearchBackend):
     search_config: str
     min_rank: float | None
 
-    headline_max_words: int | None
+    HEADLINE_START_SELECTION = "<hl>"
+    HEADLINE_STOP_SELECTION = "</hl>"
+
     headline_min_words: int | None
+    headline_max_words: int | None
     headline_max_fragments: int | None
     headline_short_word: int | None
 
+    languages_configs = {
+        "ar": "arabic",
+        "hy": "armenian",
+        "eu": "basque",
+        "ca": "catalan",
+        "da": "danish",
+        "nl": "dutch",
+        "en": "english",
+        "fi": "finnish",
+        "fr": "french",
+        "de": "german",
+        "el": "greek",
+        "hi": "hindi",
+        "hu": "hungarian",
+        "id": "indonesian",
+        "ga": "irish",
+        "it": "italian",
+        "lt": "lithuanian",
+        "ne": "nepali",
+        "nb": "norwegian",
+        "pt": "portuguese",
+        "ro": "romanian",
+        "ru": "russian",
+        "sr": "serbian",
+        "es": "spanish",
+        "sv": "swedish",
+        "ta": "tamil",
+        "tr": "turkish",
+    }
+
     def __init__(self, options: dict):
-        self.search_config = options.get("PG_SEARCH_CONFIG", "simple")
+        search_config = options.get("PG_SEARCH_CONFIG", "simple")
+        if search_config == "auto":
+            language, *_ = settings.LANGUAGE_CODE.replace("-", "_").partition("_")
+            search_config = self.languages_configs.get(language, "simple")
+
+        self.search_config = search_config
         self.min_rank = options.get("PG_MIN_RANK", 0.0001)
 
-        self.headline_max_words = options.get("PG_HEADLINE_MAX_WORDS", 55)
-        self.headline_min_words = options.get("PG_HEADLINE_MIN_WORDS", 35)
+        self.headline_min_words = options.get("PG_HEADLINE_MIN_WORDS", 60)
+        self.headline_max_words = options.get("PG_HEADLINE_MAX_WORDS", 61)
         self.headline_max_fragments = options.get("PG_HEADLINE_MAX_FRAGMENTS", 0)
         self.headline_short_word = options.get("PG_HEADLINE_SHORT_WORD")
 
     # Search operations
 
-    def search_thread_titles(
+    def search_threads(
         self,
         query: str,
         permissions: UserPermissionsProxy,
-        *,
         categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
-        started_after: datetime | None = None,
-        started_before: datetime | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
-        search_query = self._get_search_query(query)
+    ) -> ThreadsSearchResult:
+        if isinstance(threads, list):
+            thread_ids = [thread.id for thread in threads]
+        else:
+            thread_ids = filter_threads_queryset(permissions, categories).values("id")
 
-        queryset = ThreadSearch.objects.filter(
-            thread_id__in=filter_threads_queryset(
-                permissions, categories, Thread.objects
-            ).values("id"),
-            search_vector=search_query,
-        ).annotate(
-            headline=SearchHeadline(
-                "title",
-                query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
-                highlight_all=True,
-            ),
+        common_kwargs = dict(
+            users=users,
+            after=after,
+            before=before,
+            order_by=order_by,
+            offset=offset,
+            limit=limit,
+            **kwargs,
         )
 
-        if threads:
-            queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
+        if mode == SearchMode.THREAD_TITLES:
+            return self._search_thread_titles(query, thread_ids, **common_kwargs)
+
+        post_ids = filter_threads_posts_queryset(permissions, categories).values("id")
+
+        if mode == SearchMode.THREADS:
+            return self._search_threads(query, thread_ids, post_ids, **common_kwargs)
+
+        if mode == SearchMode.POSTS:
+            return self._search_posts(query, thread_ids, post_ids, **common_kwargs)
+
+    def search_private_threads(
+        self,
+        query: str,
+        permissions: UserPermissionsProxy,
+        threads: list[Thread] | None = None,
+        users: list["User"] | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        mode: SearchMode = SearchMode.THREADS,
+        order_by: SearchSort = SearchSort.RELEVANCE,
+        offset: int = 0,
+        limit: int = 50,
+        **kwargs,
+    ) -> ThreadsSearchResult:
+        private_threads = Category.objects.private_threads()
+
+        if isinstance(threads, list):
+            thread_ids = [thread.id for thread in threads]
+        else:
+            thread_ids = filter_private_threads_queryset(
+                permissions, private_threads.thread_set
+            ).values("id")
+
+        common_kwargs = dict(
+            users=users,
+            after=after,
+            before=before,
+            order_by=order_by,
+            offset=offset,
+            limit=limit,
+            **kwargs,
+        )
+
+        if mode == SearchMode.THREAD_TITLES:
+            return self._search_thread_titles(query, thread_ids, **common_kwargs)
+
+        post_ids = filter_private_threads_posts_queryset(
+            permissions, private_threads.post_Set
+        ).values("id")
+
+        if mode == SearchMode.THREADS:
+            return self._search_threads(query, thread_ids, post_ids, **common_kwargs)
+
+        if mode == SearchMode.POSTS:
+            return self._search_posts(query, thread_ids, post_ids, **common_kwargs)
+
+    def _search_thread_titles(
+        self,
+        query: str,
+        thread_ids: list[int] | QuerySet,
+        users: list["User"] | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
+        order_by: SearchSort = SearchSort.RELEVANCE,
+        offset: int = 0,
+        limit: int = 50,
+        **kwargs,
+    ):
+        search_query = self.parse_search_query(query)
+
+        # Build search queryset
+        queryset = ThreadSearch.objects.filter(
+            thread_id__in=thread_ids,
+            search_vector=search_query,
+        ).annotate(
+            headline=self._get_title_headline(query),
+        )
+
         if users:
             queryset = queryset.filter(starter_id__in=[user.id for user in users])
-        if started_after:
-            queryset = queryset.filter(started_at__gte=started_after)
-        if started_before:
-            queryset = queryset.filter(started_at__lte=started_before)
+        if after:
+            queryset = queryset.filter(started_at__gte=after)
+        if before:
+            queryset = queryset.filter(started_at__lte=before)
 
         if order_by == SearchSort.RELEVANCE or self.min_rank:
             queryset = queryset.annotate(
@@ -223,50 +336,35 @@ class PostgreSQLSearchBackend(SearchBackend):
         else:
             queryset = queryset.order_by("-thread_id")
 
-        queryset = queryset[offset : offset + limit + 1]
-
         start_time = time()
 
-        threads = list(queryset)
+        # Search threads
+        threads = list(queryset[offset : offset + limit + 1])
         threads, has_more = threads[:limit], bool(threads[limit:])
 
+        # Escape hatch for no results
         if not threads:
-            return PostSearchResults(
-                results=[],
-                offset=offset,
-                limit=limit,
-                count=0,
-                has_more=bool(has_more),
-                time=time() - start_time,
-            )
+            return self._empty_threads_result(start_time)
 
+        # Fetch posts
         posts_queryset = PostSearch.objects.filter(
             thread_id__in=[thread.thread_id for thread in threads],
             is_first_post=True,
         ).annotate(
-            headline=SearchHeadline(
-                "content",
-                query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
-                max_words=self.headline_max_words,
-                min_words=self.headline_min_words,
-                short_word=self.headline_short_word,
-                max_fragments=self.headline_max_fragments,
-            ),
+            headline=self._get_content_headline(search_query),
         )
         posts = {post.thread_id: post for post in posts_queryset}
 
         total_time = time() - start_time
 
-        final_results: list[PostSearchResult] = []
+        items: list[ThreadsSearchResultItem] = []
         for thread in threads:
             post = posts.get(thread.thread_id)
             if not post:
                 continue
 
-            final_results.append(
-                PostSearchResult(
+            items.append(
+                ThreadsSearchResultItem(
                     post_id=post.post_id,
                     thread_title=thread.headline,
                     post_content=post.headline,
@@ -274,64 +372,53 @@ class PostgreSQLSearchBackend(SearchBackend):
                 )
             )
 
-        return PostSearchResults(
-            results=final_results,
-            offset=offset,
-            limit=limit,
-            count=min(len(posts), limit),
+        return ThreadsSearchResult(
+            items=items,
             has_more=has_more,
             time=total_time,
         )
 
-    def search_threads(
+    def _search_threads(
         self,
         query: str,
-        permissions: UserPermissionsProxy,
-        *,
-        categories: list[Category | CategoryProxy] | None = None,
-        threads: list[Thread] | None = None,
+        thread_ids: list[int] | QuerySet,
+        post_ids: QuerySet,
         users: list["User"] | None = None,
-        posted_after: datetime | None = None,
-        posted_before: datetime | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
-        search_query = self._get_search_query(query)
+    ) -> ThreadsSearchResult:
+        search_query = self.parse_search_query(query)
 
         queryset = PostSearch.objects.filter(
-            thread_id__in=filter_threads_queryset(
-                permissions, categories, Thread.objects
-            ).values("id")
-        )
+            thread_search_vector=search_query,
+        ).annotate(rank=SearchRank(F("thread_search_vector"), search_query))
 
-        if threads:
-            queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
         if users:
-            queryset = queryset.filter(poster_id__in=[user.id for user in users])
-        if posted_after:
-            queryset = queryset.filter(posted_at__gte=posted_after)
-        if posted_before:
-            queryset = queryset.filter(posted_at__lte=posted_before)
-
-        queryset = queryset.filter(thread_search_vector=search_query)
+            queryset = queryset.filter(poster__in=users)
+        if after:
+            queryset = queryset.filter(posted_at__gte=after)
+        if before:
+            queryset = queryset.filter(posted_at__lte=before)
+        if self.min_rank is not None:
+            queryset = queryset.filter(rank__gt=self.min_rank)
 
         if order_by == SearchSort.RELEVANCE:
-            queryset = queryset.annotate(
-                rank=SearchRank(F("thread_search_vector"), search_query)
-            )
-            if self.min_rank is not None:
-                queryset = queryset.filter(rank__gt=self.min_rank)
-
             aggregate_by = "rank"
         else:
             aggregate_by = "thread_id"
 
         start_time = time()
 
-        thread_ids = list(
-            queryset.values("thread_id")
+        selected_thread_ids = list(
+            queryset.filter(
+                thread_id__in=thread_ids,
+                post_id__in=post_ids,
+            )
+            .values("thread_id")
             .annotate(ordering=Max(aggregate_by))
             .order_by("-ordering")
             .values_list("thread_id", flat=True)[offset : offset + limit + 1]
@@ -343,19 +430,13 @@ class PostgreSQLSearchBackend(SearchBackend):
             )
 
         posts = list(
-            queryset.filter(thread_id__in=thread_ids)
+            queryset.filter(
+                thread_id__in=selected_thread_ids,
+                post_id__in=post_ids,
+            )
             .order_by("thread_id", "-rank", "-post_id")
             .annotate(
-                content_headline=SearchHeadline(
-                    "content",
-                    query,
-                    start_sel="<hl>",
-                    stop_sel="</hl>",
-                    max_words=self.headline_max_words,
-                    min_words=self.headline_min_words,
-                    short_word=self.headline_short_word,
-                    max_fragments=self.headline_max_fragments,
-                ),
+                headline=self._get_content_headline(search_query),
             )
             .distinct("thread_id")
         )
@@ -363,90 +444,65 @@ class PostgreSQLSearchBackend(SearchBackend):
         posts, has_more = posts[:limit], bool(posts[limit:])
 
         if not posts:
-            return PostSearchResults(
-                results=[],
-                offset=offset,
-                limit=limit,
-                count=0,
-                has_more=bool(has_more),
-                time=time() - start_time,
-            )
+            return self._empty_threads_result(start_time)
 
         posts = {post.thread_id: post for post in posts}
 
         results = []
-        for thread_id in thread_ids:
+        for thread_id in selected_thread_ids:
             if post := posts.get(thread_id):
                 results.append(post)
 
-        headlines = self._get_thread_headlines(
+        thread_headlines = self._get_thread_headlines(
             query, [result.thread_id for result in results]
         )
 
         total_time = time() - start_time
 
-        return PostSearchResults(
-            results=[
-                PostSearchResult(
+        return ThreadsSearchResult(
+            items=[
+                ThreadsSearchResultItem(
                     post_id=result.post_id,
-                    thread_title=headlines.get(result.thread_id, "MISSING"),
-                    post_content=result.content_headline,
+                    thread_title=thread_headlines.get(result.thread_id, "MISSING"),
+                    post_content=result.headline,
                     rank=getattr(result, "rank", None),
                 )
                 for result in results
             ],
-            offset=offset,
-            limit=limit,
-            count=min(len(results), limit),
             has_more=has_more,
             time=total_time,
         )
 
-    def search_posts(
+    def _search_posts(
         self,
         query: str,
-        permissions: UserPermissionsProxy,
-        *,
-        categories: list[Category | CategoryProxy],
-        threads: list[Thread] | None = None,
+        thread_ids: list[int] | QuerySet,
+        post_ids: QuerySet,
         users: list["User"] | None = None,
-        posted_after: datetime | None = None,
-        posted_before: datetime | None = None,
+        after: datetime | None = None,
+        before: datetime | None = None,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> PostSearchResults:
-        search_query = self._get_search_query(query)
+    ) -> ThreadsSearchResult:
+        search_query = self.parse_search_query(query)
 
         queryset = PostSearch.objects.filter(
-            thread_id__in=filter_threads_queryset(
-                permissions, categories, Thread.objects
-            ).values("id")
+            thread_id__in=thread_ids, post_id__in=post_ids
         )
 
-        if threads:
-            queryset = queryset.filter(thread_id__in=[thread.id for thread in threads])
         if users:
-            queryset = queryset.filter(poster_id__in=[user.id for user in users])
-        if posted_after:
-            queryset = queryset.filter(posted_at__gte=posted_after)
-        if posted_before:
-            queryset = queryset.filter(posted_at__lte=posted_before)
+            queryset = queryset.filter(poster__in=users)
+        if after:
+            queryset = queryset.filter(posted_at__gte=after)
+        if before:
+            queryset = queryset.filter(posted_at__lte=before)
 
         queryset = queryset.filter(
             post_search_vector=search_query,
         ).annotate(
-            content_headline=SearchHeadline(
-                "content",
-                query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
-                max_words=self.headline_max_words,
-                min_words=self.headline_min_words,
-                short_word=self.headline_short_word,
-                max_fragments=self.headline_max_fragments,
-            ),
+            headline=self._get_content_headline(search_query),
         )
 
         if order_by == SearchSort.RELEVANCE or self.min_rank:
@@ -469,39 +525,29 @@ class PostgreSQLSearchBackend(SearchBackend):
         results, has_more = results[:limit], bool(results[limit:])
 
         if not results:
-            return PostSearchResults(
-                results=[],
-                offset=offset,
-                limit=limit,
-                count=0,
-                has_more=bool(has_more),
-                time=time() - start_time,
-            )
+            return self._empty_threads_result(start_time)
 
-        headlines = self._get_thread_headlines(
+        thread_headlines = self._get_thread_headlines(
             query, [result.thread_id for result in results]
         )
 
         total_time = time() - start_time
 
-        return PostSearchResults(
-            results=[
-                PostSearchResult(
+        return ThreadsSearchResult(
+            items=[
+                ThreadsSearchResultItem(
                     post_id=result.post_id,
-                    thread_title=headlines.get(result.thread_id, "MISSING"),
-                    post_content=result.content_headline,
+                    thread_title=thread_headlines.get(result.thread_id, "MISSING"),
+                    post_content=result.headline,
                     rank=getattr(result, "rank", None),
                 )
                 for result in results
             ],
-            offset=offset,
-            limit=limit,
-            count=min(len(results), limit),
             has_more=has_more,
             time=total_time,
         )
 
-    def _get_search_query(self, query: str) -> SearchQuery:
+    def parse_search_query(self, query: str) -> SearchQuery:
         if query.startswith('"') and query.endswith('"'):
             search_type = "phrase"
             query = query[1:-1].strip()
@@ -510,20 +556,42 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return SearchQuery(query, config=self.search_config, search_type=search_type)
 
+    def _empty_threads_result(self, start_time: float) -> ThreadsSearchResult:
+        return ThreadsSearchResult(
+            items=[],
+            has_more=False,
+            time=time() - start_time,
+        )
+
     def _get_thread_headlines(
         self, query: SearchQuery, thread_ids: Iterable[int]
     ) -> dict[int, str]:
         queryset = ThreadSearch.objects.filter(thread_id__in=thread_ids).annotate(
-            headline=SearchHeadline(
-                "title",
-                query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
-                highlight_all=True,
-            ),
+            headline=self._get_title_headline(query),
         )
 
         return {result.thread_id: result.headline for result in queryset}
+
+    def _get_title_headline(self, query: SearchQuery) -> SearchHeadline:
+        return SearchHeadline(
+            "title",
+            query,
+            start_sel=self.HEADLINE_START_SELECTION,
+            stop_sel=self.HEADLINE_STOP_SELECTION,
+            highlight_all=True,
+        )
+
+    def _get_content_headline(self, query: SearchQuery) -> SearchHeadline:
+        return SearchHeadline(
+            "content",
+            query,
+            start_sel=self.HEADLINE_START_SELECTION,
+            stop_sel=self.HEADLINE_STOP_SELECTION,
+            max_words=self.headline_max_words,
+            min_words=self.headline_min_words,
+            short_word=self.headline_short_word,
+            max_fragments=self.headline_max_fragments,
+        )
 
     # Indexing operations
 
@@ -547,7 +615,6 @@ class PostgreSQLSearchBackend(SearchBackend):
                         SearchVector(
                             Value(thread.title),
                             config=self.search_config,
-                            weight="B",
                         )
                     ),
                     started_at=thread.started_at,
@@ -594,6 +661,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                 SearchVector(
                     Value(thread.title),
                     config=self.search_config,
+                    weight="B",
                 )
                 + SearchVector(
                     Value(search_document),
@@ -604,72 +672,180 @@ class PostgreSQLSearchBackend(SearchBackend):
             is_first_post=is_first_post,
         )
 
-    # Update operation
+    # Update operations
 
-    def update_category(
+    def update_thread_title(self, thread: Thread) -> int:
+        updated_count = ThreadSearch.objects.filter(thread=thread).update(
+            title=escape(thread.title),
+            search_vector=SearchVector(
+                Value(thread.title),
+                config=self.search_config,
+            ),
+        )
+
+        updated_count += PostSearch.objects.filter(thread=thread).update(
+            thread_search_vector=(
+                SearchVector(
+                    Value(thread.title),
+                    config=self.search_config,
+                    weight="A",
+                )
+                + SearchVector(
+                    F("post_search_vector"),
+                    config=self.search_config,
+                    weight="A",
+                )
+            ),
+        )
+
+        return updated_count
+
+    def update_thread_members(
+        self, thread: Thread, members: Iterable["User | int"]
+    ) -> int:
+        return 0  # Not used
+
+    _INDEXED_THREAD_FIELDS = {
+        "category",
+        "category_id",
+        "starter",
+        "starter_id",
+    }
+
+    def update_threads(
         self,
-        new_category: Category | CategoryProxy,
+        update: ThreadsSearchUpdate,
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
-    ):
-        filters = {}
-        if categories:
-            filters["category_id__in"] = [category.id for category in categories]
-        if threads:
-            filters["thread_id__in"] = [thread.id for thread in threads]
+        users: Iterable["User"] | None = None,
+    ) -> int:
+        if not any((categories, threads, users)):
+            raise ValueError("Provide at least one filter.")
 
-        updated = ThreadSearch.objects.filter(**filters).update(
-            category_id=new_category.id
-        )
-        updated += PostSearch.objects.filter(**filters).update(
-            category_id=new_category.id
-        )
+        clean_update = {
+            field: value
+            for field, value in update.items()
+            if field in self._INDEXED_THREAD_FIELDS
+        }
 
-        return updated
+        if not clean_update:
+            return 0
 
-    def update_thread(
+        return self._threads(
+            categories=categories,
+            threads=threads,
+            users=users,
+        ).update(**clean_update)
+
+    _INDEXED_POST_FIELDS = {
+        "category",
+        "category_id",
+        "thread",
+        "thread_id",
+        "poster",
+        "poster_id",
+    }
+
+    def update_posts(
         self,
-        new_thread: Thread,
+        update: PostsSearchUpdate,
         *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
         posts: Iterable[Post] | None = None,
-    ):
-        filters = {}
-        if threads:
-            filters["thread_id__in"] = [thread.id for thread in threads]
-        if posts:
-            filters["post_id__in"] = [post.id for post in posts]
+        users: Iterable["User"] | None = None,
+    ) -> int:
+        if not any((categories, threads, posts, users)):
+            raise ValueError("Provide at least one filter.")
 
-        return PostSearch.objects.filter(**filters).update(
-            category_id=new_thread.category_id,
-            thread_id=new_thread.id,
-        )
+        clean_update = {
+            field: value
+            for field, value in update.items()
+            if field in self._INDEXED_POST_FIELDS
+        }
 
-    # Delete operations
+        if not clean_update:
+            return 0
 
-    def delete_categories(self, categories: Iterable[Category | CategoryProxy]):
-        filters = {"category_id__in": [category.id for category in categories]}
+        return self._posts(
+            categories=categories,
+            threads=threads,
+            posts=posts,
+            users=users,
+        ).update(**clean_update)
 
-        deleted_threads, _ = ThreadSearch.objects.filter(**filters).delete()
-        deleted_posts, _ = PostSearch.objects.filter(**filters).delete()
+    def delete(
+        self,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        posts: Iterable[Post] | None = None,
+        users: Iterable["User"] | None = None,
+    ) -> int:
+        if not any((categories, threads, posts, users)):
+            raise ValueError("Provide at least one filter.")
 
-        return deleted_threads + deleted_posts
+        deleted_total = 0
 
-    def delete_threads(self, threads: Iterable[Thread]):
-        filters = {"thread_id__in": [thread.id for thread in threads]}
+        if any((categories, threads, users)):
+            deleted_threads, _ = self._threads(
+                categories=categories,
+                threads=threads,
+                users=users,
+            ).delete()
 
-        deleted_threads, _ = ThreadSearch.objects.filter(**filters).delete()
-        deleted_posts, _ = PostSearch.objects.filter(**filters).delete()
+            deleted_total += deleted_threads
 
-        return deleted_threads + deleted_posts
-
-    def delete_posts(self, posts: Iterable[Post]):
-        deleted_posts, _ = PostSearch.objects.filter(
-            post_id__in=[post.id for post in posts],
+        deleted_posts, _ = self._posts(
+            categories=categories,
+            threads=threads,
+            posts=posts,
+            users=users,
         ).delete()
 
-        return deleted_posts
+        return deleted_total + deleted_posts
+
+    def _threads(
+        self,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        users: Iterable["User"] | None = None,
+    ) -> QuerySet:
+        filters = {}
+
+        if categories:
+            category_ids = [category.id for category in categories]
+            filters["category_id__in"] = category_ids
+        if threads:
+            filters["thread__in"] = threads
+        if users:
+            filters["starter__in"] = users
+
+        return ThreadSearch.objects.filter(**filters)
+
+    def _posts(
+        self,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        posts: Iterable[Post] | None = None,
+        users: Iterable["User"] | None = None,
+    ) -> QuerySet:
+        filters = {}
+
+        if categories:
+            category_ids = [category.id for category in categories]
+            filters["category_id__in"] = category_ids
+        if threads:
+            filters["thread__in"] = threads
+        if posts:
+            filters["post__in"] = posts
+        if users:
+            filters["poster__in"] = users
+
+        return PostSearch.objects.filter(**filters)
 
     def clear(self):
         ThreadSearch.objects.all().delete()

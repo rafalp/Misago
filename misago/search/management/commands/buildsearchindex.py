@@ -6,7 +6,7 @@ from ....core.management.progressbar import show_progress
 from ....parser.parse import parse
 from ....threads.models import Post, Thread
 from ...exceptions import SearchBackendError
-from ...posts import PostsSearch, posts_search
+from ...search import Search, search
 
 
 class Command(BaseCommand):
@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         self.stdout.write(
             "Rebuilding the search index using the "
-            f'"{posts_search.backend.name}" backend.'
+            f'"{search.backend.name}" backend.'
             "\n\n"
         )
 
@@ -33,7 +33,7 @@ class Command(BaseCommand):
         else:
             try:
                 start_time = time()
-                posts_search.clear()
+                search.clear()
             except SearchBackendError as exc:
                 self.stderr.write(f"\nError clearing the search index:\n\n{exc}")
                 return
@@ -53,7 +53,7 @@ class Command(BaseCommand):
         show_progress(self, indexed_count, post_count)
         start_time = time()
 
-        search_index = SearchIndexBuffer(posts_search, 50)
+        search_index = SearchIndexBuffer(search, 50)
 
         queryset = Post.objects.select_related("thread").order_by("id")
         for post in queryset.iterator(chunk_size=50):
@@ -75,7 +75,7 @@ class Command(BaseCommand):
 
 
 class SearchIndexBuffer:
-    search: PostsSearch
+    search: Search
     max_size: int
 
     threads: list[Thread]
@@ -84,7 +84,7 @@ class SearchIndexBuffer:
     posts: list[Post]
     posts_size: int
 
-    def __init__(self, search: PostsSearch, max_size: int):
+    def __init__(self, search: Search, max_size: int):
         self.search = search
         self.max_size = max_size
 
@@ -110,13 +110,13 @@ class SearchIndexBuffer:
 
     def commit_threads(self):
         if self.threads:
-            self.search.index_threads(self.threads)
+            self.search.bulk_index_threads(self.threads)
             self.threads = []
             self.threads_size = 0
 
     def commit_posts(self):
         if self.posts:
-            self.search.index_posts(
+            self.search.bulk_index_posts(
                 (post, parse(post.content).text) for post in self.posts
             )
             self.posts = []
