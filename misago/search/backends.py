@@ -286,7 +286,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             return self._search_thread_titles(query, thread_ids, **common_kwargs)
 
         post_ids = filter_private_threads_posts_queryset(
-            permissions, private_threads.post_Set
+            permissions, private_threads.post_set
         ).values("id")
 
         if mode == SearchMode.THREADS:
@@ -395,7 +395,8 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         queryset = PostSearch.objects.filter(
             thread_search_vector=search_query,
-        ).annotate(rank=SearchRank(F("thread_search_vector"), search_query))
+            post_id__in=post_ids,
+        )
 
         if users:
             queryset = queryset.filter(poster__in=users)
@@ -403,8 +404,18 @@ class PostgreSQLSearchBackend(SearchBackend):
             queryset = queryset.filter(posted_at__gte=after)
         if before:
             queryset = queryset.filter(posted_at__lte=before)
-        if self.min_rank is not None:
-            queryset = queryset.filter(rank__gt=self.min_rank)
+
+        # 1st query: search for matching threads
+        threads_queryset = queryset
+        filter_by_min_rank = self.min_rank
+
+        if order_by == SearchSort.RELEVANCE or filter_by_min_rank:
+            threads_queryset = threads_queryset.annotate(
+                rank=SearchRank(F("thread_search_vector"), search_query),
+            )
+
+        if filter_by_min_rank:
+            threads_queryset = threads_queryset.filter(rank__gt=self.min_rank)
 
         if order_by == SearchSort.RELEVANCE:
             aggregate_by = "rank"
@@ -413,8 +424,8 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         start_time = time()
 
-        selected_thread_ids = list(
-            queryset.filter(
+        result_threads_ids = list(
+            threads_queryset.filter(
                 thread_id__in=thread_ids,
                 post_id__in=post_ids,
             )
@@ -424,51 +435,44 @@ class PostgreSQLSearchBackend(SearchBackend):
             .values_list("thread_id", flat=True)[offset : offset + limit + 1]
         )
 
-        if order_by != SearchSort.RELEVANCE:
-            queryset = queryset.annotate(
-                rank=SearchRank(F("thread_search_vector"), search_query),
-            )
-
-        posts = list(
-            queryset.filter(
-                thread_id__in=selected_thread_ids,
-                post_id__in=post_ids,
-            )
-            .order_by("thread_id", "-rank", "-post_id")
-            .annotate(
-                headline=self._get_content_headline(search_query),
-            )
-            .distinct("thread_id")
+        result_threads_ids, has_more = (
+            result_threads_ids[:limit],
+            bool(result_threads_ids[limit:]),
         )
 
-        posts, has_more = posts[:limit], bool(posts[limit:])
+        # 2nd query: pull oldest matching post per thread result
+        posts = list(
+            queryset.filter(
+                thread_id__in=result_threads_ids,
+            )
+            .order_by("thread_id", "post_id")
+            .annotate(headline=self._get_content_headline(search_query))
+            .distinct("thread_id")
+        )
 
         if not posts:
             return self._empty_threads_result(start_time)
 
-        posts = {post.thread_id: post for post in posts}
+        thread_posts = {post.thread_id: post for post in posts}
+        thread_headlines = self._get_thread_headlines(search_query, thread_posts)
 
-        results = []
-        for thread_id in selected_thread_ids:
-            if post := posts.get(thread_id):
-                results.append(post)
-
-        thread_headlines = self._get_thread_headlines(
-            query, [result.thread_id for result in results]
-        )
+        # Sort posts by threads
+        items = []
+        for thread_id in result_threads_ids:
+            if post := thread_posts.get(thread_id):
+                items.append(
+                    ThreadsSearchResultItem(
+                        post_id=post.post_id,
+                        thread_title=thread_headlines.get(thread_id, "MISSING"),
+                        post_content=post.headline,
+                        rank=None,
+                    )
+                )
 
         total_time = time() - start_time
 
         return ThreadsSearchResult(
-            items=[
-                ThreadsSearchResultItem(
-                    post_id=result.post_id,
-                    thread_title=thread_headlines.get(result.thread_id, "MISSING"),
-                    post_content=result.headline,
-                    rank=getattr(result, "rank", None),
-                )
-                for result in results
-            ],
+            items=items,
             has_more=has_more,
             time=total_time,
         )
