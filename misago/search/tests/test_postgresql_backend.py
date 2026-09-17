@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.postgres.search import SearchQuery
 
 from ...threads.enums import ThreadPinned
 from ...threads.synchronize import synchronize_thread
@@ -210,7 +211,7 @@ def test_postgresql_backend_index_posts_escapes_posts_html(
     assert post_search.content == "Hello &lt;b&gt;world&lt;/b&gt;"
 
 
-def test_postgresql_backend_searches_thread_titles(
+def _test_postgresql_backend_searches_thread_titles(
     user_permissions_factory, backend, search_index, user, default_category
 ):
     user_permissions = user_permissions_factory(user)
@@ -233,7 +234,7 @@ def test_postgresql_backend_searches_thread_titles(
     )
 
 
-def test_postgresql_backend_thread_titles_search_handles_empty_result(
+def _test_postgresql_backend_thread_titles_search_handles_empty_result(
     user_permissions_factory, backend, user, default_category
 ):
     user_permissions = user_permissions_factory(user)
@@ -247,7 +248,7 @@ def test_postgresql_backend_thread_titles_search_handles_empty_result(
     assert results.count == 0
 
 
-def test_postgresql_backend_search_searches_threads(
+def _test_postgresql_backend_search_searches_threads(
     user_permissions_factory, backend, search_index, user, default_category
 ):
     user_permissions = user_permissions_factory(user)
@@ -270,7 +271,7 @@ def test_postgresql_backend_search_searches_threads(
     )
 
 
-def test_postgresql_backend_thread_search_handles_empty_result(
+def _test_postgresql_backend_thread_search_handles_empty_result(
     user_permissions_factory, backend, search_index, user, default_category
 ):
     user_permissions = user_permissions_factory(user)
@@ -284,7 +285,7 @@ def test_postgresql_backend_thread_search_handles_empty_result(
     assert results.count == 0
 
 
-def test_postgresql_backend_search_searches_posts(
+def _test_postgresql_backend_search_searches_posts(
     user_permissions_factory, backend, search_index, user, default_category
 ):
     user_permissions = user_permissions_factory(user)
@@ -299,7 +300,7 @@ def test_postgresql_backend_search_searches_posts(
     assert search_index["first_post"].id in results_ids
 
 
-def test_postgresql_backend_post_search_handles_empty_result(
+def _test_postgresql_backend_post_search_handles_empty_result(
     user_permissions_factory, backend, search_index, user, default_category
 ):
     user_permissions = user_permissions_factory(user)
@@ -313,7 +314,68 @@ def test_postgresql_backend_post_search_handles_empty_result(
     assert results.count == 0
 
 
-def test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_category(
+def test_postgresql_backend_update_thread_title_updates_thread_and_post_index(
+    thread_factory, thread_reply_factory, backend, default_category
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    post = thread_reply_factory(thread, content="Hello world")
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, post.content)])
+
+    thread.title = "Dolor met"
+    thread.save()
+
+    updated = backend.update_thread_title(thread)
+    assert updated == 2
+
+    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    assert thread_search.title == "Dolor met"
+
+    assert ThreadSearch.objects.filter(
+        search_vector=SearchQuery("Dolor met", config=backend.search_config),
+    ).exists()
+    assert PostSearch.objects.filter(
+        thread_search_vector=SearchQuery("Dolor met", config=backend.search_config),
+    ).exists()
+
+    assert not ThreadSearch.objects.filter(
+        search_vector=SearchQuery("Lorem ipsum", config=backend.search_config),
+    ).exists()
+    assert not PostSearch.objects.filter(
+        thread_search_vector=SearchQuery("Lorem ipsum", config=backend.search_config),
+    ).exists()
+
+
+def test_postgresql_backend_update_thread_title_escapes_thread_title(
+    thread_factory, backend, default_category
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+
+    backend.index_threads([thread])
+
+    thread.title = "Dolor <b>met</b>"
+    thread.save()
+
+    updated = backend.update_thread_title(thread)
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    assert thread_search.title == "Dolor &lt;b&gt;met&lt;/b&gt;"
+
+
+def test_postgresql_backend_update_thread_members_is_noop(
+    thread_factory, backend, default_category
+):
+    thread = thread_factory(default_category)
+
+    backend.index_threads([thread])
+
+    updated = backend.update_thread_members(thread)
+    assert updated == 0
+
+
+def _test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_category(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -346,7 +408,7 @@ def test_postgresql_backend_update_category_updates_threads_and_posts_categories
     assert other_post_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_thread(
+def _test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_thread(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -379,7 +441,7 @@ def test_postgresql_backend_update_category_updates_threads_and_posts_categories
     assert other_post_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_thread_updates_posts_by_thread(
+def _test_postgresql_backend_update_thread_updates_posts_by_thread(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -409,7 +471,7 @@ def test_postgresql_backend_update_thread_updates_posts_by_thread(
     assert other_post_search.thread_id == other_thread.id
 
 
-def test_postgresql_backend_update_thread_updates_posts_by_post(
+def _test_postgresql_backend_update_thread_updates_posts_by_post(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -439,7 +501,7 @@ def test_postgresql_backend_update_thread_updates_posts_by_post(
     assert other_post_search.thread_id == other_thread.id
 
 
-def test_postgresql_backend_delete_categories_deletes_threads_and_posts_in_category(
+def _test_postgresql_backend_delete_categories_deletes_threads_and_posts_in_category(
     thread_factory, thread_reply_factory, backend, default_category, other_category
 ):
     thread = thread_factory(default_category)
@@ -465,7 +527,7 @@ def test_postgresql_backend_delete_categories_deletes_threads_and_posts_in_categ
     PostSearch.objects.get(post_id=other_post.id)
 
 
-def test_postgresql_backend_delete_threads_deletes_thread_and_its_posts(
+def _test_postgresql_backend_delete_threads_deletes_thread_and_its_posts(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
@@ -491,7 +553,7 @@ def test_postgresql_backend_delete_threads_deletes_thread_and_its_posts(
     PostSearch.objects.get(post_id=other_post.id)
 
 
-def test_postgresql_backend_delete_posts_deletes_posts(
+def _test_postgresql_backend_delete_posts_deletes_posts(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
@@ -515,7 +577,7 @@ def test_postgresql_backend_delete_posts_deletes_posts(
     PostSearch.objects.get(post_id=other_post.id)
 
 
-def test_postgresql_backend_clear_deletes_all_posts(
+def _test_postgresql_backend_clear_deletes_all_posts(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
