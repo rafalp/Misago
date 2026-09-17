@@ -368,7 +368,6 @@ class PostgreSQLSearchBackend(SearchBackend):
                     post_id=post.post_id,
                     thread_title=thread.headline,
                     post_content=post.headline,
-                    rank=getattr(thread, "rank", None),
                 )
             )
 
@@ -465,7 +464,6 @@ class PostgreSQLSearchBackend(SearchBackend):
                         post_id=post.post_id,
                         thread_title=thread_headlines.get(thread_id, "MISSING"),
                         post_content=post.headline,
-                        rank=None,
                     )
                 )
 
@@ -543,7 +541,6 @@ class PostgreSQLSearchBackend(SearchBackend):
                     post_id=result.post_id,
                     thread_title=thread_headlines.get(result.thread_id, "MISSING"),
                     post_content=result.headline,
-                    rank=getattr(result, "rank", None),
                 )
                 for result in results
             ],
