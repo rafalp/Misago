@@ -197,8 +197,40 @@ class ThreadsSearchView(BaseSearchView):
 
 
 class PrivateThreadsSearchView(ThreadsSearchView):
-    def get_categories_filter(self, filters: dict) -> list[Category]:
-        return [Category.objects.filter(tree_id=CategoryTree.PRIVATE_THREADS)]
+    def get_results_data(self, form: ThreadsSearchForm) -> dict:
+        request = self.request
+
+        filters = form.cleaned_data
+
+        query = filters["query"]
+        mode = filters["mode"]
+        sort = filters["sort"]
+
+        users = filters.get("users")
+        date_from = None
+        date_to = None
+
+        if date_from := filters.get("date_from"):
+            date_from = timezone.make_aware(datetime.combine(date_from, time.min))
+        if date_to := filters.get("date_to"):
+            date_to = timezone.make_aware(
+                datetime.combine(date_to + timedelta(days=1), time.min)
+            )
+
+        results = search.search_private_threads(
+            query,
+            request.user_permissions,
+            users=users,
+            after=date_from,
+            before=date_to,
+            mode=SearchMode(mode),
+            order_by=SearchSort(sort),
+        )
+
+        return {
+            "results": results,
+            "more_url": None,
+        }
 
 
 class UsersSearchView(BaseSearchView):
