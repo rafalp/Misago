@@ -16,4 +16,3 @@ class ThreadsSearchResultItem:
     post_id: int
     thread_title: str
     post_content: str
-    rank: float | None = None
