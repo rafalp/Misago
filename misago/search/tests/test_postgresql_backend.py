@@ -104,15 +104,13 @@ def test_postgresql_backend_index_threads_indexes_threads(
 
     backend.index_threads([thread, deleted_user_thread, pinned_thread])
 
-    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.category_id == default_category.id
     assert thread_search.starter_id == user.id
     assert thread_search.title == thread.title
     assert thread_search.started_at == thread.started_at
 
-    deleted_user_thread_search = ThreadSearch.objects.get(
-        thread_id=deleted_user_thread.id
-    )
+    deleted_user_thread_search = ThreadSearch.objects.get(thread=deleted_user_thread)
     assert deleted_user_thread_search.category_id == other_category.id
     assert deleted_user_thread_search.starter_id is None
     assert deleted_user_thread_search.title == deleted_user_thread.title
@@ -130,7 +128,7 @@ def test_postgresql_backend_index_threads_escapes_thread_titles(
 
     backend.index_threads([thread])
 
-    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.category_id == default_category.id
     assert thread_search.starter_id is None
     assert thread_search.title == "&lt;mark&gt;&lt;/mark&gt; in search results"
@@ -163,14 +161,14 @@ def test_postgresql_backend_index_posts_indexes_posts(
 
     backend.index_posts([(post, post.content) for post in [first_post, reply]])
 
-    first_post_search = PostSearch.objects.get(post_id=first_post.id)
+    first_post_search = PostSearch.objects.get(post=first_post)
     assert first_post_search.category_id == first_post.category_id
     assert first_post_search.thread_id == first_post.thread_id
     assert first_post_search.poster_id == first_post.poster_id
     assert first_post_search.content
     assert first_post_search.posted_at == first_post.posted_at
 
-    reply_search = PostSearch.objects.get(post_id=reply.id)
+    reply_search = PostSearch.objects.get(post=reply)
     assert reply_search.category_id == reply_search.category_id
     assert reply_search.thread_id == reply_search.thread_id
     assert reply_search.poster_id == reply_search.poster_id
@@ -184,7 +182,7 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
     post = thread_reply_factory(thread, poster=user, content="Hello world")
     backend.index_posts([(post, post.content)])
 
-    post_search = PostSearch.objects.get(post_id=post.id)
+    post_search = PostSearch.objects.get(post=post)
     assert post_search.content == "Hello world"
 
     post.content = "Updated"
@@ -207,7 +205,7 @@ def test_postgresql_backend_index_posts_escapes_posts_html(
 
     backend.index_posts([(post, post.content)])
 
-    post_search = PostSearch.objects.get(post_id=post.id)
+    post_search = PostSearch.objects.get(post=post)
     assert post_search.content == "Hello &lt;b&gt;world&lt;/b&gt;"
 
 
@@ -225,7 +223,7 @@ def _test_postgresql_backend_searches_thread_titles(
     assert results.count == 1
 
     result = results.results[0]
-    assert result.post_id == search_index["first_post"].id
+    assert result.post_id == ["first_post"].id
     assert result.thread_title == "<hl>Forum</hl> <hl>software</hl> recommendations?"
     assert result.post_content == (
         "I am looking for a good <hl>forum</hl> <hl>software</hl> for my next project."
@@ -262,7 +260,7 @@ def _test_postgresql_backend_search_searches_threads(
     assert results.count == 1
 
     result = results.results[0]
-    assert result.post_id == search_index["first_post"].id
+    assert result.post_id == ["first_post"].id
     assert result.thread_title == "<hl>Forum</hl> <hl>software</hl> recommendations?"
     assert result.post_content == (
         "I am looking for a good <hl>forum</hl> <hl>software</hl> for my next project."
@@ -296,7 +294,7 @@ def _test_postgresql_backend_search_searches_posts(
         categories=[default_category],
     )
 
-    results_ids = [result.post_id for result in results]
+    results_ids = [result.post for result in results]
     assert search_index["first_post"].id in results_ids
 
 
@@ -314,6 +312,50 @@ def _test_postgresql_backend_post_search_handles_empty_result(
     assert results.count == 0
 
 
+def test_postgresql_backend_update_thread_first_post_updates_thread_first_post(
+    thread_factory, thread_reply_factory, backend, default_category
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    old_first_post = thread.first_post
+    new_first_post = thread_reply_factory(thread, content="Hello world")
+
+    backend.index_threads([thread])
+    backend.index_posts(
+        [
+            (old_first_post, old_first_post.content),
+            (new_first_post, new_first_post.content),
+        ]
+    )
+
+    thread.first_post = new_first_post
+    thread.save()
+
+    updated = backend.update_thread_first_post(thread)
+    assert updated == 2
+
+    old_first_post_index = PostSearch.objects.get(post=old_first_post)
+    assert not old_first_post_index.is_first_post
+
+    new_first_post_index = PostSearch.objects.get(post=new_first_post)
+    assert new_first_post_index.is_first_post
+
+
+def test_postgresql_backend_update_thread_first_post_doesnt_update_thread_first_post(
+    thread_factory, backend, default_category
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    first_post = thread.first_post
+
+    backend.index_threads([thread])
+    backend.index_posts([(first_post, first_post.content)])
+
+    updated = backend.update_thread_first_post(thread)
+    assert updated == 0
+
+    first_post_index = PostSearch.objects.get(post=first_post)
+    assert first_post_index.is_first_post
+
+
 def test_postgresql_backend_update_thread_title_updates_thread_and_post_index(
     thread_factory, thread_reply_factory, backend, default_category
 ):
@@ -329,7 +371,7 @@ def test_postgresql_backend_update_thread_title_updates_thread_and_post_index(
     updated = backend.update_thread_title(thread)
     assert updated == 2
 
-    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.title == "Dolor met"
 
     assert ThreadSearch.objects.filter(
@@ -360,7 +402,7 @@ def test_postgresql_backend_update_thread_title_escapes_thread_title(
     updated = backend.update_thread_title(thread)
     assert updated == 1
 
-    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.title == "Dolor &lt;b&gt;met&lt;/b&gt;"
 
 
@@ -371,7 +413,7 @@ def test_postgresql_backend_update_thread_members_is_noop(
 
     backend.index_threads([thread])
 
-    updated = backend.update_thread_members(thread)
+    updated = backend.update_thread_members(thread, [])
     assert updated == 0
 
 
@@ -395,16 +437,16 @@ def _test_postgresql_backend_update_category_updates_threads_and_posts_categorie
     updated = backend.update_category(other_category, categories=[default_category])
     assert updated == 2
 
-    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.category_id == other_category.id
 
-    other_thread_search = ThreadSearch.objects.get(thread_id=other_thread.id)
+    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
     assert other_thread_search.category_id == sibling_category.id
 
-    post_search = PostSearch.objects.get(post_id=post.id)
+    post_search = PostSearch.objects.get(post=post)
     assert post_search.category_id == other_category.id
 
-    other_post_search = PostSearch.objects.get(post_id=other_post.id)
+    other_post_search = PostSearch.objects.get(post=other_post)
     assert other_post_search.category_id == sibling_category.id
 
 
@@ -428,16 +470,16 @@ def _test_postgresql_backend_update_category_updates_threads_and_posts_categorie
     updated = backend.update_category(other_category, threads=[thread])
     assert updated == 2
 
-    thread_search = ThreadSearch.objects.get(thread_id=thread.id)
+    thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.category_id == other_category.id
 
-    other_thread_search = ThreadSearch.objects.get(thread_id=other_thread.id)
+    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
     assert other_thread_search.category_id == sibling_category.id
 
-    post_search = PostSearch.objects.get(post_id=post.id)
+    post_search = PostSearch.objects.get(post=post)
     assert post_search.category_id == other_category.id
 
-    other_post_search = PostSearch.objects.get(post_id=other_post.id)
+    other_post_search = PostSearch.objects.get(post=other_post)
     assert other_post_search.category_id == sibling_category.id
 
 
@@ -462,11 +504,11 @@ def _test_postgresql_backend_update_thread_updates_posts_by_thread(
     updated = backend.update_thread(new_thread, threads=[thread])
     assert updated == 1
 
-    post_search = PostSearch.objects.get(post_id=post.id)
+    post_search = PostSearch.objects.get(post=post)
     assert post_search.category_id == other_category.id
     assert post_search.thread_id == new_thread.id
 
-    other_post_search = PostSearch.objects.get(post_id=other_post.id)
+    other_post_search = PostSearch.objects.get(post=other_post)
     assert other_post_search.category_id == sibling_category.id
     assert other_post_search.thread_id == other_thread.id
 
@@ -492,20 +534,20 @@ def _test_postgresql_backend_update_thread_updates_posts_by_post(
     updated = backend.update_thread(new_thread, posts=[post])
     assert updated == 1
 
-    post_search = PostSearch.objects.get(post_id=post.id)
+    post_search = PostSearch.objects.get(post=post)
     assert post_search.category_id == other_category.id
     assert post_search.thread_id == new_thread.id
 
-    other_post_search = PostSearch.objects.get(post_id=other_post.id)
+    other_post_search = PostSearch.objects.get(post=other_post)
     assert other_post_search.category_id == sibling_category.id
     assert other_post_search.thread_id == other_thread.id
 
 
-def _test_postgresql_backend_delete_categories_deletes_threads_and_posts_in_category(
-    thread_factory, thread_reply_factory, backend, default_category, other_category
+def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_category(
+    thread_factory, thread_reply_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
-    other_thread = thread_factory(other_category)
+    other_thread = thread_factory(sibling_category)
 
     post = thread_reply_factory(thread)
     other_post = thread_reply_factory(other_thread)
@@ -513,25 +555,24 @@ def _test_postgresql_backend_delete_categories_deletes_threads_and_posts_in_cate
     backend.index_threads([thread, other_thread])
     backend.index_posts([(post, post.content), (other_post, other_post.content)])
 
-    deleted = backend.delete_categories([default_category])
+    deleted = backend.delete(categories=[default_category])
     assert deleted == 2
 
     with pytest.raises(ThreadSearch.DoesNotExist):
-        ThreadSearch.objects.get(thread_id=thread.id)
-
-    ThreadSearch.objects.get(thread_id=other_thread.id)
+        ThreadSearch.objects.get(thread=thread)
 
     with pytest.raises(PostSearch.DoesNotExist):
-        PostSearch.objects.get(post_id=post.id)
+        PostSearch.objects.get(post=post)
 
-    PostSearch.objects.get(post_id=other_post.id)
+    ThreadSearch.objects.get(thread=other_thread)
+    PostSearch.objects.get(post=other_post)
 
 
-def _test_postgresql_backend_delete_threads_deletes_thread_and_its_posts(
-    thread_factory, thread_reply_factory, backend, default_category
+def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_thread(
+    thread_factory, thread_reply_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
-    other_thread = thread_factory(default_category)
+    other_thread = thread_factory(sibling_category)
 
     post = thread_reply_factory(thread)
     other_post = thread_reply_factory(other_thread)
@@ -539,45 +580,78 @@ def _test_postgresql_backend_delete_threads_deletes_thread_and_its_posts(
     backend.index_threads([thread, other_thread])
     backend.index_posts([(post, post.content), (other_post, other_post.content)])
 
-    deleted = backend.delete_threads([thread])
+    deleted = backend.delete(threads=[thread])
     assert deleted == 2
 
     with pytest.raises(ThreadSearch.DoesNotExist):
-        ThreadSearch.objects.get(thread_id=thread.id)
-
-    ThreadSearch.objects.get(thread_id=other_thread.id)
+        ThreadSearch.objects.get(thread=thread)
 
     with pytest.raises(PostSearch.DoesNotExist):
-        PostSearch.objects.get(post_id=post.id)
+        PostSearch.objects.get(post=post)
 
-    PostSearch.objects.get(post_id=other_post.id)
+    ThreadSearch.objects.get(thread=other_thread)
+    PostSearch.objects.get(post=other_post)
 
 
-def _test_postgresql_backend_delete_posts_deletes_posts(
-    thread_factory, thread_reply_factory, backend, default_category
+def test_postgresql_backend_delete_posts(
+    thread_factory,
+    thread_reply_factory,
+    backend,
+    user,
+    default_category,
+    sibling_category,
 ):
-    thread = thread_factory(default_category)
-    other_thread = thread_factory(default_category)
+    thread = thread_factory(default_category, starter=user)
+    other_thread = thread_factory(sibling_category)
 
     post = thread_reply_factory(thread)
-    other_post = thread_reply_factory(other_thread)
+    other_post = thread_reply_factory(other_thread, poster=user)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts([(post, post.content), (other_post, other_post.content)])
 
-    deleted = backend.delete_posts([post])
+    deleted = backend.delete(posts=[other_post])
     assert deleted == 1
 
-    ThreadSearch.objects.get(thread_id=thread.id)
-    ThreadSearch.objects.get(thread_id=other_thread.id)
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
+    ThreadSearch.objects.get(thread=thread)
+    ThreadSearch.objects.get(thread=other_thread)
+    PostSearch.objects.get(post=post)
+
+
+def test_postgresql_backend_delete_deletes_all_threads_and_posts_by_user(
+    thread_factory,
+    thread_reply_factory,
+    backend,
+    user,
+    default_category,
+    sibling_category,
+):
+    thread = thread_factory(default_category, starter=user)
+    other_thread = thread_factory(sibling_category)
+
+    post = thread_reply_factory(thread)
+    other_post = thread_reply_factory(other_thread, poster=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts([(post, post.content), (other_post, other_post.content)])
+
+    deleted = backend.delete(users=[user])
+    assert deleted == 2
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=thread)
 
     with pytest.raises(PostSearch.DoesNotExist):
-        PostSearch.objects.get(post_id=post.id)
+        PostSearch.objects.get(post=other_post)
 
-    PostSearch.objects.get(post_id=other_post.id)
+    ThreadSearch.objects.get(thread=other_thread)
+    PostSearch.objects.get(post=post)
 
 
-def _test_postgresql_backend_clear_deletes_all_posts(
+def test_postgresql_backend_clear_deletes_all_threads_and_posts(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
