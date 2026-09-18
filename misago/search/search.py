@@ -140,6 +140,9 @@ class Search:
 
         return self.backend.move_posts(posts, new_thread)
 
+    def update_thread_first_post(self, thread: Thread):
+        return self.backend.update_thread_first_post(thread)
+
     def update_thread_title(self, thread: Thread):
         return self.backend.update_thread_title(thread)
 

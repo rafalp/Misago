@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from functools import reduce
 from html import escape
 from itertools import batched
 from time import time
@@ -103,11 +102,15 @@ class SearchBackend(ABC):
         pass
 
     @abstractmethod
+    def update_thread_first_post(self, thread: Thread):
+        pass
+
+    @abstractmethod
     def update_thread_title(self, thread: Thread):
         pass
 
     @abstractmethod
-    def update_thread_members(self, thread: Thread, members: Iterable["User | int"]):
+    def update_thread_members(self, thread: Thread, members: Iterable[int]):
         pass
 
     @abstractmethod
@@ -675,6 +678,25 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     # Update operations
 
+    def update_thread_first_post(self, thread: Thread) -> 0:
+        first_post_id = thread.first_post_id
+
+        updated_posts = (
+            PostSearch.objects.filter(
+                thread=thread,
+                is_first_post=True,
+            )
+            .exclude(post_id=first_post_id)
+            .update(is_first_post=False)
+        )
+
+        if updated_posts:
+            return updated_posts + PostSearch.objects.filter(
+                thread=thread, post_id=first_post_id
+            ).update(is_first_post=True)
+
+        return updated_posts
+
     def update_thread_title(self, thread: Thread) -> int:
         updated_count = ThreadSearch.objects.filter(thread=thread).update(
             title=escape(thread.title),
@@ -701,9 +723,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return updated_count
 
-    def update_thread_members(
-        self, thread: Thread, members: Iterable["User | int"]
-    ) -> int:
+    def update_thread_members(self, thread: Thread, members: Iterable[int]) -> int:
         return 0  # Not used
 
     _INDEXED_THREAD_FIELDS = {
