@@ -35,15 +35,16 @@ if TYPE_CHECKING:
 class ThreadsSearchUpdate(TypedDict, total=False):
     category: Category
     thread: Thread
-    user: "User"
+    starter: "User"
 
     is_hidden: bool
     is_unapproved: bool
 
 
 class PostsSearchUpdate(TypedDict, total=False):
+    category: Category
     thread: Thread
-    user: "User"
+    poster: "User"
 
     is_hidden: bool
     is_unapproved: bool
@@ -728,9 +729,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     _INDEXED_THREAD_FIELDS = {
         "category",
-        "category_id",
         "starter",
-        "starter_id",
     }
 
     def update_threads(
@@ -761,11 +760,8 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     _INDEXED_POST_FIELDS = {
         "category",
-        "category_id",
         "thread",
-        "thread_id",
         "poster",
-        "poster_id",
     }
 
     def update_posts(
