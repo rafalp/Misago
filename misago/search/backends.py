@@ -43,8 +43,11 @@ class ThreadsSearchUpdate(TypedDict, total=False):
 
 class PostsSearchUpdate(TypedDict, total=False):
     category: Category
+    category_id: int
     thread: Thread
-    poster: "User"
+    thread_id: int
+    poster: "User | None"
+    poster_id: int | None
 
     is_hidden: bool
     is_unapproved: bool
@@ -760,8 +763,11 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     _INDEXED_POST_FIELDS = {
         "category",
+        "category_id",
         "thread",
+        "thread_id",
         "poster",
+        "poster_id",
     }
 
     def update_posts(
@@ -775,6 +781,15 @@ class PostgreSQLSearchBackend(SearchBackend):
     ) -> int:
         if not any((categories, threads, posts, users)):
             raise ValueError("Provide at least one filter.")
+
+        if "category" in update and "category_id" in update:
+            raise ValueError("'category' and 'category_id' can't be updated together.")
+
+        if "thread" in update and "thread_id" in update:
+            raise ValueError("'thread' and 'thread_id' can't be updated together.")
+
+        if "poster" in update and "poster_id" in update:
+            raise ValueError("'poster' and 'poster_id' can't be updated together.")
 
         clean_update = {
             field: value
