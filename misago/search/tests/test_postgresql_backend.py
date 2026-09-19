@@ -417,100 +417,180 @@ def test_postgresql_backend_update_thread_members_is_noop(
     assert updated == 0
 
 
-def _test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_category(
-    thread_factory,
-    thread_reply_factory,
-    backend,
-    default_category,
-    sibling_category,
-    other_category,
+def test_postgresql_backend_update_threads_raises_exception_if_no_filter_is_set(
+    thread_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
-    other_thread = thread_factory(sibling_category)
 
-    post = thread_reply_factory(thread)
-    other_post = thread_reply_factory(other_thread)
+    backend.index_threads([thread])
 
-    backend.index_threads([thread, other_thread])
-    backend.index_posts([(post, post.content), (other_post, other_post.content)])
-
-    updated = backend.update_category(other_category, categories=[default_category])
-    assert updated == 2
+    with pytest.raises(ValueError):
+        backend.update_threads({"category": sibling_category})
 
     thread_search = ThreadSearch.objects.get(thread=thread)
-    assert thread_search.category_id == other_category.id
-
-    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
-    assert other_thread_search.category_id == sibling_category.id
-
-    post_search = PostSearch.objects.get(post=post)
-    assert post_search.category_id == other_category.id
-
-    other_post_search = PostSearch.objects.get(post=other_post)
-    assert other_post_search.category_id == sibling_category.id
+    assert thread_search.category_id == default_category.id
 
 
-def _test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_thread(
-    thread_factory,
-    thread_reply_factory,
-    backend,
-    default_category,
-    sibling_category,
-    other_category,
+def test_postgresql_backend_update_threads_filters_by_category(
+    thread_factory, backend, default_category, sibling_category, other_category
 ):
     thread = thread_factory(default_category)
-    other_thread = thread_factory(sibling_category)
-
-    post = thread_reply_factory(thread)
-    other_post = thread_reply_factory(other_thread)
+    other_thread = thread_factory(other_category)
 
     backend.index_threads([thread, other_thread])
-    backend.index_posts([(post, post.content), (other_post, other_post.content)])
 
-    updated = backend.update_category(other_category, threads=[thread])
-    assert updated == 2
-
-    thread_search = ThreadSearch.objects.get(thread=thread)
-    assert thread_search.category_id == other_category.id
-
-    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
-    assert other_thread_search.category_id == sibling_category.id
-
-    post_search = PostSearch.objects.get(post=post)
-    assert post_search.category_id == other_category.id
-
-    other_post_search = PostSearch.objects.get(post=other_post)
-    assert other_post_search.category_id == sibling_category.id
-
-
-def _test_postgresql_backend_update_thread_updates_posts_by_thread(
-    thread_factory,
-    thread_reply_factory,
-    backend,
-    default_category,
-    sibling_category,
-    other_category,
-):
-    thread = thread_factory(default_category)
-    new_thread = thread_factory(other_category)
-    other_thread = thread_factory(sibling_category)
-
-    post = thread_reply_factory(thread)
-    other_post = thread_reply_factory(other_thread)
-
-    backend.index_threads([thread, new_thread, other_thread])
-    backend.index_posts([(post, post.content), (other_post, other_post.content)])
-
-    updated = backend.update_thread(new_thread, threads=[thread])
+    updated = backend.update_threads(
+        {"category": sibling_category}, categories=[default_category]
+    )
     assert updated == 1
 
-    post_search = PostSearch.objects.get(post=post)
-    assert post_search.category_id == other_category.id
-    assert post_search.thread_id == new_thread.id
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.category_id == sibling_category.id
 
-    other_post_search = PostSearch.objects.get(post=other_post)
-    assert other_post_search.category_id == sibling_category.id
-    assert other_post_search.thread_id == other_thread.id
+    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
+    assert other_thread_search.category_id == other_category.id
+
+
+def test_postgresql_backend_update_threads_filters_by_thread(
+    thread_factory, backend, default_category, sibling_category
+):
+    thread = thread_factory(default_category)
+    other_thread = thread_factory(default_category)
+
+    backend.index_threads([thread, other_thread])
+
+    updated = backend.update_threads({"category": sibling_category}, threads=[thread])
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.category_id == sibling_category.id
+
+    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
+    assert other_thread_search.category_id == default_category.id
+
+
+def test_postgresql_backend_update_threads_filters_by_starter(
+    thread_factory, backend, user, default_category, sibling_category
+):
+    thread = thread_factory(default_category, starter=user)
+    other_thread = thread_factory(default_category)
+
+    backend.index_threads([thread, other_thread])
+
+    updated = backend.update_threads({"category": sibling_category}, starters=[user])
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.category_id == sibling_category.id
+
+    other_thread_search = ThreadSearch.objects.get(thread=other_thread)
+    assert other_thread_search.category_id == default_category.id
+
+
+def test_postgresql_backend_update_threads_updates_thread_category(
+    thread_factory, backend, default_category, sibling_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    updated = backend.update_threads({"category": sibling_category}, threads=[thread])
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.category_id == sibling_category.id
+
+
+def test_postgresql_backend_update_threads_updates_thread_category_id(
+    thread_factory, backend, default_category, sibling_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    updated = backend.update_threads(
+        {"category_id": sibling_category.id}, threads=[thread]
+    )
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.category_id == sibling_category.id
+
+
+def test_postgresql_backend_update_threads_raises_exception_if_category_and_category_id_is_used_together(
+    thread_factory, backend, default_category, sibling_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    with pytest.raises(ValueError):
+        backend.update_threads(
+            {"category": sibling_category, "category_id": sibling_category.id},
+            threads=[thread],
+        )
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.category_id == default_category.id
+
+
+def test_postgresql_backend_update_threads_updates_thread_starter(
+    thread_factory, backend, user, default_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    updated = backend.update_threads({"starter": user}, threads=[thread])
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.starter_id == user.id
+
+
+def test_postgresql_backend_update_threads_updates_thread_starter_id(
+    thread_factory, backend, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    backend.index_threads([thread])
+
+    updated = backend.update_threads({"starter_id": user.id}, threads=[thread])
+    assert updated == 1
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.starter_id == user.id
+
+
+def test_postgresql_backend_update_threads_raises_exception_if_starter_and_starter_id_is_used_together(
+    thread_factory, backend, user, default_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    with pytest.raises(ValueError):
+        backend.update_threads(
+            {"starter": user, "starter_id": user.id},
+            threads=[thread],
+        )
+
+    thread_search = ThreadSearch.objects.get(thread=thread)
+    assert thread_search.starter_id is None
+
+
+def test_postgresql_backend_update_threads_update_is_hidden_is_noop(
+    thread_factory, backend, default_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    updated = backend.update_threads({"is_hidden": True}, threads=[thread])
+    assert updated == 0
+
+
+def test_postgresql_backend_update_threads_update_is_unapproved_is_noop(
+    thread_factory, backend, default_category
+):
+    thread = thread_factory(default_category)
+    backend.index_threads([thread])
+
+    updated = backend.update_threads({"is_unapproved": True}, threads=[thread])
+    assert updated == 0
 
 
 def test_postgresql_backend_update_posts_raises_exception_if_no_filter_is_set(
@@ -532,7 +612,7 @@ def test_postgresql_backend_update_posts_raises_exception_if_no_filter_is_set(
     assert post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_updates_by_category(
+def test_postgresql_backend_update_posts_filters_by_category(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -558,7 +638,7 @@ def test_postgresql_backend_update_posts_updates_by_category(
     assert other_post_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_posts_updates_by_thread(
+def test_postgresql_backend_update_posts_filters_by_thread(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -584,7 +664,7 @@ def test_postgresql_backend_update_posts_updates_by_thread(
     assert other_post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_updates_by_post(
+def test_postgresql_backend_update_posts_filters_by_post(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -608,7 +688,7 @@ def test_postgresql_backend_update_posts_updates_by_post(
     assert other_post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_updates_by_user(
+def test_postgresql_backend_update_posts_filters_by_poster(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -623,7 +703,7 @@ def test_postgresql_backend_update_posts_updates_by_user(
     backend.index_threads([thread])
     backend.index_posts([(post, post.content), (other_post, other_post.content)])
 
-    updated = backend.update_posts({"category": sibling_category}, users=[user])
+    updated = backend.update_posts({"category": sibling_category}, posters=[user])
     assert updated == 1
 
     post_search = PostSearch.objects.get(post=post)
@@ -822,7 +902,7 @@ def test_postgresql_backend_update_posts_raises_exception_if_poster_and_poster_i
     assert post_search.poster_id is None
 
 
-def test_postgresql_backend_update_posts_is_hidden_update_is_noop(
+def test_postgresql_backend_update_posts_update_is_hidden_is_noop(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -838,7 +918,7 @@ def test_postgresql_backend_update_posts_is_hidden_update_is_noop(
     assert updated == 0
 
 
-def test_postgresql_backend_update_posts_is_unapproved_update_is_noop(
+def test_postgresql_backend_update_posts_update_is_unapproved_is_noop(
     thread_factory,
     thread_reply_factory,
     backend,
