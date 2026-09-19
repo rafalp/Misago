@@ -34,7 +34,6 @@ if TYPE_CHECKING:
 
 class ThreadsSearchUpdate(TypedDict, total=False):
     category: Category
-    thread: Thread
     starter: "User"
 
     is_hidden: bool
@@ -124,7 +123,7 @@ class SearchBackend(ABC):
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
-        users: Iterable["User"] | None = None,
+        starters: Iterable["User"] | None = None,
     ):
         pass
 
@@ -136,7 +135,7 @@ class SearchBackend(ABC):
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
         posts: Iterable[Post] | None = None,
-        users: Iterable["User"] | None = None,
+        posters: Iterable["User"] | None = None,
     ):
         pass
 
@@ -732,7 +731,9 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     _INDEXED_THREAD_FIELDS = {
         "category",
+        "category_id",
         "starter",
+        "starter_id",
     }
 
     def update_threads(
@@ -741,10 +742,20 @@ class PostgreSQLSearchBackend(SearchBackend):
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
-        users: Iterable["User"] | None = None,
+        starters: Iterable["User"] | None = None,
     ) -> int:
-        if not any((categories, threads, users)):
+        if not any((categories, threads, starters)):
             raise ValueError("Provide at least one filter.")
+
+        if "category" in update and "category_id" in update:
+            raise ValueError(
+                "'category' and 'category_id' can't be updated at the same time."
+            )
+
+        if "starter" in update and "starter_id" in update:
+            raise ValueError(
+                "'starter' and 'starter_id' can't be updated at the same time."
+            )
 
         clean_update = {
             field: value
@@ -758,7 +769,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         return self._threads(
             categories=categories,
             threads=threads,
-            users=users,
+            users=starters,
         ).update(**clean_update)
 
     _INDEXED_POST_FIELDS = {
@@ -777,19 +788,25 @@ class PostgreSQLSearchBackend(SearchBackend):
         categories: Iterable[Category | CategoryProxy] | None = None,
         threads: Iterable[Thread] | None = None,
         posts: Iterable[Post] | None = None,
-        users: Iterable["User"] | None = None,
+        posters: Iterable["User"] | None = None,
     ) -> int:
-        if not any((categories, threads, posts, users)):
+        if not any((categories, threads, posts, posters)):
             raise ValueError("Provide at least one filter.")
 
         if "category" in update and "category_id" in update:
-            raise ValueError("'category' and 'category_id' can't be updated together.")
+            raise ValueError(
+                "'category' and 'category_id' can't be updated at the same time."
+            )
 
         if "thread" in update and "thread_id" in update:
-            raise ValueError("'thread' and 'thread_id' can't be updated together.")
+            raise ValueError(
+                "'thread' and 'thread_id' can't be updated at the same time."
+            )
 
         if "poster" in update and "poster_id" in update:
-            raise ValueError("'poster' and 'poster_id' can't be updated together.")
+            raise ValueError(
+                "'poster' and 'poster_id' can't be updated at the same time."
+            )
 
         clean_update = {
             field: value
@@ -804,7 +821,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             categories=categories,
             threads=threads,
             posts=posts,
-            users=users,
+            users=posters,
         ).update(**clean_update)
 
     def delete(
