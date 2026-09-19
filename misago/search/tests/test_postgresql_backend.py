@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.postgres.search import SearchQuery
 
+from ...privatethreads.models import PrivateThreadMember
 from ...threads.enums import ThreadPinned
 from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
@@ -58,6 +59,50 @@ def test_postgresql_backend_search_threads_searches_threads(
     assert results.items[0].post_id == postgresql_post.id
 
 
+def test_postgresql_backend_search_threads_searches_thread_posts(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    databases_thread = thread_factory(
+        default_category, title="Database engine recommendation"
+    )
+    mysql_post = thread_reply_factory(databases_thread)
+    postgresql_post = thread_reply_factory(databases_thread)
+
+    cars_thread = thread_factory(default_category, title="Favorite car?")
+    seat_post = thread_reply_factory(cars_thread)
+    nissan_post = thread_reply_factory(cars_thread)
+
+    synchronize_thread(databases_thread)
+    synchronize_thread(cars_thread)
+
+    backend.index_threads([databases_thread, cars_thread])
+    backend.index_posts(
+        [
+            (mysql_post, "MySQL is OpenSource and widely available."),
+            (postgresql_post, "PostgreSQL has great features!"),
+            (seat_post, "I love SEAT"),
+            (nissan_post, "I drive Nissan"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        "seat",
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == seat_post.id
+
+
 def test_postgresql_backend_search_threads_searches_thread_titles(
     thread_factory,
     thread_reply_factory,
@@ -106,21 +151,21 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
     assert results.items[0].post_id == databases_post.id
 
 
-def test_postgresql_backend_search_threads_searches_thread_posts(
+def test_postgresql_backend_search_private_threads_searches_threads(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
     user,
     backend,
-    default_category,
+    private_threads_category,
 ):
     databases_thread = thread_factory(
-        default_category, title="Database engine recommendation"
+        private_threads_category, title="Database engine recommendation"
     )
     mysql_post = thread_reply_factory(databases_thread)
     postgresql_post = thread_reply_factory(databases_thread)
 
-    cars_thread = thread_factory(default_category, title="Favorite car?")
+    cars_thread = thread_factory(private_threads_category, title="Favorite car?")
     seat_post = thread_reply_factory(cars_thread)
     nissan_post = thread_reply_factory(cars_thread)
 
@@ -139,15 +184,109 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
 
     user_permissions = user_permissions_factory(user)
 
-    results = backend.search_threads(
+    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
+    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
+
+    results = backend.search_private_threads("postgresql database", user_permissions)
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == postgresql_post.id
+
+
+def test_postgresql_backend_search_private_threads_searches_posts(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+):
+    databases_thread = thread_factory(
+        private_threads_category, title="Database engine recommendation"
+    )
+    mysql_post = thread_reply_factory(databases_thread)
+    postgresql_post = thread_reply_factory(databases_thread)
+
+    cars_thread = thread_factory(private_threads_category, title="Favorite car?")
+    seat_post = thread_reply_factory(cars_thread)
+    nissan_post = thread_reply_factory(cars_thread)
+
+    synchronize_thread(databases_thread)
+    synchronize_thread(cars_thread)
+
+    backend.index_threads([databases_thread, cars_thread])
+    backend.index_posts(
+        [
+            (mysql_post, "MySQL is OpenSource and widely available."),
+            (postgresql_post, "PostgreSQL has great features!"),
+            (seat_post, "I love SEAT"),
+            (nissan_post, "I drive Nissan"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
+    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
+
+    results = backend.search_private_threads(
         "seat",
         user_permissions,
-        categories=[default_category],
         mode=SearchMode.POSTS,
     )
 
     assert len(results.items) == 1
     assert results.items[0].post_id == seat_post.id
+
+
+def test_postgresql_backend_search_private_threads_searches_thread_titles(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+):
+    databases_thread = thread_factory(
+        private_threads_category, title="Database engine recommendation"
+    )
+    databases_post = databases_thread.first_post
+    mysql_post = thread_reply_factory(databases_thread)
+    postgresql_post = thread_reply_factory(databases_thread)
+
+    cars_thread = thread_factory(private_threads_category, title="Favorite car?")
+    cars_post = cars_thread.first_post
+    seat_post = thread_reply_factory(cars_thread)
+    nissan_post = thread_reply_factory(cars_thread)
+
+    synchronize_thread(databases_thread)
+    synchronize_thread(cars_thread)
+
+    backend.index_threads([databases_thread, cars_thread])
+    backend.index_posts(
+        [
+            (databases_post, "What are you using?"),
+            (mysql_post, "MySQL is OpenSource and widely available."),
+            (postgresql_post, "PostgreSQL has great features!"),
+            (cars_post, "What are you driving?"),
+            (seat_post, "I love SEAT"),
+            (nissan_post, "I drive Nissan"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
+    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
+
+    results = backend.search_private_threads(
+        "database",
+        user_permissions,
+        mode=SearchMode.THREAD_TITLES,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == databases_post.id
 
 
 def test_postgresql_backend_index_threads_indexes_threads(
