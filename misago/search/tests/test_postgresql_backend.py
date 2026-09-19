@@ -4,6 +4,7 @@ from django.contrib.postgres.search import SearchQuery
 from ...threads.enums import ThreadPinned
 from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
+from ..enums import SearchMode
 from ..models import PostSearch, ThreadSearch
 
 
@@ -12,74 +13,141 @@ def backend(db):
     return PostgreSQLSearchBackend({"PG_SEARCH_CONFIG": "english"})
 
 
-@pytest.fixture
-def search_index(
-    thread_factory,
-    thread_reply_factory,
-    backend,
-    user,
-    other_user,
-    default_category,
-):
-    thread = thread_factory(
-        default_category,
-        starter=user,
-        title="Forum software recommendations?",
-    )
-
-    first_post = thread.first_post
-    first_post.thread = thread
-    first_post.content = "I am looking for a good forum software for my next project. Any recommendations?"
-    first_post.save()
-
-    reply = thread_reply_factory(
-        thread,
-        poster=other_user,
-        content="Give Misago a chance. This site runs it and we are happy with it.",
-    )
-
-    other_thread = thread_factory(
-        default_category,
-        starter=user,
-        title="Plugin hook for post validation",
-    )
-    other_thread_first_post = other_thread.first_post
-    other_thread_first_post.thread = other_thread
-    other_thread_first_post.content = (
-        "I am looking for a plugin hook to use for custom post validator."
-    )
-    other_thread_first_post.save()
-
-    other_thread_reply = thread_reply_factory(
-        thread,
-        poster=other_user,
-        content="Please see the validate_post_content_hook from misago.posting",
-    )
-
-    posts = [
-        first_post,
-        reply,
-        other_thread_first_post,
-        other_thread_reply,
-    ]
-
-    synchronize_thread(first_post.thread)
-    synchronize_thread(other_thread_reply.thread)
-
-    backend.index_threads([thread, other_thread])
-    backend.index_posts([(post, post.content) for post in posts])
-
-    return {
-        "thread": thread,
-        "first_post": first_post,
-        "reply": reply,
-        "other_thread": other_thread,
-        "other_thread_reply": other_thread_reply,
-    }
-
-
 def test_postgresql_backend_initialize_does_nothing(backend):
     backend.initialize()
+
+
+def test_postgresql_backend_search_threads_searches_threads(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    databases_thread = thread_factory(
+        default_category, title="Database engine recommendation"
+    )
+    mysql_post = thread_reply_factory(databases_thread)
+    postgresql_post = thread_reply_factory(databases_thread)
+
+    cars_thread = thread_factory(default_category, title="Favorite car?")
+    seat_post = thread_reply_factory(cars_thread)
+    nissan_post = thread_reply_factory(cars_thread)
+
+    synchronize_thread(databases_thread)
+    synchronize_thread(cars_thread)
+
+    backend.index_threads([databases_thread, cars_thread])
+    backend.index_posts(
+        [
+            (mysql_post, "MySQL is OpenSource and widely available."),
+            (postgresql_post, "PostgreSQL has great features!"),
+            (seat_post, "I love SEAT"),
+            (nissan_post, "I drive Nissan"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        "postgresql database", user_permissions, categories=[default_category]
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == postgresql_post.id
+
+
+def test_postgresql_backend_search_threads_searches_thread_titles(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    databases_thread = thread_factory(
+        default_category, title="Database engine recommendation"
+    )
+    databases_post = databases_thread.first_post
+    mysql_post = thread_reply_factory(databases_thread)
+    postgresql_post = thread_reply_factory(databases_thread)
+
+    cars_thread = thread_factory(default_category, title="Favorite car?")
+    cars_post = cars_thread.first_post
+    seat_post = thread_reply_factory(cars_thread)
+    nissan_post = thread_reply_factory(cars_thread)
+
+    synchronize_thread(databases_thread)
+    synchronize_thread(cars_thread)
+
+    backend.index_threads([databases_thread, cars_thread])
+    backend.index_posts(
+        [
+            (databases_post, "What are you using?"),
+            (mysql_post, "MySQL is OpenSource and widely available."),
+            (postgresql_post, "PostgreSQL has great features!"),
+            (cars_post, "What are you driving?"),
+            (seat_post, "I love SEAT"),
+            (nissan_post, "I drive Nissan"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        "database",
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.THREAD_TITLES,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == databases_post.id
+
+
+def test_postgresql_backend_search_threads_searches_thread_posts(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    databases_thread = thread_factory(
+        default_category, title="Database engine recommendation"
+    )
+    mysql_post = thread_reply_factory(databases_thread)
+    postgresql_post = thread_reply_factory(databases_thread)
+
+    cars_thread = thread_factory(default_category, title="Favorite car?")
+    seat_post = thread_reply_factory(cars_thread)
+    nissan_post = thread_reply_factory(cars_thread)
+
+    synchronize_thread(databases_thread)
+    synchronize_thread(cars_thread)
+
+    backend.index_threads([databases_thread, cars_thread])
+    backend.index_posts(
+        [
+            (mysql_post, "MySQL is OpenSource and widely available."),
+            (postgresql_post, "PostgreSQL has great features!"),
+            (seat_post, "I love SEAT"),
+            (nissan_post, "I drive Nissan"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        "seat",
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == seat_post.id
 
 
 def test_postgresql_backend_index_threads_indexes_threads(
