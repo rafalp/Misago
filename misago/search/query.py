@@ -73,7 +73,7 @@ def tokenize_query(query: str) -> list[Token]:
     tokens = remove_break_tokens(tokens)
     tokens = clean_value_tokens(tokens)
     tokens = clean_open_close_tokens(tokens)
-    tokens = remove_invalid_or_tokens(tokens)
+    tokens = remove_invalid_tokens(tokens)
 
     return tokens
 
@@ -114,7 +114,7 @@ def clean_open_close_tokens(tokens: list[Token]) -> list[Token]:
     return new_tokens
 
 
-def remove_invalid_or_tokens(tokens: list[Token]) -> list[Token]:
+def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
     new_tokens = []
     max_index = len(tokens) - 1
 
@@ -135,6 +135,18 @@ def remove_invalid_or_tokens(tokens: list[Token]) -> list[Token]:
             if next_token not in (
                 TokenType.OPEN,
                 TokenType.NOT,
+                TokenType.WORD,
+                TokenType.PHRASE,
+            ):
+                continue
+
+        if token_type == TokenType.NOT:
+            if index == max_index:
+                continue
+
+            next_token = tokens[index + 1][0]
+            if next_token not in (
+                TokenType.OPEN,
                 TokenType.WORD,
                 TokenType.PHRASE,
             ):
@@ -199,7 +211,7 @@ def parse_tokens(tokens: list):
                 new_tokens.append(token)
 
             elif prefix and prefix[-1] == TokenType.OR:
-                prefix.pop()
+                prefix.clear()
 
                 if isinstance(previous_token, (SearchQueryKeyword, SearchQueryPhrase)):
                     new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
@@ -224,7 +236,7 @@ def parse_tokens(tokens: list):
 
         elif isinstance(token, SearchQueryAnd):
             if prefix and prefix[-1] == TokenType.OR:
-                prefix.pop()
+                prefix.clear()
                 new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
 
             elif isinstance(previous_token, SearchQueryAnd):
@@ -238,7 +250,7 @@ def parse_tokens(tokens: list):
                 previous_token.value += token.value
 
             elif prefix and prefix[-1] == TokenType.OR:
-                prefix.pop()
+                prefix.clear()
                 new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
 
             else:
@@ -246,7 +258,7 @@ def parse_tokens(tokens: list):
 
         elif isinstance(token, SearchQueryNot):
             if prefix and prefix[-1] == TokenType.OR:
-                prefix.pop()
+                prefix.clear()
                 new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
 
             elif isinstance(previous_token, SearchQueryAnd):
