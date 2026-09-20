@@ -161,3 +161,140 @@ def test_parse_search_query_parses_two_keywords_or_two_keywords():
             ),
         ],
     )
+
+
+def test_parse_search_query_parses__keywords_and_not_keyword_or_two_keywords():
+    result = parse_search_query("(lorem -ipsum) | (dolor met)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="lorem"),
+                    SearchQueryNot(
+                        value=SearchQueryKeyword(value="ipsum"),
+                    ),
+                ],
+            ),
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="dolor"),
+                    SearchQueryKeyword(value="met"),
+                ],
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keywords_and_not_keywords():
+    result = parse_search_query("(lorem ipsum) -(dolor met)")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="ipsum"),
+            SearchQueryNot(
+                value=SearchQueryAnd(
+                    value=[
+                        SearchQueryKeyword(value="dolor"),
+                        SearchQueryKeyword(value="met"),
+                    ],
+                ),
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keywords_or_not_keywords():
+    result = parse_search_query("(lorem ipsum) | -(dolor met)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="lorem"),
+                    SearchQueryKeyword(value="ipsum"),
+                ],
+            ),
+            SearchQueryNot(
+                value=SearchQueryAnd(
+                    value=[
+                        SearchQueryKeyword(value="dolor"),
+                        SearchQueryKeyword(value="met"),
+                    ],
+                ),
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keywords_or_keywords():
+    result = parse_search_query("(lorem ipsum) | (dolor met)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="lorem"),
+                    SearchQueryKeyword(value="ipsum"),
+                ],
+            ),
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="dolor"),
+                    SearchQueryKeyword(value="met"),
+                ],
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keywords_or_keywords_with_not_keyword():
+    result = parse_search_query("(lorem ipsum) | (dolor met -elit)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="lorem"),
+                    SearchQueryKeyword(value="ipsum"),
+                ],
+            ),
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="dolor"),
+                    SearchQueryKeyword(value="met"),
+                    SearchQueryNot(
+                        value=SearchQueryKeyword(value="elit"),
+                    ),
+                ],
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keyword_group_or_keyword_group():
+    result = parse_search_query("(lorem) | (ipsum)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="ipsum"),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keyword_and_keyword_or_keyword():
+    result = parse_search_query("lorem ipsum | dolor")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryOr(
+                value=[
+                    SearchQueryKeyword(value="ipsum"),
+                    SearchQueryKeyword(value="dolor"),
+                ],
+            ),
+        ],
+    )

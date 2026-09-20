@@ -98,7 +98,10 @@ def clean_open_close_tokens(tokens: list[Token]) -> list[Token]:
             else:
                 continue
 
-        if level or group_tokens:
+        if level:
+            group_tokens.append(token)
+        elif group_tokens:
+            group_tokens.append(token)
             new_tokens += group_tokens
             group_tokens = []
         else:
@@ -180,6 +183,13 @@ def parse_tokens(tokens: list):
         if isinstance(token, tuple):
             token = parse_single_token(token) or token
 
+        if isinstance(token, SearchQueryGroup):
+            token = token.value
+
+            if prefix and prefix[-1] == TokenType.NOT:
+                prefix.pop()
+                token = SearchQueryNot(value=token)
+
         if isinstance(token, (SearchQueryKeyword, SearchQueryPhrase)):
             if prefix and prefix[-1] == TokenType.NOT:
                 prefix.pop()
@@ -211,6 +221,42 @@ def parse_tokens(tokens: list):
 
                 elif isinstance(previous_token, SearchQueryOr):
                     new_tokens[-1] = SearchQueryAnd(value=[new_tokens[-1], token])
+
+        elif isinstance(token, SearchQueryAnd):
+            if prefix and prefix[-1] == TokenType.OR:
+                prefix.pop()
+                new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
+
+            elif isinstance(previous_token, SearchQueryAnd):
+                previous_token.value += token.value
+
+            else:
+                new_tokens.append(token)
+
+        elif isinstance(token, SearchQueryOr):
+            if isinstance(previous_token, SearchQueryOr):
+                previous_token.value += token.value
+
+            elif prefix and prefix[-1] == TokenType.OR:
+                prefix.pop()
+                new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
+
+            else:
+                new_tokens.append(token)
+
+        elif isinstance(token, SearchQueryNot):
+            if prefix and prefix[-1] == TokenType.OR:
+                prefix.pop()
+                new_tokens[-1] = SearchQueryOr(value=[new_tokens[-1], token])
+
+            elif isinstance(previous_token, SearchQueryAnd):
+                previous_token.value.append(token)
+
+            else:
+                new_tokens[-1] = SearchQueryAnd(value=[new_tokens[-1], token])
+
+        else:
+            new_tokens.append(token)
 
     if len(new_tokens) == 1:
         return new_tokens[0]
@@ -248,7 +294,7 @@ def parse_token_groups(tokens: list[Token]) -> list:
         if level:
             group_tokens.append(token)
         elif group_tokens:
-            if new_token := parse_tokens(group_tokens[1:-1]):
+            if new_token := parse_tokens(group_tokens[1:]):
                 new_tokens.append(SearchQueryGroup(value=new_token))
             group_tokens = []
         else:
