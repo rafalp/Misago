@@ -191,8 +191,12 @@ def test_parse_search_query_parses_keywords_and_not_keywords():
 
     assert result == SearchQueryAnd(
         value=[
-            SearchQueryKeyword(value="lorem"),
-            SearchQueryKeyword(value="ipsum"),
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="lorem"),
+                    SearchQueryKeyword(value="ipsum"),
+                ],
+            ),
             SearchQueryNot(
                 value=SearchQueryAnd(
                     value=[
@@ -296,5 +300,39 @@ def test_parse_search_query_parses_keyword_and_keyword_or_keyword():
                     SearchQueryKeyword(value="dolor"),
                 ],
             ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keyword_and_keyword_or_keyword_or_keyword():
+    result = parse_search_query("lorem ipsum | dolor | met")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryOr(
+                value=[
+                    SearchQueryKeyword(value="ipsum"),
+                    SearchQueryKeyword(value="dolor"),
+                    SearchQueryKeyword(value="met"),
+                ],
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_keyword_or_keyword_or_keyword_and_keyword():
+    result = parse_search_query("lorem | ipsum | dolor met")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryOr(
+                value=[
+                    SearchQueryKeyword(value="lorem"),
+                    SearchQueryKeyword(value="ipsum"),
+                    SearchQueryKeyword(value="dolor"),
+                ],
+            ),
+            SearchQueryKeyword(value="met"),
         ],
     )
