@@ -67,15 +67,15 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
     return data
 
 
-def test_edit_category_form_updates_detail_on_thread_updates(
+def test_edit_category_form_updates_detail_on_thread_events(
     default_category, sibling_category, admin_client, thread
 ):
-    thread_update = create_test_thread_event(
+    thread_event = create_test_thread_event(
         thread,
         detail=default_category.name,
         content_object=default_category,
     )
-    other_thread_update = create_test_thread_event(
+    other_thread_event = create_test_thread_event(
         thread,
         detail=sibling_category.name,
         content_object=sibling_category,
@@ -87,11 +87,11 @@ def test_edit_category_form_updates_detail_on_thread_updates(
     )
     assert response.status_code == 302
 
-    thread_update.refresh_from_db()
-    assert thread_update.detail == "Updated"
+    thread_event.refresh_from_db()
+    assert thread_event.detail == "Updated"
 
-    other_thread_update.refresh_from_db()
-    assert other_thread_update.detail == sibling_category.name
+    other_thread_event.refresh_from_db()
+    assert other_thread_event.detail == sibling_category.name
 
 
 def test_edit_category_form_moves_category_under_other_category(

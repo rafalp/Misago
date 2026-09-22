@@ -210,7 +210,7 @@ def test_private_thread_post_feed_marks_original_post_as_thread_editable_by_mode
     )
 
 
-def test_private_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
+def test_private_thread_post_feed_doesnt_mark_thread_event_as_hidable_by_user(
     request_factory,
     user,
     user_private_thread,
@@ -228,7 +228,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
     assert not feed_data["items"][1]["hide_url"]
 
 
-def test_private_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_user(
+def test_private_thread_post_feed_doesnt_mark_thread_event_as_unhideable_by_user(
     request_factory,
     user,
     user_private_thread,
@@ -249,7 +249,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_use
     assert not feed_data["items"][1]["unhide_url"]
 
 
-def test_private_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user(
+def test_private_thread_post_feed_doesnt_mark_thread_event_as_deletable_by_user(
     request_factory,
     user,
     user_private_thread,
@@ -267,7 +267,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user
     assert not feed_data["items"][1]["delete_url"]
 
 
-def test_private_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
+def test_private_thread_post_feed_marks_thread_event_as_hidable_by_moderator(
     request_factory,
     moderator,
     user_private_thread,
@@ -287,7 +287,7 @@ def test_private_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
     assert feed_data["items"][1]["hide_url"]
 
 
-def test_private_thread_post_feed_marks_thread_update_as_unhideable_by_moderator(
+def test_private_thread_post_feed_marks_thread_event_as_unhideable_by_moderator(
     request_factory,
     moderator,
     user_private_thread,
@@ -310,7 +310,7 @@ def test_private_thread_post_feed_marks_thread_update_as_unhideable_by_moderator
     assert feed_data["items"][1]["unhide_url"]
 
 
-def test_private_thread_post_feed_marks_thread_update_as_deletable_by_moderator(
+def test_private_thread_post_feed_marks_thread_event_as_deletable_by_moderator(
     request_factory,
     moderator,
     user_private_thread,

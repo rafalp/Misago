@@ -123,7 +123,7 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     _move_objects(Post, categories, new_category)
     _move_objects(Thread, categories, new_category)
 
-    # misago.threadupdates
+    # misago.threadevents
     _move_objects(ThreadEvent, categories, new_category)
 
     synchronize_category(new_category)

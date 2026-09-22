@@ -286,7 +286,7 @@ def test_thread_post_feed_marks_original_post_as_thread_editable_by_moderator(
     )
 
 
-def test_post_feed_returns_thread_update_data(
+def test_post_feed_returns_thread_event_data(
     request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
@@ -301,7 +301,7 @@ def test_post_feed_returns_thread_update_data(
     assert feed_data["items"][1]["thread_event"] == thread_event
 
 
-def test_post_feed_sets_actors_in_thread_update_data(
+def test_post_feed_sets_actors_in_thread_event_data(
     request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
@@ -314,7 +314,7 @@ def test_post_feed_sets_actors_in_thread_update_data(
     assert feed_data["items"][1]["actor_name"] == user.username
 
 
-def test_post_feed_sets_action_data_in_thread_update_data(
+def test_post_feed_sets_action_data_in_thread_event_data(
     request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
@@ -327,7 +327,7 @@ def test_post_feed_sets_action_data_in_thread_update_data(
     assert feed_data["items"][1]["description"] == "Unlocked"
 
 
-def test_post_feed_marks_thread_update_as_animated(
+def test_post_feed_marks_thread_event_as_animated(
     request_factory, user, thread, post, thread_event, thread_event_detail
 ):
     request = request_factory(user)
@@ -343,7 +343,7 @@ def test_post_feed_marks_thread_update_as_animated(
     assert feed_data["items"][2]["animate"]
 
 
-def test_post_feed_marks_thread_update_as_animated(
+def test_post_feed_marks_thread_event_as_animated(
     request_factory, user, thread, post, thread_event, thread_event_detail
 ):
     request = request_factory(user)
@@ -359,7 +359,7 @@ def test_post_feed_marks_thread_update_as_animated(
     assert feed_data["items"][2]["animate"]
 
 
-def test_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
+def test_thread_post_feed_doesnt_mark_thread_event_as_hidable_by_user(
     request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
@@ -371,7 +371,7 @@ def test_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
     assert not feed_data["items"][1]["hide_url"]
 
 
-def test_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_user(
+def test_thread_post_feed_doesnt_mark_thread_event_as_unhideable_by_user(
     request_factory, user, thread, post, hidden_thread_event
 ):
     request = request_factory(user)
@@ -383,7 +383,7 @@ def test_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_user(
     assert not feed_data["items"][1]["unhide_url"]
 
 
-def test_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user(
+def test_thread_post_feed_doesnt_mark_thread_event_as_deletable_by_user(
     request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
@@ -395,7 +395,7 @@ def test_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user(
     assert not feed_data["items"][1]["delete_url"]
 
 
-def test_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
+def test_thread_post_feed_marks_thread_event_as_hidable_by_moderator(
     request_factory, moderator, thread, post, thread_event
 ):
     request = request_factory(moderator)
@@ -409,7 +409,7 @@ def test_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
     assert feed_data["items"][1]["hide_url"]
 
 
-def test_thread_post_feed_marks_thread_update_as_unhideable_by_moderator(
+def test_thread_post_feed_marks_thread_event_as_unhideable_by_moderator(
     request_factory, moderator, thread, post, hidden_thread_event
 ):
     request = request_factory(moderator)
@@ -423,7 +423,7 @@ def test_thread_post_feed_marks_thread_update_as_unhideable_by_moderator(
     assert feed_data["items"][1]["unhide_url"]
 
 
-def test_thread_post_feed_marks_thread_update_as_deletable_by_moderator(
+def test_thread_post_feed_marks_thread_event_as_deletable_by_moderator(
     request_factory, moderator, thread, post, thread_event
 ):
     request = request_factory(moderator)

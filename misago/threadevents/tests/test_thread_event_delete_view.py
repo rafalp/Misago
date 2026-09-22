@@ -23,7 +23,7 @@ def test_thread_event_delete_view_returns_404_error_for_not_found_thread(user_cl
     assert response.status_code == 404
 
 
-def test_thread_event_delete_view_returns_404_error_for_not_found_update(
+def test_thread_event_delete_view_returns_404_error_for_not_found_event(
     user_client, thread
 ):
     response = user_client.post(
@@ -224,7 +224,7 @@ def test_thread_event_delete_view_deletes_event_for_global_moderator(
         thread_event.refresh_from_db()
 
 
-def test_thread_event_delete_view_unsets_thread_has_updates_flag_for_last_event_deleted(
+def test_thread_event_delete_view_unsets_thread_has_events_flag_for_last_event_deleted(
     moderator_client, thread, thread_event
 ):
     thread.has_events = True
@@ -251,7 +251,7 @@ def test_thread_event_delete_view_unsets_thread_has_updates_flag_for_last_event_
         thread_event.refresh_from_db()
 
 
-def test_thread_event_delete_view_keeps_thread_has_updates_flag_if_other_updates_exist(
+def test_thread_event_delete_view_keeps_thread_has_events_flag_if_other_events_exist(
     moderator_client, thread, thread_event
 ):
     thread.has_events = True

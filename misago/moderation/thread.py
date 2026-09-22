@@ -359,9 +359,7 @@ class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationA
         set_private_thread_owner(thread, user, request=request)
         thread.private_thread_owner = user
 
-        thread_update = create_took_ownership_thread_event(
-            thread, user, request=request
-        )
+        thread_event = create_took_ownership_thread_event(thread, user, request=request)
         ensure_thread_has_events(thread)
 
         messages.success(
@@ -370,7 +368,7 @@ class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationA
         )
 
         return ModerationResult(
-            context={"updated_members": True}, thread_events=[thread_update]
+            context={"updated_members": True}, thread_events=[thread_event]
         )
 
 

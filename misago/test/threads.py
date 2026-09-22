@@ -163,7 +163,7 @@ def thread_relations_factory(user, other_user):
             thread=thread,
         )
 
-        thread_update = create_test_thread_event(thread, other_user)
+        thread_event = create_test_thread_event(thread, other_user)
 
         watched_thread = WatchedThread.objects.create(
             user=user,
@@ -180,7 +180,7 @@ def thread_relations_factory(user, other_user):
             post=post,
             post_edit=post_edit,
             read_thread=read_thread,
-            thread_update=thread_update,
+            thread_event=thread_event,
             watched_thread=watched_thread,
         )
 
@@ -197,7 +197,7 @@ class ThreadRelations:
     post: Post
     post_edit: PostEdit
     read_thread: ReadThread
-    thread_update: ThreadEvent
+    thread_event: ThreadEvent
     watched_thread: WatchedThread
 
     def assert_category(self, category: Category):
@@ -225,8 +225,8 @@ class ThreadRelations:
         self.post_edit.refresh_from_db()
         assert self.post_edit.category_id == category.id
 
-        self.thread_update.refresh_from_db()
-        assert self.thread_update.category_id == category.id
+        self.thread_event.refresh_from_db()
+        assert self.thread_event.category_id == category.id
 
         self.watched_thread.refresh_from_db()
         assert self.watched_thread.category_id == category.id
