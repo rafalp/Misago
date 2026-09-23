@@ -336,3 +336,137 @@ def test_parse_search_query_parses_keyword_or_keyword_or_keyword_and_keyword():
             SearchQueryKeyword(value="met"),
         ],
     )
+
+
+def test_parse_search_query_parses_keyword_or_keyword_or_keyword_and_keyword_group():
+    result = parse_search_query("lorem | ipsum | (dolor met)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="ipsum"),
+            SearchQueryAnd(
+                value=[
+                    SearchQueryKeyword(value="dolor"),
+                    SearchQueryKeyword(value="met"),
+                ],
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_unclosed_group():
+    result = parse_search_query("lorem -(dolor  met")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryNot(
+                value=SearchQueryAnd(
+                    value=[
+                        SearchQueryKeyword(value="dolor"),
+                        SearchQueryKeyword(value="met"),
+                    ],
+                ),
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_multiple_unclosed_groups():
+    result = parse_search_query("lorem -((((dolor  met")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryNot(
+                value=SearchQueryAnd(
+                    value=[
+                        SearchQueryKeyword(value="dolor"),
+                        SearchQueryKeyword(value="met"),
+                    ],
+                ),
+            ),
+        ],
+    )
+
+
+def test_parse_search_query_parses_unopened_group():
+    result = parse_search_query("lorem -dolor) met)")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryNot(
+                value=SearchQueryKeyword(value="dolor"),
+            ),
+            SearchQueryKeyword(value="met"),
+        ],
+    )
+
+
+def test_parse_search_query_parses_empty_phrase():
+    result = parse_search_query("lorem '  ' met")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="met"),
+        ],
+    )
+
+
+def test_parse_search_query_parses_not_before_or():
+    result = parse_search_query("lorem -| met)")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="met"),
+        ],
+    )
+
+
+def test_parse_search_query_parses_not_before_empty_group():
+    result = parse_search_query("lorem -()")
+
+    assert result == SearchQueryKeyword(value="lorem")
+
+
+def test_parse_search_query_parses_not_at_query_end():
+    result = parse_search_query("lorem -")
+
+    assert result == SearchQueryKeyword(value="lorem")
+
+
+def test_parse_search_query_parses_not_empty_phrase():
+    result = parse_search_query("lorem -'   ' ipsum")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="ipsum"),
+        ],
+    )
+
+
+def test_parse_search_query_parses_or_empty_phrase():
+    result = parse_search_query("lorem | '   ' | ipsum")
+
+    assert result == SearchQueryOr(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="ipsum"),
+        ],
+    )
+
+
+def test_parse_search_query_parses_group_or_empty_phrase():
+    result = parse_search_query("lorem ('   ' | ipsum)")
+
+    assert result == SearchQueryAnd(
+        value=[
+            SearchQueryKeyword(value="lorem"),
+            SearchQueryKeyword(value="ipsum"),
+        ],
+    )
