@@ -63,13 +63,13 @@ def parse_search_query(
 
 def tokenize_query(query: str) -> list[Token]:
     in_quote = False
+    group = 0
     tokens = []
 
     has_text = False
     has_not = False
     has_and = False
     has_or = False
-    has_groups = False
 
     for c in normalize_quotes(query):
         if c == "'":
@@ -93,22 +93,24 @@ def tokenize_query(query: str) -> list[Token]:
             has_or = True
             tokens.append((TokenType.OR, None))
         elif c == "(":
-            has_groups = True
             tokens.append((TokenType.OPEN, None))
+            group += 1
         elif c == ")":
-            has_groups = True
-            tokens.append((TokenType.CLOSE, None))
+            if group:
+                tokens.append((TokenType.CLOSE, None))
+                group -= 1
         else:
             has_and = True
             tokens.append((TokenType.AND, None))
+
+    while group:
+        tokens.append((TokenType.CLOSE, None))
+        group -= 1
 
     if has_text:
         tokens = clean_text_tokens(tokens)
     else:
         return []  # Search query without text is nonsensical
-
-    if has_groups:
-        tokens = clean_open_close_tokens(tokens)
 
     if has_and:
         tokens = remove_and_tokens(tokens)
@@ -139,6 +141,12 @@ def clean_text_tokens(tokens: list[Token]) -> list[Token]:
         elif token_type == TokenType.PHRASE:
             if stripped_value := token_value.strip():
                 new_tokens.append((TokenType.PHRASE, stripped_value))
+
+            elif new_tokens:
+                previous_token = new_tokens[-1][0]
+                if previous_token in (TokenType.NOT, TokenType.OR):
+                    new_tokens.pop()
+
         else:
             new_tokens.append(token)
 
@@ -211,6 +219,7 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
                 TokenType.PHRASE,
             ):
                 continue
+
             if next_token not in (
                 TokenType.OPEN,
                 TokenType.NOT,
