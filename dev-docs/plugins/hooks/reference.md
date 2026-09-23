@@ -17,6 +17,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.postedits.hooks`](#misago-postedits-hooks)
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.privatethreads.hooks`](#misago-privatethreads-hooks)
+- [`misago.search.hooks`](#misago-search-hooks)
 - [`misago.solutions.hooks`](#misago-solutions-hooks)
 - [`misago.threadevents.hooks`](#misago-threadevents-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
@@ -263,6 +264,13 @@ Hooks instances are importable from the following Python modules:
 - [`set_private_thread_owner_hook`](./set-private-thread-owner-hook.md)
 - [`validate_new_private_thread_member_hook`](./validate-new-private-thread-member-hook.md)
 - [`validate_new_private_thread_owner_hook`](./validate-new-private-thread-owner-hook.md)
+
+
+## `misago.search.hooks`
+
+`misago.search.hooks` defines the following hooks:
+
+- [`parse_search_query_hook`](./parse-search-query-hook.md)
 
 
 ## `misago.solutions.hooks`
