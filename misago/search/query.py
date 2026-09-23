@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Optional, Union
+from typing import Union
+
+from .hooks import (
+    parse_search_query_hook,
+)
 
 
 class TokenType(Enum):
@@ -52,6 +56,12 @@ class SearchQueryNot:
 
 
 def parse_search_query(
+    query: str,
+) -> SearchQuery | None:
+    return parse_search_query_hook(_parse_search_query_action, query)
+
+
+def _parse_search_query_action(
     query: str,
 ) -> SearchQuery | None:
     tokens = tokenize_query(query)
