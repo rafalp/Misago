@@ -1,7 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Protocol, Union
-
-from django.db.models import Model
-from django.http import HttpRequest
+from typing import TYPE_CHECKING, Optional, Protocol
 
 from ...plugins.hooks import FilterHook
 
