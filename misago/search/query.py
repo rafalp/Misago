@@ -4,6 +4,7 @@ from typing import Union
 
 from .hooks import (
     parse_search_query_hook,
+    tokenize_search_query_hook,
 )
 
 
@@ -14,8 +15,8 @@ class TokenType(Enum):
     NOT = auto()
     AND = auto()
     OR = auto()
-    OPEN = auto()
-    CLOSE = auto()
+    GROUP_OPEN = auto()
+    GROUP_CLOSE = auto()
 
 
 Token = tuple[TokenType, str | None]
@@ -64,14 +65,18 @@ def parse_search_query(
 def _parse_search_query_action(
     query: str,
 ) -> SearchQuery | None:
-    tokens = tokenize_query(query)
+    tokens = tokenize_search_query(query)
     if not tokens:
         return None
 
     return parse_tokens(tokens, 0, len(tokens))
 
 
-def tokenize_query(query: str) -> list[Token]:
+def tokenize_search_query(query: str) -> list[Token]:
+    return tokenize_search_query_hook(_tokenize_search_query_action, query)
+
+
+def _tokenize_search_query_action(query: str) -> list[Token]:
     in_quote = False
     group = 0
     tokens = []
@@ -103,18 +108,18 @@ def tokenize_query(query: str) -> list[Token]:
             has_or = True
             tokens.append((TokenType.OR, None))
         elif c == "(":
-            tokens.append((TokenType.OPEN, None))
+            tokens.append((TokenType.GROUP_OPEN, None))
             group += 1
         elif c == ")":
             if group:
-                tokens.append((TokenType.CLOSE, None))
+                tokens.append((TokenType.GROUP_CLOSE, None))
                 group -= 1
         else:
             has_and = True
             tokens.append((TokenType.AND, None))
 
     while group:
-        tokens.append((TokenType.CLOSE, None))
+        tokens.append((TokenType.GROUP_CLOSE, None))
         group -= 1
 
     if has_text:
@@ -171,9 +176,9 @@ def clean_open_close_tokens(tokens: list[Token]) -> list[Token]:
 
     for token in tokens:
         token_type, _ = token
-        if token_type == TokenType.OPEN:
+        if token_type == TokenType.GROUP_OPEN:
             level += 1
-        if token_type == TokenType.CLOSE:
+        if token_type == TokenType.GROUP_CLOSE:
             if level:
                 level -= 1
             else:
@@ -211,7 +216,7 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
 
             next_token = tokens[index + 1][0]
             if next_token not in (
-                TokenType.OPEN,
+                TokenType.GROUP_OPEN,
                 TokenType.WORD,
                 TokenType.PHRASE,
             ):
@@ -224,14 +229,14 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
             previous_token = new_tokens[-1][0]
             next_token = tokens[index + 1][0]
             if previous_token not in (
-                TokenType.CLOSE,
+                TokenType.GROUP_CLOSE,
                 TokenType.WORD,
                 TokenType.PHRASE,
             ):
                 continue
 
             if next_token not in (
-                TokenType.OPEN,
+                TokenType.GROUP_OPEN,
                 TokenType.NOT,
                 TokenType.WORD,
                 TokenType.PHRASE,
@@ -264,13 +269,13 @@ def parse_tokens(tokens: list[Token], start: int, stop: int) -> SearchQuery | No
     while start < stop:
         token_type = tokens[start][0]
 
-        if token_type == TokenType.OPEN:
+        if token_type == TokenType.GROUP_OPEN:
             if not level:
                 open_position = start + 1
 
             level += 1
 
-        elif token_type == TokenType.CLOSE:
+        elif token_type == TokenType.GROUP_CLOSE:
             level -= 1
 
             if not level:
