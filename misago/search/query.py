@@ -2,10 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Union
 
-from .hooks import (
-    parse_search_query_hook,
-    tokenize_search_query_hook,
-)
+from .hooks import parse_search_query_hook
 
 
 class TokenType(Enum):
@@ -69,14 +66,10 @@ def _parse_search_query_action(
     if not tokens:
         return None
 
-    return parse_tokens(tokens, 0, len(tokens))
+    return parse_search_query_token_range(tokens, 0, len(tokens))
 
 
 def tokenize_search_query(query: str) -> list[Token]:
-    return tokenize_search_query_hook(_tokenize_search_query_action, query)
-
-
-def _tokenize_search_query_action(query: str) -> list[Token]:
     in_quote = False
     group = 0
     tokens = []
@@ -248,12 +241,14 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
     return new_tokens
 
 
-def parse_tokens(tokens: list[Token], start: int, stop: int) -> SearchQuery | None:
+def parse_search_query_token_range(
+    tokens: list[Token], start: int, stop: int
+) -> SearchQuery | None:
     if start == stop:
         return None
 
     if start + 1 == stop:
-        return parse_single_token(tokens[start])
+        return parse_search_query_token(tokens[start])
 
     groups: list[SearchQuery] = []
     current_group: list[SearchQuery] = []
@@ -297,7 +292,9 @@ def parse_tokens(tokens: list[Token], start: int, stop: int) -> SearchQuery | No
                 operator = current_operator
                 is_or_lookback = False
 
-                if value := parse_tokens(tokens, open_position, start):
+                if value := parse_search_query_token_range(
+                    tokens, open_position, start
+                ):
                     if is_not:
                         value = SearchQueryNot(value=value)
                         is_not = False
@@ -331,7 +328,7 @@ def parse_tokens(tokens: list[Token], start: int, stop: int) -> SearchQuery | No
             is_or_lookback = False
 
             # Process new value
-            if value := parse_single_token(tokens[start]):
+            if value := parse_search_query_token(tokens[start]):
                 if is_not:
                     value = SearchQueryNot(value=value)
                     is_not = False
@@ -362,7 +359,7 @@ def is_or_lookahead(tokens: list[Token], start: int, stop: int) -> bool:
     return token_type == TokenType.OR
 
 
-def parse_single_token(token: Token) -> SearchQuery | None:
+def parse_search_query_token(token: Token) -> SearchQuery | None:
     token_type, token_value = token
 
     if token_type == TokenType.WORD:
