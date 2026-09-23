@@ -416,29 +416,27 @@ def test_merge_threads_deletes_thread_reads(
     assert not ReadThread.objects.exists()
 
 
-def test_merge_threads_merges_thread_updates(
+def test_merge_threads_merges_thread_events(
     sibling_category, thread, user_thread, other_user_thread
 ):
-    thread_update = create_test_thread_event(thread, "DeletedUser")
-    user_thread_update = create_test_thread_event(user_thread, "DeletedUser")
-    other_user_thread_update = create_test_thread_event(
-        other_user_thread, "DeletedUser"
-    )
+    thread_event = create_test_thread_event(thread, "DeletedUser")
+    user_thread_event = create_test_thread_event(user_thread, "DeletedUser")
+    other_user_thread_event = create_test_thread_event(other_user_thread, "DeletedUser")
 
     new_thread = create_thread(sibling_category, "Merged thread")
     merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
 
-    thread_update.refresh_from_db()
-    assert thread_update.category == sibling_category
-    assert thread_update.thread == new_thread
+    thread_event.refresh_from_db()
+    assert thread_event.category == sibling_category
+    assert thread_event.thread == new_thread
 
-    user_thread_update.refresh_from_db()
-    assert user_thread_update.category == sibling_category
-    assert user_thread_update.thread == new_thread
+    user_thread_event.refresh_from_db()
+    assert user_thread_event.category == sibling_category
+    assert user_thread_event.thread == new_thread
 
-    other_user_thread_update.refresh_from_db()
-    assert other_user_thread_update.category == sibling_category
-    assert other_user_thread_update.thread == new_thread
+    other_user_thread_event.refresh_from_db()
+    assert other_user_thread_event.category == sibling_category
+    assert other_user_thread_event.thread == new_thread
 
 
 def test_merge_threads_deletes_old_threads(

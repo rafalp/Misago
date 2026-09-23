@@ -160,7 +160,7 @@ def test_prefetch_post_feed_data_prefetches_posts_categories(
         assert data["categories"] == {default_category.id: default_category}
 
 
-def test_prefetch_post_feed_data_prefetches_thread_update_detail_categories(
+def test_prefetch_post_feed_data_prefetches_thread_event_detail_categories(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -175,9 +175,6 @@ def test_prefetch_post_feed_data_prefetches_thread_update_detail_categories(
         permission=CategoryPermission.SEE,
     )
 
-    thread_event_category_content_object.context_id = sibling_category.id
-    thread_event_category_content_object.save()
-
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
     permissions.permissions
     permissions.is_global_moderator
@@ -190,6 +187,11 @@ def test_prefetch_post_feed_data_prefetches_thread_update_detail_categories(
             thread_events=[thread_event_category_content_object],
         )
         assert data["categories"] == {sibling_category.id: sibling_category}
+        assert len(data["thread_events"]) == 1
+        assert (
+            data["thread_events"][thread_event_category_content_object.id].object_id
+            == sibling_category.id
+        )
 
 
 def test_prefetch_post_feed_data_prefetches_attachments_categories(
@@ -289,7 +291,7 @@ def test_prefetch_post_feed_data_prefetches_posts_threads(
         assert data["threads"] == {thread.id: thread}
 
 
-def test_prefetch_post_feed_data_prefetches_thread_update_detail_threads(
+def test_prefetch_post_feed_data_prefetches_thread_event_detail_threads(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -967,7 +969,7 @@ def test_prefetch_post_feed_data_prefetches_posts_users(
         assert data["users"][other_user.id].group
 
 
-def test_prefetch_post_feed_data_prefetches_thread_update_users(
+def test_prefetch_post_feed_data_prefetches_thread_event_users(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -989,7 +991,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_users(
         assert data["users"][user.id].group
 
 
-def test_prefetch_post_feed_data_prefetches_thread_update_detail_users(
+def test_prefetch_post_feed_data_prefetches_thread_event_detail_users(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,

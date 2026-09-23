@@ -13,16 +13,16 @@ def test_close_thread_poll_closes_poll(thread, poll, user):
     assert poll.closed_by_slug == user.slug
 
 
-def test_close_thread_poll_creates_thread_update(thread, poll, user):
-    thread_update = close_thread_poll(thread, poll, user)
+def test_close_thread_poll_creates_thread_event(thread, poll, user):
+    thread_event = close_thread_poll(thread, poll, user)
 
-    assert thread_update
-    assert thread_update.event_type == ThreadEventTypeName.CLOSED_POLL
-    assert thread_update.thread == thread
-    assert thread_update.actor == user
+    assert thread_event
+    assert thread_event.event_type == ThreadEventTypeName.CLOSED_POLL
+    assert thread_event.thread == thread
+    assert thread_event.actor == user
 
 
-def test_close_thread_poll_doesnt_create_thread_update_if_poll_is_already_closed(
+def test_close_thread_poll_doesnt_create_thread_event_if_poll_is_already_closed(
     thread, closed_poll, user
 ):
     assert not close_thread_poll(thread, closed_poll, user)

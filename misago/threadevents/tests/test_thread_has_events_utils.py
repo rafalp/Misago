@@ -2,7 +2,7 @@ from ..create import create_test_thread_event
 from ..threadflag import ensure_thread_has_events, sync_thread_has_events
 
 
-def test_set_thread_has_updates_sets_thread_has_updates_flag(thread):
+def test_set_thread_has_events_sets_thread_has_events_flag(thread):
     assert ensure_thread_has_events(thread)
     assert thread.has_events
 
@@ -10,7 +10,7 @@ def test_set_thread_has_updates_sets_thread_has_updates_flag(thread):
     assert thread.has_events
 
 
-def test_set_thread_has_updates_doesnt_set_thread_has_updates_flag_if_its_already_set(
+def test_set_thread_has_events_doesnt_set_thread_has_events_flag_if_its_already_set(
     django_assert_num_queries, thread
 ):
     thread.has_events = True
@@ -24,7 +24,7 @@ def test_set_thread_has_updates_doesnt_set_thread_has_updates_flag_if_its_alread
     assert thread.has_events
 
 
-def test_set_thread_has_updates_doesnt_save_thread_has_updates_flag_if_commit_is_false(
+def test_set_thread_has_events_doesnt_save_thread_has_events_flag_if_commit_is_false(
     django_assert_num_queries, thread
 ):
     with django_assert_num_queries(0):
@@ -35,7 +35,7 @@ def test_set_thread_has_updates_doesnt_save_thread_has_updates_flag_if_commit_is
     assert not thread.has_events
 
 
-def test_sync_thread_has_updates_unsets_thread_has_updates_flag_for_thread_whithout_updates(
+def test_sync_thread_has_events_unsets_thread_has_events_flag_for_thread_whithout_events(
     django_assert_num_queries, thread
 ):
     thread.has_events = True
@@ -49,7 +49,7 @@ def test_sync_thread_has_updates_unsets_thread_has_updates_flag_for_thread_whith
     assert not thread.has_events
 
 
-def test_sync_thread_has_updates_sets_thread_has_updates_flag_for_thread_with_updates(
+def test_sync_thread_has_events_sets_thread_has_events_flag_for_thread_with_events(
     django_assert_num_queries, thread
 ):
     create_test_thread_event(thread, "DeletedUser")
@@ -62,7 +62,7 @@ def test_sync_thread_has_updates_sets_thread_has_updates_flag_for_thread_with_up
     assert thread.has_events
 
 
-def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_thread_without_updates(
+def test_sync_thread_has_events_doesnt_change_thread_has_events_flag_for_thread_without_events(
     django_assert_num_queries, thread
 ):
     thread.has_events = False
@@ -76,7 +76,7 @@ def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_threa
     assert not thread.has_events
 
 
-def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_thread_with_updates(
+def test_sync_thread_has_events_doesnt_change_thread_has_events_flag_for_thread_with_events(
     django_assert_num_queries, thread
 ):
     create_test_thread_event(thread, "DeletedUser")
@@ -92,7 +92,7 @@ def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_threa
     assert thread.has_events
 
 
-def test_sync_thread_has_updates_doesnt_save_thread_without_updates_if_commit_is_false(
+def test_sync_thread_has_events_doesnt_save_thread_without_events_if_commit_is_false(
     django_assert_num_queries, thread
 ):
     thread.has_events = True
@@ -106,7 +106,7 @@ def test_sync_thread_has_updates_doesnt_save_thread_without_updates_if_commit_is
     assert thread.has_events
 
 
-def test_sync_thread_has_updates_doesnt_save_thread_with_updates_if_commit_is_false(
+def test_sync_thread_has_events_doesnt_save_thread_with_events_if_commit_is_false(
     django_assert_num_queries, thread
 ):
     create_test_thread_event(thread, "DeletedUser")

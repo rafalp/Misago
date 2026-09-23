@@ -20,7 +20,7 @@ def test_thread_event_hide_view_returns_404_error_for_not_found_thread(user_clie
     assert response.status_code == 404
 
 
-def test_thread_event_hide_view_returns_404_error_for_not_found_update(
+def test_thread_event_hide_view_returns_404_error_for_not_found_event(
     user_client, thread
 ):
     response = user_client.post(
@@ -449,7 +449,7 @@ def test_thread_event_hide_view_hides_event_for_global_moderator_in_htmx(
     assert thread_event.is_hidden
 
 
-def test_thread_event_hide_view_doesnt_event_already_hidden_event_in_htmx(
+def test_thread_event_hide_view_doesnt_update_already_hidden_event_in_htmx(
     moderator_client, thread, hidden_thread_event
 ):
     response = moderator_client.post(

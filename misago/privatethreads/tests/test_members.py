@@ -164,12 +164,12 @@ def test_remove_private_thread_member_actor_leaves_thread(
 ):
     get_private_thread_members(user_private_thread)
 
-    thread_update = remove_private_thread_member(user, user_private_thread, user)
+    thread_event = remove_private_thread_member(user, user_private_thread, user)
 
     _, members = get_private_thread_members(user_private_thread)
     assert members == [other_user, moderator]
 
-    assert thread_update.event_type == ThreadEventTypeName.MEMBER_LEFT
+    assert thread_event.event_type == ThreadEventTypeName.MEMBER_LEFT
 
 
 def test_remove_private_thread_member_removes_other_member(
@@ -177,12 +177,12 @@ def test_remove_private_thread_member_removes_other_member(
 ):
     get_private_thread_members(user_private_thread)
 
-    thread_update = remove_private_thread_member(user, user_private_thread, other_user)
+    thread_event = remove_private_thread_member(user, user_private_thread, other_user)
 
     _, members = get_private_thread_members(user_private_thread)
     assert members == [user, moderator]
 
-    assert thread_update.event_type == ThreadEventTypeName.REMOVED_MEMBER
+    assert thread_event.event_type == ThreadEventTypeName.REMOVED_MEMBER
 
 
 def test_remove_private_thread_member_updates_private_thread_member_cache(

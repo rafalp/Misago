@@ -701,7 +701,7 @@ class DetailView(BaseThreadView):
         posts = list(page_obj.object_list)
 
         if thread.has_events:
-            thread_events = self.get_thread_updates(request, thread, page_obj, posts)
+            thread_events = self.get_thread_events(request, thread, page_obj, posts)
         else:
             thread_events = []
 
@@ -747,7 +747,7 @@ class DetailView(BaseThreadView):
 
         return paginator.get_page(page)
 
-    def get_thread_updates(
+    def get_thread_events(
         self,
         request: HttpRequest,
         thread: Thread,

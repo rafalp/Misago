@@ -172,7 +172,7 @@ class PrefetchPostFeedData:
             "visible_posts": {p.id for p in self.posts if p.id},
             "liked_posts": set(),
             "thread_events": {u.id: u for u in self.thread_events},
-            "visible_thread_updates": {u for u in self.thread_events},
+            "visible_thread_events": {u for u in self.thread_events},
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
@@ -251,8 +251,8 @@ def find_category_ids(
             data["category_ids"].add(thread.category_id)
 
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_object_id_for_type(Category):
-            data["category_ids"].add(context_id)
+        if object_id := thread_event.get_object_id_for_type(Category):
+            data["category_ids"].add(object_id)
 
     for attachment in data["attachments"].values():
         if attachment.category_id:
@@ -279,8 +279,8 @@ def find_thread_ids(
             data["thread_ids"].add(post.thread_id)
 
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_object_id_for_type(Thread):
-            data["thread_ids"].add(context_id)
+        if object_id := thread_event.get_object_id_for_type(Thread):
+            data["thread_ids"].add(object_id)
 
     for attachment in data["attachments"].values():
         if attachment.thread_id:
@@ -318,8 +318,8 @@ def find_post_ids(
     permissions: UserPermissionsProxy,
 ):
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_object_id_for_type(Post):
-            data["post_ids"].add(context_id)
+        if object_id := thread_event.get_object_id_for_type(Post):
+            data["post_ids"].add(object_id)
 
     for attachment in data["attachments"].values():
         if attachment.post_id:
@@ -356,8 +356,8 @@ def find_attachment_ids(
         data["attachment_ids"].update(post.metadata.get("attachments", []))
 
     for thread_event in data["thread_events"].values():
-        if context_id := thread_event.get_object_id_for_type(Attachment):
-            data["attachment_ids"].add(context_id)
+        if object_id := thread_event.get_object_id_for_type(Attachment):
+            data["attachment_ids"].add(object_id)
 
     if extra_attachments := data["metadata"].get("attachments"):
         data["attachment_ids"].update(extra_attachments)
@@ -533,8 +533,8 @@ def find_users_ids(
     for thread_event in data["thread_events"].values():
         if thread_event.actor_id:
             data["user_ids"].add(thread_event.actor_id)
-        if context_id := thread_event.get_object_id_for_type(get_user_model()):
-            data["user_ids"].add(context_id)
+        if object_id := thread_event.get_object_id_for_type(get_user_model()):
+            data["user_ids"].add(object_id)
 
 
 def fetch_users(

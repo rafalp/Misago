@@ -21,7 +21,7 @@ def test_private_thread_event_unhide_view_returns_404_error_for_not_found_thread
     assert response.status_code == 404
 
 
-def test_private_thread_event_unhide_view_returns_404_error_for_not_found_update(
+def test_private_thread_event_unhide_view_returns_404_error_for_not_found_event(
     user_client, user_private_thread
 ):
     response = user_client.post(
@@ -160,7 +160,7 @@ def test_private_thread_event_unhide_view_unhides_event_for_global_moderator(
     assert not hidden_user_private_thread_event.is_hidden
 
 
-def test_private_thread_event_unhide_view_doesnt_event_already_unhidden_update(
+def test_private_thread_event_unhide_view_doesnt_update_already_unhidden_event(
     moderator_client, user_private_thread, user_private_thread_event
 ):
     response = moderator_client.post(
@@ -434,7 +434,7 @@ def test_private_thread_event_unhide_view_unhides_event_for_global_moderator_in_
     assert not hidden_user_private_thread_event.is_hidden
 
 
-def test_private_thread_event_unhide_view_doesnt_event_already_unhidden_event_in_htmx(
+def test_private_thread_event_unhide_view_doesnt_update_already_unhidden_event_in_htmx(
     moderator_client, user_private_thread, user_private_thread_event
 ):
 
