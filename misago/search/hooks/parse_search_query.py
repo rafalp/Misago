@@ -70,7 +70,7 @@ class ParseSearchQueryHook(
     a backend-specific search query.
 
     # Example
-    
+
     Add a naive cache for queries shorter than a specified length:
 
     ```python
