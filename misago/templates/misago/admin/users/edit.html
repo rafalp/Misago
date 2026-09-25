@@ -176,7 +176,7 @@
 
     {% form_row form.is_avatar_locked %}
     {% form_row form.avatar_lock_user_message %}
-    {% form_row form.avatar_lock_staff_message %}
+    {% form_row form.avatar_lock_team_reason %}
 
   </fieldset>
 </div>
@@ -187,7 +187,7 @@
     {% form_row form.signature %}
     {% form_row form.is_signature_locked %}
     {% form_row form.signature_lock_user_message %}
-    {% form_row form.signature_lock_staff_message %}
+    {% form_row form.signature_lock_team_reason %}
 
   </fieldset>
 </div>
@@ -253,7 +253,7 @@
     {% endif %}
 
     {% form_row form.is_active %}
-    {% form_row form.is_active_staff_message %}
+    {% form_row form.deactivated_reason %}
 
   </fieldset>
 </div>
