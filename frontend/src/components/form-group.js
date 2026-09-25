@@ -54,6 +54,16 @@ export default class extends React.Component {
     }
   }
 
+  getControl() {
+    if (this.props.validation) {
+      return React.cloneElement(this.props.children, {
+        "aria-invalid": "true",
+      })
+    }
+
+    return this.props.children
+  }
+
   render() {
     return (
       <div className={this.getClassName()}>
@@ -64,7 +74,7 @@ export default class extends React.Component {
           {this.props.label + ":"}
         </label>
         <div className={this.props.controlClass || ""}>
-          {this.props.children}
+          {this.getControl()}
           {this.getFeedbackDescription()}
           {this.getFeedback()}
           {this.getHelpText()}
