@@ -2,24 +2,24 @@ from django.urls import path
 
 from ..plugins import extensions
 from .views import (
-    EventDeleteView,
-    EventHideView,
-    EventUnhideView,
-    # EventDeleteView,
-    # ThreadEventHideView,
-    # ThreadEventUnhideView,
+    PrivateThreadEventDeleteView,
+    PrivateThreadEventHideView,
+    PrivateThreadEventUnhideView,
+    ThreadEventDeleteView,
+    ThreadEventHideView,
+    ThreadEventUnhideView,
 )
 
 private_thread_event_delete_view = extensions.get(
-    EventDeleteView
+    PrivateThreadEventDeleteView
 ).as_view()
-private_thread_event_hide_view = extensions.get(EventHideView).as_view()
+private_thread_event_hide_view = extensions.get(PrivateThreadEventHideView).as_view()
 private_thread_event_unhide_view = extensions.get(
-    EventUnhideView
+    PrivateThreadEventUnhideView
 ).as_view()
-thread_event_delete_view = extensions.get(EventDeleteView).as_view()
-thread_event_hide_view = extensions.get(EventHideView).as_view()
-thread_event_unhide_view = extensions.get(EventUnhideView).as_view()
+thread_event_delete_view = extensions.get(ThreadEventDeleteView).as_view()
+thread_event_hide_view = extensions.get(ThreadEventHideView).as_view()
+thread_event_unhide_view = extensions.get(ThreadEventUnhideView).as_view()
 
 urlpatterns = [
     path(

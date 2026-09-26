@@ -1,5 +1,3 @@
-from typing import Iterable
-
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -93,28 +91,27 @@ class EventUnhideView(EventVisibilityView):
             )
         )
 
-# 
-# class ThreadEventHideView(EventHideView):
-#     thread_type = thread_type
-# 
-# 
-# class ThreadEventUnhideView(EventUnhideView):
-#     thread_type = thread_type
-# 
-# 
-# class PrivateThreadEventHideView(EventHideView):
-#     thread_type = thread_type #private_thread_type
-# 
-# 
-# class PrivateThreadEventUnhideView(EventUnhideView):
-#     thread_type = thread_type #private_thread_type
+
+class ThreadEventHideView(EventHideView):
+    thread_type = thread_type
+
+
+class ThreadEventUnhideView(EventUnhideView):
+    thread_type = thread_type
+
+
+class PrivateThreadEventHideView(EventHideView):
+    thread_type = private_thread_type
+
+
+class PrivateThreadEventUnhideView(EventUnhideView):
+    thread_type = private_thread_type
 
 
 class EventDeleteView(BaseThreadView):
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
     success_message = pgettext_lazy("thread event deleted", "Thread event deleted")
-    thread_type = thread_type
 
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, thread_event_id: int
@@ -170,9 +167,9 @@ class EventDeleteView(BaseThreadView):
         messages.success(request, self.success_message)
 
 
-# class ThreadEventDeleteView(EventDeleteView):
-#     pass
-# 
-# 
-# class PrivateThreadEventDeleteView(EventDeleteView):
-#     pass
+class ThreadEventDeleteView(EventDeleteView):
+    thread_type = thread_type
+
+
+class PrivateThreadEventDeleteView(EventDeleteView):
+    thread_type = private_thread_type
