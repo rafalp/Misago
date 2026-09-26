@@ -14,10 +14,6 @@ from ..threads.views import BaseThreadView
 from .delete import delete_thread_event
 from .hide import hide_thread_event, unhide_thread_event
 from .models import ThreadEvent
-from .threadeventtypes import (
-    private_thread_event_type,
-    thread_event_type,
-)
 from .threadflag import sync_thread_has_events
 
 
@@ -66,6 +62,7 @@ class EventHideView(EventVisibilityView):
     success_message = pgettext_lazy(
         "thread event hide success message", "Thread event hidden"
     )
+    thread_type = thread_type
 
     def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return hide_thread_event(thread_event, request)
@@ -83,6 +80,7 @@ class EventUnhideView(EventVisibilityView):
     success_message = pgettext_lazy(
         "thread event unhide success message", "Thread event unhidden"
     )
+    thread_type = thread_type
 
     def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return unhide_thread_event(thread_event, request)
@@ -95,31 +93,28 @@ class EventUnhideView(EventVisibilityView):
             )
         )
 
-
-class ThreadEventHideView(EventHideView):
-    thread_type = thread_type
-    thread_event_type = thread_event_type
-
-
-class ThreadEventUnhideView(EventUnhideView):
-    thread_type = thread_type
-    thread_event_type = thread_event_type
-
-
-class PrivateThreadEventHideView(EventHideView):
-    thread_type = private_thread_type
-    thread_event_type = private_thread_event_type
-
-
-class PrivateThreadEventUnhideView(EventUnhideView):
-    thread_type = private_thread_type
-    thread_event_type = private_thread_event_type
+# 
+# class ThreadEventHideView(EventHideView):
+#     thread_type = thread_type
+# 
+# 
+# class ThreadEventUnhideView(EventUnhideView):
+#     thread_type = thread_type
+# 
+# 
+# class PrivateThreadEventHideView(EventHideView):
+#     thread_type = thread_type #private_thread_type
+# 
+# 
+# class PrivateThreadEventUnhideView(EventUnhideView):
+#     thread_type = thread_type #private_thread_type
 
 
 class EventDeleteView(BaseThreadView):
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
     success_message = pgettext_lazy("thread event deleted", "Thread event deleted")
+    thread_type = thread_type
 
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, thread_event_id: int
@@ -175,11 +170,9 @@ class EventDeleteView(BaseThreadView):
         messages.success(request, self.success_message)
 
 
-class ThreadEventDeleteView(EventDeleteView):
-    thread_type = thread_type
-    thread_event_type = thread_event_type
-
-
-class PrivateThreadEventDeleteView(EventDeleteView):
-    thread_type = private_thread_type
-    thread_event_type = private_thread_event_type
+# class ThreadEventDeleteView(EventDeleteView):
+#     pass
+# 
+# 
+# class PrivateThreadEventDeleteView(EventDeleteView):
+#     pass
