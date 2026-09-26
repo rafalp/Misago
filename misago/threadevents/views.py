@@ -60,7 +60,6 @@ class EventHideView(EventVisibilityView):
     success_message = pgettext_lazy(
         "thread event hide success message", "Thread event hidden"
     )
-    thread_type = thread_type
 
     def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return hide_thread_event(thread_event, request)
@@ -78,7 +77,6 @@ class EventUnhideView(EventVisibilityView):
     success_message = pgettext_lazy(
         "thread event unhide success message", "Thread event unhidden"
     )
-    thread_type = thread_type
 
     def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return unhide_thread_event(thread_event, request)
