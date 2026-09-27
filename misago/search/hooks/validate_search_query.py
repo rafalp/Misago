@@ -94,7 +94,7 @@ class ValidateSearchQueryHook(
 
 
     def count_keywords(query: SearchQuery) -> int:
-        ...  # Plugin provided...
+        ...  # Implemented by a plugin...
     ```
     """
 
