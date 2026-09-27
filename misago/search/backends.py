@@ -1,3 +1,4 @@
+import string
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import reduce
@@ -17,6 +18,7 @@ from django.contrib.postgres.search import (
 )
 from django.db import transaction
 from django.db.models import F, Max, QuerySet, Value
+from django.utils.crypto import get_random_string
 
 from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
@@ -171,9 +173,7 @@ class PostgreSQLSearchBackend(SearchBackend):
     search_config: str
     min_rank: float | None
 
-    HEADLINE_START_SELECTION = "<hl>"
-    HEADLINE_STOP_SELECTION = "</hl>"
-
+    headline_marker_characters = string.ascii_letters + string.digits
     headline_min_words: int | None
     headline_max_words: int | None
     headline_max_fragments: int | None
@@ -218,6 +218,8 @@ class PostgreSQLSearchBackend(SearchBackend):
         self.search_config = search_config
         self.min_rank = options.get("PG_MIN_RANK", 0.0001)
 
+        self.headline_start_html = options.get("HEADLINE_START_HTML", "<strong>")
+        self.headline_stop_html = options.get("HEADLINE_STOP_HTML", "</strong>")
         self.headline_min_words = options.get("PG_HEADLINE_MIN_WORDS", 60)
         self.headline_max_words = options.get("PG_HEADLINE_MAX_WORDS", 61)
         self.headline_max_fragments = options.get("PG_HEADLINE_MAX_FRAGMENTS", 0)
@@ -327,12 +329,14 @@ class PostgreSQLSearchBackend(SearchBackend):
         search_query = self.build_pg_search_query(query)
         rank_query = self.build_pg_rank_query(query)
 
+        headline_markers = self.get_headline_markers()
+
         # Build search queryset
         queryset = ThreadSearch.objects.filter(
             thread_id__in=thread_ids,
             search_vector=search_query,
         ).annotate(
-            headline=self._get_title_headline(rank_query),
+            headline=self._get_title_headline(rank_query, headline_markers),
         )
 
         if users:
@@ -369,7 +373,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             thread_id__in=[thread.thread_id for thread in threads],
             is_first_post=True,
         ).annotate(
-            headline=self._get_content_headline(rank_query),
+            headline=self._get_content_headline(rank_query, headline_markers),
         )
         posts = {post.thread_id: post for post in posts_queryset}
 
@@ -384,8 +388,10 @@ class PostgreSQLSearchBackend(SearchBackend):
             items.append(
                 ThreadsSearchResultItem(
                     post_id=post.post_id,
-                    thread_title=thread.headline,
-                    post_content=post.headline,
+                    thread_title=self.format_headline(
+                        thread.headline, headline_markers
+                    ),
+                    post_content=self.format_headline(post.headline, headline_markers),
                 )
             )
 
@@ -410,6 +416,8 @@ class PostgreSQLSearchBackend(SearchBackend):
     ) -> ThreadsSearchResult:
         search_query = self.build_pg_search_query(query)
         rank_query = self.build_pg_rank_query(query)
+
+        headline_markers = self.get_headline_markers()
 
         queryset = PostSearch.objects.filter(
             thread_search_vector=search_query,
@@ -464,7 +472,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                 thread_id__in=result_threads_ids,
             )
             .order_by("thread_id", "post_id")
-            .annotate(headline=self._get_content_headline(rank_query))
+            .annotate(headline=self._get_content_headline(rank_query, headline_markers))
             .distinct("thread_id")
         )
 
@@ -472,7 +480,9 @@ class PostgreSQLSearchBackend(SearchBackend):
             return self._empty_threads_result(start_time)
 
         thread_posts = {post.thread_id: post for post in posts}
-        thread_headlines = self._get_thread_headlines(rank_query, thread_posts)
+        thread_headlines = self._get_thread_headlines(
+            rank_query, thread_posts, headline_markers
+        )
 
         # Sort posts by threads
         items = []
@@ -481,8 +491,12 @@ class PostgreSQLSearchBackend(SearchBackend):
                 items.append(
                     ThreadsSearchResultItem(
                         post_id=post.post_id,
-                        thread_title=thread_headlines.get(thread_id, "MISSING"),
-                        post_content=post.headline,
+                        thread_title=self.format_headline(
+                            thread_headlines.get(thread_id, "MISSING"), headline_markers
+                        ),
+                        post_content=self.format_headline(
+                            post.headline, headline_markers
+                        ),
                     )
                 )
 
@@ -510,6 +524,8 @@ class PostgreSQLSearchBackend(SearchBackend):
         search_query = self.build_pg_search_query(query)
         rank_query = self.build_pg_rank_query(query)
 
+        headline_markers = self.get_headline_markers()
+
         queryset = PostSearch.objects.filter(
             thread_id__in=thread_ids, post_id__in=post_ids
         )
@@ -524,7 +540,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         queryset = queryset.filter(
             post_search_vector=search_query,
         ).annotate(
-            headline=self._get_content_headline(rank_query),
+            headline=self._get_content_headline(rank_query, headline_markers),
         )
 
         if order_by == SearchSort.RELEVANCE or self.min_rank:
@@ -550,7 +566,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             return self._empty_threads_result(start_time)
 
         thread_headlines = self._get_thread_headlines(
-            rank_query, [result.thread_id for result in results]
+            rank_query, [result.thread_id for result in results], headline_markers
         )
 
         total_time = time() - start_time
@@ -559,8 +575,13 @@ class PostgreSQLSearchBackend(SearchBackend):
             items=[
                 ThreadsSearchResultItem(
                     post_id=result.post_id,
-                    thread_title=thread_headlines.get(result.thread_id, "MISSING"),
-                    post_content=result.headline,
+                    thread_title=self.format_headline(
+                        thread_headlines.get(result.thread_id, "MISSING"),
+                        headline_markers,
+                    ),
+                    post_content=self.format_headline(
+                        result.headline, headline_markers
+                    ),
                 )
                 for result in results
             ],
@@ -620,41 +641,63 @@ class PostgreSQLSearchBackend(SearchBackend):
                 filter(bool, map(self.build_pg_rank_query, query.value)),
             )
 
+    def get_headline_markers(self) -> tuple[str, str]:
+        return (
+            get_random_string(16, self.headline_marker_characters),
+            get_random_string(16, self.headline_marker_characters),
+        )
+
+    def format_headline(self, headline: str, markers: str):
+        start_sel, stop_sel = markers
+        return (
+            escape(headline)
+            .replace(start_sel, self.headline_start_html)
+            .replace(stop_sel, self.headline_stop_html)
+        )
+
+    def _get_thread_headlines(
+        self, query: PgSearchQuery, thread_ids: Iterable[int], markers: tuple[str, str]
+    ) -> dict[int, str]:
+        queryset = ThreadSearch.objects.filter(thread_id__in=thread_ids).annotate(
+            headline=self._get_title_headline(query, markers),
+        )
+
+        return {result.thread_id: result.headline for result in queryset}
+
+    def _get_title_headline(
+        self, query: PgSearchQuery, markers: tuple[str, str]
+    ) -> SearchHeadline:
+        start_sel, stop_sel = markers
+
+        return SearchHeadline(
+            "title",
+            query,
+            start_sel=start_sel,
+            stop_sel=stop_sel,
+            highlight_all=True,
+        )
+
+    def _get_content_headline(
+        self, query: PgSearchQuery, markers: tuple[str, str]
+    ) -> SearchHeadline:
+        start_sel, stop_sel = markers
+
+        return SearchHeadline(
+            "content",
+            query,
+            start_sel=start_sel,
+            stop_sel=stop_sel,
+            max_words=self.headline_max_words,
+            min_words=self.headline_min_words,
+            short_word=self.headline_short_word,
+            max_fragments=self.headline_max_fragments,
+        )
+
     def _empty_threads_result(self, start_time: float) -> ThreadsSearchResult:
         return ThreadsSearchResult(
             items=[],
             has_more=False,
             time=time() - start_time,
-        )
-
-    def _get_thread_headlines(
-        self, query: PgSearchQuery, thread_ids: Iterable[int]
-    ) -> dict[int, str]:
-        queryset = ThreadSearch.objects.filter(thread_id__in=thread_ids).annotate(
-            headline=self._get_title_headline(query),
-        )
-
-        return {result.thread_id: result.headline for result in queryset}
-
-    def _get_title_headline(self, query: PgSearchQuery) -> SearchHeadline:
-        return SearchHeadline(
-            "title",
-            query,
-            start_sel=self.HEADLINE_START_SELECTION,
-            stop_sel=self.HEADLINE_STOP_SELECTION,
-            highlight_all=True,
-        )
-
-    def _get_content_headline(self, query: PgSearchQuery) -> SearchHeadline:
-        return SearchHeadline(
-            "content",
-            query,
-            start_sel=self.HEADLINE_START_SELECTION,
-            stop_sel=self.HEADLINE_STOP_SELECTION,
-            max_words=self.headline_max_words,
-            min_words=self.headline_min_words,
-            short_word=self.headline_short_word,
-            max_fragments=self.headline_max_fragments,
         )
 
     # Indexing operations
@@ -674,7 +717,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                     category_id=thread.category_id,
                     thread_id=thread.id,
                     starter_id=thread.starter_id,
-                    title=escape(thread.title),
+                    title=thread.title,
                     search_vector=(
                         SearchVector(
                             Value(thread.title),
@@ -714,7 +757,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             thread_id=post.thread_id,
             post_id=post.id,
             poster_id=post.poster_id,
-            content=escape(search_document),
+            content=search_document,
             post_search_vector=(
                 SearchVector(
                     Value(search_document),
@@ -759,7 +802,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     def update_thread_title(self, thread: Thread) -> int:
         updated_count = ThreadSearch.objects.filter(thread=thread).update(
-            title=escape(thread.title),
+            title=thread.title,
             search_vector=SearchVector(
                 Value(thread.title),
                 config=self.search_config,

@@ -7,6 +7,7 @@ from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
 from ..enums import SearchMode
 from ..models import PostSearch, ThreadSearch
+from ..query import parse_search_query
 
 
 @pytest.fixture
@@ -52,7 +53,9 @@ def test_postgresql_backend_search_threads_searches_threads(
     user_permissions = user_permissions_factory(user)
 
     results = backend.search_threads(
-        "postgresql database", user_permissions, categories=[default_category]
+        parse_search_query("postgresql database"),
+        user_permissions,
+        categories=[default_category],
     )
 
     assert len(results.items) == 1
@@ -93,7 +96,7 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
     user_permissions = user_permissions_factory(user)
 
     results = backend.search_threads(
-        "seat",
+        parse_search_query("seat"),
         user_permissions,
         categories=[default_category],
         mode=SearchMode.POSTS,
@@ -141,7 +144,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
     user_permissions = user_permissions_factory(user)
 
     results = backend.search_threads(
-        "database",
+        parse_search_query("database"),
         user_permissions,
         categories=[default_category],
         mode=SearchMode.THREAD_TITLES,
@@ -187,7 +190,10 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     PrivateThreadMember.objects.create(thread=databases_thread, user=user)
     PrivateThreadMember.objects.create(thread=cars_thread, user=user)
 
-    results = backend.search_private_threads("postgresql database", user_permissions)
+    results = backend.search_private_threads(
+        parse_search_query("postgresql database"),
+        user_permissions,
+    )
 
     assert len(results.items) == 1
     assert results.items[0].post_id == postgresql_post.id
@@ -230,7 +236,7 @@ def test_postgresql_backend_search_private_threads_searches_posts(
     PrivateThreadMember.objects.create(thread=cars_thread, user=user)
 
     results = backend.search_private_threads(
-        "seat",
+        parse_search_query("seat"),
         user_permissions,
         mode=SearchMode.POSTS,
     )
@@ -280,7 +286,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
     PrivateThreadMember.objects.create(thread=cars_thread, user=user)
 
     results = backend.search_private_threads(
-        "database",
+        parse_search_query("database"),
         user_permissions,
         mode=SearchMode.THREAD_TITLES,
     )
@@ -322,24 +328,6 @@ def test_postgresql_backend_index_threads_indexes_threads(
     assert deleted_user_thread_search.starter_id is None
     assert deleted_user_thread_search.title == deleted_user_thread.title
     assert deleted_user_thread_search.started_at == deleted_user_thread.started_at
-
-
-def test_postgresql_backend_index_threads_escapes_thread_titles(
-    thread_factory, backend, default_category
-):
-    thread = thread_factory(
-        default_category,
-        starter="Moderator",
-        title="<mark></mark> in search results",
-    )
-
-    backend.index_threads([thread])
-
-    thread_search = ThreadSearch.objects.get(thread=thread)
-    assert thread_search.category_id == default_category.id
-    assert thread_search.starter_id is None
-    assert thread_search.title == "&lt;mark&gt;&lt;/mark&gt; in search results"
-    assert thread_search.started_at == thread.started_at
 
 
 def test_postgresql_backend_index_posts_indexes_posts(
@@ -399,21 +387,6 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
 
     post_search.refresh_from_db()
     assert post_search.content == "Updated"
-
-
-def test_postgresql_backend_index_posts_escapes_posts_html(
-    thread_factory, backend, default_category
-):
-    thread = thread_factory(default_category, title="Test <b>thread</b>")
-
-    post = thread.first_post
-    post.content = "Hello <b>world</b>"
-    post.save()
-
-    backend.index_posts([(post, post.content)])
-
-    post_search = PostSearch.objects.get(post=post)
-    assert post_search.content == "Hello &lt;b&gt;world&lt;/b&gt;"
 
 
 def _test_postgresql_backend_searches_thread_titles(
@@ -594,23 +567,6 @@ def test_postgresql_backend_update_thread_title_updates_thread_and_post_index(
     assert not PostSearch.objects.filter(
         thread_search_vector=SearchQuery("Lorem ipsum", config=backend.search_config),
     ).exists()
-
-
-def test_postgresql_backend_update_thread_title_escapes_thread_title(
-    thread_factory, backend, default_category
-):
-    thread = thread_factory(default_category, title="Lorem ipsum")
-
-    backend.index_threads([thread])
-
-    thread.title = "Dolor <b>met</b>"
-    thread.save()
-
-    updated = backend.update_thread_title(thread)
-    assert updated == 1
-
-    thread_search = ThreadSearch.objects.get(thread=thread)
-    assert thread_search.title == "Dolor &lt;b&gt;met&lt;/b&gt;"
 
 
 def test_postgresql_backend_update_thread_members_is_noop(
