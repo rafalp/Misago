@@ -1,0 +1,32 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Query constraints" context "admin search settings form" %}</legend>
+
+    {% form_row form.max_search_query_length %}
+    {% form_row form.min_search_word_length %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Intervals" context "admin search settings form" %}</legend>
+
+    {% form_row form.user_min_search_interval %}
+    {% form_row form.guest_min_search_interval %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Log retention" context "admin search settings form" %}</legend>
+
+    {% form_row form.search_log_retention %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
