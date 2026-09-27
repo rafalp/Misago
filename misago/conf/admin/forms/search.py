@@ -7,7 +7,7 @@ from .base import SettingsForm
 class SearchSettingsForm(SettingsForm):
     settings = [
         "max_search_query_length",
-        "min_search_word_length",
+        "min_search_term_length",
         "user_min_search_interval",
         "guest_min_search_interval",
         "search_log_retention",
@@ -20,10 +20,14 @@ class SearchSettingsForm(SettingsForm):
         ),
         min_value=5,
     )
-    min_search_word_length = forms.IntegerField(
+    min_search_term_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin search settings form",
-            "Minimum length of a word in a search query",
+            "Minimum length of a single term in a search query",
+        ),
+        help_text=pgettext_lazy(
+            "admin search settings form",
+            'Search term is either a single word, or a phrase surrounded by quotes.',
         ),
         min_value=1,
     )

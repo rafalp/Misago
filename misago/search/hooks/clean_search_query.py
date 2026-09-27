@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from django.http import HttpRequest
 
@@ -19,9 +19,9 @@ class CleanSearchQueryHookAction(Protocol):
 
     The maximum length of a search query.
 
-    ## `min_word_length: int`
+    ## `min_term_length: int`
 
-    The minimum length of a word in a search query.
+    The minimum length of a term (a keyword or a phrase) in a search query.
 
     ## `request: HttpRequest | None`
 
@@ -40,7 +40,7 @@ class CleanSearchQueryHookAction(Protocol):
         self,
         query: str,
         max_length: int,
-        min_word_length: int,
+        min_term_length: int,
         request: HttpRequest | None = None,
     ) -> str: ...
 
@@ -66,9 +66,9 @@ class CleanSearchQueryHookFilter(Protocol):
 
     The maximum length of a search query.
 
-    ## `min_word_length: int`
+    ## `min_term_length: int`
 
-    The minimum length of a word in a search query.
+    The minimum length of a term (a keyword or a phrase) in a search query.
 
     ## `request: HttpRequest | None`
 
@@ -88,7 +88,7 @@ class CleanSearchQueryHookFilter(Protocol):
         action: CleanSearchQueryHookAction,
         query: str,
         max_length: int,
-        min_word_length: int,
+        min_term_length: int,
         request: HttpRequest | None = None,
     ) -> str: ...
 
@@ -124,10 +124,10 @@ class CleanSearchQueryHook(
         action,
         query: str,
         max_length: int,
-        min_word_length: int,
+        min_term_length: int,
         request: HttpRequest | None = None,
     ) -> str:
-        query = action(query, max_length, min_word_length, request)
+        query = action(query, max_length, min_term_length, request)
 
         query_lowered = query.lower()
         for word in COMMON_WORDS:
@@ -148,10 +148,10 @@ class CleanSearchQueryHook(
         action: CleanSearchQueryHookAction,
         query: str,
         max_length: int,
-        min_word_length: int,
+        min_term_length: int,
         request: HttpRequest | None = None,
     ) -> str:
-        return super().__call__(action, query, max_length, min_word_length, request)
+        return super().__call__(action, query, max_length, min_term_length, request)
 
 
 clean_search_query_hook = CleanSearchQueryHook()

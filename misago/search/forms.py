@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
@@ -9,6 +11,12 @@ from ..users.fields import UserMultipleChoiceField
 from .categories import get_searchable_category_ids
 from .enums import SearchMode, SearchSort
 from .hooks import clean_search_query_hook
+from .query import normalize_quotes, parse_search_query
+from .validators import (
+    validate_search_query,
+    validate_search_query_length,
+    validate_search_query_term_length,
+)
 
 User = get_user_model()
 
@@ -27,7 +35,7 @@ class SearchForm(forms.Form):
 
 
 class BaseThreadsSearchForm(SearchForm):
-    query = forms.CharField(min_length=3, max_length=255)
+    query = forms.CharField()
     users = UserMultipleChoiceField(max_choices=10, required=False)
     mode = forms.ChoiceField(
         choices=SearchMode.get_choices(),
@@ -52,7 +60,13 @@ class BaseThreadsSearchForm(SearchForm):
 
         super().__init__(data, *args, **kwargs)
 
+        self.setup_query_field()
         self.setup_users_field()
+
+    def setup_query_field(self):
+        field = self.fields["query"]
+        field.max_length = self.request.settings.max_search_query_length
+        field.min_length = self.request.settings.min_search_term_length
 
     def setup_users_field(self):
         users_queryset = User.objects
@@ -66,7 +80,7 @@ class BaseThreadsSearchForm(SearchForm):
         query = clean_search_query(
             query,
             max_length=self.request.settings.max_search_query_length,
-            min_word_length=self.request.settings.min_search_word_length,
+            min_term_length=self.request.settings.min_search_term_length,
             request=self.request,
         )
 
@@ -88,14 +102,14 @@ class BaseThreadsSearchForm(SearchForm):
 def clean_search_query(
     query: str,
     max_length: int,
-    min_word_length: int,
+    min_term_length: int,
     request: HttpRequest | None = None,
 ) -> str:
     return clean_search_query_hook(
         _clean_search_query_action,
         query,
         max_length=max_length,
-        min_word_length=min_word_length,
+        min_term_length=min_term_length,
         request=request,
     )
 
@@ -103,9 +117,13 @@ def clean_search_query(
 def _clean_search_query_action(
     query: str,
     max_length: int,
-    min_word_length: int,
+    min_term_length: int,
     request: HttpRequest | None = None,
 ) -> str:
+    query = re.sub(r"\s+", " ", query)
+    query = normalize_quotes(query)
+    validate_search_query_length(query, max_length)
+    validate_search_query_term_length(query, min_term_length)
     return query
 
 
