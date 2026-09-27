@@ -21,7 +21,7 @@ def custom_clean_search_query_filter(
     action: CleanSearchQueryHookAction,
     query: str,
     max_length: int,
-    min_word_length: int,
+    min_term_length: int,
     request: HttpRequest | None=None,
 ) -> str:
     ...
@@ -49,9 +49,9 @@ The search query string to clean.
 The maximum length of a search query.
 
 
-#### `min_word_length: int`
+#### `min_term_length: int`
 
-The minimum length of a word in a search query.
+The minimum length of a term (a keyword or a phrase) in a search query.
 
 
 #### `request: HttpRequest | None`
@@ -75,7 +75,7 @@ A `str` with the cleaned search query.
 def clean_search_query_action(
     query: str,
     max_length: int,
-    min_word_length: int,
+    min_term_length: int,
     request: HttpRequest | None=None,
 ) -> str:
     ...
@@ -96,9 +96,9 @@ The search query string to clean.
 The maximum length of a search query.
 
 
-#### `min_word_length: int`
+#### `min_term_length: int`
 
-The minimum length of a word in a search query.
+The minimum length of a term (a keyword or a phrase) in a search query.
 
 
 #### `request: HttpRequest | None`
@@ -134,10 +134,10 @@ def clean_search_query_words(
     action,
     query: str,
     max_length: int,
-    min_word_length: int,
+    min_term_length: int,
     request: HttpRequest | None = None,
 ) -> str:
-    query = action(query, max_length, min_word_length, request)
+    query = action(query, max_length, min_term_length, request)
 
     query_lowered = query.lower()
     for word in COMMON_WORDS:
