@@ -8,6 +8,7 @@ from ..categories.proxy import CategoryProxy
 from ..users.fields import UserMultipleChoiceField
 from .categories import get_searchable_category_ids
 from .enums import SearchMode, SearchSort
+from .hooks import clean_search_query_hook
 
 User = get_user_model()
 
@@ -59,6 +60,18 @@ class BaseThreadsSearchForm(SearchForm):
             users_queryset = users_queryset.filter(is_active=True)
         self.fields["users"].queryset = users_queryset
 
+    def clean_query(self):
+        query = self.cleaned_data["query"]
+
+        query = clean_search_query(
+            query,
+            max_length=self.request.settings.max_search_query_length,
+            min_word_length=self.request.settings.min_search_word_length,
+            request=self.request,
+        )
+
+        return query
+
     def clean(self):
         data = super().clean()
 
@@ -70,6 +83,30 @@ class BaseThreadsSearchForm(SearchForm):
             data["date_from"], data["date_to"] = data["date_to"], data["date_from"]
 
         return data
+
+
+def clean_search_query(
+    query: str,
+    max_length: int,
+    min_word_length: int,
+    request: HttpRequest | None = None,
+) -> str:
+    return clean_search_query_hook(
+        _clean_search_query_action,
+        query,
+        max_length=max_length,
+        min_word_length=min_word_length,
+        request=request,
+    )
+
+
+def _clean_search_query_action(
+    query: str,
+    max_length: int,
+    min_word_length: int,
+    request: HttpRequest | None = None,
+) -> str:
+    return query
 
 
 class ThreadsSearchForm(BaseThreadsSearchForm):

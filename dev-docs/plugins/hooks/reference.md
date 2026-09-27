@@ -270,6 +270,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.search.hooks` defines the following hooks:
 
+- [`clean_search_query_hook`](./clean-search-query-hook.md)
 - [`parse_search_query_hook`](./parse-search-query-hook.md)
 - [`validate_search_query_hook`](./validate-search-query-hook.md)
 

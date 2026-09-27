@@ -23,7 +23,6 @@ class ValidateSearchQueryHookAction(Protocol):
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
-
     """
 
     def __call__(
