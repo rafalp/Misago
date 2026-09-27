@@ -93,5 +93,5 @@ def validate_search_query_keywords(action, query: SearchQuery):
 
 
 def count_keywords(query: SearchQuery) -> int:
-    ...  # Plugin provided...
+    ...  # Implemented by a plugin...
 ```
