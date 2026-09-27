@@ -1,6 +1,5 @@
 from io import StringIO
 
-import pytest
 from django.core import management
 
 from ..exceptions import SearchBackendError
@@ -102,7 +101,7 @@ def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, pos
 
 def test_buildsearchindex_command_prints_clear_error(mocker, db):
     mocker.patch(
-        "misago.search.posts.posts_search.backend.clear",
+        "misago.search.search.search.backend.clear",
         side_effect=SearchBackendError("This backend is not available."),
     )
 
