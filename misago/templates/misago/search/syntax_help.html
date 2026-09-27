@@ -13,7 +13,7 @@
     {% endcapture %}
     <p>
       {% blocktranslate trimmed with example=example_1|safe context "search syntax help" %}
-        Separate search terms with spaces. {{ example }} will search for results that contain both "dog" and "cat".
+        Separate search terms with spaces: {{ example }} will search for results that contain both "dog" and "cat".
       {% endblocktranslate %}
     </p>
     {% capture trimmed as example_2 %}
@@ -21,7 +21,7 @@
     {% endcapture %}
     <p>
       {% blocktranslate trimmed with example=example_2|safe context "search syntax help" %}
-        Enter "-" before a search term to exclude it from the search. {{ example }} will search for results that contain "dog" but don't contain "cat".
+        Enter "-" before a search term to exclude it from the search: {{ example }} will search for results that contain "dog" but don't contain "cat".
       {% endblocktranslate %}
     </p>
     {% capture trimmed as example_3 %}
@@ -32,7 +32,7 @@
     {% endcapture %}
     <p>
       {% blocktranslate trimmed with example=example_3|safe context "search syntax help" %}
-        Separate terms with "|" to search for alternatives. {{ example }} will search for results that contain "dog", "cat", or both.
+        Separate terms with "|" to search for alternatives: {{ example }} will search for results that contain either "dog" or "cat", or both.
       {% endblocktranslate %}
       {% blocktranslate trimmed with example=example_4|safe context "search syntax help" %}
         This only applies to the closest search terms. {{ example }} will search results that contain "dog" and either "cat" or "fox", or both.
@@ -43,7 +43,7 @@
     {% endcapture %}
     <p>
       {% blocktranslate trimmed with example=example_5|safe context "search syntax help" %}
-        Wrap multiple words in single or double quotes to search for phrases. {{ example }} will search for results that contain "funny cat".
+        Wrap multiple words in single or double quotes to search for phrases: {{ example }} will search for results that contain "funny cat".
       {% endblocktranslate %}
     </p>
     {% capture trimmed as example_6 %}
@@ -54,7 +54,7 @@
     {% endcapture %}
     <p>
       {% blocktranslate trimmed with example=example_6|safe context "search syntax help" %}
-        Group terms together with parentheses. {{ example }} will search for results that contain "dog" or "wolf", and "cat" or "lion".
+        Group terms together with parentheses: {{ example }} will search for results that contain "dog" or "wolf", and "cat" or "lion".
       {% endblocktranslate %}
       {% blocktranslate trimmed with example=example_7|safe context "search syntax help" %}
         {{ example }} will search for results that contain "dog" and "wolf", or "cat" and "lion".
