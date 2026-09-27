@@ -10,6 +10,7 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .backends import SearchBackend
 from .enums import SearchMode, SearchSort
+from .query import SearchQuery
 from .types import ThreadsSearchResult
 
 if TYPE_CHECKING:
@@ -42,7 +43,7 @@ class Search:
 
     def search_threads(
         self,
-        query: str,
+        query: SearchQuery,
         permissions: UserPermissionsProxy,
         categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
@@ -72,7 +73,7 @@ class Search:
 
     def search_private_threads(
         self,
-        query: str,
+        query: SearchQuery,
         permissions: UserPermissionsProxy,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
