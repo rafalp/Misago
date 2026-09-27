@@ -30,7 +30,7 @@ def validate_search_query_length(query: str, max_length: int):
             params={
                 "max_length": max_length,
                 "query_length": query_length,
-            }
+            },
         )
 
 
@@ -54,7 +54,7 @@ def validate_search_query_term_length(query: str, min_length: int):
             code="min_length",
             params={
                 "min_length": min_length,
-            }
+            },
         )
 
     for term in terms:
@@ -70,7 +70,7 @@ def validate_search_query_term_length(query: str, min_length: int):
                 params={
                     "term": term,
                     "min_length": min_length,
-                }
+                },
             )
 
 

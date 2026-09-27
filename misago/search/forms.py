@@ -77,14 +77,12 @@ class BaseThreadsSearchForm(SearchForm):
     def clean_query(self):
         query = self.cleaned_data["query"]
 
-        query = clean_search_query(
+        return clean_search_query(
             query,
             max_length=self.request.settings.max_search_query_length,
             min_term_length=self.request.settings.min_search_term_length,
             request=self.request,
         )
-
-        return query
 
     def clean(self):
         data = super().clean()
@@ -95,6 +93,13 @@ class BaseThreadsSearchForm(SearchForm):
             and data["date_from"] > data["date_to"]
         ):
             data["date_from"], data["date_to"] = data["date_to"], data["date_from"]
+
+        try:
+            if query_string := data.get("query"):
+                self.search_query = parse_search_query(query_string)
+                validate_search_query(self.search_query)
+        except forms.ValidationError as error:
+            self.add_error("query", error)
 
         return data
 
