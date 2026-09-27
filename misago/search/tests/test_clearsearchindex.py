@@ -57,7 +57,7 @@ def test_clearsearchindex_command_clears_search_index(thread, post):
 
 def test_clearsearchindex_command_prints_backend_error(mocker):
     mocker.patch(
-        "misago.search.posts.posts_search.backend.clear",
+        "misago.search.search.search.backend.clear",
         side_effect=SearchBackendError("This backend is not available."),
     )
 
