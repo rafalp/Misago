@@ -160,7 +160,7 @@ class ThreadsSearchView(BaseSearchView):
             )
 
         results = search.search_threads(
-            query,
+            form.search_query,
             request.user_permissions,
             categories=categories,
             users=users,
@@ -218,7 +218,7 @@ class PrivateThreadsSearchView(ThreadsSearchView):
             )
 
         results = search.search_private_threads(
-            query,
+            form.search_query,
             request.user_permissions,
             users=users,
             after=date_from,
