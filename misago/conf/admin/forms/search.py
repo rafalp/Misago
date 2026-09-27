@@ -27,7 +27,7 @@ class SearchSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin search settings form",
-            'Search term is either a single word, or a phrase surrounded by quotes.',
+            "Search term is either a single word, or a phrase surrounded by quotes.",
         ),
         min_value=1,
     )
