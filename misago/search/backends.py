@@ -630,16 +630,16 @@ class PostgreSQLSearchBackend(SearchBackend):
             return None
 
         if isinstance(query, SearchQueryAnd):
-            return reduce(
-                lambda result, value: result & value,
-                filter(bool, map(self.build_pg_rank_query, query.value)),
-            )
+            items = list(filter(bool, map(self.build_pg_rank_query, query.value)))
+            if items:
+                return reduce(lambda result, value: result & value, items)
+            return None
 
         if isinstance(query, SearchQueryOr):
-            return reduce(
-                lambda result, value: result | value,
-                filter(bool, map(self.build_pg_rank_query, query.value)),
-            )
+            items = list(filter(bool, map(self.build_pg_rank_query, query.value)))
+            if items:
+                return reduce(lambda result, value: result | value, items)
+            return None
 
     def get_headline_markers(self) -> tuple[str, str]:
         return (
