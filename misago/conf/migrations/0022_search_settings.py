@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             dry_value=150,
         ),
         CreateSetting(
-            setting="min_search_word_length",
+            setting="min_search_term_length",
             python_type="int",
             dry_value=4,
         ),

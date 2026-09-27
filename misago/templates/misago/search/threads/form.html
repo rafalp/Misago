@@ -9,9 +9,7 @@
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
-    <p class="help-block">
-      {% translate 'Surround your search with quotations ("search") to search for phrases.' context "search threads form" %}
-    </p>
+    {% include "misago/search/syntax_help.html" %}
   </div>
 {% endwith %}
 

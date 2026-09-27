@@ -7,7 +7,7 @@ from .hooks import parse_search_query_hook
 
 class TokenType(Enum):
     QUOTE = auto()
-    WORD = auto()
+    KEYWORD = auto()
     PHRASE = auto()
     NOT = auto()
     AND = auto()
@@ -79,7 +79,7 @@ def tokenize_search_query(query: str) -> list[Token]:
     has_and = False
     has_or = False
 
-    for c in normalize_quotes(query):
+    for c in query:
         if c == "'":
             tokens.append((TokenType.QUOTE, None))
             in_quote = not in_quote
@@ -89,11 +89,11 @@ def tokenize_search_query(query: str) -> list[Token]:
             has_text = True
             tokens[-1] = (TokenType.PHRASE, tokens[-1][1] + c)
         elif c.isalnum():
-            if not tokens or tokens[-1][0] != TokenType.WORD:
+            if not tokens or tokens[-1][0] != TokenType.KEYWORD:
                 has_text = True
-                tokens.append((TokenType.WORD, c))
+                tokens.append((TokenType.KEYWORD, c))
             else:
-                tokens[-1] = (TokenType.WORD, tokens[-1][1] + c)
+                tokens[-1] = (TokenType.KEYWORD, tokens[-1][1] + c)
         elif c == "-":
             has_not = True
             tokens.append((TokenType.NOT, None))
@@ -132,7 +132,7 @@ def tokenize_search_query(query: str) -> list[Token]:
 def normalize_quotes(query: str) -> str:
     normalized_query: str = ""
     for c in query:
-        if 0x2018 <= ord(c) <= 0x201F:
+        if c == '"' or 0x2018 <= ord(c) <= 0x201F:
             normalized_query += "'"
         else:
             normalized_query += c
@@ -210,7 +210,7 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
             next_token = tokens[index + 1][0]
             if next_token not in (
                 TokenType.GROUP_OPEN,
-                TokenType.WORD,
+                TokenType.KEYWORD,
                 TokenType.PHRASE,
             ):
                 continue
@@ -223,7 +223,7 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
             next_token = tokens[index + 1][0]
             if previous_token not in (
                 TokenType.GROUP_CLOSE,
-                TokenType.WORD,
+                TokenType.KEYWORD,
                 TokenType.PHRASE,
             ):
                 continue
@@ -231,7 +231,7 @@ def remove_invalid_tokens(tokens: list[Token]) -> list[Token]:
             if next_token not in (
                 TokenType.GROUP_OPEN,
                 TokenType.NOT,
-                TokenType.WORD,
+                TokenType.KEYWORD,
                 TokenType.PHRASE,
             ):
                 continue
@@ -362,7 +362,7 @@ def is_or_lookahead(tokens: list[Token], start: int, stop: int) -> bool:
 def parse_search_query_token(token: Token) -> SearchQuery | None:
     token_type, token_value = token
 
-    if token_type == TokenType.WORD:
+    if token_type == TokenType.KEYWORD:
         return SearchQueryKeyword(value=token_value)
 
     if token_type == TokenType.PHRASE:
