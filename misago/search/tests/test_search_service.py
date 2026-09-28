@@ -49,6 +49,19 @@ def test_search_service_bulk_index_posts_indexes_multiple_post(
     PostSearch.objects.get(post=other_post)
 
 
+def test_search_service_update_thread_members_updates_members(
+    mocker, thread, user, other_user
+):
+    # We are using a mock because default search backend doesn't implement this
+    mock_update_thread_members = mocker.patch(
+        "misago.search.service.search.update_thread_members", autospec=True
+    )
+
+    search.update_thread_members(thread, [user.id, other_user.id])
+
+    mock_update_thread_members.assert_called_with(thread, [user.id, other_user.id])
+
+
 def test_search_service_move_category_data_updates_related_search_data(
     thread_factory,
     thread_reply_factory,
