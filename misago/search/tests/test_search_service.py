@@ -52,7 +52,7 @@ def test_search_service_bulk_index_posts_indexes_multiple_post(
 def test_search_service_update_thread_members_updates_members(
     mocker, thread, user, other_user
 ):
-    # We are using a mock because default search backend doesn't implement this
+    # We are using a mock because in default search backend this is noop
     mock_update_thread_members = mocker.patch(
         "misago.search.service.search.update_thread_members", autospec=True
     )
