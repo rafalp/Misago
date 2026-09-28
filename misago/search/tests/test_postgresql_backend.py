@@ -1,7 +1,9 @@
 import pytest
 from django.contrib.postgres.search import SearchQuery
 
+from ...permissions.enums import CategoryPermission
 from ...privatethreads.models import PrivateThreadMember
+from ...testutils import grant_category_group_permissions
 from ...threads.enums import ThreadPinned
 from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
@@ -319,6 +321,181 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
         "<strong>Database</strong> engine recommendation"
     )
     assert results.items[0].post_content == "What are you using?"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_threads_filters_inaccessible_threads(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    search_mode,
+):
+    thread = thread_factory(default_category, title="Title ipsum dolor", is_hidden=True)
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum dolor")])
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        mode=search_mode,
+    )
+
+    assert not results.items
+
+
+@pytest.mark.parametrize("search_mode", [SearchMode.THREADS, SearchMode.POSTS])
+def test_postgresql_backend_search_threads_filters_inaccessible_posts(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    search_mode,
+):
+    thread = thread_factory(default_category, title="Title ipsum dolor")
+    post = thread.first_post
+    reply = thread_reply_factory(thread, is_hidden=True)
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (reply, "Reply ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("reply"),
+        user_permissions,
+        categories=[default_category],
+        mode=search_mode,
+    )
+
+    assert not results.items
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_private_threads_filters_inaccessible_threads(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    search_mode,
+):
+    thread = thread_factory(private_threads_category, title="Title ipsum dolor")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum dolor")])
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        mode=search_mode,
+    )
+
+    assert not results.items
+
+
+@pytest.mark.parametrize("search_mode", [SearchMode.THREADS, SearchMode.POSTS])
+def test_postgresql_backend_search_private_threads_filters_inaccessible_posts(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    search_mode,
+):
+    thread = thread_factory(private_threads_category, title="Title ipsum dolor")
+    post = thread.first_post
+    reply = thread_reply_factory(thread, is_hidden=True)
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (reply, "Reply ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("reply"),
+        user_permissions,
+        mode=search_mode,
+    )
+
+    assert not results.items
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_threads_filters_by_category(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    sibling_category,
+    search_mode,
+):
+    thread = thread_factory(default_category, title="Title ipsum dolor")
+    post = thread.first_post
+
+    other_thread = thread_factory(sibling_category, title="Title ipsum dolor")
+    other_post = other_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+        ]
+    )
+
+    grant_category_group_permissions(
+        sibling_category, user.group, CategoryPermission.SEE, CategoryPermission.BROWSE
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[sibling_category],
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
 
 
 def test_postgresql_backend_search_escapes_html_in_threads_search_results(
