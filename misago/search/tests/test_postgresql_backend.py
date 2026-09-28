@@ -10,7 +10,7 @@ from ...testutils import grant_category_group_permissions
 from ...threads.enums import ThreadPinned
 from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
-from ..enums import SearchMode
+from ..enums import SearchMode, SearchSort
 from ..models import PostSearch, ThreadSearch
 from ..query import parse_search_query
 
@@ -24,6 +24,7 @@ def test_postgresql_backend_initialize_does_nothing(backend):
     backend.initialize()
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_threads_searches_threads(
     thread_factory,
     thread_reply_factory,
@@ -31,6 +32,7 @@ def test_postgresql_backend_search_threads_searches_threads(
     user,
     backend,
     default_category,
+    order_by,
 ):
     databases_thread = thread_factory(
         default_category, title="Database engine recommendation"
@@ -61,6 +63,7 @@ def test_postgresql_backend_search_threads_searches_threads(
         parse_search_query("postgresql database"),
         user_permissions,
         categories=[default_category],
+        order_by=order_by,
     )
 
     assert len(results.items) == 1
@@ -73,6 +76,7 @@ def test_postgresql_backend_search_threads_searches_threads(
     )
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_threads_searches_thread_posts(
     thread_factory,
     thread_reply_factory,
@@ -80,6 +84,7 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
     user,
     backend,
     default_category,
+    order_by,
 ):
     databases_thread = thread_factory(
         default_category, title="Database engine recommendation"
@@ -111,6 +116,7 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
         user_permissions,
         categories=[default_category],
         mode=SearchMode.POSTS,
+        order_by=order_by,
     )
 
     assert len(results.items) == 1
@@ -119,6 +125,7 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
     assert results.items[0].post_content == "I love <strong>SEAT</strong>"
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_threads_searches_thread_titles(
     thread_factory,
     thread_reply_factory,
@@ -126,6 +133,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
     user,
     backend,
     default_category,
+    order_by,
 ):
     databases_thread = thread_factory(
         default_category, title="Database engine recommendation"
@@ -161,6 +169,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
         user_permissions,
         categories=[default_category],
         mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
     )
 
     assert len(results.items) == 1
@@ -171,6 +180,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
     assert results.items[0].post_content == "What are you using?"
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_private_threads_searches_threads(
     thread_factory,
     thread_reply_factory,
@@ -178,6 +188,7 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     user,
     backend,
     private_threads_category,
+    order_by,
 ):
     databases_thread = thread_factory(
         private_threads_category, title="Database engine recommendation"
@@ -212,6 +223,7 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     results = backend.search_private_threads(
         parse_search_query("postgresql database"),
         user_permissions,
+        order_by=order_by,
     )
 
     assert len(results.items) == 1
@@ -224,6 +236,7 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     )
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_private_threads_searches_posts(
     thread_factory,
     thread_reply_factory,
@@ -231,6 +244,7 @@ def test_postgresql_backend_search_private_threads_searches_posts(
     user,
     backend,
     private_threads_category,
+    order_by,
 ):
     databases_thread = thread_factory(
         private_threads_category, title="Database engine recommendation"
@@ -264,6 +278,7 @@ def test_postgresql_backend_search_private_threads_searches_posts(
         parse_search_query("seat"),
         user_permissions,
         mode=SearchMode.POSTS,
+        order_by=order_by,
     )
 
     assert len(results.items) == 1
@@ -272,6 +287,7 @@ def test_postgresql_backend_search_private_threads_searches_posts(
     assert results.items[0].post_content == "I love <strong>SEAT</strong>"
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_private_threads_searches_thread_titles(
     thread_factory,
     thread_reply_factory,
@@ -279,6 +295,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
     user,
     backend,
     private_threads_category,
+    order_by,
 ):
     databases_thread = thread_factory(
         private_threads_category, title="Database engine recommendation"
@@ -316,6 +333,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
         parse_search_query("database"),
         user_permissions,
         mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
     )
 
     assert len(results.items) == 1
