@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from ...exceptions import SearchBackendError
-from ...search import search
+from ...service import search
 
 
 class Command(BaseCommand):

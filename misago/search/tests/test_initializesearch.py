@@ -28,7 +28,7 @@ def test_initializesearch_command_initializes_search_backend():
 
 def test_initializesearch_command_prints_backend_error(mocker):
     mocker.patch(
-        "misago.search.search.search.backend.initialize",
+        "misago.search.service.search.backend.initialize",
         side_effect=SearchBackendError("This backend is not available."),
     )
 

@@ -72,7 +72,7 @@ def test_buildsearchindex_command_indexes_private_thread_members(
     mocker, thread, post, user_private_thread
 ):
     mock_update_thread_members = mocker.patch(
-        "misago.search.search.search.update_thread_members", autospec=True
+        "misago.search.service.search.update_thread_members", autospec=True
     )
 
     thread_search = ThreadSearch.objects.create(
@@ -145,7 +145,7 @@ def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, pos
 
 def test_buildsearchindex_command_prints_clear_error(mocker, db):
     mocker.patch(
-        "misago.search.search.search.backend.clear",
+        "misago.search.service.search.backend.clear",
         side_effect=SearchBackendError("This backend is not available."),
     )
 

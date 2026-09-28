@@ -23,7 +23,7 @@ from .forms import (
     ThreadsSearchForm,
     UsersSearchForm,
 )
-from .search import search
+from .service import search
 
 
 class SearchView(View):
