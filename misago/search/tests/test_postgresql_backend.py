@@ -321,6 +321,211 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
     assert results.items[0].post_content == "What are you using?"
 
 
+def test_postgresql_backend_search_escapes_html_in_threads_search_results(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    thread = thread_factory(default_category, title="Title ipsum <b>dolor</b>")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == (
+        "Title <strong>ipsum</strong> &lt; b &gt; dolor &lt; /b &gt;"
+    )
+    assert results.items[0].post_content == (
+        "Post <strong>ipsum</strong> &lt; u &gt; dolor &lt; /u &gt;"
+    )
+
+
+def test_postgresql_backend_search_escapes_html_in_posts_search_results(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    thread = thread_factory(default_category, title="Title ipsum <b>dolor</b>")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == (
+        "Title <strong>ipsum</strong> &lt; b &gt; dolor &lt; /b &gt;"
+    )
+    assert results.items[0].post_content == (
+        "Post <strong>ipsum</strong> &lt; u &gt; dolor &lt; /u &gt;"
+    )
+
+
+def test_postgresql_backend_search_escapes_html_in_thread_titles_search_results(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+):
+    thread = thread_factory(default_category, title="Title ipsum <b>dolor</b>")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.THREAD_TITLES,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == (
+        "Title <strong>ipsum</strong> &lt; b &gt; dolor &lt; /b &gt;"
+    )
+    assert results.items[0].post_content == (
+        "Post <strong>ipsum</strong> &lt; u &gt; dolor &lt; /u &gt;"
+    )
+
+
+def test_postgresql_backend_search_escapes_html_in_private_threads_search_results(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+):
+    thread = thread_factory(private_threads_category, title="Title ipsum <b>dolor</b>")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == (
+        "Title <strong>ipsum</strong> &lt; b &gt; dolor &lt; /b &gt;"
+    )
+    assert results.items[0].post_content == (
+        "Post <strong>ipsum</strong> &lt; u &gt; dolor &lt; /u &gt;"
+    )
+
+
+def test_postgresql_backend_search_escapes_html_in_private_threads_posts_search_results(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+):
+    thread = thread_factory(private_threads_category, title="Title ipsum <b>dolor</b>")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        mode=SearchMode.POSTS,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == (
+        "Title <strong>ipsum</strong> &lt; b &gt; dolor &lt; /b &gt;"
+    )
+    assert results.items[0].post_content == (
+        "Post <strong>ipsum</strong> &lt; u &gt; dolor &lt; /u &gt;"
+    )
+
+
+def test_postgresql_backend_search_escapes_html_in_private_threads_titles_search_results(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+):
+    thread = thread_factory(private_threads_category, title="Title ipsum <b>dolor</b>")
+    post = thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        mode=SearchMode.THREAD_TITLES,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == (
+        "Title <strong>ipsum</strong> &lt; b &gt; dolor &lt; /b &gt;"
+    )
+    assert results.items[0].post_content == (
+        "Post <strong>ipsum</strong> &lt; u &gt; dolor &lt; /u &gt;"
+    )
+
+
 def test_postgresql_backend_index_threads_indexes_threads(
     thread_factory, backend, default_category, other_category, user, other_user
 ):
@@ -415,107 +620,14 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
     assert post_search.content == "Updated"
 
 
-def _test_postgresql_backend_searches_thread_titles(
-    user_permissions_factory, backend, search_index, user, default_category
-):
-    user_permissions = user_permissions_factory(user)
-
-    results = backend.search_thread_titles(
-        "forum software",
-        user_permissions,
-        categories=[default_category],
-    )
-
-    assert results.count == 1
-
-    result = results.results[0]
-    assert result.post_id == ["first_post"].id
-    assert result.thread_title == "<hl>Forum</hl> <hl>software</hl> recommendations?"
-    assert result.post_content == (
-        "I am looking for a good <hl>forum</hl> <hl>software</hl> for my next project."
-        " "
-        "Any recommendations?"
-    )
+def test_postgresql_backend_prepare_headline_value_breaks_down_html_tags(backend):
+    result = backend.prepare_headline_value("How to use <article> html tag?")
+    assert result == "How to use < article > html tag?"
 
 
-def _test_postgresql_backend_thread_titles_search_handles_empty_result(
-    user_permissions_factory, backend, user, default_category
-):
-    user_permissions = user_permissions_factory(user)
-
-    results = backend.search_thread_titles(
-        "lorem ipsum",
-        user_permissions,
-        categories=[default_category],
-    )
-
-    assert results.count == 0
-
-
-def _test_postgresql_backend_search_searches_threads(
-    user_permissions_factory, backend, search_index, user, default_category
-):
-    user_permissions = user_permissions_factory(user)
-
-    results = backend.search_threads(
-        "forum software",
-        user_permissions,
-        categories=[default_category],
-    )
-
-    assert results.count == 1
-
-    result = results.results[0]
-    assert result.post_id == ["first_post"].id
-    assert result.thread_title == "<hl>Forum</hl> <hl>software</hl> recommendations?"
-    assert result.post_content == (
-        "I am looking for a good <hl>forum</hl> <hl>software</hl> for my next project."
-        " "
-        "Any recommendations?"
-    )
-
-
-def _test_postgresql_backend_thread_search_handles_empty_result(
-    user_permissions_factory, backend, search_index, user, default_category
-):
-    user_permissions = user_permissions_factory(user)
-
-    results = backend.search_threads(
-        "lorem ipsum",
-        user_permissions,
-        categories=[default_category],
-    )
-
-    assert results.count == 0
-
-
-def _test_postgresql_backend_search_searches_posts(
-    user_permissions_factory, backend, search_index, user, default_category
-):
-    user_permissions = user_permissions_factory(user)
-
-    results = backend.search_posts(
-        "forum software",
-        user_permissions,
-        categories=[default_category],
-    )
-
-    results_ids = [result.post for result in results]
-    assert search_index["first_post"].id in results_ids
-
-
-def _test_postgresql_backend_post_search_handles_empty_result(
-    user_permissions_factory, backend, search_index, user, default_category
-):
-    user_permissions = user_permissions_factory(user)
-
-    results = backend.search_posts(
-        "lorem ipsum",
-        user_permissions,
-        categories=[default_category],
-    )
-
-    assert results.count == 0
+def test_postgresql_backend_prepare_indexed_value_strips_html_tags(backend):
+    result = backend.prepare_indexed_value("How to use <article> html tag?")
+    assert result == "How to use article html tag?"
 
 
 def test_postgresql_backend_update_thread_first_post_updates_thread_first_post(
