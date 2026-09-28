@@ -111,6 +111,9 @@ class SearchService:
     def bulk_index_posts(self, posts: Iterable[tuple[Post, str]]):
         return self.backend.index_posts(posts)
 
+    def update_thread_members(self, thread: Thread, members: Iterable[int]):
+        return self.backend.update_thread_members(thread, members)
+
     def move_category_data(
         self, category: Category | CategoryProxy, new_category: Category | CategoryProxy
     ):
