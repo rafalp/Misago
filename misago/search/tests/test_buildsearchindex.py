@@ -2,6 +2,7 @@ from io import StringIO
 
 from django.core import management
 
+from ...privatethreads.members import get_private_thread_members
 from ..exceptions import SearchBackendError
 from ..management.commands import buildsearchindex
 from ..models import PostSearch, ThreadSearch
@@ -67,6 +68,49 @@ def test_buildsearchindex_command_clears_search_index(thread, post):
     post_search.refresh_from_db()
 
 
+def test_buildsearchindex_command_indexes_private_thread_members(
+    mocker, thread, post, user_private_thread
+):
+    mock_update_thread_members = mocker.patch(
+        "misago.search.search.search.update_thread_members", autospec=True
+    )
+
+    thread_search = ThreadSearch.objects.create(
+        category_id=thread.category_id,
+        thread_id=thread.id,
+        starter_id=None,
+        title=thread.title,
+        started_at=thread.started_at,
+    )
+
+    post_search = PostSearch.objects.create(
+        category_id=post.category_id,
+        thread_id=post.thread_id,
+        post_id=post.id,
+        poster_id=None,
+        content=post.content,
+        posted_at=post.posted_at,
+    )
+
+    stdout, stderr = call_command()
+
+    assert stdout[0] == (
+        'Rebuilding the search index using the "PostgreSQL full-text search" backend.'
+    )
+    assert stdout[2].startswith("Cleared the search index in ")
+    assert stdout[-1].startswith("Indexed 2 posts in ")
+
+    assert not stderr
+
+    thread_search.refresh_from_db()
+    post_search.refresh_from_db()
+
+    _, private_thread_members = get_private_thread_members(user_private_thread)
+    mock_update_thread_members.assert_called_once_with(
+        user_private_thread, [user.id for user in private_thread_members]
+    )
+
+
 def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, post):
     thread_search = ThreadSearch.objects.create(
         category_id=thread.category_id,
@@ -85,12 +129,12 @@ def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, pos
         posted_at=post.posted_at,
     )
 
-    stdout, stderr = call_command(skip_clear=True)
+    stdout, stderr = call_command(no_clear=True)
 
     assert stdout[0] == (
         'Rebuilding the search index using the "PostgreSQL full-text search" backend.'
     )
-    assert stdout[2].startswith("Skipped clearing the search index.")
+    assert stdout[2].startswith("Keeping the existing search index.")
     assert stdout[-1].startswith("Indexed one post in ")
 
     assert not stderr
