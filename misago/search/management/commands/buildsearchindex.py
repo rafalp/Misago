@@ -2,8 +2,10 @@ from time import time
 
 from django.core.management.base import BaseCommand, CommandError
 
+from ....categories.models import Category
 from ....core.management.progressbar import show_progress
 from ....parser.parse import parse
+from ....privatethreads.members import prefetch_private_thread_member_ids
 from ....threads.models import Post, Thread
 from ...exceptions import SearchBackendError
 from ...search import Search, search
@@ -14,12 +16,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--skip-clear",
+            "--no-clear",
             action="store_true",
-            help="Skip clearing of existing search data.",
+            help="Don't clear existing search data.",
         )
 
     def handle(self, *args, **options):
+        private_threads = Category.objects.private_threads()
         post_count = Post.objects.count()
 
         self.stdout.write(
@@ -28,8 +31,8 @@ class Command(BaseCommand):
             "\n\n"
         )
 
-        if options["skip_clear"]:
-            self.stdout.write(f"Skipped clearing the search index.\n\n")
+        if options["no_clear"]:
+            self.stdout.write("Keeping the existing search index.\n\n")
         else:
             try:
                 start_time = time()
@@ -58,7 +61,15 @@ class Command(BaseCommand):
         queryset = Post.objects.select_related("thread").order_by("id")
         for post in queryset.iterator(chunk_size=50):
             if post.id == post.thread.first_post_id:
-                search_index.index_thread(post.thread)
+                thread = post.thread
+                if thread.category_id == private_threads.id:
+                    search.index_thread(thread)
+                    prefetch_private_thread_member_ids([thread])
+                    search.update_thread_members(
+                        thread, thread.private_thread_member_ids
+                    )
+                else:
+                    search_index.index_thread(thread)
 
             search_index.index_post(post)
 
