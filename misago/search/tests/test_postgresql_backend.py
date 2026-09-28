@@ -582,6 +582,109 @@ def test_postgresql_backend_search_private_threads_filters_by_thread(
     assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
 
 
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_threads_filters_by_user(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    other_user,
+    backend,
+    default_category,
+    search_mode,
+):
+    thread = thread_factory(default_category, title="Title ipsum dolor")
+    post = thread.first_post
+
+    user_thread = thread_factory(
+        default_category, title="Title ipsum dolor", starter=user
+    )
+    user_post = user_thread.first_post
+
+    other_user_thread = thread_factory(
+        default_category, title="Title ipsum dolor", starter=other_user
+    )
+    other_user_post = other_user_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, user_thread, other_user_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (user_post, "Post ipsum dolor"),
+            (other_user_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        users=[other_user],
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_user_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_private_threads_filters_by_user(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    other_user,
+    backend,
+    private_threads_category,
+    search_mode,
+):
+    thread = thread_factory(private_threads_category, title="Title ipsum dolor")
+    post = thread.first_post
+
+    user_thread = thread_factory(
+        private_threads_category, title="Title ipsum dolor", starter=user
+    )
+    user_post = user_thread.first_post
+
+    other_user_thread = thread_factory(
+        private_threads_category, title="Title ipsum dolor", starter=other_user
+    )
+    other_user_post = other_user_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, user_thread, other_user_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (user_post, "Post ipsum dolor"),
+            (other_user_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=user_thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_user_thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        users=[other_user],
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_user_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
 def test_postgresql_backend_search_escapes_html_in_threads_search_results(
     thread_factory,
     user_permissions_factory,
