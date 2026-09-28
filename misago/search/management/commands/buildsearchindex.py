@@ -8,7 +8,7 @@ from ....parser.parse import parse
 from ....privatethreads.members import prefetch_private_thread_member_ids
 from ....threads.models import Post, Thread
 from ...exceptions import SearchBackendError
-from ...search import Search, search
+from ...service import SearchService, search
 
 
 class Command(BaseCommand):
@@ -86,7 +86,7 @@ class Command(BaseCommand):
 
 
 class SearchIndexBuffer:
-    search: Search
+    search: SearchService
     max_size: int
 
     threads: list[Thread]
@@ -95,7 +95,7 @@ class SearchIndexBuffer:
     posts: list[Post]
     posts_size: int
 
-    def __init__(self, search: Search, max_size: int):
+    def __init__(self, search: SearchService, max_size: int):
         self.search = search
         self.max_size = max_size
 

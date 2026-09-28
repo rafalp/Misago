@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-class Search:
+class SearchService:
     backend: SearchBackend
 
     def __init__(self, options: dict):
@@ -238,4 +238,4 @@ class Search:
         return self.backend.clear()
 
 
-search = Search(settings.MISAGO_SEARCH)
+search = SearchService(settings.MISAGO_SEARCH)
