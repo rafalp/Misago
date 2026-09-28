@@ -100,139 +100,45 @@ class SearchService:
         )
 
     def index_thread(self, thread: Thread):
-        return self.backend.index_threads([thread])
+        return self.bulk_index_threads([thread])
 
     def bulk_index_threads(self, threads: Iterable[Thread]):
         return self.backend.index_threads(threads)
 
     def index_post(self, post: Post, search_document: str):
-        return self.backend.index_posts([(post, search_document)])
+        return self.bulk_index_posts([(post, search_document)])
 
     def bulk_index_posts(self, posts: Iterable[tuple[Post, str]]):
         return self.backend.index_posts(posts)
 
-    def bulk_move_categories(
-        self, categories: Category | Iterable[Category], new_category: Category
+    def move_category_data(
+        self, category: Category | CategoryProxy, new_category: Category | CategoryProxy
     ):
-        if isinstance(categories, Category):
-            categories = [categories]
+        return self.bulk_move_categories_data([category], new_category)
 
-        return self.backend.move_categories(categories, new_category)
-
-    def bulk_move_thread_posts(
-        self, threads: Thread | Iterable[Thread], new_thread: Thread
-    ):
-        if isinstance(threads, Thread):
-            threads = [threads]
-
-        return self.backend.move_thread_posts(threads, new_thread)
-
-    def bulk_move_threads(
-        self, threads: Thread | Iterable[Thread], new_category: Category
-    ):
-        if isinstance(threads, Thread):
-            threads = [threads]
-
-        return self.backend.move_threads(threads, new_category)
-
-    def bulk_move_posts(self, posts: Post | Iterable[Post], new_thread: Thread):
-        if isinstance(posts, Post):
-            posts = [posts]
-
-        return self.backend.move_posts(posts, new_thread)
-
-    def update_thread_first_post(self, thread: Thread):
-        return self.backend.update_thread_first_post(thread)
-
-    def update_thread_title(self, thread: Thread):
-        return self.backend.update_thread_title(thread)
-
-    def update_thread_members(self, thread: Thread, members: Iterable[int]):
-        return self.backend.update_thread_members(thread, members)
-
-    def update_thread(
+    def bulk_move_categories_data(
         self,
-        thread: Thread,
-        *,
-        is_hidden: bool | None = None,
-        is_unapproved: bool | None = None,
-        **kwargs,
+        categories: Iterable[Category | CategoryProxy],
+        new_category: Category | CategoryProxy,
     ):
-        return self.backend.update_threads(
-            [thread],
-            is_hidden=is_hidden,
-            is_unapproved=is_unapproved,
-            **kwargs,
+        return (
+            self.backend.update_threads(
+                {"category": new_category},
+                categories=categories,
+            ),
+            self.backend.update_posts(
+                {"category": new_category},
+                categories=categories,
+            ),
         )
 
-    def bulk_update_threads(
-        self,
-        threads: Iterable[Thread],
-        *,
-        is_hidden: bool | None = None,
-        is_unapproved: bool | None = None,
-        **kwargs,
+    def delete_category_data(self, category: Category | CategoryProxy):
+        return self.bulk_delete_categories_data([category])
+
+    def bulk_delete_categories_data(
+        self, categories: Iterable[Category | CategoryProxy]
     ):
-        return self.backend.update_threads(
-            threads,
-            is_hidden=is_hidden,
-            is_unapproved=is_unapproved,
-            **kwargs,
-        )
-
-    def update_post(
-        self,
-        post: Post,
-        *,
-        is_hidden: bool | None = None,
-        is_unapproved: bool | None = None,
-        **kwargs,
-    ):
-        return self.backend.update_posts(
-            [post],
-            is_hidden=is_hidden,
-            is_unapproved=is_unapproved,
-            **kwargs,
-        )
-
-    def bulk_update_posts(
-        self,
-        posts: Iterable[Post],
-        *,
-        is_hidden: bool | None = None,
-        is_unapproved: bool | None = None,
-        **kwargs,
-    ):
-        return self.backend.update_posts(
-            posts,
-            is_hidden=is_hidden,
-            is_unapproved=is_unapproved,
-            **kwargs,
-        )
-
-    def delete_category(self, category: Category):
-        return self.backend.delete_categories([category])
-
-    def bulk_delete_categories(self, categories: Iterable[Category]):
-        return self.backend.delete_categories(categories)
-
-    def delete_thread(self, thread: Thread):
-        return self.backend.delete_threads([thread])
-
-    def bulk_delete_threads(self, threads: Iterable[Thread]):
-        return self.backend.delete_threads(threads)
-
-    def delete_post(self, post: Post):
-        return self.backend.delete_posts([post])
-
-    def bulk_delete_posts(self, posts: Iterable[Post]):
-        return self.backend.delete_posts(posts)
-
-    def delete_user(self, user: "User"):
-        return self.backend.delete_users([user])
-
-    def bulk_delete_users(self, users: Iterable["User"]):
-        return self.backend.delete_users(users)
+        return self.backend.delete(categories=categories)
 
     def clear(self):
         return self.backend.clear()

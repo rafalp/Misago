@@ -7,7 +7,6 @@ from django.utils import timezone
 from ...permissions.enums import CategoryPermission
 from ...privatethreads.models import PrivateThreadMember
 from ...testutils import grant_category_group_permissions
-from ...threads.enums import ThreadPinned
 from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
 from ..enums import SearchMode, SearchSort
@@ -1203,14 +1202,8 @@ def test_postgresql_backend_index_threads_indexes_threads(
         starter="DeletedUser",
         title="Forum software recommendations",
     )
-    pinned_thread = thread_factory(
-        default_category,
-        starter=other_user,
-        title="Important announcement: please read",
-        pinned=ThreadPinned.EVERYWHERE,
-    )
 
-    backend.index_threads([thread, deleted_user_thread, pinned_thread])
+    backend.index_threads([thread, deleted_user_thread])
 
     thread_search = ThreadSearch.objects.get(thread=thread)
     assert thread_search.category_id == default_category.id
@@ -1949,7 +1942,7 @@ def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_thread(
     PostSearch.objects.get(post=other_post)
 
 
-def test_postgresql_backend_delete_posts(
+def test_postgresql_backend_delete_posts_deletes_posts(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2018,6 +2011,9 @@ def test_postgresql_backend_clear_deletes_all_threads_and_posts(
 
     backend.index_threads([thread, other_thread])
     backend.index_posts([(post, post.content), (other_post, other_post.content)])
+
+    assert ThreadSearch.objects.exists()
+    assert PostSearch.objects.exists()
 
     backend.clear()
 
