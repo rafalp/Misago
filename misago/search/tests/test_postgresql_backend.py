@@ -60,6 +60,12 @@ def test_postgresql_backend_search_threads_searches_threads(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == postgresql_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Database</strong> engine recommendation"
+    )
+    assert results.items[0].post_content == (
+        "<strong>PostgreSQL</strong> has great features!"
+    )
 
 
 def test_postgresql_backend_search_threads_searches_thread_posts(
@@ -104,6 +110,8 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == seat_post.id
+    assert results.items[0].thread_title == "Favorite car?"
+    assert results.items[0].post_content == "I love <strong>SEAT</strong>"
 
 
 def test_postgresql_backend_search_threads_searches_thread_titles(
@@ -152,6 +160,10 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == databases_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Database</strong> engine recommendation"
+    )
+    assert results.items[0].post_content == "What are you using?"
 
 
 def test_postgresql_backend_search_private_threads_searches_threads(
@@ -165,6 +177,7 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     databases_thread = thread_factory(
         private_threads_category, title="Database engine recommendation"
     )
+    databases_post = databases_thread.first_post
     mysql_post = thread_reply_factory(databases_thread)
     postgresql_post = thread_reply_factory(databases_thread)
 
@@ -178,6 +191,7 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     backend.index_threads([databases_thread, cars_thread])
     backend.index_posts(
         [
+            (databases_post, "What are you using?"),
             (mysql_post, "MySQL is OpenSource and widely available."),
             (postgresql_post, "PostgreSQL has great features!"),
             (seat_post, "I love SEAT"),
@@ -197,6 +211,12 @@ def test_postgresql_backend_search_private_threads_searches_threads(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == postgresql_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Database</strong> engine recommendation"
+    )
+    assert results.items[0].post_content == (
+        "<strong>PostgreSQL</strong> has great features!"
+    )
 
 
 def test_postgresql_backend_search_private_threads_searches_posts(
@@ -243,6 +263,8 @@ def test_postgresql_backend_search_private_threads_searches_posts(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == seat_post.id
+    assert results.items[0].thread_title == "Favorite car?"
+    assert results.items[0].post_content == "I love <strong>SEAT</strong>"
 
 
 def test_postgresql_backend_search_private_threads_searches_thread_titles(
@@ -293,6 +315,10 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == databases_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Database</strong> engine recommendation"
+    )
+    assert results.items[0].post_content == "What are you using?"
 
 
 def test_postgresql_backend_index_threads_indexes_threads(
