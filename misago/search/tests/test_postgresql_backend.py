@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 import pytest
 from django.contrib.postgres.search import SearchQuery
+from django.utils import timezone
 
 from ...permissions.enums import CategoryPermission
 from ...privatethreads.models import PrivateThreadMember
@@ -681,6 +684,285 @@ def test_postgresql_backend_search_private_threads_filters_by_user(
 
     assert len(results.items) == 1
     assert results.items[0].post_id == other_user_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_threads_filters_after_date(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    search_mode,
+):
+    thread = thread_factory(
+        default_category, title="Title ipsum dolor", started_at=-3600
+    )
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Title ipsum dolor")
+    other_post = other_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        after=timezone.now() - timedelta(minutes=5),
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_private_threads_filters_after_date(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    search_mode,
+):
+    thread = thread_factory(
+        private_threads_category, title="Title ipsum dolor", started_at=-3600
+    )
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
+    other_post = other_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        after=timezone.now() - timedelta(minutes=5),
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_threads_filters_before_date(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    search_mode,
+):
+    thread = thread_factory(
+        default_category, title="Title ipsum dolor", started_at=-3600
+    )
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Title ipsum dolor")
+    other_post = other_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        before=timezone.now() - timedelta(minutes=5),
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_private_threads_filters_before_date(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    search_mode,
+):
+    thread = thread_factory(
+        private_threads_category, title="Title ipsum dolor", started_at=-3600
+    )
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
+    other_post = other_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        before=timezone.now() - timedelta(minutes=5),
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_threads_filters_between_dates(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    search_mode,
+):
+    thread = thread_factory(
+        default_category, title="Title ipsum dolor", started_at=-3600
+    )
+    post = thread.first_post
+
+    other_thread = thread_factory(
+        default_category, title="Title ipsum dolor", started_at=-600
+    )
+    other_post = other_thread.first_post
+
+    recent_thread = thread_factory(default_category, title="Title ipsum dolor")
+    recent_post = recent_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread, recent_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+            (recent_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        categories=[default_category],
+        after=timezone.now() - timedelta(minutes=15),
+        before=timezone.now() - timedelta(minutes=5),
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
+    assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
+
+
+@pytest.mark.parametrize("search_mode", SearchMode)
+def test_postgresql_backend_search_private_threads_filters_between_dates(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    search_mode,
+):
+    thread = thread_factory(
+        private_threads_category, title="Title ipsum dolor", started_at=-3600
+    )
+    post = thread.first_post
+
+    other_thread = thread_factory(
+        private_threads_category, title="Title ipsum dolor", started_at=-600
+    )
+    other_post = other_thread.first_post
+
+    recent_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
+    recent_post = recent_thread.first_post
+
+    synchronize_thread(thread)
+
+    backend.index_threads([thread, other_thread, recent_thread])
+    backend.index_posts(
+        [
+            (post, "Post ipsum dolor"),
+            (other_post, "Post ipsum dolor"),
+            (recent_post, "Post ipsum dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+    PrivateThreadMember.objects.create(thread=recent_thread, user=user)
+
+    results = backend.search_private_threads(
+        parse_search_query("ipsum"),
+        user_permissions,
+        after=timezone.now() - timedelta(minutes=15),
+        before=timezone.now() - timedelta(minutes=5),
+        mode=search_mode,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
     assert results.items[0].thread_title == "Title <strong>ipsum</strong> dolor"
     assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
 
