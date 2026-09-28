@@ -130,7 +130,7 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     synchronize_category(new_category)
 
     # misago.search
-    search.move_categories_data(categories, new_category)
+    search.bulk_move_categories_data(categories, new_category)
 
 
 def _move_objects(
