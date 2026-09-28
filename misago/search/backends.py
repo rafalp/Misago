@@ -336,7 +336,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             thread_id__in=thread_ids,
             search_vector=search_query,
         ).annotate(
-            headline=self._get_title_headline(rank_query, headline_markers),
+            headline=self.get_title_headline(rank_query, headline_markers),
         )
 
         if users:
@@ -373,7 +373,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             thread_id__in=[thread.thread_id for thread in threads],
             is_first_post=True,
         ).annotate(
-            headline=self._get_content_headline(rank_query, headline_markers),
+            headline=self.get_content_headline(rank_query, headline_markers),
         )
         posts = {post.thread_id: post for post in posts_queryset}
 
@@ -472,7 +472,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                 thread_id__in=result_threads_ids,
             )
             .order_by("thread_id", "post_id")
-            .annotate(headline=self._get_content_headline(rank_query, headline_markers))
+            .annotate(headline=self.get_content_headline(rank_query, headline_markers))
             .distinct("thread_id")
         )
 
@@ -480,7 +480,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             return self._empty_threads_result(start_time)
 
         thread_posts = {post.thread_id: post for post in posts}
-        thread_headlines = self._get_thread_headlines(
+        thread_headlines = self.get_thread_headlines(
             rank_query, thread_posts, headline_markers
         )
 
@@ -488,6 +488,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         items = []
         for thread_id in result_threads_ids:
             if post := thread_posts.get(thread_id):
+                print(post.content)
                 items.append(
                     ThreadsSearchResultItem(
                         post_id=post.post_id,
@@ -540,7 +541,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         queryset = queryset.filter(
             post_search_vector=search_query,
         ).annotate(
-            headline=self._get_content_headline(rank_query, headline_markers),
+            headline=self.get_content_headline(rank_query, headline_markers),
         )
 
         if order_by == SearchSort.RELEVANCE or self.min_rank:
@@ -565,7 +566,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         if not results:
             return self._empty_threads_result(start_time)
 
-        thread_headlines = self._get_thread_headlines(
+        thread_headlines = self.get_thread_headlines(
             rank_query, [result.thread_id for result in results], headline_markers
         )
 
@@ -655,16 +656,16 @@ class PostgreSQLSearchBackend(SearchBackend):
             .replace(stop_sel, self.headline_stop_html)
         )
 
-    def _get_thread_headlines(
+    def get_thread_headlines(
         self, query: PgSearchQuery, thread_ids: Iterable[int], markers: tuple[str, str]
     ) -> dict[int, str]:
         queryset = ThreadSearch.objects.filter(thread_id__in=thread_ids).annotate(
-            headline=self._get_title_headline(query, markers),
+            headline=self.get_title_headline(query, markers),
         )
 
         return {result.thread_id: result.headline for result in queryset}
 
-    def _get_title_headline(
+    def get_title_headline(
         self, query: PgSearchQuery, markers: tuple[str, str]
     ) -> SearchHeadline:
         start_sel, stop_sel = markers
@@ -677,7 +678,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             highlight_all=True,
         )
 
-    def _get_content_headline(
+    def get_content_headline(
         self, query: PgSearchQuery, markers: tuple[str, str]
     ) -> SearchHeadline:
         start_sel, stop_sel = markers
@@ -717,10 +718,10 @@ class PostgreSQLSearchBackend(SearchBackend):
                     category_id=thread.category_id,
                     thread_id=thread.id,
                     starter_id=thread.starter_id,
-                    title=thread.title,
+                    title=self.prepare_headline_value(thread.title),
                     search_vector=(
                         SearchVector(
-                            Value(thread.title),
+                            Value(self.prepare_indexed_value(thread.title)),
                             config=self.search_config,
                         )
                     ),
@@ -757,27 +758,70 @@ class PostgreSQLSearchBackend(SearchBackend):
             thread_id=post.thread_id,
             post_id=post.id,
             poster_id=post.poster_id,
-            content=search_document,
+            content=self.prepare_headline_value(search_document),
             post_search_vector=(
                 SearchVector(
-                    Value(search_document),
+                    Value(self.prepare_indexed_value(search_document)),
                     config=self.search_config,
                 )
             ),
             thread_search_vector=(
                 SearchVector(
-                    Value(thread.title),
+                    Value(self.prepare_indexed_value(thread.title)),
                     config=self.search_config,
                     weight="B",
                 )
                 + SearchVector(
-                    Value(search_document),
+                    Value(self.prepare_indexed_value(search_document)),
                     config=self.search_config,
                 )
             ),
             posted_at=post.posted_at,
             is_first_post=is_first_post,
         )
+
+    def prepare_headline_value(self, value: str) -> str:
+        return self.break_down_html_tags(value)
+
+    def break_down_html_tags(self, value: str) -> str:
+        if "<" not in value and ">" not in value:
+            return value
+
+        clean_value: list[str] = []
+        max_i = len(value) - 1
+
+        for i, c in enumerate(value):
+            if c == "<" or c == ">":
+                if i and not clean_value[-1].isspace():
+                    clean_value.append(" ")
+                clean_value.append(c)
+                if i < max_i and not value[i + 1].isspace():
+                    clean_value.append(" ")
+            else:
+                clean_value.append(c)
+
+        return "".join(clean_value)
+
+    def prepare_indexed_value(self, value: str) -> str:
+        return self.strip_html_tags(value)
+
+    def strip_html_tags(self, value: str) -> str:
+        if "<" not in value and ">" not in value:
+            return value
+
+        clean_value: list[str] = []
+        max_i = len(value) - 1
+
+        for i, c in enumerate(value):
+            if c == "<" or c == ">":
+                if (i and not clean_value[-1].isspace()) and (
+                    i < max_i and not value[i + 1].isspace()
+                ):
+                    clean_value.append(" ")
+            else:
+                clean_value.append(c)
+
+        return "".join(clean_value)
 
     # Update operations
 
@@ -802,9 +846,9 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     def update_thread_title(self, thread: Thread) -> int:
         updated_count = ThreadSearch.objects.filter(thread=thread).update(
-            title=thread.title,
+            title=self.prepare_headline_value(thread.title),
             search_vector=SearchVector(
-                Value(thread.title),
+                Value(self.prepare_indexed_value(thread.title)),
                 config=self.search_config,
             ),
         )
@@ -812,7 +856,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         updated_count += PostSearch.objects.filter(thread=thread).update(
             thread_search_vector=(
                 SearchVector(
-                    Value(thread.title),
+                    Value(self.prepare_indexed_value(thread.title)),
                     config=self.search_config,
                     weight="A",
                 )
