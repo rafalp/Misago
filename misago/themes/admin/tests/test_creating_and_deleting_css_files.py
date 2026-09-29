@@ -4,7 +4,6 @@ from django.urls import reverse
 from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message
 from ... import THEME_CACHE
-from ...models import Css
 
 
 @pytest.fixture
