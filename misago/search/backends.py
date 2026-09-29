@@ -488,7 +488,6 @@ class PostgreSQLSearchBackend(SearchBackend):
         items = []
         for thread_id in result_threads_ids:
             if post := thread_posts.get(thread_id):
-                print(post.content)
                 items.append(
                     ThreadsSearchResultItem(
                         post_id=post.post_id,

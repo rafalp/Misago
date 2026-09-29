@@ -76,7 +76,163 @@ def test_postgresql_backend_search_threads_searches_threads(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_thread_posts(
+def test_postgresql_backend_search_threads_searches_threads_using_phrase(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum dolor"),
+            (other_post, "Lorem dolor ipsum"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("'lorem dolor'"),
+        user_permissions,
+        categories=[default_category],
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong> ipsum"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_threads_using_not_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("lorem -ipsum"),
+        user_permissions,
+        categories=[default_category],
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == "<strong>Lorem</strong> dolor"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_threads_using_and_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("lorem dolor"),
+        user_permissions,
+        categories=[default_category],
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong>"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_threads_using_or_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("met | dolor"),
+        user_permissions,
+        categories=[default_category],
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == ("Lorem <strong>dolor</strong>")
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_posts(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -122,6 +278,166 @@ def test_postgresql_backend_search_threads_searches_thread_posts(
     assert results.items[0].post_id == seat_post.id
     assert results.items[0].thread_title == "Favorite car?"
     assert results.items[0].post_content == "I love <strong>SEAT</strong>"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_posts_using_phrase(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum dolor"),
+            (other_post, "Lorem dolor ipsum"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("'lorem dolor'"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong> ipsum"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_posts_using_not_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("lorem -ipsum"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == "<strong>Lorem</strong> dolor"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_posts_using_and_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("lorem dolor"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong>"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_posts_using_or_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("met | dolor"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == ("Lorem <strong>dolor</strong>")
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
@@ -180,6 +496,166 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_thread_titles_using_phrase(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Lorem ipsum dolor")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Lorem dolor ipsum")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("'lorem dolor'"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Lorem</strong> <strong>dolor</strong> ipsum"
+    )
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_thread_titles_using_not_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Lorem dolor")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("lorem -ipsum"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "<strong>Lorem</strong> dolor"
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_thread_titles_using_and_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Lorem dolor")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("lorem dolor"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Lorem</strong> <strong>dolor</strong>"
+    )
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_threads_searches_thread_titles_using_or_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    default_category,
+    order_by,
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    post = thread.first_post
+
+    other_thread = thread_factory(default_category, title="Lorem dolor")
+    other_post = other_thread.first_post
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        parse_search_query("met | dolor"),
+        user_permissions,
+        categories=[default_category],
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == ("Lorem <strong>dolor</strong>")
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
 def test_postgresql_backend_search_private_threads_searches_threads(
     thread_factory,
     thread_reply_factory,
@@ -203,6 +679,9 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     synchronize_thread(databases_thread)
     synchronize_thread(cars_thread)
 
+    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
+    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
+
     backend.index_threads([databases_thread, cars_thread])
     backend.index_posts(
         [
@@ -215,9 +694,6 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
-    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("postgresql database"),
@@ -233,6 +709,170 @@ def test_postgresql_backend_search_private_threads_searches_threads(
     assert results.items[0].post_content == (
         "<strong>PostgreSQL</strong> has great features!"
     )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_threads_using_phrase(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum dolor"),
+            (other_post, "Lorem dolor ipsum"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("'lorem dolor'"),
+        user_permissions,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong> ipsum"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_threads_using_not_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("lorem -ipsum"),
+        user_permissions,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == "<strong>Lorem</strong> dolor"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_threads_using_and_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("lorem dolor"),
+        user_permissions,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong>"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_threads_using_or_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("met | dolor"),
+        user_permissions,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == ("Lorem <strong>dolor</strong>")
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
@@ -258,6 +898,9 @@ def test_postgresql_backend_search_private_threads_searches_posts(
     synchronize_thread(databases_thread)
     synchronize_thread(cars_thread)
 
+    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
+    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
+
     backend.index_threads([databases_thread, cars_thread])
     backend.index_posts(
         [
@@ -270,9 +913,6 @@ def test_postgresql_backend_search_private_threads_searches_posts(
 
     user_permissions = user_permissions_factory(user)
 
-    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
-    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
-
     results = backend.search_private_threads(
         parse_search_query("seat"),
         user_permissions,
@@ -284,6 +924,174 @@ def test_postgresql_backend_search_private_threads_searches_posts(
     assert results.items[0].post_id == seat_post.id
     assert results.items[0].thread_title == "Favorite car?"
     assert results.items[0].post_content == "I love <strong>SEAT</strong>"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_posts_using_phrase(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum dolor"),
+            (other_post, "Lorem dolor ipsum"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("'lorem dolor'"),
+        user_permissions,
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong> ipsum"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_posts_using_not_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("lorem -ipsum"),
+        user_permissions,
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == "<strong>Lorem</strong> dolor"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_posts_using_and_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("lorem dolor"),
+        user_permissions,
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == (
+        "<strong>Lorem</strong> <strong>dolor</strong>"
+    )
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_posts_using_or_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Thread")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Other thread")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Lorem ipsum"),
+            (other_post, "Lorem dolor"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("met | dolor"),
+        user_permissions,
+        mode=SearchMode.POSTS,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "Other thread"
+    assert results.items[0].post_content == ("Lorem <strong>dolor</strong>")
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
@@ -311,6 +1119,9 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
     synchronize_thread(databases_thread)
     synchronize_thread(cars_thread)
 
+    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
+    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
+
     backend.index_threads([databases_thread, cars_thread])
     backend.index_posts(
         [
@@ -324,9 +1135,6 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=databases_thread, user=user)
-    PrivateThreadMember.objects.create(thread=cars_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("database"),
@@ -343,6 +1151,174 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
     assert results.items[0].post_content == "What are you using?"
 
 
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_thread_titles_using_phrase(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Lorem ipsum dolor")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Lorem dolor ipsum")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("'lorem dolor'"),
+        user_permissions,
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Lorem</strong> <strong>dolor</strong> ipsum"
+    )
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_thread_titles_using_not_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Lorem ipsum")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Lorem dolor")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("lorem -ipsum"),
+        user_permissions,
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == "<strong>Lorem</strong> dolor"
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_thread_titles_using_and_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Lorem ipsum")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Lorem dolor")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("lorem dolor"),
+        user_permissions,
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == (
+        "<strong>Lorem</strong> <strong>dolor</strong>"
+    )
+    assert results.items[0].post_content == "Other post"
+
+
+@pytest.mark.parametrize("order_by", SearchSort)
+def test_postgresql_backend_search_private_threads_searches_thread_titles_using_or_query(
+    thread_factory,
+    user_permissions_factory,
+    user,
+    backend,
+    private_threads_category,
+    order_by,
+):
+    thread = thread_factory(private_threads_category, title="Lorem ipsum")
+    post = thread.first_post
+
+    other_thread = thread_factory(private_threads_category, title="Lorem dolor")
+    other_post = other_thread.first_post
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+
+    backend.index_threads([thread, other_thread])
+    backend.index_posts(
+        [
+            (post, "Post"),
+            (other_post, "Other post"),
+        ]
+    )
+
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_private_threads(
+        parse_search_query("met | dolor"),
+        user_permissions,
+        mode=SearchMode.THREAD_TITLES,
+        order_by=order_by,
+    )
+
+    assert len(results.items) == 1
+    assert results.items[0].post_id == other_post.id
+    assert results.items[0].thread_title == ("Lorem <strong>dolor</strong>")
+    assert results.items[0].post_content == "Other post"
+
+
 @pytest.mark.parametrize("search_mode", SearchMode)
 def test_postgresql_backend_search_threads_filters_inaccessible_threads(
     thread_factory,
@@ -354,8 +1330,6 @@ def test_postgresql_backend_search_threads_filters_inaccessible_threads(
 ):
     thread = thread_factory(default_category, title="Title ipsum dolor", is_hidden=True)
     post = thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum dolor")])
@@ -420,8 +1394,6 @@ def test_postgresql_backend_search_private_threads_filters_inaccessible_threads(
     thread = thread_factory(private_threads_category, title="Title ipsum dolor")
     post = thread.first_post
 
-    synchronize_thread(thread)
-
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum dolor")])
 
@@ -452,6 +1424,8 @@ def test_postgresql_backend_search_private_threads_filters_inaccessible_posts(
 
     synchronize_thread(thread)
 
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
     backend.index_threads([thread])
     backend.index_posts(
         [
@@ -461,8 +1435,6 @@ def test_postgresql_backend_search_private_threads_filters_inaccessible_posts(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("reply"),
@@ -488,8 +1460,6 @@ def test_postgresql_backend_search_threads_filters_by_category(
 
     other_thread = thread_factory(sibling_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts(
@@ -533,8 +1503,6 @@ def test_postgresql_backend_search_threads_filters_by_thread(
     other_thread = thread_factory(default_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
 
-    synchronize_thread(thread)
-
     backend.index_threads([thread, other_thread])
     backend.index_posts(
         [
@@ -574,7 +1542,8 @@ def test_postgresql_backend_search_private_threads_filters_by_thread(
     other_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts(
@@ -585,9 +1554,6 @@ def test_postgresql_backend_search_private_threads_filters_by_thread(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-    PrivateThreadMember.objects.create(thread=other_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -624,8 +1590,6 @@ def test_postgresql_backend_search_threads_filters_by_user(
         default_category, title="Title ipsum dolor", starter=other_user
     )
     other_user_post = other_user_thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread, user_thread, other_user_thread])
     backend.index_posts(
@@ -675,7 +1639,9 @@ def test_postgresql_backend_search_private_threads_filters_by_user(
     )
     other_user_post = other_user_thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=user_thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_user_thread, user=user)
 
     backend.index_threads([thread, user_thread, other_user_thread])
     backend.index_posts(
@@ -687,10 +1653,6 @@ def test_postgresql_backend_search_private_threads_filters_by_user(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-    PrivateThreadMember.objects.create(thread=user_thread, user=user)
-    PrivateThreadMember.objects.create(thread=other_user_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -721,8 +1683,6 @@ def test_postgresql_backend_search_threads_filters_after_date(
 
     other_thread = thread_factory(default_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts(
@@ -765,7 +1725,8 @@ def test_postgresql_backend_search_private_threads_filters_after_date(
     other_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts(
@@ -776,9 +1737,6 @@ def test_postgresql_backend_search_private_threads_filters_after_date(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-    PrivateThreadMember.objects.create(thread=other_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -809,8 +1767,6 @@ def test_postgresql_backend_search_threads_filters_before_date(
 
     other_thread = thread_factory(default_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts(
@@ -853,7 +1809,8 @@ def test_postgresql_backend_search_private_threads_filters_before_date(
     other_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
     other_post = other_thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
 
     backend.index_threads([thread, other_thread])
     backend.index_posts(
@@ -864,9 +1821,6 @@ def test_postgresql_backend_search_private_threads_filters_before_date(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-    PrivateThreadMember.objects.create(thread=other_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -902,8 +1856,6 @@ def test_postgresql_backend_search_threads_filters_between_dates(
 
     recent_thread = thread_factory(default_category, title="Title ipsum dolor")
     recent_post = recent_thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread, other_thread, recent_thread])
     backend.index_posts(
@@ -953,7 +1905,9 @@ def test_postgresql_backend_search_private_threads_filters_between_dates(
     recent_thread = thread_factory(private_threads_category, title="Title ipsum dolor")
     recent_post = recent_thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=other_thread, user=user)
+    PrivateThreadMember.objects.create(thread=recent_thread, user=user)
 
     backend.index_threads([thread, other_thread, recent_thread])
     backend.index_posts(
@@ -965,10 +1919,6 @@ def test_postgresql_backend_search_private_threads_filters_between_dates(
     )
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-    PrivateThreadMember.objects.create(thread=other_thread, user=user)
-    PrivateThreadMember.objects.create(thread=recent_thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -993,8 +1943,6 @@ def test_postgresql_backend_search_escapes_html_in_threads_search_results(
 ):
     thread = thread_factory(default_category, title="Title ipsum <b>dolor</b>")
     post = thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
@@ -1026,8 +1974,6 @@ def test_postgresql_backend_search_escapes_html_in_posts_search_results(
 ):
     thread = thread_factory(default_category, title="Title ipsum <b>dolor</b>")
     post = thread.first_post
-
-    synchronize_thread(thread)
 
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
@@ -1061,8 +2007,6 @@ def test_postgresql_backend_search_escapes_html_in_thread_titles_search_results(
     thread = thread_factory(default_category, title="Title ipsum <b>dolor</b>")
     post = thread.first_post
 
-    synchronize_thread(thread)
-
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
 
@@ -1095,14 +2039,12 @@ def test_postgresql_backend_search_escapes_html_in_private_threads_search_result
     thread = thread_factory(private_threads_category, title="Title ipsum <b>dolor</b>")
     post = thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -1129,14 +2071,12 @@ def test_postgresql_backend_search_escapes_html_in_private_threads_posts_search_
     thread = thread_factory(private_threads_category, title="Title ipsum <b>dolor</b>")
     post = thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
@@ -1164,14 +2104,12 @@ def test_postgresql_backend_search_escapes_html_in_private_threads_titles_search
     thread = thread_factory(private_threads_category, title="Title ipsum <b>dolor</b>")
     post = thread.first_post
 
-    synchronize_thread(thread)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     backend.index_threads([thread])
     backend.index_posts([(post, "Post ipsum <u>dolor</u>")])
 
     user_permissions = user_permissions_factory(user)
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     results = backend.search_private_threads(
         parse_search_query("ipsum"),
