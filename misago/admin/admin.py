@@ -5,6 +5,7 @@ from .attachments import views as attachments
 from .categories import views as categories
 from .groups import views as groups
 from .moderators import views as moderators
+from .searchlogs import views as searchlogs
 
 
 class MisagoAdminExtension:
@@ -38,6 +39,12 @@ class MisagoAdminExtension:
             name=pgettext_lazy("admin node", "File types"),
             parent="attachments",
             namespace="filetypes",
+        )
+        site.add_node(
+            name=pgettext_lazy("admin node", "Search logs"),
+            icon="fas fa-search",
+            after="attachments:index",
+            namespace="searchlogs",
         )
 
     def register_urlpatterns(self, urlpatterns):
@@ -113,4 +120,11 @@ class MisagoAdminExtension:
             "filetypes",
             "attachments",
             attachments.AttachmentsFiletypesList.as_view(),
+        )
+
+        urlpatterns.namespace("search-logs/", "searchlogs")
+        urlpatterns.patterns(
+            "searchlogs",
+            path("", searchlogs.SearchLogsList.as_view(), name="index"),
+            path("<int:page>/", searchlogs.SearchLogsList.as_view(), name="index"),
         )

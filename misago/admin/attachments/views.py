@@ -19,7 +19,7 @@ class AttachmentAdmin(generic.AdminBaseMixin):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related("uploader", "post", "post__thread", "post__category")
+        return qs.prefetch_related("uploader", "post", "post__thread", "post__category")
 
 
 class AttachmentsList(AttachmentAdmin, generic.ListView):

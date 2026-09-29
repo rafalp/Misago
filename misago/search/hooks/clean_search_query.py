@@ -11,7 +11,7 @@ class CleanSearchQueryHookAction(Protocol):
 
     # Arguments
 
-    ## `query: str`
+    ## `search_query: str`
 
     The search query string to clean.
 
@@ -38,7 +38,7 @@ class CleanSearchQueryHookAction(Protocol):
 
     def __call__(
         self,
-        query: str,
+        search_query: str,
         max_length: int,
         min_term_length: int,
         request: HttpRequest | None = None,
@@ -58,7 +58,7 @@ class CleanSearchQueryHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `query: str`
+    ## `search_query: str`
 
     The search query string to clean.
 
@@ -86,7 +86,7 @@ class CleanSearchQueryHookFilter(Protocol):
     def __call__(
         self,
         action: CleanSearchQueryHookAction,
-        query: str,
+        search_query: str,
         max_length: int,
         min_term_length: int,
         request: HttpRequest | None = None,
@@ -122,7 +122,7 @@ class CleanSearchQueryHook(
     @clean_search_query_hook.append_filter
     def clean_search_query_words(
         action,
-        query: str,
+        search_query: str,
         max_length: int,
         min_term_length: int,
         request: HttpRequest | None = None,
@@ -146,12 +146,14 @@ class CleanSearchQueryHook(
     def __call__(
         self,
         action: CleanSearchQueryHookAction,
-        query: str,
+        search_query: str,
         max_length: int,
         min_term_length: int,
         request: HttpRequest | None = None,
     ) -> str:
-        return super().__call__(action, query, max_length, min_term_length, request)
+        return super().__call__(
+            action, search_query, max_length, min_term_length, request
+        )
 
 
 clean_search_query_hook = CleanSearchQueryHook()

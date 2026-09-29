@@ -54,22 +54,22 @@ class SearchQueryNot:
 
 
 def parse_search_query(
-    query: str,
+    search_query: str,
 ) -> SearchQuery | None:
-    return parse_search_query_hook(_parse_search_query_action, query)
+    return parse_search_query_hook(_parse_search_query_action, search_query)
 
 
 def _parse_search_query_action(
-    query: str,
+    search_query: str,
 ) -> SearchQuery | None:
-    tokens = tokenize_search_query(query)
+    tokens = tokenize_search_query(search_query)
     if not tokens:
         return None
 
     return parse_search_query_token_range(tokens, 0, len(tokens))
 
 
-def tokenize_search_query(query: str) -> list[Token]:
+def tokenize_search_query(search_query: str) -> list[Token]:
     in_quote = False
     group = 0
     tokens = []
@@ -79,7 +79,7 @@ def tokenize_search_query(query: str) -> list[Token]:
     has_and = False
     has_or = False
 
-    for c in query:
+    for c in search_query:
         if c == "'":
             tokens.append((TokenType.QUOTE, None))
             in_quote = not in_quote
@@ -129,9 +129,9 @@ def tokenize_search_query(query: str) -> list[Token]:
     return tokens
 
 
-def normalize_quotes(query: str) -> str:
+def normalize_quotes(search_query: str) -> str:
     normalized_query: str = ""
-    for c in query:
+    for c in search_query:
         if c == '"' or 0x2018 <= ord(c) <= 0x201F:
             normalized_query += "'"
         else:

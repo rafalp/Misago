@@ -12,7 +12,7 @@ class ParseSearchQueryHookAction(Protocol):
 
     # Arguments
 
-    ## `query: str`
+    ## `search_query: str`
 
     A search query `str`.
 
@@ -21,7 +21,7 @@ class ParseSearchQueryHookAction(Protocol):
     A `SearchQuery` object, or `None` if the query couldn't be parsed.
     """
 
-    def __call__(self, query: str) -> Optional["SearchQuery"]: ...
+    def __call__(self, search_query: str) -> Optional["SearchQuery"]: ...
 
 
 class ParseSearchQueryHookFilter(Protocol):
@@ -37,7 +37,7 @@ class ParseSearchQueryHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `query: str`
+    ## `search_query: str`
 
     A search query `str`.
 
@@ -49,7 +49,7 @@ class ParseSearchQueryHookFilter(Protocol):
     def __call__(
         self,
         action: ParseSearchQueryHookAction,
-        query: str,
+        search_query: str,
     ) -> Optional["SearchQuery"]: ...
 
 
@@ -79,14 +79,14 @@ class ParseSearchQueryHook(
     _search_query_cache: dict[str, SearchQuery] = {}
 
     @parse_search_query_hook.append_filter
-    def cache_parsed_query(action, query: str) -> SearchQuery | None:
-        if len(query) > CACHED_QUERY_LEN:
-            return action(query)
+    def cache_parsed_query(action, search_query: str) -> SearchQuery | None:
+        if len(search_query) > CACHED_QUERY_LEN:
+            return action(search_query)
 
-        if query not in _search_query_cache:
-            _search_query_cache[query] = action(query)
+        if search_query not in _search_query_cache:
+            _search_query_cache[search_query] = action(search_query)
 
-        return _search_query_cache[query]
+        return _search_query_cache[search_query]
     ```
     """
 
@@ -95,9 +95,9 @@ class ParseSearchQueryHook(
     def __call__(
         self,
         action: ParseSearchQueryHookAction,
-        query: str,
+        search_query: str,
     ) -> Optional["SearchQuery"]:
-        return super().__call__(action, query)
+        return super().__call__(action, search_query)
 
 
 parse_search_query_hook = ParseSearchQueryHook()

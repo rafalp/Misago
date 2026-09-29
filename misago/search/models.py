@@ -2,9 +2,34 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
+from django.utils import timezone
 
 from ..categories.models import Category
 from ..threads.models import Post, Thread
+
+
+class SearchLog(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    ip_address = models.CharField(max_length=45, db_index=True)
+
+    search_query = models.TextField()
+
+    searched_at = models.DateTimeField(default=timezone.now, db_index=True)
+    is_public = models.BooleanField(default=True, db_index=False)
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=["searched_at"],
+                condition=models.Q(is_public=True),
+                name="search_log_public_searc_at_idx",
+            ),
+        ]
 
 
 class ThreadSearch(models.Model):
