@@ -19,7 +19,7 @@ from misago.search.hooks import validate_search_query_hook
 ```python
 def custom_validate_search_query_filter(
     action: ValidateSearchQueryHookAction,
-    query: 'SearchQuery',
+    search_query: 'SearchQuery',
     request: HttpRequest | None=None,
 ) -> None:
     ...
@@ -37,7 +37,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `query: SearchQuery`
+#### `search_query: SearchQuery`
 
 A `SearchQuery` object to validate.
 
@@ -51,7 +51,7 @@ The request object, or `None` if not provided.
 
 ```python
 def validate_search_query_action(
-    query: 'SearchQuery', request: HttpRequest | None=None
+    search_query: 'SearchQuery', request: HttpRequest | None=None
 ) -> None:
     ...
 ```
@@ -63,7 +63,7 @@ Raises `ValidationError` if query is not valid.
 
 ### Arguments
 
-#### `query: SearchQuery`
+#### `search_query: SearchQuery`
 
 A `SearchQuery` object to validate.
 
@@ -83,7 +83,7 @@ from misago.search.hooks import validate_search_query_hook
 from misago.search.query import SearchQuery
 
 @validate_search_query_hook.append_filter
-def validate_search_query_keywords(action, query: SearchQuery):
+def validate_search_query_keywords(action, search_query: SearchQuery):
     action(query)
 
     if count_keywords(query) > 5:

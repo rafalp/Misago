@@ -19,7 +19,7 @@ from misago.search.hooks import clean_search_query_hook
 ```python
 def custom_clean_search_query_filter(
     action: CleanSearchQueryHookAction,
-    query: str,
+    search_query: str,
     max_length: int,
     min_term_length: int,
     request: HttpRequest | None=None,
@@ -39,7 +39,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `query: str`
+#### `search_query: str`
 
 The search query string to clean.
 
@@ -73,7 +73,7 @@ A `str` with the cleaned search query.
 
 ```python
 def clean_search_query_action(
-    query: str,
+    search_query: str,
     max_length: int,
     min_term_length: int,
     request: HttpRequest | None=None,
@@ -86,7 +86,7 @@ Misago function used to validate and clean a search query string.
 
 ### Arguments
 
-#### `query: str`
+#### `search_query: str`
 
 The search query string to clean.
 
@@ -132,7 +132,7 @@ COMMON_WORDS = (
 @clean_search_query_hook.append_filter
 def clean_search_query_words(
     action,
-    query: str,
+    search_query: str,
     max_length: int,
     min_term_length: int,
     request: HttpRequest | None = None,
