@@ -111,6 +111,12 @@ class SearchService:
     def bulk_index_posts(self, posts: Iterable[tuple[Post, str]]):
         return self.backend.index_posts(posts)
 
+    def update_thread_first_post(self, thread: Thread):
+        return self.backend.update_thread_first_post(thread)
+
+    def update_thread_title(self, thread: Thread):
+        return self.backend.update_thread_title(thread)
+
     def update_thread_members(self, thread: Thread, members: Iterable[int]):
         return self.backend.update_thread_members(thread, members)
 
