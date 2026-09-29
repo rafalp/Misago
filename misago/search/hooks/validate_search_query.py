@@ -16,7 +16,7 @@ class ValidateSearchQueryHookAction(Protocol):
 
     # Arguments
 
-    ## `query: SearchQuery`
+    ## `search_query: SearchQuery`
 
     A `SearchQuery` object to validate.
 
@@ -26,7 +26,7 @@ class ValidateSearchQueryHookAction(Protocol):
     """
 
     def __call__(
-        self, query: "SearchQuery", request: HttpRequest | None = None
+        self, search_query: "SearchQuery", request: HttpRequest | None = None
     ) -> None: ...
 
 
@@ -43,7 +43,7 @@ class ValidateSearchQueryHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `query: SearchQuery`
+    ## `search_query: SearchQuery`
 
     A `SearchQuery` object to validate.
 
@@ -55,7 +55,7 @@ class ValidateSearchQueryHookFilter(Protocol):
     def __call__(
         self,
         action: ValidateSearchQueryHookAction,
-        query: "SearchQuery",
+        search_query: "SearchQuery",
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -83,7 +83,7 @@ class ValidateSearchQueryHook(
     from misago.search.query import SearchQuery
 
     @validate_search_query_hook.append_filter
-    def validate_search_query_keywords(action, query: SearchQuery):
+    def validate_search_query_keywords(action, search_query: SearchQuery):
         action(query)
 
         if count_keywords(query) > 5:
@@ -102,10 +102,10 @@ class ValidateSearchQueryHook(
     def __call__(
         self,
         action: ValidateSearchQueryHookAction,
-        query: "SearchQuery",
+        search_query: "SearchQuery",
         request: HttpRequest | None = None,
     ) -> None:
-        super().__call__(action, query, request)
+        super().__call__(action, search_query, request)
 
 
 validate_search_query_hook = ValidateSearchQueryHook()

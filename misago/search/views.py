@@ -23,6 +23,7 @@ from .forms import (
     ThreadsSearchForm,
     UsersSearchForm,
 )
+from .logging import log_search
 from .service import search
 
 
@@ -107,6 +108,8 @@ class ThreadsSearchView(BaseSearchView):
     template_name = "misago/search/threads/index.html"
     header_template_name = "misago/search/threads/header.html"
 
+    is_search_public: bool = True
+
     def get(self, request: HttpRequest) -> HttpResponse:
         self.check_permission()
         context = self.get_context_data()
@@ -119,6 +122,7 @@ class ThreadsSearchView(BaseSearchView):
         form = self.get_search_form()
 
         if form.is_valid():
+            self.log_search(form.cleaned_data["query"])
             results = self.get_results_data(form)
         else:
             results = None
@@ -143,7 +147,6 @@ class ThreadsSearchView(BaseSearchView):
 
         filters = form.cleaned_data
 
-        query = filters["query"]
         mode = filters["mode"]
         sort = filters["sort"]
 
@@ -195,14 +198,23 @@ class ThreadsSearchView(BaseSearchView):
             if category.id in searchable_categories
         ]
 
+    def log_search(self, search_query: str):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+
+        log_search(user, self.request.user_ip, search_query, self.is_search_public)
+
 
 class PrivateThreadsSearchView(ThreadsSearchView):
+    is_search_public: bool = False
+
     def get_results_data(self, form: ThreadsSearchForm) -> dict:
         request = self.request
 
         filters = form.cleaned_data
 
-        query = filters["query"]
         mode = filters["mode"]
         sort = filters["sort"]
 

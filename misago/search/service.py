@@ -43,7 +43,7 @@ class SearchService:
 
     def search_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         permissions: UserPermissionsProxy,
         categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
@@ -57,7 +57,7 @@ class SearchService:
         **kwargs,
     ) -> ThreadsSearchResult:
         return self.backend.search_threads(
-            query,
+            search_query,
             permissions,
             categories,
             threads=threads,
@@ -73,7 +73,7 @@ class SearchService:
 
     def search_private_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         permissions: UserPermissionsProxy,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
@@ -86,7 +86,7 @@ class SearchService:
         **kwargs,
     ) -> ThreadsSearchResult:
         return self.backend.search_private_threads(
-            query,
+            search_query,
             permissions,
             threads=threads,
             users=users,

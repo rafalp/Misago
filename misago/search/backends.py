@@ -77,7 +77,7 @@ class SearchBackend(ABC):
     @abstractmethod
     def search_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         permissions: UserPermissionsProxy,
         categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
@@ -95,7 +95,7 @@ class SearchBackend(ABC):
     @abstractmethod
     def search_private_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         permissions: UserPermissionsProxy,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
@@ -229,7 +229,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     def search_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         permissions: UserPermissionsProxy,
         categories: list[Category | CategoryProxy],
         threads: list[Thread] | None = None,
@@ -258,19 +258,23 @@ class PostgreSQLSearchBackend(SearchBackend):
         )
 
         if mode == SearchMode.THREAD_TITLES:
-            return self._search_thread_titles(query, thread_ids, **common_kwargs)
+            return self._search_thread_titles(search_query, thread_ids, **common_kwargs)
 
         post_ids = filter_threads_posts_queryset(permissions, categories).values("id")
 
         if mode == SearchMode.THREADS:
-            return self._search_threads(query, thread_ids, post_ids, **common_kwargs)
+            return self._search_threads(
+                search_query, thread_ids, post_ids, **common_kwargs
+            )
 
         if mode == SearchMode.POSTS:
-            return self._search_posts(query, thread_ids, post_ids, **common_kwargs)
+            return self._search_posts(
+                search_query, thread_ids, post_ids, **common_kwargs
+            )
 
     def search_private_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         permissions: UserPermissionsProxy,
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
@@ -302,21 +306,25 @@ class PostgreSQLSearchBackend(SearchBackend):
         )
 
         if mode == SearchMode.THREAD_TITLES:
-            return self._search_thread_titles(query, thread_ids, **common_kwargs)
+            return self._search_thread_titles(search_query, thread_ids, **common_kwargs)
 
         post_ids = filter_private_threads_posts_queryset(
             permissions, private_threads.post_set
         ).values("id")
 
         if mode == SearchMode.THREADS:
-            return self._search_threads(query, thread_ids, post_ids, **common_kwargs)
+            return self._search_threads(
+                search_query, thread_ids, post_ids, **common_kwargs
+            )
 
         if mode == SearchMode.POSTS:
-            return self._search_posts(query, thread_ids, post_ids, **common_kwargs)
+            return self._search_posts(
+                search_query, thread_ids, post_ids, **common_kwargs
+            )
 
     def _search_thread_titles(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         thread_ids: list[int] | QuerySet,
         users: list["User"] | None = None,
         after: datetime | None = None,
@@ -326,15 +334,13 @@ class PostgreSQLSearchBackend(SearchBackend):
         limit: int = 50,
         **kwargs,
     ):
-        search_query = self.build_pg_search_query(query)
-        rank_query = self.build_pg_rank_query(query)
-
+        rank_query = self.build_pg_rank_query(search_query)
         headline_markers = self.get_headline_markers()
 
         # Build search queryset
         queryset = ThreadSearch.objects.filter(
             thread_id__in=thread_ids,
-            search_vector=search_query,
+            search_vector=self.build_pg_search_query(search_query),
         ).annotate(
             headline=self.get_title_headline(rank_query, headline_markers),
         )
@@ -403,7 +409,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     def _search_threads(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         thread_ids: list[int] | QuerySet,
         post_ids: QuerySet,
         users: list["User"] | None = None,
@@ -414,13 +420,11 @@ class PostgreSQLSearchBackend(SearchBackend):
         limit: int = 50,
         **kwargs,
     ) -> ThreadsSearchResult:
-        search_query = self.build_pg_search_query(query)
-        rank_query = self.build_pg_rank_query(query)
-
+        rank_query = self.build_pg_rank_query(search_query)
         headline_markers = self.get_headline_markers()
 
         queryset = PostSearch.objects.filter(
-            thread_search_vector=search_query,
+            thread_search_vector=self.build_pg_search_query(search_query),
             post_id__in=post_ids,
         )
 
@@ -510,7 +514,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
     def _search_posts(
         self,
-        query: SearchQuery,
+        search_query: SearchQuery,
         thread_ids: list[int] | QuerySet,
         post_ids: QuerySet,
         users: list["User"] | None = None,
@@ -521,9 +525,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         limit: int = 50,
         **kwargs,
     ) -> ThreadsSearchResult:
-        search_query = self.build_pg_search_query(query)
-        rank_query = self.build_pg_rank_query(query)
-
+        rank_query = self.build_pg_rank_query(search_query)
         headline_markers = self.get_headline_markers()
 
         queryset = PostSearch.objects.filter(
@@ -538,7 +540,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             queryset = queryset.filter(posted_at__lte=before)
 
         queryset = queryset.filter(
-            post_search_vector=search_query,
+            post_search_vector=self.build_pg_search_query(search_query),
         ).annotate(
             headline=self.get_content_headline(rank_query, headline_markers),
         )
@@ -589,54 +591,58 @@ class PostgreSQLSearchBackend(SearchBackend):
             time=total_time,
         )
 
-    def build_pg_search_query(self, query: SearchQuery) -> PgSearchQuery:
-        if isinstance(query, SearchQueryKeyword):
+    def build_pg_search_query(self, search_query: SearchQuery) -> PgSearchQuery:
+        if isinstance(search_query, SearchQueryKeyword):
             return PgSearchQuery(
-                query.value, config=self.search_config, search_type="plain"
+                search_query.value, config=self.search_config, search_type="plain"
             )
 
-        if isinstance(query, SearchQueryPhrase):
+        if isinstance(search_query, SearchQueryPhrase):
             return PgSearchQuery(
-                query.value, config=self.search_config, search_type="phrase"
+                search_query.value, config=self.search_config, search_type="phrase"
             )
 
-        if isinstance(query, SearchQueryNot):
-            return ~self.build_pg_search_query(query.value)
+        if isinstance(search_query, SearchQueryNot):
+            return ~self.build_pg_search_query(search_query.value)
 
-        if isinstance(query, SearchQueryAnd):
+        if isinstance(search_query, SearchQueryAnd):
             return reduce(
                 lambda result, value: result & value,
-                map(self.build_pg_search_query, query.value),
+                map(self.build_pg_search_query, search_query.value),
             )
 
-        if isinstance(query, SearchQueryOr):
+        if isinstance(search_query, SearchQueryOr):
             return reduce(
                 lambda result, value: result | value,
-                map(self.build_pg_search_query, query.value),
+                map(self.build_pg_search_query, search_query.value),
             )
 
-    def build_pg_rank_query(self, query: SearchQuery) -> PgSearchQuery | None:
-        if isinstance(query, SearchQueryKeyword):
+    def build_pg_rank_query(self, search_query: SearchQuery) -> PgSearchQuery | None:
+        if isinstance(search_query, SearchQueryKeyword):
             return PgSearchQuery(
-                query.value, config=self.search_config, search_type="plain"
+                search_query.value, config=self.search_config, search_type="plain"
             )
 
-        if isinstance(query, SearchQueryPhrase):
+        if isinstance(search_query, SearchQueryPhrase):
             return PgSearchQuery(
-                query.value, config=self.search_config, search_type="phrase"
+                search_query.value, config=self.search_config, search_type="phrase"
             )
 
-        if isinstance(query, SearchQueryNot):
+        if isinstance(search_query, SearchQueryNot):
             return None
 
-        if isinstance(query, SearchQueryAnd):
-            items = list(filter(bool, map(self.build_pg_rank_query, query.value)))
+        if isinstance(search_query, SearchQueryAnd):
+            items = list(
+                filter(bool, map(self.build_pg_rank_query, search_query.value))
+            )
             if items:
                 return reduce(lambda result, value: result & value, items)
             return None
 
-        if isinstance(query, SearchQueryOr):
-            items = list(filter(bool, map(self.build_pg_rank_query, query.value)))
+        if isinstance(search_query, SearchQueryOr):
+            items = list(
+                filter(bool, map(self.build_pg_rank_query, search_query.value))
+            )
             if items:
                 return reduce(lambda result, value: result | value, items)
             return None
@@ -656,35 +662,38 @@ class PostgreSQLSearchBackend(SearchBackend):
         )
 
     def get_thread_headlines(
-        self, query: PgSearchQuery, thread_ids: Iterable[int], markers: tuple[str, str]
+        self,
+        rank_query: PgSearchQuery,
+        thread_ids: Iterable[int],
+        markers: tuple[str, str],
     ) -> dict[int, str]:
         queryset = ThreadSearch.objects.filter(thread_id__in=thread_ids).annotate(
-            headline=self.get_title_headline(query, markers),
+            headline=self.get_title_headline(rank_query, markers),
         )
 
         return {result.thread_id: result.headline for result in queryset}
 
     def get_title_headline(
-        self, query: PgSearchQuery, markers: tuple[str, str]
+        self, rank_query: PgSearchQuery, markers: tuple[str, str]
     ) -> SearchHeadline:
         start_sel, stop_sel = markers
 
         return SearchHeadline(
             "title",
-            query,
+            rank_query,
             start_sel=start_sel,
             stop_sel=stop_sel,
             highlight_all=True,
         )
 
     def get_content_headline(
-        self, query: PgSearchQuery, markers: tuple[str, str]
+        self, rank_query: PgSearchQuery, markers: tuple[str, str]
     ) -> SearchHeadline:
         start_sel, stop_sel = markers
 
         return SearchHeadline(
             "content",
-            query,
+            rank_query,
             start_sel=start_sel,
             stop_sel=stop_sel,
             max_words=self.headline_max_words,
