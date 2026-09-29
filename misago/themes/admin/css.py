@@ -61,7 +61,8 @@ def rebuild_css(media_map, css):
     if css.build_file:
         css.build_file.delete(save=False)
 
-    css_source = css.source_file.read().decode("utf-8")
+    with css.source_file.open() as sf:
+        css_source = sf.read().decode("utf-8")
     build_source = change_css_source(media_map, css_source).encode()
 
     build_file_name = css.name

@@ -4,6 +4,7 @@ from django.urls import reverse
 from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message
 from ... import THEME_CACHE
+from ...models import Css
 
 
 @pytest.fixture
@@ -44,7 +45,9 @@ def test_created_source_file_contains_css_entered_by_user(
 ):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    assert css.source_file.read().decode("utf-8") == data["source"]
+    with css.source_file.open() as sf:
+        css_source_content = sf.read().decode("utf-8")
+    assert css_source_content == data["source"]
 
 
 def test_source_file_is_created_in_theme_directory(
@@ -52,7 +55,7 @@ def test_source_file_is_created_in_theme_directory(
 ):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    assert theme.dirname in str(css.source_file)
+    assert theme.dirname in css.source_file.name
 
 
 def test_created_source_file_name_starts_with_asset_name(
@@ -60,21 +63,21 @@ def test_created_source_file_name_starts_with_asset_name(
 ):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    source_filename = str(css.source_file).split("/")[-1]
+    source_filename = css.source_file.name.split("/")[-1]
     assert source_filename.startswith("test.")
 
 
 def test_created_source_file_has_css_extension(theme, admin_client, create_link, data):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    source_filename = str(css.source_file).split("/")[-1]
+    source_filename = css.source_file.name.split("/")[-1]
     assert source_filename.endswith(".css")
 
 
 def test_created_source_file_is_hashed(theme, admin_client, create_link, data):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    source_filename = str(css.source_file).split("/")[-1]
+    source_filename = css.source_file.name.split("/")[-1]
     assert ".%s." % css.source_hash in source_filename
 
 
@@ -207,7 +210,9 @@ def test_css_edition_form_is_displayed(admin_client, edit_link, css):
 
 def test_css_edition_form_contains_source_file_contents(admin_client, edit_link, css):
     response = admin_client.get(edit_link)
-    assert_contains(response, css.source_file.read().decode("utf-8"))
+    with css.source_file.open() as sf:
+        css_source_content = sf.read().decode("utf-8")
+    assert_contains(response, css_source_content)
 
 
 def test_css_name_can_be_changed(admin_client, edit_link, css, data):
@@ -225,7 +230,7 @@ def test_css_name_change_also_changes_source_file_name(
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
-    assert "new-name" in str(css.source_file)
+    assert "new-name" in css.source_file.name
 
 
 def test_css_source_can_be_changed(admin_client, edit_link, css, data):
@@ -233,7 +238,9 @@ def test_css_source_can_be_changed(admin_client, edit_link, css, data):
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
-    assert css.source_file.read().decode("utf-8") == data["source"]
+    with css.source_file.open() as sf:
+        css_source_content = sf.read().decode("utf-8")
+    assert css_source_content == data["source"]
 
 
 def test_changing_css_source_also_changes_source_hash(
@@ -255,14 +262,16 @@ def test_changing_css_source_also_changes_hash_in_filename(
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
-    assert original_hash not in str(css.source_file)
-    assert css.source_hash in str(css.source_file)
+    assert original_hash not in css.source_file.name
+    assert css.source_hash in css.source_file.name
 
 
 def test_hash_stays_same_if_source_is_not_changed(admin_client, edit_link, css, data):
     original_hash = css.source_hash
     data["name"] = "changed.css"
-    data["source"] = css.source_file.read().decode("utf-8")
+    with css.source_file.open() as sf:
+        css_source_content = sf.read().decode("utf-8")
+    data["source"] = css_source_content
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
@@ -274,11 +283,13 @@ def test_file_is_not_updated_if_form_data_has_no_changes(
 ):
     original_source_file = str(css.source_file)
     data["name"] = css.name
-    data["source"] = css.source_file.read().decode("utf-8")
+    with css.source_file.open() as sf:
+        css_source_content = sf.read().decode("utf-8")
+    data["source"] = css_source_content
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
-    assert original_source_file == str(css.source_file)
+    assert original_source_file == css.source_file.name
 
 
 def test_adding_image_url_to_edited_file_sets_rebuilding_flag(
