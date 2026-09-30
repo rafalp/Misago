@@ -1,9 +1,12 @@
 """Misago's default Django Project settings."""
 
+from celery.schedules import crontab
+
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
     "MISAGO_ATTACHMENTS_SERVER",
+    "MISAGO_CELERY_BEAT_SCHEDULE",
     "MISAGO_DEFAULT_OG_IMAGE_HEIGHT",
     "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
     "MISAGO_DEFAULT_OG_IMAGE",
@@ -14,10 +17,10 @@ __all__ = [
     "MISAGO_POST_ATTACHMENTS_LIMIT",
     "MISAGO_POST_LAST_LIKES_LIMIT",
     "MISAGO_POST_MENTIONS_LIMIT",
-    "MISAGO_SEARCH",
     "MISAGO_PYGMENTS_LANGUAGES",
     "MISAGO_PYGMENTS_STYLE",
     "MISAGO_QUOTED_POSTS_LIMIT",
+    "MISAGO_SEARCH",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -155,6 +158,14 @@ MISAGO_MIDDLEWARE = [
     "misago.admin.middleware.AdminAuthMiddleware",
     "misago.middleware.privatethreads.sync_user_unread_private_threads",
 ]
+
+MISAGO_CELERY_BEAT_SCHEDULE = {
+    "clear-old-search-logs": {
+        "task": "misago.search.tasks.clear_old_search_logs",
+        "schedule": crontab(hour=0, minute=0),
+    },
+}
+
 
 MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_redirect_response"
 
