@@ -107,11 +107,11 @@ class MisagoAdminExtension:
         urlpatterns.namespace("attachments/", "attachments")
         urlpatterns.patterns(
             "attachments",
-            path("", attachments.AttachmentsList.as_view(), name="index"),
-            path("<int:page>/", attachments.AttachmentsList.as_view(), name="index"),
+            path("", attachments.ListView.as_view(), name="index"),
+            path("<int:page>/", attachments.ListView.as_view(), name="index"),
             path(
                 "delete/<int:pk>/",
-                attachments.DeleteAttachment.as_view(),
+                attachments.DeleteView.as_view(),
                 name="delete",
             ),
         )
@@ -119,12 +119,13 @@ class MisagoAdminExtension:
             "filetypes/",
             "filetypes",
             "attachments",
-            attachments.AttachmentsFiletypesList.as_view(),
+            attachments.FiletypesListView.as_view(),
         )
 
         urlpatterns.namespace("search-logs/", "searchlogs")
         urlpatterns.patterns(
             "searchlogs",
-            path("", searchlogs.SearchLogsList.as_view(), name="index"),
-            path("<int:page>/", searchlogs.SearchLogsList.as_view(), name="index"),
+            path("", searchlogs.ListView.as_view(), name="index"),
+            path("<int:page>", searchlogs.ListView.as_view(), name="index"),
+            path("download/", searchlogs.DownloadView.as_view(), name="download"),
         )

@@ -55,9 +55,6 @@ class ListView(AdminView):
 
         cls.extra_actions.append({"name": name, "link": link})
 
-    def get_queryset(self):
-        return self.get_model().objects.all()
-
     def dispatch(self, request, *args, **kwargs):
         mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
