@@ -52,9 +52,9 @@
 {% block blankslate %}
 <td colspan="4">
   {% if active_filters %}
-    {% translate "No search logs matching criteria exist." context "admin search logs" %}
+    {% translate "No search logs found" context "admin search logs" %}
   {% else %}
-    {% translate "No search logs exist." context "admin search logs" %}
+    {% translate "No search logs exist" context "admin search logs" %}
   {% endif %}
 </td>
 {% endblock blankslate %}
