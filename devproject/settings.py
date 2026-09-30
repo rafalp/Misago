@@ -281,6 +281,10 @@ CELERY_BROKER_URL = "redis://redis:6379/0"
 
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 10
 
+# Use Celery Beat for scheduled maintenance tasks
+
+CELERY_BEAT_SCHEDULE = MISAGO_CELERY_BEAT_SCHEDULE
+
 
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
