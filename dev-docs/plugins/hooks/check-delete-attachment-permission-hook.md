@@ -1,6 +1,6 @@
 # `check_delete_attachment_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to delete an attachment. It raises `PermissionDenied` if they are not allowed to delete it.
+This hook wraps a Misago function used to check if a user has permission to delete an attachment. Raises `PermissionDenied` if they don't.
 
 
 ## Location

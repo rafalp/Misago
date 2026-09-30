@@ -87,8 +87,8 @@ class FilterPrivateThreadEventsQuerysetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses set filters on private
-    thread's events queryset to limit it only to events that the user can see.
+    This hook wraps a Misago function used to set filters on private thread's
+    events queryset to limit it only to events that the user can see.
 
     # Example
 

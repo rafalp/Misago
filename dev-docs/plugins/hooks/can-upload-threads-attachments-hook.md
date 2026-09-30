@@ -1,6 +1,6 @@
 # `can_upload_threads_attachments_hook`
 
-This hook wraps a standard Misago function that checks whether a user has permission to upload attachments in a category.
+This hook wraps a Misago function used to check if a user has permission to upload attachments in a category.
 
 
 ## Location

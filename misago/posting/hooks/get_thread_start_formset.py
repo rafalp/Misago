@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetThreadStartFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ThreadStartFormset`
-    instance with forms for starting a new thread.
+    Misago function used to create a new `ThreadStartFormset` instance with forms
+    for starting a new thread.
 
     # Arguments
 
@@ -77,8 +77,8 @@ class GetThreadStartFormsetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `ThreadStartFormset` instance with forms for starting a new thread.
+    This hook wraps a Misago function used to create a new `ThreadStartFormset`
+    instance with forms for starting a new thread.
 
     # Example
 

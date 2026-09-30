@@ -88,8 +88,8 @@ class GetPrivateThreadReplyStateHook(
     ]
 ):
     """
-    This hook wraps the standard function Misago uses to create a new
-    `PrivateThreadReplyState` instance for the private thread reply view.
+    This hook wraps a Misago function used to create a new `PrivateThreadReplyState`
+    instance for the private thread reply view.
 
     # Example
 

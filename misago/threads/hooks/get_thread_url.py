@@ -77,8 +77,8 @@ class GetThreadUrlHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago useds to retrieve
-    a thread URL based on its category type.
+    This hook wraps a Misago function used to retrieve a thread URL based on its
+    category type.
 
     # Example
 

@@ -88,9 +88,9 @@ class GetThreadsQueriesHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the names of
-    predefined database `WHERE` clauses, represented as `Q` object instances,
-    for use by other functions to retrieve threads from given categories.
+    This hook wraps a Misago function used to get the names of predefined
+    database `WHERE` clauses, represented as `Q` object instances, for use by
+    other functions to retrieve threads from given categories.
 
     # Example
 

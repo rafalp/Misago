@@ -77,8 +77,8 @@ class FilterPrivateThreadsPostsQuerysetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to filter a queryset
-    to retrieve private threads posts the user can see.
+    This hook wraps a Misago function used to filter a queryset to retrieve
+    private threads posts the user can see.
 
     This function is usually combined with the `filter_private_threads_queryset`
     to retrieve all posts the user can see from visible threads, e.g. for search

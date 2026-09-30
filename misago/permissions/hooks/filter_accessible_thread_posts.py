@@ -99,9 +99,9 @@ class FilterAccessibleThreadPostsHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to set filters on a queryset
-    of posts from   a thread of any type (regular, private, or plugin-specified),
-    limiting it to only the posts that the user can see.
+    This hook wraps a Misago function used to set filters on a queryset of posts
+    from a thread of any type (regular, private, or plugin-specified), limiting
+    it to only the posts that the user can see.
 
     # Example
 

@@ -1,6 +1,6 @@
 # `parse_search_query_hook`
 
-This hook wraps a standard Misago function used to parse a search query for the forum search.
+This hook wraps a Misago function used to parse a search query for the forum search.
 
 It returns a 'SearchQuery' object that search backends can translate to a backend-specific search query.
 

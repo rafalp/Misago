@@ -1,6 +1,6 @@
 # `check_see_category_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has a permission to see a category. Raises Django's `Http404` error if they don't.
+This hook wraps a Misago function used to check if a user has permission to see a category. Raises Django's `Http404` error if they don't.
 
 
 ## Location

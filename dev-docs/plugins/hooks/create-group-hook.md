@@ -1,6 +1,6 @@
 # `create_group_hook`
 
-This hook wraps the standard function that Misago uses to create a new user group.
+This hook wraps a Misago function used to create a new user group.
 
 Misago group creation logic is a thin wrapper for `Group.objects.create()` that updates the `kwargs` to include a valid `slug` generated from the `name` and next valid `ordering` position.
 

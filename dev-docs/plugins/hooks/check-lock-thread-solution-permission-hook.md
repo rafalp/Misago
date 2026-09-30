@@ -1,6 +1,6 @@
 # `check_lock_thread_solution_permission_hook`
 
-This hook wraps the standard Misago function used to check whether the user has permission to lock the thread’s selected solution. Raises `PermissionDenied` with an error message if they do not.
+This hook wraps a Misago function used to check if a user has permission to lock the thread’s selected solution. Raises `PermissionDenied` with an error message if they do not.
 
 
 ## Location

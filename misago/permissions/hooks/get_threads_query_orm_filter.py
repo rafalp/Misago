@@ -83,8 +83,8 @@ class GetThreadsQueryORMFilterHook(
     FilterHook[GetThreadsQueryORMFilterHookAction, GetThreadsQueryORMFilterHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to get Django's `Q`
-    object instance to retrieve threads using a specified query.
+    This hook wraps a Misago function used to get Django's `Q` object instance
+    to retrieve threads using a specified query.
 
     # Example
 

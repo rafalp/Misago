@@ -1,6 +1,6 @@
 # `check_search_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to search the site. Raises Django's `PermissionDenied` with an error message if they don't.
+This hook wraps a Misago function used to check if a user has permission to search the site. Raises Django's `PermissionDenied` with an error message if they don't.
 
 
 ## Location
