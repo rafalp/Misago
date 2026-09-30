@@ -2,6 +2,19 @@
 {% load i18n misago_admin_form misago_capture %}
 
 
+{% block page-actions %}
+<div class="col-auto page-action">
+  <form action="{% url 'misago:admin:searchlogs:download' %}" method="post" data-delete-confirmation="true">
+    {% csrf_token %}
+    <button class="btn btn-primary btn-sm">
+      <span class="fa fa-download"></span>
+      {% translate "Download CSV" context "admin search logs" %}
+    </button>
+  </form>
+</div>
+{% endblock %}
+
+
 {% block table-header %}
 <th>{% translate "Search" context "admin search logs list" %}</th>
 <th style="width: 200px;">{% translate "Searched" context "admin search logs list" %}</th>
