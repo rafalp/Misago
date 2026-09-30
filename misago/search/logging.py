@@ -17,6 +17,11 @@ def log_search(
     )
 
 
+def delete_all_search_logs() -> int:
+    deleted, _ = SearchLog.objects.all().delete()
+    return deleted
+
+
 def delete_old_search_logs(retention_days: int) -> int:
     deleted, _ = SearchLog.objects.filter(
         searched_at__lte=timezone.now() - timedelta(days=retention_days),
