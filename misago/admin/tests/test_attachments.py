@@ -14,7 +14,7 @@ def test_attachments_link_is_registered_in_admin_nav(admin_client):
 
 def test_attachments_list_renders_empty(admin_client):
     response = admin_client.get(attachments_url + "?redirected=1")
-    assert_contains(response, "No attachments exist.")
+    assert_contains(response, "No attachments exist")
 
 
 def test_attachments_list_renders_broken_text_attachment(
