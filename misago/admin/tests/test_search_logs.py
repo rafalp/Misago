@@ -1,4 +1,9 @@
+import csv
+import io
+from unittest.mock import ANY
+
 import pytest
+from django.http import StreamingHttpResponse
 from django.urls import reverse
 
 from ...search.logging import log_search
@@ -106,3 +111,51 @@ def test_search_logs_list_search_ip_address_excludes_private_log(
 
     response = admin_client.get(search_logs_link + "&ip_address=127.*")
     assert_contains(response, "No search logs found")
+
+
+def read_streaming_response(response: StreamingHttpResponse) -> list[dict]:
+    csv_string = (b"".join(response.streaming_content)).decode()
+    return list(csv.DictReader(io.StringIO(csv_string)))
+
+
+def test_search_logs_download_returns_empty_csv(admin_client):
+    response = admin_client.post(reverse("misago:admin:searchlogs:download"))
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "text/csv"
+
+    csv_data = read_streaming_response(response)
+    assert len(csv_data) == 0
+
+
+def test_search_logs_download_returns_csv_with_rows(admin_client, user):
+    log_search(user, "127.0.0.1", "lorem", is_public=True)
+    log_search(None, "125.0.0.1", "ipsum")
+    log_search(None, "120.0.0.1", "dolor", is_public=True)
+
+    response = admin_client.post(reverse("misago:admin:searchlogs:download"))
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "text/csv"
+
+    csv_data = read_streaming_response(response)
+    assert len(csv_data) == 2
+    assert csv_data == [
+        {
+            "Search": "lorem",
+            "Searched": ANY,
+            "User": user.username,
+            "IP address": "127.0.0.1",
+        },
+        {
+            "Search": "dolor",
+            "Searched": ANY,
+            "User": "",
+            "IP address": "120.0.0.1",
+        },
+    ]
+
+
+def test_search_logs_download_raises_error_for_get_request(admin_client):
+    response = admin_client.get(reverse("misago:admin:searchlogs:download"))
+    return response.status_code == 401
