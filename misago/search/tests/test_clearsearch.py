@@ -4,12 +4,12 @@ import pytest
 from django.core import management
 
 from ..exceptions import SearchBackendError
-from ..management.commands import clearsearchindex
+from ..management.commands import clearsearch
 from ..models import PostSearch, ThreadSearch
 
 
 def call_command():
-    command = clearsearchindex.Command()
+    command = clearsearch.Command()
 
     stdout = StringIO()
     stderr = StringIO()
@@ -21,7 +21,7 @@ def call_command():
     )
 
 
-def test_clearsearchindex_command_clears_search_index(thread, post):
+def test_clearsearch_command_clears_search_index(thread, post):
     thread_search = ThreadSearch.objects.create(
         category_id=thread.category_id,
         thread_id=thread.id,
@@ -41,11 +41,7 @@ def test_clearsearchindex_command_clears_search_index(thread, post):
 
     stdout, stderr = call_command()
 
-    assert stdout == (
-        'Cleared the search index using the "PostgreSQL full-text search" backend.',
-        "",
-        "Time: 0.00s",
-    )
+    assert stdout == ('Cleared data from "PostgreSQL full-text search" in 0.00s.',)
     assert not stderr
 
     with pytest.raises(ThreadSearch.DoesNotExist):
@@ -55,7 +51,7 @@ def test_clearsearchindex_command_clears_search_index(thread, post):
         post_search.refresh_from_db()
 
 
-def test_clearsearchindex_command_prints_backend_error(mocker):
+def test_clearsearch_command_prints_backend_error(mocker):
     mocker.patch(
         "misago.search.service.search.backend.clear",
         side_effect=SearchBackendError("This backend is not available."),
@@ -64,7 +60,7 @@ def test_clearsearchindex_command_prints_backend_error(mocker):
     stdout, stderr = call_command()
 
     assert stderr == (
-        'Error clearing the search index using the "PostgreSQL full-text search" backend:',
+        'Error clearing search using "PostgreSQL full-text search":',
         "",
         "This backend is not available.",
     )
