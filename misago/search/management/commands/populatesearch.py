@@ -12,7 +12,7 @@ from ...service import SearchService, search
 
 
 class Command(BaseCommand):
-    help = "Builds search index"
+    help = "Populates search with data."
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -25,27 +25,23 @@ class Command(BaseCommand):
         private_threads = Category.objects.private_threads()
         post_count = Post.objects.count()
 
-        self.stdout.write(
-            "Rebuilding the search index using the "
-            f'"{search.backend.name}" backend.'
-            "\n\n"
-        )
+        self.stdout.write(f'Populating "{search.backend.name}"...\n\n')
 
         if options["no_clear"]:
-            self.stdout.write("Keeping the existing search index.\n\n")
+            self.stdout.write("Keeping existing search data.\n\n")
         else:
             try:
                 start_time = time()
                 search.clear()
             except SearchBackendError as exc:
-                self.stderr.write(f"\nError clearing the search index:\n\n{exc}")
+                self.stderr.write(f"\nError clearing search data:\n\n{exc}")
                 return
             else:
                 total_time = "{:.2f}s".format(time() - start_time)
-                self.stdout.write(f"Cleared the search index in {total_time}.\n\n")
+                self.stdout.write(f"Cleared existing search data in {total_time}.\n\n")
 
         if not post_count:
-            raise CommandError("No posts exist.")
+            raise CommandError("No posts to add to search.")
 
         if post_count == 1:
             self.stdout.write("Indexing one post...\n")

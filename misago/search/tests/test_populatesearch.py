@@ -4,12 +4,12 @@ from django.core import management
 
 from ...privatethreads.members import get_private_thread_members
 from ..exceptions import SearchBackendError
-from ..management.commands import buildsearchindex
+from ..management.commands import populatesearch
 from ..models import PostSearch, ThreadSearch
 
 
 def call_command(**kwargs):
-    command = buildsearchindex.Command()
+    command = populatesearch.Command()
 
     stdout = StringIO()
     stderr = StringIO()
@@ -21,22 +21,20 @@ def call_command(**kwargs):
     )
 
 
-def test_buildsearchindex_indexes_threads_and_posts(thread, post):
+def test_populatesearch_indexes_threads_and_posts(thread, post):
     stdout, stderr = call_command()
 
     ThreadSearch.objects.get(thread_id=thread.id)
     PostSearch.objects.get(post_id=post.id)
 
-    assert stdout[0] == (
-        'Rebuilding the search index using the "PostgreSQL full-text search" backend.'
-    )
-    assert stdout[2].startswith("Cleared the search index in ")
+    assert stdout[0] == 'Populating "PostgreSQL full-text search"...'
+    assert stdout[2].startswith("Cleared existing search data in ")
     assert stdout[-1].startswith("Indexed one post in ")
 
     assert not stderr
 
 
-def test_buildsearchindex_command_clears_search_index(thread, post):
+def test_populatesearch_command_clears_search_index(thread, post):
     thread_search = ThreadSearch.objects.create(
         category_id=thread.category_id,
         thread_id=thread.id,
@@ -56,10 +54,8 @@ def test_buildsearchindex_command_clears_search_index(thread, post):
 
     stdout, stderr = call_command()
 
-    assert stdout[0] == (
-        'Rebuilding the search index using the "PostgreSQL full-text search" backend.'
-    )
-    assert stdout[2].startswith("Cleared the search index in ")
+    assert stdout[0] == 'Populating "PostgreSQL full-text search"...'
+    assert stdout[2].startswith("Cleared existing search data in ")
     assert stdout[-1].startswith("Indexed one post in ")
 
     assert not stderr
@@ -68,7 +64,7 @@ def test_buildsearchindex_command_clears_search_index(thread, post):
     post_search.refresh_from_db()
 
 
-def test_buildsearchindex_command_indexes_private_thread_members(
+def test_populatesearch_command_indexes_private_thread_members(
     mocker, thread, post, user_private_thread
 ):
     mock_update_thread_members = mocker.patch(
@@ -94,10 +90,8 @@ def test_buildsearchindex_command_indexes_private_thread_members(
 
     stdout, stderr = call_command()
 
-    assert stdout[0] == (
-        'Rebuilding the search index using the "PostgreSQL full-text search" backend.'
-    )
-    assert stdout[2].startswith("Cleared the search index in ")
+    assert stdout[0] == 'Populating "PostgreSQL full-text search"...'
+    assert stdout[2].startswith("Cleared existing search data in ")
     assert stdout[-1].startswith("Indexed 2 posts in ")
 
     assert not stderr
@@ -111,7 +105,7 @@ def test_buildsearchindex_command_indexes_private_thread_members(
     )
 
 
-def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, post):
+def test_populatesearch_command_skips_search_index_clear_on_option(thread, post):
     thread_search = ThreadSearch.objects.create(
         category_id=thread.category_id,
         thread_id=thread.id,
@@ -131,10 +125,8 @@ def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, pos
 
     stdout, stderr = call_command(no_clear=True)
 
-    assert stdout[0] == (
-        'Rebuilding the search index using the "PostgreSQL full-text search" backend.'
-    )
-    assert stdout[2].startswith("Keeping the existing search index.")
+    assert stdout[0] == 'Populating "PostgreSQL full-text search"...'
+    assert stdout[2] == "Keeping existing search data."
     assert stdout[-1].startswith("Indexed one post in ")
 
     assert not stderr
@@ -143,7 +135,7 @@ def test_buildsearchindex_command_skips_search_index_clear_on_option(thread, pos
     post_search.refresh_from_db()
 
 
-def test_buildsearchindex_command_prints_clear_error(mocker, db):
+def test_populatesearch_command_prints_clear_error(mocker, db):
     mocker.patch(
         "misago.search.service.search.backend.clear",
         side_effect=SearchBackendError("This backend is not available."),
@@ -151,11 +143,9 @@ def test_buildsearchindex_command_prints_clear_error(mocker, db):
 
     stdout, stderr = call_command()
 
-    assert stdout == (
-        'Rebuilding the search index using the "PostgreSQL full-text search" backend.',
-    )
+    assert stdout == ('Populating "PostgreSQL full-text search"...',)
     assert stderr == (
-        "Error clearing the search index:",
+        "Error clearing search data:",
         "",
         "This backend is not available.",
     )

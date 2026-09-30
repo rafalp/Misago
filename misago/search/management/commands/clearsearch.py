@@ -7,7 +7,7 @@ from ...service import search
 
 
 class Command(BaseCommand):
-    help = "Clears search"
+    help = "Clears search data."
 
     def handle(self, *args, **options):
         try:
@@ -15,12 +15,10 @@ class Command(BaseCommand):
             search.clear()
         except SearchBackendError as exc:
             self.stderr.write(
-                f'Error clearing the search index using the "{search.backend.name}" backend:'
-                f"\n\n{exc}"
+                f'Error clearing search using "{search.backend.name}":\n\n{exc}'
             )
         else:
             total_time = "{:.2f}s".format(time() - start_time)
             self.stdout.write(
-                f'Cleared the search index using the "{search.backend.name}" backend.'
-                f"\n\nTime: {total_time}"
+                f'Cleared data from "{search.backend.name}" in {total_time}.'
             )

@@ -46,7 +46,7 @@ services:
 
   celery-worker:
     build: .
-    command: celery -A devproject worker --loglevel=info
+    command: celery -A devproject worker -b --loglevel=info
     restart: unless-stopped
     environment:
       # Postgres
