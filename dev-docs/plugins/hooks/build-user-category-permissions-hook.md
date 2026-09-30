@@ -1,6 +1,6 @@
 # `build_user_category_permissions_hook`
 
-This hook wraps the standard function that Misago uses to build user category permissions.
+This hook wraps a Misago function used to build user's category permissions.
 
 Category permissions are stored as a Python `dict` with permission names as keys and values being category IDs with the associated permission:
 

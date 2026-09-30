@@ -1,6 +1,6 @@
 # `get_threads_posts_queries_hook`
 
-This hook wraps the standard function that Misago uses to get the names of predefined database `WHERE` clauses, represented as `Q` object instances, for use by other functions to retrieve posts from given categories.
+This hook wraps a Misago function used to get the names of predefined database `WHERE` clauses, represented as `Q` object instances, for use by other functions to retrieve posts from given categories.
 
 
 ## Location

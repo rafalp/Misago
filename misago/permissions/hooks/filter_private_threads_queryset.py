@@ -76,8 +76,8 @@ class FilterPrivateThreadsQuerysetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses set filters on
-    a private threads queryset to limit it only to threads that the user has access to.
+    This hook wraps a Misago function used to set filters on a private threads
+    queryset to limit it only to threads that the user has access to.
 
     # Example
 

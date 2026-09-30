@@ -1,6 +1,6 @@
 # `check_change_thread_solution_permission_hook`
 
-This hook wraps the standard Misago function used to check whether the user has permission to change the thread’s solution to a new post. Raises `PermissionDenied` with an error message if they don't.
+This hook wraps a Misago function used to check if a user has permission to change the thread’s solution to a new post. Raises `PermissionDenied` with an error message if they don't.
 
 
 ## Location

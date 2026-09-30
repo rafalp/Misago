@@ -115,10 +115,10 @@ class GetCategoryThreadsCategoryQueryHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the name of
-    the predefined database `WHERE` clause (represented as a `Q` object instance)
-    to use to retrieve threads from the given category for displaying on
-    the category threads page.
+    This hook wraps a Misago function used to get the name of the predefined
+    database `WHERE` clause (represented as a `Q` object instance) to use to
+    retrieve threads from the given category for displaying on the category
+    threads page.
 
     # Example
 

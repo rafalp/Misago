@@ -1,6 +1,6 @@
 # `serialize_category_data_hook`
 
-This hook wraps the standard function that Misago uses to create a JSON-serializable `dict` with the category data to populate the `CategoriesProxy` and cache across requests.
+This hook wraps a Misago function used to create a JSON-serializable `dict` with the category data to populate the `CategoriesProxy` and cache across requests.
 
 
 ## Location

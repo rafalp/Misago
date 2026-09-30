@@ -100,8 +100,8 @@ class CleanSearchQueryHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to validate and clean
-    a search query for the forum search.
+    This hook wraps a Misago function used to validate and clean a search query
+    for the forum search.
 
     It returns the cleaned search query, or raises `ValidationError` if
     the query fails to validate.

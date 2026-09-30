@@ -68,9 +68,9 @@ class CheckReplyPrivateThreadPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to check if the user
-    has permission to reply to a private thread. It raises Django's `PermissionDenied`
-    with an error message if they can't post in it.
+    This hook wraps a Misago function used to check if a user has permission to
+    reply to a private thread. It raises Django's `PermissionDenied` with an
+    error message if they don't.
 
     # Example
 

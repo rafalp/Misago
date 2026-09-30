@@ -77,8 +77,8 @@ class CheckSeePrivateThreadPostPermissionHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if the user has
-    a permission to see a private thread post. Raises Django's `Http404` if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    see a private thread post. Raises Django's `Http404` if they don't.
 
     # Example
 

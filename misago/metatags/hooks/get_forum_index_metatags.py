@@ -56,8 +56,7 @@ class GetForumIndexMetatagsHook(
     FilterHook[GetForumIndexMetatagsHookAction, GetForumIndexMetatagsHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to get metatags for
-    the forum index page.
+    This hook wraps a Misago function used to get metatags for the forum index page.
 
     # Example
 

@@ -1,6 +1,6 @@
 # `check_unhide_post_edit_permission_hook`
 
-This hook wraps the standard Misago function used to check whether a user has permission to unhide a hidden post edit. Raises Django's `PermissionDenied` if they don't.
+This hook wraps a Misago function used to check if a user has permission to unhide a hidden post edit. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location

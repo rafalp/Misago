@@ -67,8 +67,8 @@ class ValidateSearchQueryHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to validate a search query
-    for the forum search.
+    This hook wraps a Misago function used to validate a search query for
+    the forum search.
 
     It returns nothing, but should raise `ValidationError` if the query fails to
     validate.
@@ -79,12 +79,17 @@ class ValidateSearchQueryHook(
 
     ```python
     from django.core.exceptions import ValidationError
+    from django.http import HttpRequest
     from misago.search.hooks import validate_search_query_hook
     from misago.search.query import SearchQuery
 
     @validate_search_query_hook.append_filter
-    def validate_search_query_keywords(action, search_query: SearchQuery):
-        action(query)
+    def validate_search_query_keywords(
+        action,
+        search_query: SearchQuery,
+        request: HttpRequest | None = None,
+    ):
+        action(query, request)
 
         if count_keywords(query) > 5:
             raise ValidationError(

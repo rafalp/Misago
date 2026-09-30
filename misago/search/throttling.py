@@ -1,10 +1,15 @@
 from django.http import HttpRequest
 from django.utils import timezone
 
+from .hooks import throttle_search_hook
 from .models import SearchLog
 
 
 def throttle_search(request: HttpRequest) -> int:
+    return throttle_search_hook(_throttle_search_action, request)
+
+
+def _throttle_search_action(request: HttpRequest) -> int:
     queryset = SearchLog.objects
 
     if request.user.is_authenticated:

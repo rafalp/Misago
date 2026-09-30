@@ -1,6 +1,6 @@
 # `copy_category_permissions_hook`
 
-This hook wraps the standard function that Misago uses to copy category permissions.
+This hook wraps a Misago function used to copy category permissions.
 
 
 ## Location

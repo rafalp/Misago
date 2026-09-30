@@ -79,9 +79,9 @@ class CheckEditThreadPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to check if the user
-    has permission to edit a thread. It raises Django's `PermissionDenied`
-    with an error message if they can't edit it.
+    This hook wraps a Misago function used to check if a user has permission to
+    edit a thread. It raises Django's `PermissionDenied` with an error message
+    if they don't.
 
     # Example
 

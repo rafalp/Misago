@@ -1,6 +1,6 @@
 # `render_tokens_to_plaintext_hook`
 
-This hook wraps the standard function Misago uses to convert a token stream into plain text.
+This hook wraps a Misago function used to convert a token stream into plain text.
 
 Token stream is a list of the `Token` instances from `markdown_it.tokens` module.
 

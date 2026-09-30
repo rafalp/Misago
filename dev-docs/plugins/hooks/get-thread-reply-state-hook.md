@@ -1,6 +1,6 @@
 # `get_thread_reply_state_hook`
 
-This hook wraps the standard function Misago uses to create a new `ThreadReplyState` instance for the thread reply view.
+This hook wraps a Misago function used to create a new `ThreadReplyState` instance for the thread reply view.
 
 
 ## Location

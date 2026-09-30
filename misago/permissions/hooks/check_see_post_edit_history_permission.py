@@ -88,9 +88,8 @@ class CheckSeePostEditHistoryPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard Misago function used to check whether a user has
-    permission to see a post's edit history.
-    Raises Django's `PermissionDenied` if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    see a post's edit history. Raises Django's `PermissionDenied` if they don't.
 
     # Example
 

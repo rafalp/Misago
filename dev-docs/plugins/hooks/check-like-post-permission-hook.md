@@ -1,6 +1,6 @@
 # `check_like_post_permission_hook`
 
-This hook wraps a standard Misago function used to check if a user has permission to like a post. Raises Django's `PermissionDenied` if they don't.
+This hook wraps a Misago function used to check if a user has permission to like a post. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location

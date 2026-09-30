@@ -1,6 +1,6 @@
 # `check_download_attachment_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to download an attachment. It raises Django's `Http404` if the user cannot see the attachment or `PermissionDenied` if they are not allowed to download it.
+This hook wraps a Misago function used to check if a user has permission to download an attachment. It raises Django's `Http404` if the user can't see the attachment or `PermissionDenied` if they are not allowed to download it.
 
 
 ## Location
