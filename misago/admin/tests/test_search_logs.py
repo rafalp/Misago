@@ -125,7 +125,7 @@ def test_search_logs_download_returns_empty_csv(admin_client):
     assert response["Content-Type"] == "text/csv"
 
     csv_data = read_streaming_response(response)
-    assert len(csv_data) == 0
+    assert csv_data == []
 
 
 def test_search_logs_download_returns_csv_with_rows(admin_client, user):
@@ -139,7 +139,6 @@ def test_search_logs_download_returns_csv_with_rows(admin_client, user):
     assert response["Content-Type"] == "text/csv"
 
     csv_data = read_streaming_response(response)
-    assert len(csv_data) == 2
     assert csv_data == [
         {
             "Search": "lorem",
