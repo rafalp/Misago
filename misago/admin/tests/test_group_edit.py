@@ -20,6 +20,7 @@ def get_form_data(group: Group) -> dict:
         "is_page": "1" if group.is_page else "",
         "is_hidden": "1" if group.is_hidden else "",
         "can_search": str(group.can_search),
+        "bypass_search_throttling": str(group.bypass_search_throttling),
         "can_edit_own_threads": str(group.can_edit_own_threads),
         "own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
         "can_edit_own_posts": str(group.can_edit_own_posts),
