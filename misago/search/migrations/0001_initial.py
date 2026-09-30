@@ -113,6 +113,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
+                "ordering": ["-id"],
                 "indexes": [
                     models.Index(
                         condition=models.Q(("is_public", True)),

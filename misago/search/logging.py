@@ -1,4 +1,7 @@
+from datetime import timedelta
 from typing import TYPE_CHECKING
+
+from django.utils import timezone
 
 from .models import SearchLog
 
@@ -12,3 +15,11 @@ def log_search(
     return SearchLog.objects.create(
         user=user, ip_address=ip_address, search_query=search_query, is_public=is_public
     )
+
+
+def delete_old_search_logs(retention_days: int) -> int:
+    deleted, _ = SearchLog.objects.filter(
+        searched_at__lte=timezone.now() - timedelta(days=retention_days),
+    ).delete()
+
+    return deleted

@@ -23,6 +23,7 @@ class SearchLog(models.Model):
     is_public = models.BooleanField(default=True, db_index=False)
 
     class Meta:
+        ordering = ["-id"]
         indexes = [
             models.Index(
                 fields=["searched_at"],
