@@ -257,6 +257,7 @@ class CssEditorForm(forms.ModelForm):
             self.instance.source_file.delete(save=False)
 
         self.instance.source_file = source_file
+
         with source_file.open() as sf:
             self.instance.source_hash = get_file_hash(sf)
             self.instance.source_needs_building = css_needs_rebuilding(sf)

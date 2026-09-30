@@ -55,6 +55,7 @@ class AnalyticsSettingsForm(SettingsForm):
 
         with upload.open() as fp:
             file_content = fp.read().decode("utf-8")
+
         content_match = GOOGLE_SITE_VERIFICATION.match(file_content)
         if not content_match:
             raise forms.ValidationError(

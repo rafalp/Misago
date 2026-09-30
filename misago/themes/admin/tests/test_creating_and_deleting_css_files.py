@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from django.urls import reverse
 
@@ -404,3 +406,49 @@ def test_error_message_is_set_if_user_attempts_to_edit_css_link_with_file_form(
     )
     response = admin_client.get(edit_link)
     assert_has_error_message(response)
+
+
+def test_css_source_file_is_opened_and_closed(theme, admin_client, create_link, data):
+    # tests context manager to open and close file in forms.CssEditForm.save() method
+    from django.core.files.base import ContentFile
+
+    content_file_open = ContentFile.open
+    content_file_close = ContentFile.close
+    with (
+        patch.object(
+            ContentFile, "open", side_effect=content_file_open, autospec=True
+        ) as mock_open_file,
+        patch.object(
+            ContentFile, "close", side_effect=content_file_close, autospec=True
+        ) as mock_close_file,
+    ):
+        admin_client.post(create_link, data)
+    assert theme.css.exists()
+    mock_open_file.assert_called_once()
+    mock_close_file.assert_called_once()
+
+
+def test_css_edition_form_if_source_file_is_opened_and_closed(
+    admin_client, edit_link, css
+):
+    # test context manager to open and close file in views.EditThemeCss.get_form() method
+    source_file_open = css.source_file.open
+    source_file_close = css.source_file.close
+    with (
+        patch(
+            "misago.themes.admin.views.EditThemeCss.get_theme_css_or_none",
+            return_value=css,
+        ) as mock_get_theme_css,
+        patch.object(
+            css.source_file, "open", side_effect=source_file_open, autospec=True
+        ) as mock_open_file,
+        patch.object(
+            css.source_file, "close", side_effect=source_file_close, autospec=True
+        ) as mock_close_file,
+    ):
+        response = admin_client.get(edit_link)
+    mock_get_theme_css.assert_called_once()
+    mock_open_file.assert_called_once()
+    mock_close_file.assert_called_once()
+    assert response.status_code == 200
+    assert_contains(response, css.name)
