@@ -1,3 +1,4 @@
+import os
 from unittest.mock import patch
 
 import pytest
@@ -46,9 +47,10 @@ def test_created_source_file_contains_css_entered_by_user(
 ):
     admin_client.post(create_link, data)
     css = theme.css.last()
+
     with css.source_file.open() as sf:
         css_source_content = sf.read().decode("utf-8")
-    assert css_source_content == data["source"]
+        assert css_source_content == data["source"]
 
 
 def test_source_file_is_created_in_theme_directory(
@@ -64,21 +66,21 @@ def test_created_source_file_name_starts_with_asset_name(
 ):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    source_filename = css.source_file.name.split("/")[-1]
+    _, source_filename = os.path.split(css.source_file.name)
     assert source_filename.startswith("test.")
 
 
 def test_created_source_file_has_css_extension(theme, admin_client, create_link, data):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    source_filename = css.source_file.name.split("/")[-1]
+    _, source_filename = os.path.split(css.source_file.name)
     assert source_filename.endswith(".css")
 
 
 def test_created_source_file_is_hashed(theme, admin_client, create_link, data):
     admin_client.post(create_link, data)
     css = theme.css.last()
-    source_filename = css.source_file.name.split("/")[-1]
+    _, source_filename = os.path.split(css.source_file.name)
     assert ".%s." % css.source_hash in source_filename
 
 
@@ -211,8 +213,10 @@ def test_css_edition_form_is_displayed(admin_client, edit_link, css):
 
 def test_css_edition_form_contains_source_file_contents(admin_client, edit_link, css):
     response = admin_client.get(edit_link)
+
     with css.source_file.open() as sf:
         css_source_content = sf.read().decode("utf-8")
+
     assert_contains(response, css_source_content)
 
 
@@ -239,9 +243,10 @@ def test_css_source_can_be_changed(admin_client, edit_link, css, data):
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
+
     with css.source_file.open() as sf:
         css_source_content = sf.read().decode("utf-8")
-    assert css_source_content == data["source"]
+        assert css_source_content == data["source"]
 
 
 def test_changing_css_source_also_changes_source_hash(
@@ -270,9 +275,11 @@ def test_changing_css_source_also_changes_hash_in_filename(
 def test_hash_stays_same_if_source_is_not_changed(admin_client, edit_link, css, data):
     original_hash = css.source_hash
     data["name"] = "changed.css"
+
     with css.source_file.open() as sf:
         css_source_content = sf.read().decode("utf-8")
-    data["source"] = css_source_content
+        data["source"] = css_source_content
+
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
@@ -284,9 +291,11 @@ def test_file_is_not_updated_if_form_data_has_no_changes(
 ):
     original_source_file = str(css.source_file)
     data["name"] = css.name
+
     with css.source_file.open() as sf:
         css_source_content = sf.read().decode("utf-8")
-    data["source"] = css_source_content
+        data["source"] = css_source_content
+
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
@@ -414,6 +423,7 @@ def test_css_source_file_is_opened_and_closed(theme, admin_client, create_link, 
 
     content_file_open = ContentFile.open
     content_file_close = ContentFile.close
+
     with (
         patch.object(
             ContentFile, "open", side_effect=content_file_open, autospec=True
@@ -423,7 +433,9 @@ def test_css_source_file_is_opened_and_closed(theme, admin_client, create_link, 
         ) as mock_close_file,
     ):
         admin_client.post(create_link, data)
+
     assert theme.css.exists()
+
     mock_open_file.assert_called_once()
     mock_close_file.assert_called_once()
 
@@ -434,6 +446,7 @@ def test_css_edition_form_if_source_file_is_opened_and_closed(
     # test context manager to open and close file in views.EditThemeCss.get_form() method
     source_file_open = css.source_file.open
     source_file_close = css.source_file.close
+
     with (
         patch(
             "misago.themes.admin.views.EditThemeCss.get_theme_css_or_none",
@@ -447,8 +460,10 @@ def test_css_edition_form_if_source_file_is_opened_and_closed(
         ) as mock_close_file,
     ):
         response = admin_client.get(edit_link)
+
+    assert response.status_code == 200
+    assert_contains(response, css.name)
+
     mock_get_theme_css.assert_called_once()
     mock_open_file.assert_called_once()
     mock_close_file.assert_called_once()
-    assert response.status_code == 200
-    assert_contains(response, css.name)

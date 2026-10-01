@@ -66,8 +66,10 @@ def test_uploaded_file_is_opened_and_closed(admin_client):
 
     verification = b"google-site-verification: google.html"
     verification_file = SimpleUploadedFile("test.html", verification, "text/html")
+
     upload_open = InMemoryUploadedFile.open
     upload_close = InMemoryUploadedFile.close
+
     with (
         patch.object(
             InMemoryUploadedFile, "open", side_effect=upload_open, autospec=True
@@ -79,5 +81,6 @@ def test_uploaded_file_is_opened_and_closed(admin_client):
         admin_client.post(
             admin_link, {"google_site_verification_file": verification_file}
         )
+
     mock_open_file.assert_called_once()
     assert mock_close_file.call_count == 2
