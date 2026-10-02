@@ -358,7 +358,11 @@ class EditThemeCss(NewThemeCss):
     def get_form(self, form_class, request, theme, css):
         if request.method == "POST":
             return form_class(request.POST, instance=css)
-        initial_data = {"source": css.source_file.read().decode("utf-8")}
+
+        with css.source_file.open() as sf:
+            css_source_content = sf.read().decode("utf-8")
+
+        initial_data = {"source": css_source_content}
         return form_class(instance=css, initial=initial_data)
 
     def handle_form(self, form, request, theme, css):

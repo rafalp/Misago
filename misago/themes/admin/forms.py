@@ -257,9 +257,12 @@ class CssEditorForm(forms.ModelForm):
             self.instance.source_file.delete(save=False)
 
         self.instance.source_file = source_file
-        self.instance.source_hash = get_file_hash(source_file)
-        self.instance.source_needs_building = css_needs_rebuilding(source_file)
-        self.instance.size = len(source)
+
+        with source_file.open() as sf:
+            self.instance.source_hash = get_file_hash(sf)
+            self.instance.source_needs_building = css_needs_rebuilding(sf)
+
+        self.instance.size = source_file.size
 
         if not self.instance.pk:
             self.instance.order = get_next_css_order(self.instance.theme)
