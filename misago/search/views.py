@@ -1,20 +1,21 @@
 from datetime import datetime, time, timedelta
 
 from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.db.models import QuerySet, prefetch_related_objects
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
-from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
 from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import check_private_threads_permission
 from ..permissions.search import check_search_permission
 from ..plugins import extensions
+from ..threads.models import Post
 from .categories import get_searchable_category_ids
 from .enums import SearchMode, SearchSort
 from .forms import (
@@ -25,6 +26,8 @@ from .forms import (
 )
 from .logging import log_search
 from .service import search
+from .throttling import throttle_search
+from .types import ThreadsSearchResult, ThreadsSearchResultItem
 
 
 class SearchView(View):
@@ -120,19 +123,21 @@ class ThreadsSearchView(BaseSearchView):
 
     def get_context_data(self) -> dict:
         form = self.get_search_form()
+        search_throttling = self.get_search_throttling()
 
-        if form.is_valid():
+        if form.is_valid() and not search_throttling:
             self.log_search(form.cleaned_data["query"])
-            results = self.get_results_data(form)
+            search_results = self.get_search_results_data(form)
         else:
-            results = None
+            search_results = None
 
         return {
             "page_title": form.name,
             "breadcrumbs": self.get_breadcrumbs(),
             "header": self.get_header_data(),
             "form": form,
-            "results": results,
+            "search_throttling": search_throttling,
+            "search_results": search_results,
         }
 
     def get_search_form(self) -> ThreadsSearchForm:
@@ -142,7 +147,64 @@ class ThreadsSearchView(BaseSearchView):
     def get_header_data(self) -> dict:
         return {"template_name": self.header_template_name}
 
-    def get_results_data(self, form: ThreadsSearchForm) -> dict:
+    def get_search_results_data(self, form: ThreadsSearchForm) -> dict:
+        results = self.search(form)
+        post_ids = [result.post_id for result in results]
+
+        posts: dict[int, Post] = {}
+        for post in self.get_posts_queryset(post_ids):
+            posts[post.id] = post
+
+        prefetch_related_objects(list(posts.values()), "poster")
+
+        results_data = []
+        for result in results:
+            results_data.append(
+                self.get_search_result_data(result, posts[result.post_id])
+            )
+
+        more_url = None
+
+        return {
+            "results": results_data,
+            "has_more": results.has_more,
+            "more_url": more_url,
+        }
+
+    def get_search_result_data(
+        self, result: ThreadsSearchResultItem, post: Post
+    ) -> dict:
+        return {
+            "id": post.id,
+            "poster": post.poster,
+            "poster_name": post.poster_name,
+            "posted_at": post.posted_at,
+            "categories": self.get_search_result_categories(post),
+            "thread_title": result.thread_title,
+            "post_content": result.post_content,
+            "post_url": reverse("misago:post", kwargs={"post_id": post.id}),
+        }
+
+    def get_search_result_categories(self, post: Post) -> list[dict]:
+        return self.request.categories.get_ancestors(
+            post.category_id, include_self=True
+        )
+
+    def get_search_throttling(self) -> int:
+        if self.request.user_permissions.bypass_search_throttling:
+            return 0
+
+        return throttle_search(self.request)
+
+    def log_search(self, search_query: str):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+
+        log_search(user, self.request.user_ip, search_query, self.is_search_public)
+
+    def search(self, form: ThreadsSearchForm) -> ThreadsSearchResult:
         request = self.request
 
         filters = form.cleaned_data
@@ -162,7 +224,7 @@ class ThreadsSearchView(BaseSearchView):
                 datetime.combine(date_to + timedelta(days=1), time.min)
             )
 
-        results = search.search_threads(
+        return search.search_threads(
             form.search_query,
             request.user_permissions,
             categories=categories,
@@ -172,11 +234,6 @@ class ThreadsSearchView(BaseSearchView):
             mode=SearchMode(mode),
             order_by=SearchSort(sort),
         )
-
-        return {
-            "results": results,
-            "more_url": None,
-        }
 
     def get_categories_filter(self, filters: dict) -> list[Category | CategoryProxy]:
         request = self.request
@@ -198,13 +255,8 @@ class ThreadsSearchView(BaseSearchView):
             if category.id in searchable_categories
         ]
 
-    def log_search(self, search_query: str):
-        if self.request.user.is_authenticated:
-            user = self.request.user
-        else:
-            user = None
-
-        log_search(user, self.request.user_ip, search_query, self.is_search_public)
+    def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
+        return Post.objects.filter(id__in=post_ids)
 
 
 class PrivateThreadsSearchView(ThreadsSearchView):
