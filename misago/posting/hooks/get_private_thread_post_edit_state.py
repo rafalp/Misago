@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetEditPrivateThreadPostStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `EditPrivateThreadPostState`
-    instance for editing a private thread post.
+    Misago function used to create a new `EditPrivateThreadPostState` instance
+    for editing a private thread post.
 
     # Arguments
 
@@ -79,8 +79,8 @@ class GetEditPrivateThreadPostStateHook(
     ]
 ):
     """
-    This hook wraps the standard function Misago uses to create a new
-    `EditPrivateThreadPostState` instance for editing a private thread post.
+    This hook wraps a Misago function used to create a new `EditPrivateThreadPostState`
+    instance for editing a private thread post.
 
     # Example
 

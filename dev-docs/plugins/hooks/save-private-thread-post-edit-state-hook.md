@@ -1,6 +1,6 @@
 # `save_private_thread_post_edit_state_hook`
 
-This hook wraps the standard function that Misago uses to save edited private thread post to the database.
+This hook wraps a Misago function used to save edited private thread post to the database.
 
 
 ## Location
@@ -54,7 +54,7 @@ def save_private_thread_post_edit_state_action(
     ...
 ```
 
-A standard function that Misago uses to save edited private thread post to the database.
+Misago function used to save edited private thread post to the database.
 
 
 ### Arguments

@@ -6,6 +6,7 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
+from ..categories.models import Category
 from ..privatethreads.models import PrivateThreadMember
 from ..threads.models import Post, Thread
 from .hooks import (
@@ -22,6 +23,7 @@ from .hooks import (
     check_start_private_threads_permission_hook,
     filter_private_thread_events_queryset_hook,
     filter_private_thread_posts_queryset_hook,
+    filter_private_threads_posts_queryset_hook,
     filter_private_threads_queryset_hook,
 )
 from .proxy import UserPermissionsProxy
@@ -417,36 +419,55 @@ def _check_remove_private_thread_member_permission_action(
         )
 
 
-def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):
+def filter_private_threads_queryset(
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
     return filter_private_threads_queryset_hook(
         _filter_private_threads_queryset_action, permissions, queryset
     )
 
 
 def _filter_private_threads_queryset_action(
-    permissions: UserPermissionsProxy, queryset
-):
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
     if permissions.user.is_anonymous:
         return queryset.none()
 
+    member_threads = PrivateThreadMember.objects.filter(user=permissions.user).values(
+        "thread_id"
+    )
+
     if permissions.is_private_threads_moderator:
         return queryset.filter(
-            Q(
-                id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
-                    "thread_id"
-                )
-            )
+            Q(id__in=member_threads)
             | Q(is_hidden=True)
             | Q(is_unapproved=True)
             | Q(has_unapproved_posts=True)
         )
 
     return queryset.filter(
-        id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
-            "thread_id"
-        ),
+        id__in=member_threads,
         is_hidden=False,
     ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
+
+
+def filter_private_threads_posts_queryset(
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
+    return filter_private_threads_posts_queryset_hook(
+        _filter_private_threads_posts_queryset_action, permissions, queryset
+    )
+
+
+def _filter_private_threads_posts_queryset_action(
+    permissions: UserPermissionsProxy, queryset: QuerySet
+) -> QuerySet:
+    if permissions.is_private_threads_moderator:
+        return queryset.all()
+
+    return queryset.filter(is_hidden=False).filter(
+        Q(is_unapproved=False) | Q(poster=permissions.user)
+    )
 
 
 def filter_private_thread_posts_queryset(
@@ -465,7 +486,7 @@ def _filter_private_thread_posts_queryset_action(
     queryset: QuerySet,
 ) -> QuerySet:
     if permissions.is_private_threads_moderator:
-        return queryset
+        return queryset.all()
 
     if permissions.user.is_authenticated:
         return queryset.filter(Q(is_unapproved=False) | Q(poster=permissions.user))
@@ -489,6 +510,6 @@ def _filter_private_thread_events_queryset_action(
     queryset: QuerySet,
 ) -> QuerySet:
     if permissions.is_private_threads_moderator:
-        return queryset
+        return queryset.all()
 
     return queryset.filter(is_hidden=False)

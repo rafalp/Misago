@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetPrivateThreadEditFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `PrivateThreadEditFormset`
-    instance with forms for editing a private thread.
+    Misago function used to create a new `PrivateThreadEditFormset` instance
+    with forms for editing a private thread.
 
     # Arguments
 
@@ -77,8 +77,8 @@ class GetPrivateThreadEditFormsetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `PrivateThreadEditFormset` instance with forms for editing a private thread.
+    This hook wraps a Misago function used to create a new `PrivateThreadEditFormset`
+    instance with forms for editing a private thread.
 
     # Example
 

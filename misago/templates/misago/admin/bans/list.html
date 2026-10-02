@@ -79,9 +79,9 @@
 {% block blankslate %}
 <td colspan="{{ 6|add:extra_actions_len }}">
   {% if active_filters %}
-    {% translate "No bans matching criteria exist." context "admin bans" %}
+    {% translate "No bans found" context "admin bans" %}
   {% else %}
-    {% translate "No bans are set." context "admin bans" %}
+    {% translate "No bans exist" context "admin bans" %}
   {% endif %}
 </td>
 {% endblock blankslate %}

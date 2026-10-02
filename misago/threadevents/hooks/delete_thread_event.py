@@ -67,7 +67,7 @@ class DeleteThreadEventHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to delete a `ThreadEvent` object.
+    This hook wraps a Misago function used to delete a `ThreadEvent` object.
 
     # Example
 

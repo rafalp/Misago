@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class SavePrivateThreadStartStateHookAction(Protocol):
     """
-    A standard function that Misago uses to save a new private thread to the database.
+    Misago function used to save a new private thread to the database.
 
     # Arguments
 
@@ -66,8 +66,7 @@ class SavePrivateThreadStartStateHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to save a new private
-    thread to the database.
+    This hook wraps a Misago function used to save a new private thread to the database.
 
     # Example
 

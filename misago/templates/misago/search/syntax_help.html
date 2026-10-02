@@ -1,0 +1,80 @@
+{% load i18n misago_capture %}
+
+<details class="help-text-extended">
+  <summary class="help-text-extended-summary">
+    {% include "tabler/help-circle.svg" %}
+    <span>
+      {% translate "Search syntax help" context "search syntax help" %}
+    </span>
+  </summary>
+  <div class="help-text-extended-body">
+    {% capture trimmed as example_and %}
+      <code>{% translate "dog cat" context "search syntax help" %}</code>
+    {% endcapture %}
+    <p>
+      {% blocktranslate trimmed with example=example_and|safe context "search syntax help" %}
+        Separate search terms with spaces: {{ example }} will search for results that contain both "dog" and "cat".
+      {% endblocktranslate %}
+    </p>
+    {% capture trimmed as example_phrase %}
+      <code>"funny cat"</code>
+    {% endcapture %}
+    {% capture trimmed as example_phrase_2 %}
+      <code>version "0.40"</code>
+    {% endcapture %}
+    <p>
+      {% blocktranslate trimmed context "search syntax help" %}
+        Wrap multiple words or terms containing special characters in single or double quotes to search for phrases:
+      {% endblocktranslate %}
+    </p>
+    <ul>
+      <li>
+        {% blocktranslate trimmed with example=example_phrase|safe context "search syntax help" %}
+          {{ example }} will search for results that contain "funny cat".
+        {% endblocktranslate %}
+      </li>
+      <li>
+      {% blocktranslate trimmed with example=example_phrase_2|safe context "search syntax help" %}
+        {{ example }} will search for results that contain "version" and "0.40".
+      {% endblocktranslate %}
+      </li>
+    </ul>
+    {% capture trimmed as example_exclude %}
+      <code>{% translate "dog -cat" context "search syntax help" %}</code>
+    {% endcapture %}
+    <p>
+      {% blocktranslate trimmed with example=example_exclude|safe context "search syntax help" %}
+        Enter "-" before a search term to exclude it from the search: {{ example }} will search for results that contain "dog" but don't contain "cat".
+      {% endblocktranslate %}
+    </p>
+    {% capture trimmed as example_or %}
+      <code>{% translate "dog | cat" context "search syntax help" %}</code>
+    {% endcapture %}
+    {% capture trimmed as example_or_2 %}
+      <code>{% translate "dog cat | fox" context "search syntax help" %}</code>
+    {% endcapture %}
+    <p>
+      {% blocktranslate trimmed with example=example_or|safe context "search syntax help" %}
+        Separate terms with "|" to search for alternatives: {{ example }} will search for results that contain either "dog" or "cat", or both.
+      {% endblocktranslate %}
+      {% blocktranslate trimmed with example=example_or_2|safe context "search syntax help" %}
+        This only applies to the closest search terms. {{ example }} will search results that contain "dog" and either "cat" or "fox", or both.
+      {% endblocktranslate %}
+    </p>
+    {% capture trimmed as example_group %}
+      <code>(dog | wolf) (cat | lion)</code>
+    {% endcapture %}
+    {% capture trimmed as example_group_2 %}
+      <code>(dog wolf) | (cat lion)</code>
+    {% endcapture %}
+    <p>
+      {% blocktranslate trimmed with example=example_group|safe context "search syntax help" %}
+        Group terms together with parentheses: {{ example }} will search for results that contain "dog" or "wolf", and "cat" or "lion".
+      {% endblocktranslate %}
+      {% blocktranslate trimmed with example=example_group_2|safe context "search syntax help" %}
+        {{ example }} will search for results that contain "dog" and "wolf", or "cat" and "lion".
+      {% endblocktranslate %}
+    </p>
+    <p>{% translate "Search ignores case." context "search syntax help" %}</p>
+  </div>
+</details>

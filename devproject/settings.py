@@ -281,6 +281,10 @@ CELERY_BROKER_URL = "redis://redis:6379/0"
 
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 10
 
+# Use Celery Beat for scheduled maintenance tasks
+
+CELERY_BEAT_SCHEDULE = MISAGO_CELERY_BEAT_SCHEDULE
+
 
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
@@ -295,14 +299,16 @@ MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_file_response"
 MISAGO_AVATARS_SIZES = [400, 200, 100]
 
 
-# PostgreSQL text search configuration to use in searches
-# Defaults to "simple", for list of installed configurations run "\dF" in "psql".
-# Standard configs as of PostgreSQL 9.5 are: dutch, english, finnish, french,
-# german, hungarian, italian, norwegian, portuguese, romanian, russian, simple,
-# spanish, swedish and turkish
-# Example on adding custom language can be found here: https://github.com/lemonskyjwt/plpstgrssearch
+# Use english for default search
 
-MISAGO_SEARCH_CONFIG = "simple"
+MISAGO_SEARCH_CONFIG = "english"
+
+MISAGO_POSTS_SEARCH = {
+    "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
+    "INDEX_BATCH_SIZE": 50,
+    "MAX_LIMIT": 100,
+    "PG_SEARCH_CONFIG": "english",
+}
 
 
 # Path to the directory that Misago should use to prepare user data downloads.

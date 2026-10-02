@@ -1,6 +1,6 @@
 # `check_select_thread_solution_permission_hook`
 
-This hook wraps a standard Misago function used to check whether the user has permission to select a post as the thread’s solution. Raises `PermissionDenied` with an error message if they don't.
+This hook wraps a Misago function used to check if a user has permission to select a post as the thread’s solution. Raises `PermissionDenied` with an error message if they don't.
 
 
 ## Location
@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -57,7 +57,7 @@ Misago function used to check whether the user has permission to select a post a
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 

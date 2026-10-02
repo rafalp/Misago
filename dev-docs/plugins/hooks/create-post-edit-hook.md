@@ -1,6 +1,6 @@
 # `create_post_edit_hook`
 
-This hook wraps a standard Misago function used to create a `PostEdit` object.
+This hook wraps a Misago function used to create a `PostEdit` object.
 
 
 ## Location

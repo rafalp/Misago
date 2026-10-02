@@ -19,10 +19,10 @@ class AttachmentAdmin(generic.AdminBaseMixin):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related("uploader", "post", "post__thread", "post__category")
+        return qs.prefetch_related("uploader", "post", "post__thread", "post__category")
 
 
-class AttachmentsList(AttachmentAdmin, generic.ListView):
+class ListView(AttachmentAdmin, generic.ListView):
     items_per_page = 20
     ordering = [
         ("-id", pgettext_lazy("admin attachments ordering choice", "From newest")),
@@ -82,7 +82,7 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
         post.save(update_fields=["attachments_cache"])
 
 
-class DeleteAttachment(AttachmentAdmin, generic.ButtonView):
+class DeleteView(AttachmentAdmin, generic.ButtonView):
     def button_action(self, request, target):
         if target.post:
             self.delete_from_cache(target)
@@ -105,7 +105,7 @@ class DeleteAttachment(AttachmentAdmin, generic.ButtonView):
         attachment.post.save(update_fields=["attachments_cache"])
 
 
-class AttachmentsFiletypesList(generic.AdminView):
+class FiletypesListView(generic.AdminView):
     root_link = "misago:admin:attachments:filetypes:index"
     templates_dir = "misago/admin/attachments_filetypes"
     template_name = "list.html"
