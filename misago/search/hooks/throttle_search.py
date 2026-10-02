@@ -70,11 +70,9 @@ class ThrottleSearchHook(
 
     # Example
 
-    Use custom throttling for flagged users:
+    Disable search throttling for a special IP address:
 
     ```python
-    from random import randint
-
     from django.http import HttpRequest
     from misago.search.hooks import throttle_search_hook
 
@@ -82,11 +80,8 @@ class ThrottleSearchHook(
     def throttle_discouraged_user_search(
         action, request: HttpRequest
     ) -> int:
-        if (
-            request.user.is_authenticated
-            and request.user.plugin_data.get("discourage")
-        ):
-            return randint(0, 60)
+        if request.user_ip == "38.0.0.14":
+            return 0
 
         return action(request)
     ```

@@ -28,3 +28,151 @@
     }
   }
 }
+
+.search-results-list {
+  margin: 0;
+  padding: 0;
+
+  border-top: 1px solid @gray-lighter;
+  border-bottom: 1px solid @gray-lighter;
+  list-style: none;
+}
+
+.search-result {
+  display: flex;
+  gap: @padding-base-horizontal;
+
+  padding: @line-height-computed 0;
+}
+
+.search-result + .search-result {
+  border-top: 1px solid @gray-lighter;
+}
+
+.search-result-start {
+  flex: 0;
+}
+
+.search-result-end {
+  min-width: 0;
+
+  overflow-wrap: break-word;
+}
+
+.search-result-avatar {
+  img {
+    width: 32px;
+    height: 32px;
+
+    border-radius: @border-radius-small;
+  }
+}
+
+.search-result-header {
+  margin-bottom: @padding-large-vertical;
+}
+
+.search-result-title {
+  max-width: 100%;
+
+  padding: 0;
+  margin: 0;
+
+  font-size: @font-size-large;
+  font-weight: 400;
+
+  a,
+  a:link,
+  a:visited,
+  a:hover,
+  a:focus,
+  a:active {
+    color: @gray-700;
+  }
+
+  strong {
+    color: @gray-900;
+    font-weight: 900;
+  }
+}
+
+.search-result-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: @padding-small-vertical @padding-large-horizontal;
+
+  margin: @padding-base-vertical 0 @padding-large-vertical 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.search-result-category {
+  min-width: 0;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    min-width: 0;
+
+    &,
+    &:link,
+    &:visited {
+      color: @gray-600;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: @gray-900;
+      text-decoration: none;
+
+      .search-result-category-name {
+        text-decoration: underline;
+      }
+    }
+
+    .search-result-category-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.search-result-category-icon {
+  display: inline-block;
+
+  width: 16px;
+  height: 16px;
+
+  line-height: 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+
+    color: var(--category-color, @gray-300);
+  }
+}
+
+.search-result-excerpt {
+  display: inline-block;
+  max-width: 100%;
+
+  &,
+  &:link,
+  &:visited,
+  &:hover,
+  &:focus,
+  &:active {
+    color: @gray-600;
+    text-decoration: none;
+  }
+
+  strong {
+    color: @gray-900;
+  }
+}
