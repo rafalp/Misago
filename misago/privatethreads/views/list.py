@@ -26,9 +26,9 @@ from ...readtracker.tracker import (
 )
 from ...threads.filters import (
     MyThreadsFilter,
+    NewContentThreadsFilter,
     ThreadsFilter,
     ThreadsFilterChoice,
-    UnreadThreadsFilter,
 )
 from ...threads.models import Thread
 from ...threads.views import ListView
@@ -97,7 +97,7 @@ class PrivateThreadListView(ListView):
 
         queryset = self.get_threads_queryset(request, category)
 
-        if not active_filter or active_filter.url != "unread":
+        if not active_filter or active_filter.url != "new-content":
             queryset = threads_select_related_user_readthread(queryset, request.user)
             queryset = threads_annotate_user_readcategory_time(queryset, request.user)
 
@@ -110,7 +110,7 @@ class PrivateThreadListView(ListView):
         users = self.get_threads_users(request, threads_list)
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
 
-        if active_filter and active_filter.url == "unread":
+        if active_filter and active_filter.url == "new-content":
             unread = set(thread.id for thread in threads_list)
         else:
             unread = get_unread_threads(request, threads_list)
@@ -185,7 +185,7 @@ class PrivateThreadListView(ListView):
             return []
 
         return [
-            UnreadThreadsFilter(request),
+            NewContentThreadsFilter(request),
             MyThreadsFilter(request),
         ]
 

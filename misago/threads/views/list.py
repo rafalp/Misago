@@ -66,10 +66,10 @@ from ..enums import (
 )
 from ..filters import (
     MyThreadsFilter,
+    NewContentThreadsFilter,
     ThreadsFilter,
     ThreadsFilterChoice,
     UnapprovedThreadsFilter,
-    UnreadThreadsFilter,
 )
 from ..models import Thread
 from ..threadtypes import BaseThreadType, thread_type
@@ -512,7 +512,7 @@ class ThreadListView(ListView):
         permissions_filter = self.get_threads_permissions_queryset_filter(request)
         queryset = self.get_threads_queryset(request)
 
-        if not active_filter or active_filter.url != "unread":
+        if not active_filter or active_filter.url != "new-content":
             queryset = threads_select_related_user_readthread(queryset, request.user)
             queryset = threads_annotate_user_readcategory_time(queryset, request.user)
 
@@ -537,7 +537,7 @@ class ThreadListView(ListView):
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
         selected = self.get_selected_threads_ids(request)
 
-        if active_filter and active_filter.url == "unread":
+        if active_filter and active_filter.url == "new-content":
             unread = set(thread.id for thread in threads_list)
         else:
             unread = get_unread_threads(request, threads_list)
@@ -615,7 +615,7 @@ class ThreadListView(ListView):
             return []
 
         filters = [
-            UnreadThreadsFilter(request),
+            NewContentThreadsFilter(request),
             MyThreadsFilter(request),
         ]
 
@@ -914,7 +914,7 @@ class CategoryThreadListView(ListView):
         )
         queryset = self.get_threads_queryset(request)
 
-        if not active_filter or active_filter.url != "unread":
+        if not active_filter or active_filter.url != "new-content":
             queryset = threads_select_related_user_readthread(queryset, request.user)
             queryset = threads_annotate_user_readcategory_time(queryset, request.user)
 
@@ -939,7 +939,7 @@ class CategoryThreadListView(ListView):
         animate = self.get_threads_to_animate(request, kwargs, threads_list)
         selected = self.get_selected_threads_ids(request)
 
-        if active_filter and active_filter.url == "unread":
+        if active_filter and active_filter.url == "new-content":
             unread = set(thread.id for thread in threads_list)
         else:
             unread = get_unread_threads(request, threads_list)
@@ -1031,7 +1031,7 @@ class CategoryThreadListView(ListView):
             return []
 
         filters = [
-            UnreadThreadsFilter(request),
+            NewContentThreadsFilter(request),
             MyThreadsFilter(request),
         ]
 

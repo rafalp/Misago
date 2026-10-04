@@ -6,8 +6,8 @@ from django.utils import timezone
 from ...readtracker.models import ReadCategory, ReadThread
 from ..filters import (
     MyThreadsFilter,
+    NewContentThreadsFilter,
     UnapprovedThreadsFilter,
-    UnreadThreadsFilter,
 )
 from ..models import Thread
 
@@ -34,33 +34,33 @@ def test_filter_as_choice_method_returns_inactive_filter_choice(anonymous_user):
     assert choice.filter is filter
 
 
-def test_unread_threads_filter_returns_never_read_thread(
+def test_new_content_threads_filter_returns_never_read_thread(
     thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
     thread = thread_factory(default_category)
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == [thread]
 
 
-def test_unread_threads_filter_excludes_never_read_thread_older_than_user(
+def test_new_content_threads_filter_excludes_never_read_thread_older_than_user(
     thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
     thread_factory(default_category, started_at=-900)
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == []
 
 
-def test_unread_threads_filter_excludes_old_never_read_thread(
+def test_new_content_threads_filter_excludes_old_never_read_thread(
     thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
@@ -69,14 +69,14 @@ def test_unread_threads_filter_excludes_old_never_read_thread(
         started_at=timezone.now().replace(year=2010),
     )
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == []
 
 
-def test_unread_threads_filter_excludes_read_thread(
+def test_new_content_threads_filter_excludes_read_thread(
     thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -92,14 +92,14 @@ def test_unread_threads_filter_excludes_read_thread(
         read_time=timezone.now(),
     )
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == []
 
 
-def test_unread_threads_filter_excludes_thread_in_read_category(
+def test_new_content_threads_filter_excludes_thread_in_read_category(
     thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -114,14 +114,14 @@ def test_unread_threads_filter_excludes_thread_in_read_category(
         read_time=timezone.now(),
     )
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == []
 
 
-def test_unread_threads_filter_shows_read_thread_with_unread_replies(
+def test_new_content_threads_filter_shows_read_thread_with_unread_replies(
     thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -137,14 +137,14 @@ def test_unread_threads_filter_shows_read_thread_with_unread_replies(
         read_time=timezone.now() - timedelta(minutes=30),
     )
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == [thread]
 
 
-def test_unread_threads_filter_shows_unread_thread_in_read_category(
+def test_new_content_threads_filter_shows_unread_thread_in_read_category(
     thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -159,14 +159,14 @@ def test_unread_threads_filter_shows_unread_thread_in_read_category(
         read_time=timezone.now() - timedelta(minutes=30),
     )
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
     assert list(filtered_queryset) == [thread]
 
 
-def test_unread_threads_filter_shows_read_thread_in_read_category_with_unread_replies(
+def test_new_content_threads_filter_shows_read_thread_in_read_category_with_unread_replies(
     thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -188,7 +188,7 @@ def test_unread_threads_filter_shows_read_thread_in_read_category_with_unread_re
         read_time=timezone.now() - timedelta(minutes=20),
     )
 
-    filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
+    filter = NewContentThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
 
     filtered_queryset = choice.filter(queryset)
