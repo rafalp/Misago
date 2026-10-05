@@ -48,17 +48,17 @@
       {% endblocktranslate %}
     </p>
     {% capture trimmed as example_or %}
-      <code>{% translate "dog | cat" context "search syntax help" %}</code>
+      <code>{% translate "register | registration" context "search syntax help" %}</code>
     {% endcapture %}
     {% capture trimmed as example_or_2 %}
-      <code>{% translate "dog cat | fox" context "search syntax help" %}</code>
+      <code>{% translate "register registration | help" context "search syntax help" %}</code>
     {% endcapture %}
     <p>
       {% blocktranslate trimmed with example=example_or|safe context "search syntax help" %}
-        Separate terms with "|" to search for alternatives: {{ example }} will search for results that contain either "dog" or "cat", or both.
+        Separate terms with "|" to search for alternatives: {{ example }} will search for results that contain either "register" or "registration", or both.
       {% endblocktranslate %}
       {% blocktranslate trimmed with example=example_or_2|safe context "search syntax help" %}
-        This only applies to the closest search terms. {{ example }} will search results that contain "dog" and either "cat" or "fox", or both.
+        This applies only to the closest search terms. {{ example }} will search results that contain "register" and either "registration" or "help", or both.
       {% endblocktranslate %}
     </p>
     {% capture trimmed as example_group %}

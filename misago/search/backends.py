@@ -958,7 +958,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         if not clean_update:
             return 0
 
-        return self._threads(
+        return self._select_threads(
             categories=categories,
             threads=threads,
             users=starters,
@@ -1009,7 +1009,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         if not clean_update:
             return 0
 
-        return self._posts(
+        return self._select_posts(
             categories=categories,
             threads=threads,
             posts=posts,
@@ -1030,7 +1030,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         deleted_total = 0
 
         if any((categories, threads, users)):
-            deleted_threads, _ = self._threads(
+            deleted_threads, _ = self._select_threads(
                 categories=categories,
                 threads=threads,
                 users=users,
@@ -1038,7 +1038,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
             deleted_total += deleted_threads
 
-        deleted_posts, _ = self._posts(
+        deleted_posts, _ = self._select_posts(
             categories=categories,
             threads=threads,
             posts=posts,
@@ -1047,7 +1047,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return deleted_total + deleted_posts
 
-    def _threads(
+    def _select_threads(
         self,
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
@@ -1066,7 +1066,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         return ThreadSearch.objects.filter(**filters)
 
-    def _posts(
+    def _select_posts(
         self,
         *,
         categories: Iterable[Category | CategoryProxy] | None = None,
