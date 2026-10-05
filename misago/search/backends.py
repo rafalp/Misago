@@ -18,6 +18,7 @@ from django.contrib.postgres.search import (
 )
 from django.db import transaction
 from django.db.models import F, Max, QuerySet, Value
+from django.db.models.functions import Left, Right
 from django.utils.crypto import get_random_string
 
 from ..categories.models import Category
@@ -173,6 +174,9 @@ class PostgreSQLSearchBackend(SearchBackend):
     search_config: str
     min_rank: float | None
 
+    excerpt_lead_length: int
+    excerpt_tail_length: int
+
     headline_marker_characters = string.ascii_letters + string.digits
     headline_min_words: int | None
     headline_max_words: int | None
@@ -218,12 +222,15 @@ class PostgreSQLSearchBackend(SearchBackend):
         self.search_config = search_config
         self.min_rank = options.get("PG_MIN_RANK", 0.0001)
 
+        self.excerpt_lead_length = options.get("PG_EXCERPT_LEAD_LENGTH", 50)
+        self.excerpt_tail_length = options.get("PG_EXCERPT_TAIL_LENGTH", 50)
+
         self.headline_start_html = options.get("HEADLINE_START_HTML", "<strong>")
         self.headline_stop_html = options.get("HEADLINE_STOP_HTML", "</strong>")
-        self.headline_min_words = options.get("PG_HEADLINE_MIN_WORDS", 60)
-        self.headline_max_words = options.get("PG_HEADLINE_MAX_WORDS", 61)
-        self.headline_max_fragments = options.get("PG_HEADLINE_MAX_FRAGMENTS", 0)
-        self.headline_short_word = options.get("PG_HEADLINE_SHORT_WORD")
+        self.headline_min_words = options.get("PG_HEADLINE_MIN_WORDS", 50)
+        self.headline_max_words = options.get("PG_HEADLINE_MAX_WORDS", 51)
+        self.headline_max_fragments = options.get("PG_HEADLINE_MAX_FRAGMENTS", 1)
+        self.headline_short_word = options.get("PG_HEADLINE_SHORT_WORD", 0)
 
     # Search operations
 
@@ -397,7 +404,9 @@ class PostgreSQLSearchBackend(SearchBackend):
                     thread_title=self.format_headline(
                         thread.headline, headline_markers
                     ),
-                    post_content=self.format_headline(post.headline, headline_markers),
+                    post_content=self.build_search_result_excerpt(
+                        post, post.headline, headline_markers
+                    ),
                 )
             )
 
@@ -476,7 +485,9 @@ class PostgreSQLSearchBackend(SearchBackend):
                 thread_id__in=result_threads_ids,
             )
             .order_by("thread_id", "post_id")
-            .annotate(headline=self.get_content_headline(rank_query, headline_markers))
+            .annotate(
+                headline=self.get_content_headline(rank_query, headline_markers),
+            )
             .distinct("thread_id")
         )
 
@@ -498,8 +509,8 @@ class PostgreSQLSearchBackend(SearchBackend):
                         thread_title=self.format_headline(
                             thread_headlines.get(thread_id, "MISSING"), headline_markers
                         ),
-                        post_content=self.format_headline(
-                            post.headline, headline_markers
+                        post_content=self.build_search_result_excerpt(
+                            post, post.headline, headline_markers
                         ),
                     )
                 )
@@ -581,8 +592,8 @@ class PostgreSQLSearchBackend(SearchBackend):
                         thread_headlines.get(result.thread_id, "MISSING"),
                         headline_markers,
                     ),
-                    post_content=self.format_headline(
-                        result.headline, headline_markers
+                    post_content=self.build_search_result_excerpt(
+                        result, result.headline, headline_markers
                     ),
                 )
                 for result in results
@@ -692,7 +703,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         start_sel, stop_sel = markers
 
         return SearchHeadline(
-            "content",
+            Left("content", 2000),
             rank_query,
             start_sel=start_sel,
             stop_sel=stop_sel,
@@ -701,6 +712,35 @@ class PostgreSQLSearchBackend(SearchBackend):
             short_word=self.headline_short_word,
             max_fragments=self.headline_max_fragments,
         )
+
+    def build_search_result_excerpt(
+        self, post: PostSearch, headline: str, headline_markers: tuple[str, str]
+    ) -> str:
+        content = post.content
+
+        headline_start, headline_stop = headline_markers
+        raw_headline = headline.replace(headline_start, "").replace(headline_stop, "")
+
+        headline_start = content.index(raw_headline)
+        headline_end = headline_start + len(raw_headline)
+
+        content_end = len(content)
+        if headline_start == 0 and headline_end == content_end:
+            return self.format_headline(headline, headline_markers)
+
+        formatted_headline = self.format_headline(headline, headline_markers)
+
+        if headline_start < self.excerpt_lead_length:
+            formatted_headline = escape(content[:headline_start]) + formatted_headline
+        elif headline_start:
+            formatted_headline = "..." + formatted_headline
+
+        if content_end - headline_end < self.excerpt_tail_length:
+            formatted_headline += escape(content[headline_end:])
+        elif headline_end < content_end:
+            formatted_headline = formatted_headline + "..."
+
+        return formatted_headline
 
     def _empty_threads_result(self, start_time: float) -> ThreadsSearchResult:
         return ThreadsSearchResult(

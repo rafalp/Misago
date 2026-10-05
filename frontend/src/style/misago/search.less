@@ -128,19 +128,39 @@
     &:active {
       color: @gray-900;
       text-decoration: none;
-
+  
       .search-result-category-name {
+        text-decoration: underline;
+      }
+
+      .search-result-category-name-short {
         text-decoration: underline;
       }
     }
 
-    .search-result-category-name {
+    .search-result-category-name,
+    .search-result-category-name-short {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
 }
+
+.search-result-category-name-short + .search-result-category-name {
+  display: none;
+}
+
+@media screen and (min-width: @screen-md-min) {
+  .search-result-category-name-short {
+    display: none;
+  }
+
+  .search-result-category-name-short + .search-result-category-name {
+    display: block;
+  }
+}
+
 
 .search-result-category-icon {
   display: inline-block;

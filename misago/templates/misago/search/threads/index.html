@@ -53,64 +53,74 @@
         </h2>
       </header>
       <ul class="search-results-list">
-      {% if search_results %}
-        {% for result in search_results.results %}
-          <li class="search-result">
-            <div class="search-result-start">
-              {% if result.poster %}
-                <a class="search-result-avatar" href="{{ result.poster.get_absolute_url }}">
-                  <img src="{{ result.poster|avatar:32 }}" srcset="{{ result.poster|avatar:64 }}" alt="">
-                </a>
-              {% else %}
-                <span class="search-result-avatar">
-                  <img src="{{ BLANK_AVATAR_URL }}" alt="">
-                </span>
-              {% endif %}
-            </div>
-            <div class="search-result-end">
-              <div class="search-result-header">
-                <h3 class="search-result-title">
-                  <a href="{{ result.post_url }}">{{ result.thread_title|safe }}</a>
-                </h3>
-                {% if result.categories %}
-                  <ul class="search-result-categories">
-                    {% for category in result.categories %}
-                      <li class="search-result-category"{% if category.color %} style="--category-color: {{ category.color }};"{% endif %}>
-                        <a href="{% url 'misago:category-thread-list' category_id=category.id slug=category.slug %}">
-                          <span class="search-result-category-icon" aria-hidden="true">
-                            {% include "tabler/label-filled.svg" %}
-                          </span>
-                          <span class="search-result-category-name">
-                            {{ category.short_name|default:category.name }}
-                          </span>
-                        </a>
-                      </li>
-                    {% endfor %}
-                  </ul>
+        {% if search_results %}
+          {% for result in search_results.results %}
+            <li class="search-result">
+              <div class="search-result-start">
+                {% if result.poster %}
+                  <a class="search-result-avatar" href="{{ result.poster.get_absolute_url }}">
+                    <img src="{{ result.poster|avatar:32 }}" srcset="{{ result.poster|avatar:64 }}" alt="">
+                  </a>
+                {% else %}
+                  <span class="search-result-avatar">
+                    <img src="{{ BLANK_AVATAR_URL }}" alt="">
+                  </span>
                 {% endif %}
               </div>
-              <div class="search-result-body">
-                <a href="{{ result.post_url }}" class="search-result-excerpt">
-                  <span
-                    class="search-result-timestamp"
-                    title="{{ result.posted_at|date:'DATETIME_FORMAT' }}"
-                    mg-timestamp="{{ result.posted_at.isoformat }}"
-                  >{{ result.posted_at|date_relative }}</span> &mdash;
-                  {{ result.post_content|safe }}
-                </a>
+              <div class="search-result-end">
+                <div class="search-result-header">
+                  <h3 class="search-result-title">
+                    <a href="{{ result.post_url }}">{{ result.thread_title|safe }}</a>
+                  </h3>
+                  {% if result.categories %}
+                    <ul class="search-result-categories">
+                      {% for category in result.categories %}
+                        <li class="search-result-category"{% if category.color %} style="--category-color: {{ category.color }};"{% endif %}>
+                          <a href="{% url 'misago:category-thread-list' category_id=category.id slug=category.slug %}">
+                            <span class="search-result-category-icon" aria-hidden="true">
+                              {% include "tabler/label-filled.svg" %}
+                            </span>
+                            {% if category.short_name %}
+                              <span class="search-result-category-name-short">
+                                {{ category.short_name }}
+                              </span>
+                            {% endif %}
+                            <span class="search-result-category-name">
+                              {{ category.name }}
+                            </span>
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+                <div class="search-result-body">
+                  <a href="{{ result.post_url }}" class="search-result-excerpt">
+                    <span
+                      class="search-result-timestamp"
+                      title="{{ result.posted_at|date:'DATETIME_FORMAT' }}"
+                      mg-timestamp="{{ result.posted_at.isoformat }}"
+                    >{{ result.posted_at|date_relative }}</span> &mdash;
+                    {{ result.post_content|safe }}
+                  </a>
+                </div>
               </div>
-            </div>
+            </li>
+          {% empty %}
+            <li>
+              NOTHING FOUND
+            </li>
+          {% endfor %}
+        {% elif search_throttling %}
+          <li>
+            {% blocktranslate count seconds=search_throttling %}
+              You need to wait {{ seconds }} second before searching again.
+            {% plural %}
+              You need to wait {{ seconds }} seconds before searching again.
+            {% endblocktranslate %}
           </li>
-        {% endfor %}
-      {% elif search_throttling %}
-        {% blocktranslate count seconds=search_throttling %}
-          You need to wait {{ seconds }} second before searching again.
-        {% plural %}
-          You need to wait {{ seconds }} seconds before searching again.
-        {% endblocktranslate %}
-      {% else %}
-        NOTHING FOUND
-      {% endif %}
+        {% endif %}
+      </ul>
     </section>
 
     {% include "misago/main_footer.html" %}
