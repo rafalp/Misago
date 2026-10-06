@@ -2215,9 +2215,80 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
     assert post_search.content == "Updated"
 
 
+def test_postgresql_backend_create_search_result_excerpt_returns_full_length_excerpt(
+    backend,
+):
+    result = backend.create_search_result_excerpt(
+        "Lorem ipsum dolor met",
+        "Lorem STARTipsum dolorEND met",
+        ("START", "END"),
+    )
+
+    assert result == "Lorem <strong>ipsum dolor</strong> met"
+
+
+def test_postgresql_backend_create_search_result_excerpt_appends_short_prefix(backend):
+    result = backend.create_search_result_excerpt(
+        "Lorem ipsum dolor met",
+        "STARTipsum dolorEND met",
+        ("START", "END"),
+    )
+
+    assert result == "Lorem <strong>ipsum dolor</strong> met"
+
+
+def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_at_start(
+    backend,
+):
+    result = backend.create_search_result_excerpt(
+        ("Lorem " * 10) + "ipsum dolor met",
+        "STARTipsum dolorEND met",
+        ("START", "END"),
+    )
+
+    assert result == "...<strong>ipsum dolor</strong> met"
+
+
+def test_postgresql_backend_create_search_result_excerpt_appends_short_suffix(backend):
+    result = backend.create_search_result_excerpt(
+        "Lorem ipsum dolor met",
+        "Lorem STARTipsum dolorEND",
+        ("START", "END"),
+    )
+
+    assert result == "Lorem <strong>ipsum dolor</strong> met"
+
+
+def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_end(backend):
+    result = backend.create_search_result_excerpt(
+        "Lorem ipsum dolor met" + (" elit" * 15),
+        "STARTipsum dolorEND met",
+        ("START", "END"),
+    )
+
+    assert result == "Lorem <strong>ipsum dolor</strong> met..."
+
+
+def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_at_both_ends(
+    backend,
+):
+    result = backend.create_search_result_excerpt(
+        ("Lorem " * 10) + " sit ipsum dolor met" + (" elit" * 15),
+        "sit STARTipsum dolorEND met",
+        ("START", "END"),
+    )
+
+    assert result == "...sit <strong>ipsum dolor</strong> met..."
+
+
 def test_postgresql_backend_prepare_headline_value_breaks_down_html_tags(backend):
     result = backend.prepare_headline_value("How to use <article> html tag?")
     assert result == "How to use < article > html tag?"
+
+
+def test_postgresql_backend_prepare_headline_value_normalizes_whitespace(backend):
+    result = backend.prepare_headline_value("Lorem   ipsum\n \ndolor")
+    assert result == "Lorem ipsum dolor"
 
 
 def test_postgresql_backend_prepare_indexed_value_strips_html_tags(backend):

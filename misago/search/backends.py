@@ -1,3 +1,4 @@
+import re
 import string
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -404,8 +405,8 @@ class PostgreSQLSearchBackend(SearchBackend):
                     thread_title=self.format_headline(
                         thread.headline, headline_markers
                     ),
-                    post_content=self.build_search_result_excerpt(
-                        post, post.headline, headline_markers
+                    post_content=self.create_search_result_excerpt(
+                        post.content, post.headline, headline_markers
                     ),
                 )
             )
@@ -509,8 +510,8 @@ class PostgreSQLSearchBackend(SearchBackend):
                         thread_title=self.format_headline(
                             thread_headlines.get(thread_id, "MISSING"), headline_markers
                         ),
-                        post_content=self.build_search_result_excerpt(
-                            post, post.headline, headline_markers
+                        post_content=self.create_search_result_excerpt(
+                            post.content, post.headline, headline_markers
                         ),
                     )
                 )
@@ -592,8 +593,8 @@ class PostgreSQLSearchBackend(SearchBackend):
                         thread_headlines.get(result.thread_id, "MISSING"),
                         headline_markers,
                     ),
-                    post_content=self.build_search_result_excerpt(
-                        result, result.headline, headline_markers
+                    post_content=self.create_search_result_excerpt(
+                        result.content, result.headline, headline_markers
                     ),
                 )
                 for result in results
@@ -713,11 +714,9 @@ class PostgreSQLSearchBackend(SearchBackend):
             max_fragments=self.headline_max_fragments,
         )
 
-    def build_search_result_excerpt(
-        self, post: PostSearch, headline: str, headline_markers: tuple[str, str]
+    def create_search_result_excerpt(
+        self, content: str, headline: str, headline_markers: tuple[str, str]
     ) -> str:
-        content = post.content
-
         headline_start, headline_stop = headline_markers
         raw_headline = headline.replace(headline_start, "").replace(headline_stop, "")
 
@@ -829,7 +828,9 @@ class PostgreSQLSearchBackend(SearchBackend):
         )
 
     def prepare_headline_value(self, value: str) -> str:
-        return self.break_down_html_tags(value)
+        return self.normalize_whitespaces(
+            self.break_down_html_tags(value),
+        )
 
     def break_down_html_tags(self, value: str) -> str:
         if "<" not in value and ">" not in value:
@@ -849,6 +850,9 @@ class PostgreSQLSearchBackend(SearchBackend):
                 clean_value.append(c)
 
         return "".join(clean_value)
+
+    def normalize_whitespaces(self, value: str) -> str:
+        return re.sub(r"\s+", " ", value)
 
     def prepare_indexed_value(self, value: str) -> str:
         return self.strip_html_tags(value)
