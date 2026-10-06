@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_avatars misago_component misago_formats %}
+{% load i18n misago_component misago_forms %}
 
 
 {% block title %}
@@ -9,109 +9,74 @@
 
 {% block content %}
 <div class="page page-search">
-  {% includecomponent header %}
   <div class="container page-container">
 
-    <details{% if not form.is_valid %} open{% endif %}>
-      <summary>
-          <span class="btn btn-default with-svg-icon inline-flex">
-            {% include "tabler/adjustments-horizontal.svg" %}
-            <span>
-              {% translate "Toggle options" context "search threads form toggle btn" %}
-            </span>
-          </span>
-      </summary>
-      <div class="section">
-        <form action="{% url form.url_name %}" method="get">
-          <div class="panel panel-default panel-form">
-            <div class="panel-heading">
-              <h3 class="panel-title">{% translate "Search options" context "search threads form title" %}</h3>
-            </div>
-            <div class="panel-body">
-              {% include form.template_name %}
-            </div>
-            <div class="panel-footer panel-footer-center">
-              <button class="btn btn-primary">
-                {% translate "Search" context "search form submit btn" %}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </details>
+    {% includecomponent breadcrumbs %}
 
     <section class="section">
-      <header class="search-results-header">
+      <form action="{% url form.url_name %}" method="get" class="search-threads-form">
+        <div class="panel panel-default panel-form">
+          <div class="panel-heading">
+            <h1 class="panel-title">
+              {{ form.name }}
+            </h1>
+          </div>
+          <div class="panel-body">
+
+            {% with field=form.query %}
+              <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="sr-only" for="{{ field.id_for_label }}">
+                  {% translate "Search:" context "search threads form" %}
+                </label>
+                <div class="search-query-form-group">
+                  <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+                  <button class="btn btn-primary search-btn-icon">
+                    {% include "tabler/search.svg" %}
+                  </button>
+                  <button class="btn btn-primary search-btn-full">
+                    {% translate "Search" context "search form submit btn" %}
+                  </button>
+                </div>
+                {% for error in field.errors %}
+                  <p class="help-block">{{ error }}</p>
+                {% endfor %}
+                {% include "misago/search/syntax_help.html" %}
+              </div>
+            {% endwith %}
+
+            <details class="search-threads-options" {% if not form.is_valid %} open{% endif %}>
+              <summary class="search-threads-options-title">
+                {% include "tabler/adjustments-horizontal.svg" %}
+                <span class="search-threads-options-title-text">
+                  {% translate "Search options" context "search threads form toggle" %}
+                </span>
+              </summary>
+              <div class="search-threads-options-body">
+                {% include "misago/search/threads/options.html" %}
+              </div>
+            </details>
+          </div>
+          <div class="panel-footer panel-footer-center">
+            <button class="btn btn-primary">
+              {% translate "Search" context "search form submit btn" %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="section">
+      <div class="search-results-header">
         <h2 class="search-results-title">
-          {% if search_results %}
-            {{ search_results.title }}
-          {% elif search_throttling %}
+          {% if search_throttling %}
             THROTTLED
           {% else %}
-            NO RESULTs
+            {{ search_results.title }}
           {% endif %}
         </h2>
-      </header>
+      </div>
       <ul class="search-results-list">
-        {% if search_results %}
-          {% for result in search_results.results %}
-            <li class="search-result">
-              <div class="search-result-start">
-                {% if result.poster %}
-                  <a class="search-result-avatar" href="{{ result.poster.get_absolute_url }}">
-                    <img src="{{ result.poster|avatar:32 }}" srcset="{{ result.poster|avatar:64 }}" alt="">
-                  </a>
-                {% else %}
-                  <span class="search-result-avatar">
-                    <img src="{{ BLANK_AVATAR_URL }}" alt="">
-                  </span>
-                {% endif %}
-              </div>
-              <div class="search-result-end">
-                <div class="search-result-header">
-                  <h3 class="search-result-title">
-                    <a href="{{ result.post_url }}">{{ result.thread_title|safe }}</a>
-                  </h3>
-                  {% if result.categories %}
-                    <ul class="search-result-categories">
-                      {% for category in result.categories %}
-                        <li class="search-result-category"{% if category.color %} style="--category-color: {{ category.color }};"{% endif %}>
-                          <a href="{% url 'misago:category-thread-list' category_id=category.id slug=category.slug %}">
-                            <span class="search-result-category-icon" aria-hidden="true">
-                              {% include "tabler/label-filled.svg" %}
-                            </span>
-                            {% if category.short_name %}
-                              <span class="search-result-category-name-short">
-                                {{ category.short_name }}
-                              </span>
-                            {% endif %}
-                            <span class="search-result-category-name">
-                              {{ category.name }}
-                            </span>
-                          </a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                </div>
-                <div class="search-result-body">
-                  <a href="{{ result.post_url }}" class="search-result-excerpt">
-                    <span
-                      class="search-result-timestamp"
-                      title="{{ result.posted_at|date:'DATETIME_FORMAT' }}"
-                      mg-timestamp="{{ result.posted_at.isoformat }}"
-                    >{{ result.posted_at|date_relative }}</span> &mdash;
-                    {{ result.post_content|safe }}
-                  </a>
-                </div>
-              </div>
-            </li>
-          {% empty %}
-            <li>
-              NOTHING FOUND
-            </li>
-          {% endfor %}
-        {% elif search_throttling %}
+        {% if search_throttling %}
           <li>
             {% blocktranslate count seconds=search_throttling %}
               You need to wait {{ seconds }} second before searching again.
@@ -119,6 +84,8 @@
               You need to wait {{ seconds }} seconds before searching again.
             {% endblocktranslate %}
           </li>
+        {% elif search_results %}
+          {% include "misago/search/threads/results.html" %}
         {% endif %}
       </ul>
     </section>

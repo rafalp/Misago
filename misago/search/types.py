@@ -7,6 +7,9 @@ class ThreadsSearchResult:
     has_more: bool
     time: float
 
+    def __len__(self) -> int:
+        return len(self.items)
+
     def __iter__(self):
         yield from self.items
 

@@ -29,6 +29,92 @@
   }
 }
 
+.search-query-form-group {
+  display: flex;
+  gap: @padding-large-vertical;
+
+  .form-control {
+    display: flex;
+    align-items: center;
+    height: 34px;
+  }
+}
+
+.search-btn-icon {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+
+  width: 34px;
+  padding: 0;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.search-btn-full {
+  display: none;
+}
+
+.search-btn-icon,
+.search-btn-full {
+  align-items: center;
+  height: 34px;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .search-btn-icon {
+    display: none;
+  }
+
+  .search-btn-full {
+    display: flex;
+  }
+}
+
+.search-threads-form {
+  .panel-footer {
+    display: none;
+  }
+
+  &:has(.search-threads-options:open, .search-threads-options[open]) {
+    .panel-footer {
+      display: block;
+    }
+  }
+}
+
+.search-threads-options-title {
+  display: flex;
+  align-items: center;
+  gap: @padding-base-vertical;
+
+  font-size: @font-size-large;
+
+  cursor: pointer;
+
+  svg {
+    width: 24px;
+    height: 24px;
+
+    color: @gray-500;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    .search-threads-options-title-text {
+      text-decoration: underline;
+    }
+  }
+}
+
+.search-threads-options-body {
+  margin-top: @padding-large-vertical;
+}
+
 .search-results-list {
   margin: 0;
   padding: 0;
@@ -36,6 +122,13 @@
   border-top: 1px solid @gray-lighter;
   border-bottom: 1px solid @gray-lighter;
   list-style: none;
+}
+
+.search-results-title {
+  margin: 0;
+  padding: @padding-large-vertical 0;
+
+  font-size: @font-size-base * 1.5;
 }
 
 .search-result {
@@ -128,7 +221,7 @@
     &:active {
       color: @gray-900;
       text-decoration: none;
-  
+
       .search-result-category-name {
         text-decoration: underline;
       }
@@ -161,7 +254,6 @@
   }
 }
 
-
 .search-result-category-icon {
   display: inline-block;
 
@@ -176,6 +268,11 @@
 
     color: var(--category-color, @gray-300);
   }
+}
+
+.search-result-body {
+  margin: 0;
+  padding: 0;
 }
 
 .search-result-excerpt {

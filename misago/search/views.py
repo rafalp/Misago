@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import pgettext
+from django.utils.translation import npgettext, pgettext
 from django.views import View
 
 from ..categories.models import Category
@@ -109,7 +109,6 @@ class BaseSearchView(View):
 
 class ThreadsSearchView(BaseSearchView):
     template_name = "misago/search/threads/index.html"
-    header_template_name = "misago/search/threads/header.html"
 
     is_search_public: bool = True
 
@@ -134,7 +133,6 @@ class ThreadsSearchView(BaseSearchView):
         return {
             "page_title": form.name,
             "breadcrumbs": self.get_breadcrumbs(),
-            "header": self.get_header_data(),
             "form": form,
             "search_throttling": search_throttling,
             "search_results": search_results,
@@ -143,9 +141,6 @@ class ThreadsSearchView(BaseSearchView):
     def get_search_form(self) -> ThreadsSearchForm:
         form_class = extensions.get(ThreadsSearchForm)
         return form_class(self.request.GET, request=self.request)
-
-    def get_header_data(self) -> dict:
-        return {"template_name": self.header_template_name}
 
     def get_search_results_data(self, form: ThreadsSearchForm) -> dict:
         results = self.search(form)
@@ -166,6 +161,7 @@ class ThreadsSearchView(BaseSearchView):
         more_url = None
 
         return {
+            "title": self.get_search_results_title(results),
             "results": results_data,
             "has_more": results.has_more,
             "more_url": more_url,
@@ -189,6 +185,26 @@ class ThreadsSearchView(BaseSearchView):
         return self.request.categories.get_ancestors(
             post.category_id, include_self=True
         )
+
+    def get_search_results_title(self, results: ThreadsSearchResult) -> str:
+        results_num = len(results)
+
+        if results.has_more:
+            message = npgettext(
+                "search threads results title",
+                "Found %(results)s+ thread",
+                "Found %(results)s+ threads",
+                results_num,
+            )
+        else:
+            message = npgettext(
+                "search threads results title",
+                "Found %(results)s thread",
+                "Found %(results)s threads",
+                results_num,
+            )
+
+        return message % {"results": results_num}
 
     def get_search_throttling(self) -> int:
         if self.request.user_permissions.bypass_search_throttling:
@@ -292,9 +308,31 @@ class PrivateThreadsSearchView(ThreadsSearchView):
         )
 
         return {
+            "header": self.get_search_results_header(results),
             "results": results,
             "more_url": None,
         }
+
+    def get_search_results_title(self, results: ThreadsSearchResult) -> str:
+        results_num = len(results)
+
+        if results.has_more:
+            message = npgettext(
+                "search private threads results title",
+                "Found %(results)s+ private thread",
+                "Found %(results)s+ private threads",
+                results_num,
+            )
+        else:
+            message = npgettext(
+                "search private threads results title",
+                "Found %(results)s private thread",
+                "Found %(results)s private threads",
+                results_num,
+            )
+
+        return message % {"results": results_num}
+
 
 
 class UsersSearchView(BaseSearchView):
