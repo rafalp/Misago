@@ -190,10 +190,7 @@ class ThreadsSearchView(BaseSearchView):
         results_num = len(results)
 
         if not results_num:
-            return pgettext(
-                "search threads results title",
-                "No threads found"
-            )
+            return pgettext("search threads results title", "No threads found")
 
         if results.has_more:
             message = npgettext(
@@ -324,8 +321,7 @@ class PrivateThreadsSearchView(ThreadsSearchView):
 
         if not results_num:
             return pgettext(
-                "search private threads results title",
-                "No private threads found"
+                "search private threads results title", "No private threads found"
             )
 
         if results.has_more:
