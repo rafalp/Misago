@@ -334,6 +334,5 @@ class PrivateThreadsSearchView(ThreadsSearchView):
         return message % {"results": results_num}
 
 
-
 class UsersSearchView(BaseSearchView):
     pass
