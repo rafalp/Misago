@@ -54,7 +54,9 @@
     </div>
   </li>
 {% empty %}
-  <li>
-    NOTHING FOUND
+  <li class="search-results-blankslate">
+    {% blocktranslate trimmed context "search threads blankslate message"%}
+      Try broadening your search
+    {% endblocktranslate %}
   </li>
 {% endfor %}
