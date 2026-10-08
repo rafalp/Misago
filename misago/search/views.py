@@ -109,22 +109,32 @@ class BaseSearchView(View):
 
 class ThreadsSearchView(BaseSearchView):
     template_name = "misago/search/threads/index.html"
+    results_template_name = "misago/search/threads/results.html"
 
     is_search_public: bool = True
 
     def get(self, request: HttpRequest) -> HttpResponse:
         self.check_permission()
         context = self.get_context_data()
-        return render(request, self.template_name, context)
+
+        if request.is_htmx:
+            template_name = self.results_template_name
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
 
     def check_permission(self):
         check_search_permission(self.request.user_permissions)
 
     def get_context_data(self) -> dict:
         form = self.get_search_form()
-        search_throttling = self.get_search_throttling()
+        search_throttled = self.get_search_throttling()
 
-        if form.is_valid() and not search_throttling:
+        if self.request.is_htmx and search_throttled:
+            raise PermissionDenied("NOPE")
+
+        if form.is_valid() and not search_throttled:
             self.log_search(form.cleaned_data["query"])
             search_results = self.get_search_results_data(form)
         else:
@@ -134,7 +144,7 @@ class ThreadsSearchView(BaseSearchView):
             "page_title": form.name,
             "breadcrumbs": self.get_breadcrumbs(),
             "form": form,
-            "search_throttling": search_throttling,
+            "search_throttled": search_throttled,
             "search_results": search_results,
         }
 

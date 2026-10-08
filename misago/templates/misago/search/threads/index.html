@@ -65,30 +65,13 @@
       </form>
     </section>
 
-    <section class="section">
-      <div class="search-results-header">
-        <h2 class="search-results-title">
-          {% if search_throttling %}
-            {% translate "Search limit reached" context "search threads results title" %}
-          {% else %}
-            {{ search_results.title }}
-          {% endif %}
-        </h2>
-      </div>
-      <ul class="search-results-list">
-        {% if search_throttling %}
-          <li class="search-results-throttled">
-            {% blocktranslate count seconds=search_throttling %}
-              Wait {{ seconds }} second before searching again.
-            {% plural %}
-              Wait {{ seconds }} seconds before searching again.
-            {% endblocktranslate %}
-          </li>
-        {% elif search_results %}
-          {% include "misago/search/threads/results.html" %}
-        {% endif %}
-      </ul>
-    </section>
+    <div id="misago-htmx-root">
+      {% if search_throttled %}
+        {% include "misago/search/throttled.html" %}
+      {% elif search_results %}
+        {% include "misago/search/threads/results.html" %}
+      {% endif %}
+    </div>
 
     {% include "misago/main_footer.html" %}
 

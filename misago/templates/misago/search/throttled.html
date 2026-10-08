@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<section
+  class="section"
+  hx-get="{{ full_path }}"
+  hx-trigger="load delay:{{ search_throttled|add:3 }}s"
+  hx-target="#misago-htmx-root"
+  hx-swap="innerHTML"
+>
+  <div class="search-throttled">
+    <div class="search-throttled-icon" aria-hidden="true">
+      {% include "tabler/alarm.svg" %}
+    </div>
+    <div class="search-throttled-body">
+      <h2 class="search-throttled-title">
+        {% translate "Search limit reached" context "search results throttled title" %}
+      </h2>
+      <p class="search-throttled-content">
+        {% blocktranslate count seconds=search_throttled context "search results throttled" %}
+          Wait {{ seconds }} second before searching again.
+        {% plural %}
+          Wait {{ seconds }} seconds before searching again.
+        {% endblocktranslate %}
+      </p>
+    </div>
+  </div>
+</section>
