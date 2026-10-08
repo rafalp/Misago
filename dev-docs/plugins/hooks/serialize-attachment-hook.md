@@ -1,6 +1,6 @@
 # `serialize_attachment_hook`
 
-This hook wraps the standard function that Misago uses to create a JSON-serializable `dict` for an attachment.
+This hook wraps a Misago function used to create a JSON-serializable `dict` for an attachment.
 
 
 ## Location
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: SerializeAttachmentHookAction`
 
-A standard function that Misago uses to create a JSON-serializable `dict` for an attachment.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ def serialize_attachment_action(attachment: Attachment) -> dict:
     ...
 ```
 
-A standard function that Misago uses to create a JSON-serializable `dict` for an attachment.
+Misago function used to create a JSON-serializable `dict` for an attachment.
 
 
 ### Arguments

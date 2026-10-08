@@ -17,6 +17,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.postedits.hooks`](#misago-postedits-hooks)
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.privatethreads.hooks`](#misago-privatethreads-hooks)
+- [`misago.search.hooks`](#misago-search-hooks)
 - [`misago.solutions.hooks`](#misago-solutions-hooks)
 - [`misago.threadevents.hooks`](#misago-threadevents-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
@@ -44,8 +45,7 @@ Hooks instances are importable from the following Python modules:
 - [`delete_categories_hook`](./delete-categories-hook.md)
 - [`get_categories_page_component_hook`](./get-categories-page-component-hook.md)
 - [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
-- [`get_categories_query_values_hook`](./get-categories-query-values-hook.md)
-- [`get_category_data_hook`](./get-category-data-hook.md)
+- [`serialize_category_data_hook`](./serialize-category-data-hook.md)
 - [`synchronize_category_hook`](./synchronize-category-hook.md)
 
 
@@ -151,6 +151,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_reply_private_thread_permission_hook`](./check-reply-private-thread-permission-hook.md)
 - [`check_reply_thread_permission_hook`](./check-reply-thread-permission-hook.md)
 - [`check_restore_post_edit_permission_hook`](./check-restore-post-edit-permission-hook.md)
+- [`check_search_permission_hook`](./check-search-permission-hook.md)
 - [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
 - [`check_see_post_edit_history_permission_hook`](./check-see-post-edit-history-permission-hook.md)
 - [`check_see_post_likes_permission_hook`](./check-see-post-likes-permission-hook.md)
@@ -172,15 +173,20 @@ Hooks instances are importable from the following Python modules:
 - [`filter_accessible_thread_posts_hook`](./filter-accessible-thread-posts-hook.md)
 - [`filter_private_thread_events_queryset_hook`](./filter-private-thread-events-queryset-hook.md)
 - [`filter_private_thread_posts_queryset_hook`](./filter-private-thread-posts-queryset-hook.md)
+- [`filter_private_threads_posts_queryset_hook`](./filter-private-threads-posts-queryset-hook.md)
 - [`filter_private_threads_queryset_hook`](./filter-private-threads-queryset-hook.md)
 - [`filter_thread_events_queryset_hook`](./filter-thread-events-queryset-hook.md)
 - [`filter_thread_posts_queryset_hook`](./filter-thread-posts-queryset-hook.md)
+- [`filter_threads_posts_queryset_hook`](./filter-threads-posts-queryset-hook.md)
+- [`filter_threads_queryset_hook`](./filter-threads-queryset-hook.md)
 - [`get_admin_category_permissions_hook`](./get-admin-category-permissions-hook.md)
 - [`get_category_threads_category_query_hook`](./get-category-threads-category-query-hook.md)
 - [`get_category_threads_pinned_category_query_hook`](./get-category-threads-pinned-category-query-hook.md)
 - [`get_category_threads_query_hook`](./get-category-threads-query-hook.md)
 - [`get_threads_category_query_hook`](./get-threads-category-query-hook.md)
 - [`get_threads_pinned_category_query_hook`](./get-threads-pinned-category-query-hook.md)
+- [`get_threads_posts_queries_hook`](./get-threads-posts-queries-hook.md)
+- [`get_threads_queries_hook`](./get-threads-queries-hook.md)
 - [`get_threads_query_orm_filter_hook`](./get-threads-query-orm-filter-hook.md)
 - [`get_user_permissions_hook`](./get-user-permissions-hook.md)
 
@@ -258,6 +264,16 @@ Hooks instances are importable from the following Python modules:
 - [`set_private_thread_owner_hook`](./set-private-thread-owner-hook.md)
 - [`validate_new_private_thread_member_hook`](./validate-new-private-thread-member-hook.md)
 - [`validate_new_private_thread_owner_hook`](./validate-new-private-thread-owner-hook.md)
+
+
+## `misago.search.hooks`
+
+`misago.search.hooks` defines the following hooks:
+
+- [`clean_search_query_hook`](./clean-search-query-hook.md)
+- [`parse_search_query_hook`](./parse-search-query-hook.md)
+- [`throttle_search_hook`](./throttle-search-hook.md)
+- [`validate_search_query_hook`](./validate-search-query-hook.md)
 
 
 ## `misago.solutions.hooks`

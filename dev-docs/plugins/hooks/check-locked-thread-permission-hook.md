@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -59,7 +59,7 @@ Misago function that checks whether a user has permission to bypass a thread's l
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 

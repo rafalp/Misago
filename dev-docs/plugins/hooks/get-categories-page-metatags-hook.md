@@ -1,6 +1,6 @@
 # `get_categories_page_metatags_hook`
 
-This hook wraps the standard function that Misago uses to get metatags for the categories page.
+This hook wraps a Misago function used to get metatags for the categories page.
 
 
 ## Location

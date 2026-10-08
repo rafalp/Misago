@@ -16,7 +16,7 @@ class FilterThreadEventsQuerysetHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -30,7 +30,7 @@ class FilterThreadEventsQuerysetHookAction(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only thread events that the user can see.
+    A `QuerySet` filtered to show only thread events that the user can see.
     """
 
     def __call__(
@@ -54,7 +54,7 @@ class FilterThreadEventsQuerysetHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,7 +68,7 @@ class FilterThreadEventsQuerysetHookFilter(Protocol):
 
     ## Return value
 
-    A `queryset` filtered to show only thread events that the user can see.
+    A `QuerySet` filtered to show only thread events that the user can see.
     """
 
     def __call__(
@@ -87,8 +87,8 @@ class FilterThreadEventsQuerysetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses set filters on
-    thread's events queryset to limit it only to events that the user can see.
+    This hook wraps a Misago function used to set filters on thread's events
+    queryset to limit it only to events that the user can see.
 
     # Example
 
@@ -96,16 +96,18 @@ class FilterThreadEventsQuerysetHook(
     anonymous user.
 
     ```python
+    from django.db.models import Queryset
     from misago.permissions.hooks import filter_thread_events_queryset_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.threads.models import Thread
 
     @filter_thread_events_queryset_hook.append_filter
-    def exclude_old_private_threads_queryset_hook(
+    def hide_thread_events_for_anonymous_user(
         action,
         permissions: UserPermissionsProxy,
-        thread,
-        queryset,
-    ) -> None:
+        thread: Thread,
+        queryset: Queryset,
+    ) -> Queryset:
         queryset = action(permissions, thread, queryset)
 
         if permissions.user.is_anonymous:

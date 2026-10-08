@@ -265,13 +265,9 @@ def _merge_posts_action(
         if post.id > target.id:
             target.content += f"\n\n{post.content}"
             target.content_parsed += f"\n{post.content_parsed}"
-            target.search_document += f"\n\n{post.search_document}"
         else:
             target.content = f"{post.content}\n\n{target.content}"
             target.content_parsed = f"{post.content_parsed}\n{target.content_parsed}"
-            target.search_document = (
-                f"{post.search_document}\n\n{target.search_document}"
-            )
 
         target.edits += post.edits
 
@@ -310,8 +306,6 @@ def _merge_posts_action(
         target.last_editor = merged_by
         target.last_editor_name = merged_by.username
         target.last_editor_slug = merged_by.slug
-
-    target.set_search_vector()
 
     if commit:
         target.save()

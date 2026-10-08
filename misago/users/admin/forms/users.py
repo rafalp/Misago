@@ -8,8 +8,8 @@ from django.utils.translation import npgettext, pgettext, pgettext_lazy
 
 from ....acl.models import Role
 from ....admin.forms import IsoDateTimeField, YesNoField
+from ....admin.search import search_queryset
 from ....notifications.threads import ThreadNotifications
-from ....search.filter_queryset import filter_queryset
 from ...enums import DefaultGroupId, UserNewPrivateThreadsPreference
 from ...models import Group, Rank
 from ...profilefields import profilefields
@@ -529,12 +529,12 @@ class BaseFilterUsersForm(forms.Form):
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get("username"):
-            queryset = filter_queryset(
+            queryset = search_queryset(
                 queryset, "slug", slugify_username(criteria["username"])
             )
 
         if criteria.get("email"):
-            queryset = filter_queryset(
+            queryset = search_queryset(
                 queryset, "email", criteria["email"], case_sensitive=False
             )
 

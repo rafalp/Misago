@@ -1,0 +1,74 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_admin_form misago_capture %}
+
+
+{% block page-actions %}
+<div class="col-auto page-action">
+  <form action="{% url 'misago:admin:searchlogs:download' %}" method="post" data-delete-confirmation="true">
+    {% csrf_token %}
+    <button class="btn btn-primary btn-sm">
+      <span class="fa fa-download"></span>
+      {% translate "Download CSV" context "admin search logs" %}
+    </button>
+  </form>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th>{% translate "Search" context "admin search logs list" %}</th>
+<th style="width: 200px;">{% translate "Searched" context "admin search logs list" %}</th>
+<th style="width: 160px;">{% translate "User" context "admin search logs list" %}</th>
+<th style="width: 160px;">{% translate "IP address" context "admin search logs list" %}</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="small text-truncate">
+  <code>
+    {{ item.search_query }}
+  </code>
+</td>
+<td class="small text-truncate" style="max-width: 200px;">
+  <abbr data-timestamp="{{ item.searched_at.isoformat }}" data-format="LL">
+    {{ item.searched_at }}
+  </abbr>
+</td>
+<td class="small text-truncate" style="max-width: 160px;">
+  {% if item.user %}
+    <a href="{{ item.user.get_absolute_url }}" class="item-title" target="_blank">{{ item.user }}</a>
+  {% else %}
+    <em class="text-muted">
+      {% translate "Guest" context "admin search logs list guest user" %}
+    </em>
+  {% endif %}
+</td>
+<td class="small text-truncate" style="max-width: 160px;">
+  {{ item.ip_address }}
+</td>
+{% endblock table-row %}
+
+
+{% block blankslate %}
+<td colspan="4">
+  {% if active_filters %}
+    {% translate "No search logs found" context "admin search logs" %}
+  {% else %}
+    {% translate "No search logs exist" context "admin search logs" %}
+  {% endif %}
+</td>
+{% endblock blankslate %}
+
+
+{% block filters-modal-body %}
+<div class="row">
+  <div class="col">
+    {% form_row filter_form.search_query %}
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    {% form_row filter_form.ip_address %}
+  </div>
+</div>
+{% endblock filters-modal-body %}

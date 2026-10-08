@@ -1,0 +1,80 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_component misago_forms %}
+
+
+{% block title %}
+{{ page_title }} | {{ settings.forum_name }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-search">
+  <div class="container page-container">
+
+    {% includecomponent breadcrumbs %}
+
+    <section class="section">
+      <form action="{% url form.url_name %}" method="get" class="search-threads-form">
+        <div class="panel panel-default panel-form">
+          <div class="panel-heading">
+            <h1 class="panel-title">
+              {{ form.name }}
+            </h1>
+          </div>
+          <div class="panel-body">
+
+            {% with field=form.query %}
+              <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label class="sr-only" for="{{ field.id_for_label }}">
+                  {% translate "Search:" context "search threads form" %}
+                </label>
+                <div class="search-query-form-group">
+                  <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+                  <button class="btn btn-primary search-btn-icon">
+                    {% include "tabler/search.svg" %}
+                  </button>
+                  <button class="btn btn-primary search-btn-full">
+                    {% translate "Search" context "search form submit btn" %}
+                  </button>
+                </div>
+                {% for error in field.errors %}
+                  <p class="help-block">{{ error }}</p>
+                {% endfor %}
+                {% include "misago/search/syntax_help.html" %}
+              </div>
+            {% endwith %}
+
+            <details class="search-threads-options" {% if not form.is_valid %} open{% endif %}>
+              <summary class="search-threads-options-title">
+                {% include "tabler/adjustments-horizontal.svg" %}
+                <span class="search-threads-options-title-text">
+                  {% translate "Search options" context "search threads form toggle" %}
+                </span>
+              </summary>
+              <div class="search-threads-options-body">
+                {% include "misago/search/threads/options.html" %}
+              </div>
+            </details>
+          </div>
+          <div class="panel-footer panel-footer-center">
+            <button class="btn btn-primary">
+              {% translate "Search" context "search form submit btn" %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <div id="misago-htmx-root">
+      {% if search_throttled %}
+        {% include "misago/search/throttled.html" %}
+      {% elif search_results %}
+        {% includecomponent search_results %}
+      {% endif %}
+    </div>
+
+    {% include "misago/main_footer.html" %}
+
+  </div>
+</div>
+{% endblock %}

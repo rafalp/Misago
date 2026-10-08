@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetThreadStartStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ThreadStartState`
-    instance for starting a new thread.
+    Misago function used to create a new `ThreadStartState` instance for starting
+    a new thread.
 
     # Arguments
 
@@ -74,8 +74,8 @@ class GetThreadStartStateHook(
     FilterHook[GetThreadStartStateHookAction, GetThreadStartStateHookFilter]
 ):
     """
-    This hook wraps the standard function Misago uses to create a new
-    `ThreadStartState` instance for starting a new thread.
+    This hook wraps a Misago function used to create a new `ThreadStartState`
+    instance for starting a new thread.
 
     # Example
 

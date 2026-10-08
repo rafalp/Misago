@@ -81,7 +81,7 @@ class DeletePostEditHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to delete a `PostEdit` object.
+    This hook wraps a Misago function used to delete a `PostEdit` object.
 
     # Example
 

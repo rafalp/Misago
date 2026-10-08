@@ -1,0 +1,20 @@
+{% load i18n misago_forms %}
+
+{% with field=form.query %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Search:" context "search threads form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    {% include "misago/search/syntax_help.html" %}
+  </div>
+{% endwith %}
+
+<h4 class="panel-fieldset-legend">
+  {% translate 'Optional' context "search threads form legend" %}
+</h4>
+
+{% include "misago/search/threads/options.html" %}

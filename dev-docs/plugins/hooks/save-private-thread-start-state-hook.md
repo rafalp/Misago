@@ -1,6 +1,6 @@
 # `save_private_thread_start_state_hook`
 
-This hook wraps the standard function that Misago uses to save a new private thread to the database.
+This hook wraps a Misago function used to save a new private thread to the database.
 
 
 ## Location
@@ -54,7 +54,7 @@ def save_private_thread_start_state_action(
     ...
 ```
 
-A standard function that Misago uses to save a new private thread to the database.
+Misago function used to save a new private thread to the database.
 
 
 ### Arguments

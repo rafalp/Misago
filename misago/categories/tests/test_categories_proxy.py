@@ -1,458 +1,215 @@
-from ...categories.models import Category
+import pytest
+
 from ...permissions.enums import CategoryPermission
-from ...permissions.proxy import UserPermissionsProxy
-from ...testutils import (
-    grant_category_group_permissions,
-    remove_category_group_permissions,
-)
-from ..categories import get_category_data
-from ..proxy import CategoriesProxy
+from ...permissions.models import CategoryGroupPermission
+from ...testutils import grant_category_group_permissions
+from ..categoriesdata import serialize_category_data
+from ..models import Category
+from ..proxy import CategoriesProxy, CategoryProxy
 
 
-def get_category_data_dict(category: Category):
-    return get_category_data(category.__dict__)
+def get_category_proxy(category: Category) -> CategoryProxy:
+    return CategoryProxy(**serialize_category_data(category.__dict__))
 
 
 def test_categories_proxy_loads_categories_visible_to_anonymous_user(
-    default_category, anonymous_user, cache_versions
+    user_permissions_factory, default_category, anonymous_user, cache_versions
 ):
-    user_permissions = UserPermissionsProxy(anonymous_user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    user_permissions = user_permissions_factory(anonymous_user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    assert categories.categories[default_category.id] == get_category_data_dict(
-        default_category
-    )
+    assert default_category in proxy
 
 
 def test_categories_proxy_loads_categories_visible_to_user(
-    default_category, user, cache_versions
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    assert categories.categories[default_category.id] == get_category_data_dict(
-        default_category
-    )
+    assert default_category in proxy
 
 
 def test_categories_proxy_excludes_categories_inaccessible_by_user(
-    root_category, user, cache_versions
+    user_permissions_factory, root_category, user, cache_versions
 ):
     sibling_category = Category(name="Sibling Category", slug="sibling-category")
     sibling_category.insert_at(root_category, position="last-child", save=True)
 
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    assert sibling_category.id not in categories.categories
+    assert sibling_category not in proxy
 
 
-def test_categories_proxy_list_has_categories_visible_to_user(
-    root_category, default_category, user, cache_versions
+def test_categories_proxy_evaluates_to_true_if_it_contains_categories(
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+    assert proxy
 
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
 
-    assert categories.category_list == [
-        get_category_data_dict(default_category),
+def test_categories_proxy_evaluates_to_false_if_it_contains_no_categories(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    CategoryGroupPermission.objects.all().delete()
+
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+    assert not proxy
+
+
+def test_categories_proxy_contains_returns_true_for_contained_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert default_category in proxy
+    assert default_category.id in proxy
+
+
+def test_categories_proxy_contains_returns_false_for_non_contained_category(
+    user_permissions_factory, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert sibling_category not in proxy
+    assert sibling_category.id not in proxy
+
+
+def test_categories_proxy_getitem_returns_category_proxy_object_by_id(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy[default_category.id] == get_category_proxy(default_category)
+
+
+def test_categories_proxy_getitem_raises_key_error_for_nonexisting_id(
+    user_permissions_factory, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    with pytest.raises(KeyError):
+        proxy[sibling_category.id]
+
+
+def test_categories_proxy_iter_returns_visible_categories_ids_iterator(
+    user_permissions_factory, default_category, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert list(proxy) == [default_category.id]
+
+
+def test_categories_proxy_len_returns_visible_categories_number(
+    user_permissions_factory, default_category, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert len(proxy) == 1
+
+
+def test_categories_proxy_keys_returns_visible_categories_ids_view(
+    user_permissions_factory, default_category, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert list(proxy.keys()) == [default_category.id]
+
+
+def test_categories_proxy_values_returns_visible_category_proxies_view(
+    user_permissions_factory, default_category, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert list(proxy.values()) == [get_category_proxy(default_category)]
+
+
+def test_categories_proxy_items_returns_visible_categories_id_and_proxy_view(
+    user_permissions_factory, default_category, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert list(proxy.items()) == [
+        (default_category.id, get_category_proxy(default_category))
     ]
 
 
-def test_categories_proxy_returns_category_parents_with_self(
-    root_category, default_category, user, cache_versions
+def test_categories_proxy_get_returns_visible_category_proxy(
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
+    assert proxy.get(default_category.id) == get_category_proxy(default_category)
+
+
+def test_categories_proxy_get_returns_false_for_category_without_permission(
+    user_permissions_factory, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get(sibling_category.id) is None
+
+
+def test_categories_proxy_get_parent_returns_categorys_parent(
+    user_permissions_factory, default_category, user, cache_versions
+):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
     grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
         child_category,
         user.group,
         CategoryPermission.SEE,
         CategoryPermission.BROWSE,
     )
 
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    assert categories.get_category_parents(child_category.id) == [
-        get_category_data_dict(child_category),
-        get_category_data_dict(default_category),
-    ]
+    assert proxy.get_parent(child_category) == get_category_proxy(default_category)
 
 
-def test_categories_proxy_returns_category_parents_without_self(
-    root_category, default_category, user, cache_versions
+def test_categories_proxy_get_parent_returns_none_for_top_level_category(
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(default_category, position="last-child", save=True)
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_category_parents(child_category.id, include_self=False) == [
-        get_category_data_dict(default_category),
-    ]
+    assert proxy.get_parent(default_category) is None
 
 
-def test_categories_proxy_returns_category_path_with_self(
-    root_category, default_category, user, cache_versions
+def test_categories_proxy_get_parent_returns_none_for_parent_category_without_permission(
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(default_category, position="last-child", save=True)
+    default_category.parent_id = default_category.id * 100
+    assert proxy.get_parent(default_category) is None
 
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
 
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_category_path(child_category.id) == [
-        get_category_data_dict(default_category),
-        get_category_data_dict(child_category),
-    ]
-
-
-def test_categories_proxy_returns_category_path_without_self(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(default_category, position="last-child", save=True)
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_category_path(child_category.id, include_self=False) == [
-        get_category_data_dict(default_category),
-    ]
-
-
-def test_categories_proxy_returns_category_descendants(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(
-        name="Sibling Category", slug="sibling-category", is_vanilla=True
-    )
-    sibling_category.insert_at(root_category, position="first-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(default_category, position="last-child", save=True)
-
-    deep_category = Category(name="Deep Category", slug="deep-category")
-    deep_category.insert_at(child_category, position="last-child", save=True)
-
-    default_category.refresh_from_db()
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        deep_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_category_descendants(default_category.id) == [
-        get_category_data_dict(default_category),
-        get_category_data_dict(child_category),
-        get_category_data_dict(deep_category),
-    ]
-
-
-def test_categories_proxy_returns_category_descendants_without_self(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(
-        name="Sibling Category", slug="sibling-category", is_vanilla=True
-    )
-    sibling_category.insert_at(root_category, position="first-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(default_category, position="last-child", save=True)
-
-    deep_category = Category(name="Deep Category", slug="deep-category")
-    deep_category.insert_at(child_category, position="last-child", save=True)
-
-    default_category.refresh_from_db()
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        deep_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_category_descendants(
-        default_category.id, include_self=False
-    ) == [
-        get_category_data_dict(child_category),
-        get_category_data_dict(deep_category),
-    ]
-
-
-def test_categories_proxy_returns_empty_categories_menu(
-    default_category, user, cache_versions
-):
-    remove_category_group_permissions(default_category, user.group)
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_categories_menu() == []
-
-
-def test_categories_proxy_returns_categories_menu_with_one_category(
-    default_category, user, cache_versions
-):
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_categories_menu() == [
-        get_category_data_dict(default_category),
-    ]
-
-
-def test_categories_proxy_returns_categories_menu_with_two_categories(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_categories_menu() == [
-        get_category_data_dict(default_category),
-        get_category_data_dict(sibling_category),
-    ]
-
-
-def test_categories_proxy_returns_categories_menu_with_vanilla_category(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(
-        name="Sibling Category", slug="sibling-category", is_vanilla=True
-    )
-    sibling_category.insert_at(root_category, position="last-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(sibling_category, position="last-child", save=True)
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_categories_menu() == [
-        get_category_data_dict(default_category),
-        get_category_data_dict(sibling_category),
-        get_category_data_dict(child_category),
-    ]
-
-
-def test_categories_proxy_returns_categories_menu_without_empty_vanilla_category(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(
-        name="Sibling Category", slug="sibling-category", is_vanilla=True
-    )
-    sibling_category.insert_at(root_category, position="last-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(sibling_category, position="last-child", save=True)
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_categories_menu() == [
-        get_category_data_dict(default_category),
-    ]
-
-
-def test_categories_proxy_sets_last_flag_on_categories_menu_vanilla_category_last_item(
-    root_category, default_category, user, cache_versions
-):
-    sibling_category = Category(
-        name="Sibling Category", slug="sibling-category", is_vanilla=True
-    )
-    sibling_category.insert_at(root_category, position="first-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(sibling_category, position="last-child", save=True)
-
-    default_category.refresh_from_db()
-
-    grant_category_group_permissions(
-        sibling_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_categories_menu() == [
-        get_category_data_dict(sibling_category),
-        dict(**get_category_data_dict(child_category), last=True),
-        get_category_data_dict(default_category),
-    ]
-
-
-def test_categories_proxy_returns_default_category_thread_path(
-    default_category, user, cache_versions
-):
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_thread_categories(default_category.id) == [
-        get_category_data_dict(default_category),
-    ]
-
-
-def test_categories_proxy_returns_default_category_thread_path_from_default_category(
-    default_category, user, cache_versions
-):
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert (
-        categories.get_thread_categories(default_category.id, default_category.id) == []
-    )
-
-
-def test_categories_proxy_returns_child_category_thread_path(
-    default_category, user, cache_versions
+def test_categories_proxy_get_children_returns_direct_children(
+    user_permissions_factory, default_category, user, cache_versions
 ):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    default_category.refresh_from_db()
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
 
     grant_category_group_permissions(
         child_category,
@@ -461,22 +218,29 @@ def test_categories_proxy_returns_child_category_thread_path(
         CategoryPermission.BROWSE,
     )
 
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    grant_category_group_permissions(
+        descendant_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
 
-    assert categories.get_thread_categories(child_category.id) == [
-        get_category_data_dict(default_category),
-        get_category_data_dict(child_category),
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_children(default_category) == [
+        get_category_proxy(child_category),
     ]
 
 
-def test_categories_proxy_returns_child_category_thread_path_from_default_category(
-    default_category, user, cache_versions
+def test_categories_proxy_get_children_with_self_includes_category(
+    user_permissions_factory, default_category, user, cache_versions
 ):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    default_category.refresh_from_db()
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
 
     grant_category_group_permissions(
         child_category,
@@ -485,45 +249,74 @@ def test_categories_proxy_returns_child_category_thread_path_from_default_catego
         CategoryPermission.BROWSE,
     )
 
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    grant_category_group_permissions(
+        descendant_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
 
-    assert categories.get_thread_categories(child_category.id, default_category.id) == [
-        get_category_data_dict(child_category),
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_children(default_category, include_self=True) == [
+        get_category_proxy(default_category),
+        get_category_proxy(child_category),
     ]
 
 
-def test_categories_proxy_returns_child_category_thread_path_from_child_category(
-    default_category, user, cache_versions
+def test_categories_proxy_get_children_excludes_children_without_permission(
+    user_permissions_factory, default_category, user, cache_versions
 ):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    default_category.refresh_from_db()
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    grant_category_group_permissions(
-        child_category,
-        user.group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-    )
-
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-
-    assert categories.get_thread_categories(child_category.id, child_category.id) == []
+    assert proxy.get_children(default_category) == []
 
 
-def test_categories_proxy_returns_sibling_category_thread_path_from_child_category(
-    root_category, default_category, user, cache_versions
+def test_categories_proxy_get_children_with_include_self_excludes_parent_without_permission(
+    user_permissions_factory, default_category, user, cache_versions
 ):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    sibling_category = Category(name="Sibling Category", slug="sibling-category")
-    sibling_category.insert_at(root_category, position="last-child", save=True)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    default_category.refresh_from_db()
+    assert proxy.get_children(child_category, include_self=True) == []
+
+
+def test_categories_proxy_get_children_returns_empty_list_for_leaf_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_children(default_category) == []
+
+
+def test_categories_proxy_get_children_with_include_self_returns_leaf_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_children(default_category, include_self=True) == [
+        get_category_proxy(default_category),
+    ]
+
+
+def test_categories_proxy_get_ancestors_returns_category_ancestors(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
 
     grant_category_group_permissions(
         child_category,
@@ -531,37 +324,285 @@ def test_categories_proxy_returns_sibling_category_thread_path_from_child_catego
         CategoryPermission.SEE,
         CategoryPermission.BROWSE,
     )
+
     grant_category_group_permissions(
-        sibling_category,
+        descendant_category,
         user.group,
         CategoryPermission.SEE,
         CategoryPermission.BROWSE,
     )
 
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
 
-    assert categories.get_thread_categories(sibling_category.id, child_category.id) == [
-        get_category_data_dict(sibling_category),
+    assert proxy.get_ancestors(descendant_category) == [
+        get_category_proxy(default_category),
+        get_category_proxy(child_category),
     ]
 
 
-def test_categories_proxy_returns_category_choices(
-    root_category, default_category, user, cache_versions
+def test_categories_proxy_get_ancestors_with_include_self_returns_category(
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-    assert categories.get_choices() == [
-        (default_category.id, default_category.name),
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        descendant_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_ancestors(descendant_category, include_self=True) == [
+        get_category_proxy(default_category),
+        get_category_proxy(child_category),
+        get_category_proxy(descendant_category),
     ]
 
 
-def test_categories_proxy_returns_category_choices_with_empty_choice(
-    default_category, user, cache_versions
+def test_categories_proxy_get_ancestors_returns_empty_list_for_top_level_category(
+    user_permissions_factory, default_category, user, cache_versions
 ):
-    user_permissions = UserPermissionsProxy(user, cache_versions)
-    categories = CategoriesProxy(user_permissions, cache_versions)
-    assert categories.get_choices(True) == [
-        ("", ""),
-        (default_category.id, default_category.name),
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_ancestors(default_category) == []
+
+
+def test_categories_proxy_get_ancestors_with_include_self_returns_top_level_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_ancestors(default_category, include_self=True) == [
+        get_category_proxy(default_category),
     ]
+
+
+def test_categories_proxy_get_descendants_returns_category_descendants(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        descendant_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_descendants(default_category) == [
+        get_category_proxy(child_category),
+        get_category_proxy(descendant_category),
+    ]
+
+
+def test_categories_proxy_get_descendants_returns_empty_list_for_leaf_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_descendants(default_category) == []
+
+
+def test_categories_proxy_get_descendants_with_include_self_returns_leaf_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_descendants(default_category, include_self=True) == [
+        get_category_proxy(default_category),
+    ]
+
+
+def test_categories_proxy_get_descendants_with_include_self_returns_category(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    grant_category_group_permissions(
+        descendant_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_descendants(default_category, include_self=True) == [
+        get_category_proxy(default_category),
+        get_category_proxy(child_category),
+        get_category_proxy(descendant_category),
+    ]
+
+
+def test_categories_proxy_get_descendants_excludes_categories_without_permission(
+    user_permissions_factory, default_category, user, cache_versions
+):
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    descendant_category = Category(name="Child Category", slug="child-category")
+    descendant_category.insert_at(child_category, position="last-child", save=True)
+
+    grant_category_group_permissions(
+        child_category,
+        user.group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert proxy.get_descendants(default_category) == [
+        get_category_proxy(child_category),
+    ]
+
+
+def test_categories_proxy_can_be_cast_to_dict_with_visible_categories(
+    user_permissions_factory, default_category, sibling_category, user, cache_versions
+):
+    user_permissions = user_permissions_factory(user)
+    proxy = CategoriesProxy(user_permissions, cache_versions)
+
+    assert dict(proxy) == {default_category.id: get_category_proxy(default_category)}
+
+
+def test_category_proxy_is_top_level_attribute_is_true_for_top_level_category(
+    default_category,
+):
+    proxy = get_category_proxy(default_category)
+    assert proxy.is_top_level
+
+
+def test_category_proxy_is_top_level_attribute_is_false_for_child_category(
+    child_category,
+):
+    proxy = get_category_proxy(child_category)
+    assert not proxy.is_top_level
+
+
+def test_category_proxy_is_leaf_attribute_is_true_for_leaf_category(default_category):
+    proxy = get_category_proxy(default_category)
+    assert proxy.is_leaf
+
+
+def test_category_proxy_is_leaf_attribute_is_false_for_category_with_children(
+    sibling_category,
+):
+    proxy = get_category_proxy(sibling_category)
+    assert not proxy.is_leaf
+
+
+def test_category_proxy_has_children_attribute_is_false_for_leaf_category(
+    default_category,
+):
+    proxy = get_category_proxy(default_category)
+    assert not proxy.has_children
+
+
+def test_category_proxy_has_children_attribute_is_true_for_category_with_children(
+    sibling_category,
+):
+    proxy = get_category_proxy(sibling_category)
+    assert proxy.has_children
+
+
+def test_category_proxy_is_parent_method_returns_true_if_category_is_parent_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(sibling_category)
+    assert proxy.is_parent(child_category)
+
+
+def test_category_proxy_is_parent_method_returns_false_if_category_is_not_parent_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(child_category)
+    assert not proxy.is_parent(sibling_category)
+
+
+def test_category_proxy_is_child_method_returns_true_if_category_is_child_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(child_category)
+    assert proxy.is_child(sibling_category)
+
+
+def test_category_proxy_is_child_method_returns_false_if_category_is_not_child_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(sibling_category)
+    assert not proxy.is_child(child_category)
+
+
+def test_category_proxy_is_ancestor_method_returns_true_if_category_is_ancestor_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(sibling_category)
+    assert proxy.is_ancestor(child_category)
+
+
+def test_category_proxy_is_ancestor_method_returns_false_if_category_is_not_ancestor_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(child_category)
+    assert not proxy.is_ancestor(sibling_category)
+
+
+def test_category_proxy_is_descendant_method_returns_true_if_category_is_descendant_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(child_category)
+    assert proxy.is_descendant(sibling_category)
+
+
+def test_category_proxy_is_descendant_method_returns_false_if_category_is_not_descendant_of_other_category(
+    sibling_category, child_category
+):
+    proxy = get_category_proxy(sibling_category)
+    assert not proxy.is_descendant(child_category)

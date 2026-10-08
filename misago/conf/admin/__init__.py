@@ -8,6 +8,7 @@ from .views import (
     GeneralSettingsView,
     NotificationsSettingsView,
     OAuth2SettingsView,
+    SearchSettingsView,
     UsersSettingsView,
     index,
 )
@@ -42,6 +43,9 @@ class MisagoAdminExtension:
         )
         urlpatterns.single_pattern(
             "content/", "content", "settings", ContentSettingsView.as_view()
+        )
+        urlpatterns.single_pattern(
+            "search/", "search", "settings", SearchSettingsView.as_view()
         )
         urlpatterns.single_pattern(
             "users/", "users", "settings", UsersSettingsView.as_view()
@@ -103,6 +107,16 @@ class MisagoAdminExtension:
             after="content:index",
         )
         site.add_node(
+            name=pgettext_lazy("admin node", "Search"),
+            description=pgettext_lazy(
+                "admin node",
+                "Search query constraints, intervals between searches, and log retention.",
+            ),
+            parent="settings",
+            namespace="search",
+            after="notifications:index",
+        )
+        site.add_node(
             name=pgettext_lazy("admin node", "OAuth2"),
             description=pgettext_lazy(
                 "admin node",
@@ -110,7 +124,7 @@ class MisagoAdminExtension:
             ),
             parent="settings",
             namespace="oauth2",
-            after="notifications:index",
+            after="search:index",
         )
         site.add_node(
             name=pgettext_lazy("admin node", "Analytics"),

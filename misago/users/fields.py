@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from django import forms
 from django.contrib.auth import get_user_model
@@ -12,6 +12,9 @@ if TYPE_CHECKING:
 
 
 class UserNotFound:
+    is_anonymous = True
+    is_authenticated = False
+
     id = None
     username: str
 
@@ -24,70 +27,40 @@ class UserNotFound:
 class UserMultipleChoiceWidget(forms.Widget):
     template_name = "misago/widgets/user_multiple_choice.html"
 
-    def format_value(self, value: list["User"] | list[str] | None) -> str | None:
+    def format_value(self, value: list[Union["User", str]] | None) -> list["User"]:
         if not value:
             return None
 
-        usernames = []
+        users = []
         for item in value:
             if isinstance(item, str):
-                usernames.append(item)
+                users.append(UserNotFound(item))
             else:
-                usernames.append(item.username)
+                users.append(item)
 
-        return " ".join(usernames)
+        return users
 
-    def format_chips(self, value: list["User"] | list[str] | None) -> list["User"]:
-        if not value:
-            return None
+    def value_from_datadict(self, data, files, name) -> list[str]:
+        raw_value = data.get(name)
+        if not raw_value:
+            return []
 
-        chips = []
-        for item in value:
-            if isinstance(item, str):
-                chips.append(UserNotFound(item))
-            else:
-                chips.append(item)
+        value: list[str] = []
+        unique_values: set[str] = set()
 
-        return chips or []
+        for item in raw_value.split(","):
+            item = item.strip()
+            if not item:
+                continue
 
-    def get_context(
-        self, name: str, value: list["User"] | list[str] | None, attrs: dict
-    ) -> dict:
-        source = attrs.pop("source", None)
+            item_unique = item.lower()
+            if item_unique in unique_values:
+                continue
 
-        context = super().get_context(name, value, attrs)
+            value.append(item)
+            unique_values.add(item_unique)
 
-        context["widget"].update(
-            {
-                "source_text": source == "text",
-                "source_chip": source == "chip",
-                "chips": self.format_chips(value),
-            }
-        )
-
-        if source == "text":
-            context["widget"]["chips"] = None
-        elif source == "chip":
-            context["widget"]["value"] = None
-
-        return context
-
-    def value_from_datadict(self, data, files, name) -> list[str] | None:
-        if text_data := data.get(f"{name}_text"):
-            return self.list_value_from_datadict(text_data.replace(",", " ").split())
-
-        if list_data := data.getlist(f"{name}_chip"):
-            return self.list_value_from_datadict(list_data)
-
-        return None
-
-    def list_value_from_datadict(self, data: list[str]) -> list[str]:
-        list_value: list[str] = []
-        for value in data:
-            value = value.strip()
-            if value and value not in list_value:
-                list_value.append(value)
-        return list_value
+        return value
 
 
 class UserMultipleChoiceField(forms.Field):
@@ -179,16 +152,3 @@ class UserMultipleChoiceBoundField(forms.BoundField):
 
     def max_choices(self) -> int:
         return self.field.max_choices
-
-    def build_widget_attrs(
-        self, attrs: dict, widget: forms.Widget | None = None
-    ) -> dict:
-        attrs = super().build_widget_attrs(attrs, widget)
-
-        if self.form.is_bound:
-            if self.form.data.get(f"{self.html_name}_text"):
-                attrs["source"] = "text"
-            elif self.form.data.getlist(f"{self.html_name}_chip"):
-                attrs["source"] = "chip"
-
-        return attrs
