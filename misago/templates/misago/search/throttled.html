@@ -15,12 +15,8 @@
       <h2 class="search-throttled-title">
         {% translate "Search limit reached" context "search results throttled title" %}
       </h2>
-      <p class="search-throttled-content">
-        {% blocktranslate count seconds=search_throttled context "search results throttled" %}
-          Wait {{ seconds }} second before searching again.
-        {% plural %}
-          Wait {{ seconds }} seconds before searching again.
-        {% endblocktranslate %}
+      <p class="search-throttled-message">
+        {{ search_throttled_message }}
       </p>
     </div>
   </div>

@@ -120,7 +120,7 @@ class ThreadsSearchView(BaseSearchView):
         context = self.get_context_data()
 
         if request.is_htmx:
-            template_name = self.results_template_name
+            template_name = context["template_name"]
         else:
             template_name = self.template_name
 
@@ -134,7 +134,9 @@ class ThreadsSearchView(BaseSearchView):
         search_throttled = self.get_search_throttling()
 
         if self.request.is_htmx and search_throttled:
-            raise PermissionDenied("THROTTLED")
+            raise PermissionDenied(
+                self.get_search_throttled_message(search_throttled),
+            )
 
         if form.is_valid() and not search_throttled:
             self.log_search(form.cleaned_data["query"])
@@ -143,6 +145,7 @@ class ThreadsSearchView(BaseSearchView):
             search_results = None
 
         if self.request.is_htmx:
+            # In HTMX return only search results component
             return search_results
 
         return {
@@ -150,6 +153,9 @@ class ThreadsSearchView(BaseSearchView):
             "breadcrumbs": self.get_breadcrumbs(),
             "form": form,
             "search_throttled": search_throttled,
+            "search_throttled_message": self.get_search_throttled_message(
+                search_throttled
+            ),
             "search_results": search_results,
         }
 
@@ -162,6 +168,14 @@ class ThreadsSearchView(BaseSearchView):
             return 0
 
         return throttle_search(self.request)
+
+    def get_search_throttled_message(self, throttled: int) -> str:
+        return npgettext(
+            "search results throttled message",
+            "Wait %(seconds)s second before searching again.",
+            "Wait %(seconds)s seconds before searching again.",
+            throttled,
+        ) % {"seconds": throttled}
 
     def log_search(self, search_query: str):
         if self.request.user.is_authenticated:
