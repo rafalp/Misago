@@ -89,7 +89,7 @@ class SearchBackend(ABC):
         mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
-        limit: int = 50,
+        limit: int = 40,
         **kwargs,
     ) -> ThreadsSearchResult:
         pass
@@ -106,7 +106,7 @@ class SearchBackend(ABC):
         mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
-        limit: int = 50,
+        limit: int = 40,
         **kwargs,
     ) -> ThreadsSearchResult:
         pass
@@ -247,7 +247,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
-        limit: int = 50,
+        limit: int = 40,
         **kwargs,
     ) -> ThreadsSearchResult:
         if isinstance(threads, list):
@@ -291,7 +291,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
-        limit: int = 50,
+        limit: int = 40,
         **kwargs,
     ) -> ThreadsSearchResult:
         private_threads = Category.objects.private_threads()
@@ -368,7 +368,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             queryset = queryset.filter(rank__gt=self.min_rank)
 
         if order_by == SearchSort.RELEVANCE:
-            queryset = queryset.order_by("-rank")
+            queryset = queryset.order_by("-rank", "-thread_id")
         else:
             queryset = queryset.order_by("-thread_id")
 
@@ -459,8 +459,10 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         if order_by == SearchSort.RELEVANCE:
             aggregate_by = "rank"
+            queryset_order_by = ("-ordering", "-thread_id")
         else:
             aggregate_by = "thread_id"
+            queryset_order_by = ("-thread_id",)
 
         start_time = time()
 
@@ -471,7 +473,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             )
             .values("thread_id")
             .annotate(ordering=Max(aggregate_by))
-            .order_by("-ordering")
+            .order_by(*queryset_order_by)
             .values_list("thread_id", flat=True)[offset : offset + limit + 1]
         )
 
@@ -565,7 +567,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             queryset = queryset.filter(rank__gt=self.min_rank)
 
         if order_by == SearchSort.RELEVANCE:
-            queryset = queryset.order_by("-rank")
+            queryset = queryset.order_by("-rank", "-post_id")
         else:
             queryset = queryset.order_by("-post_id")
 

@@ -1,8 +1,10 @@
 from datetime import datetime, time, timedelta
+from urllib.parse import urlencode
 
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet, prefetch_related_objects
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -132,7 +134,7 @@ class ThreadsSearchView(BaseSearchView):
         search_throttled = self.get_search_throttling()
 
         if self.request.is_htmx and search_throttled:
-            raise PermissionDenied("NOPE")
+            raise PermissionDenied("THROTTLED")
 
         if form.is_valid() and not search_throttled:
             self.log_search(form.cleaned_data["query"])
@@ -152,8 +154,25 @@ class ThreadsSearchView(BaseSearchView):
         form_class = extensions.get(ThreadsSearchForm)
         return form_class(self.request.GET, request=self.request)
 
+    def get_search_throttling(self) -> int:
+        if self.request.user_permissions.bypass_search_throttling:
+            return 0
+
+        return throttle_search(self.request)
+
+    def log_search(self, search_query: str):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+
+        log_search(user, self.request.user_ip, search_query, self.is_search_public)
+
     def get_search_results_data(self, form: ThreadsSearchForm) -> dict:
-        results = self.search(form)
+        max_offset = self.get_max_search_offset()
+        offset = self.get_search_offset(max_offset)
+
+        results = self.search(form, offset)
         post_ids = [result.post_id for result in results]
 
         posts: dict[int, Post] = {}
@@ -168,14 +187,90 @@ class ThreadsSearchView(BaseSearchView):
                 self.get_search_result_data(result, posts[result.post_id])
             )
 
-        more_url = None
+        if results.has_more and offset < max_offset:
+            more_url = self.get_more_url(form, offset + len(results))
+        else:
+            more_url = None
 
         return {
             "title": self.get_search_results_title(results),
             "results": results_data,
-            "has_more": results.has_more,
+            "has_more": bool(more_url),
             "more_url": more_url,
         }
+
+    def get_max_search_offset(self) -> int:
+        return max(settings.MISAGO_SEARCH.get("MAX_OFFSET", 0), 20)
+
+    def get_search_offset(self, max_offset: int) -> int:
+        try:
+            if offset := self.request.GET.get("offset", 0):
+                offset = int(offset)
+            if offset < 0 or offset > max_offset:
+                raise ValueError()
+
+            return offset
+        except (ValueError, TypeError):
+            raise Http404()
+
+    def search(self, form: ThreadsSearchForm, offset: int) -> ThreadsSearchResult:
+        request = self.request
+
+        filters = form.cleaned_data
+
+        mode = filters["mode"]
+        sort = filters["sort"]
+
+        categories = self.get_categories_filter(filters)
+        users = filters.get("users")
+        date_from = None
+        date_to = None
+
+        if date_from := filters.get("date_from"):
+            date_from = timezone.make_aware(datetime.combine(date_from, time.min))
+        if date_to := filters.get("date_to"):
+            date_to = timezone.make_aware(
+                datetime.combine(date_to + timedelta(days=1), time.min)
+            )
+
+        return search.search_threads(
+            form.search_query,
+            request.user_permissions,
+            categories=categories,
+            users=users,
+            after=date_from,
+            before=date_to,
+            mode=SearchMode(mode),
+            order_by=SearchSort(sort),
+            offset=offset,
+            limit=self.get_search_limit(),
+        )
+
+    def get_categories_filter(self, filters: dict) -> list[Category | CategoryProxy]:
+        request = self.request
+
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
+        )
+
+        if category_ids := filters.get("categories"):
+            return [
+                request.categories[category_id]
+                for category_id in category_ids
+                if category_id in searchable_categories
+            ]
+
+        return [
+            category
+            for category in request.categories.values()
+            if category.id in searchable_categories
+        ]
+
+    def get_search_limit(self) -> tuple[int, int]:
+        return max(settings.MISAGO_SEARCH.get("RESULT_SIZE", 0), 5)
+
+    def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
+        return Post.objects.filter(id__in=post_ids)
 
     def get_search_result_data(
         self, result: ThreadsSearchResultItem, post: Post
@@ -219,73 +314,31 @@ class ThreadsSearchView(BaseSearchView):
 
         return message % {"results": results_num}
 
-    def get_search_throttling(self) -> int:
-        if self.request.user_permissions.bypass_search_throttling:
-            return 0
+    def get_more_url(self, form: ThreadsSearchForm, offset: int | None = None) -> str:
+        cleaned_data = form.cleaned_data
 
-        return throttle_search(self.request)
-
-    def log_search(self, search_query: str):
-        if self.request.user.is_authenticated:
-            user = self.request.user
-        else:
-            user = None
-
-        log_search(user, self.request.user_ip, search_query, self.is_search_public)
-
-    def search(self, form: ThreadsSearchForm) -> ThreadsSearchResult:
-        request = self.request
-
-        filters = form.cleaned_data
-
-        mode = filters["mode"]
-        sort = filters["sort"]
-
-        categories = self.get_categories_filter(filters)
-        users = filters.get("users")
-        date_from = None
-        date_to = None
-
-        if date_from := filters.get("date_from"):
-            date_from = timezone.make_aware(datetime.combine(date_from, time.min))
-        if date_to := filters.get("date_to"):
-            date_to = timezone.make_aware(
-                datetime.combine(date_to + timedelta(days=1), time.min)
-            )
-
-        return search.search_threads(
-            form.search_query,
-            request.user_permissions,
-            categories=categories,
-            users=users,
-            after=date_from,
-            before=date_to,
-            mode=SearchMode(mode),
-            order_by=SearchSort(sort),
-        )
-
-    def get_categories_filter(self, filters: dict) -> list[Category | CategoryProxy]:
-        request = self.request
-
-        searchable_categories = get_searchable_category_ids(
-            request.user_permissions, request.categories
-        )
-
-        if category_ids := filters.get("categories"):
-            return [
-                request.categories[category_id]
-                for category_id in category_ids
-                if category_id in searchable_categories
-            ]
-
-        return [
-            category
-            for category in request.categories.values()
-            if category.id in searchable_categories
+        data = [
+            ("query", cleaned_data["query"]),
+            ("mode", cleaned_data["mode"]),
+            ("sort", cleaned_data["sort"]),
         ]
 
-    def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
-        return Post.objects.filter(id__in=post_ids)
+        if categories := cleaned_data.get("categories"):
+            data += [("categories", category_id) for category_id in categories]
+
+        if users := cleaned_data.get("users"):
+            data += [("users", " ".join(user.slug for user in users))]
+
+        if date_from := cleaned_data["date_from"]:
+            data.append(("date_from", date_from))
+
+        if date_to := cleaned_data["date_to"]:
+            data.append(("date_to", date_to))
+
+        if offset:
+            data.append(("offset", offset))
+
+        return f"{self.request.path}?{urlencode(data)}"
 
 
 class PrivateThreadsSearchView(ThreadsSearchView):

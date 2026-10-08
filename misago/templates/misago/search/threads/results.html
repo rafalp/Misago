@@ -6,7 +6,7 @@
     <h2 class="search-threads-title">
       {{ search_results.title }}
     </h2>
-    <ul class="search-threads-results">
+    <ul class="search-threads-results"{% if is_request_htmx %} hx-swap-oob="beforeend:.search-threads-results"{% endif %}>
       {% for result in search_results.results %}
         <li class="search-threads-result">
           <div class="search-threads-result-start">
@@ -62,10 +62,28 @@
       {% empty %}
         <li class="search-threads-blankslate">
           {% blocktranslate trimmed context "search threads empty message"%}
-            Try broadening your search
+            Try broadening your search.
           {% endblocktranslate %}
         </li>
       {% endfor %}
     </ul>
+    {% if search_results.has_more %}
+      <div class="search-threads-footer">
+        <a class="btn btn-default d-js-none" href="{{ search_results.more_url }}">
+          {% translate "Load more" context "search threads load more btn" %}
+        </a>
+        <button
+          class="btn btn-default d-js-inline-block"
+          type="button"
+          hx-get="{{ search_results.more_url }}"
+          hx-target=".search-threads-footer"
+          hx-select=".search-threads-footer"
+          hx-swap="outerHTML"
+          hx-disabled-elt="this"
+        >
+          {% translate "Load more" context "search threads load more btn" %}
+        </button>
+      </div>
+    {% endif %}
   </div>
 </section>

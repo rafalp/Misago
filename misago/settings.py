@@ -263,6 +263,7 @@ MISAGO_PARSER_CLEAN_AST = True
 MISAGO_SEARCH = {
     "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
     "INDEX_BATCH_SIZE": 50,
-    "MAX_LIMIT": 100,
+    "MAX_OFFSET": 160,
+    "RESULT_SIZE": 40,
     "PG_SEARCH_CONFIG": "auto",
 }
