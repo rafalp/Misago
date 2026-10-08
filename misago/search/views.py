@@ -142,6 +142,9 @@ class ThreadsSearchView(BaseSearchView):
         else:
             search_results = None
 
+        if self.request.is_htmx:
+            return search_results
+
         return {
             "page_title": form.name,
             "breadcrumbs": self.get_breadcrumbs(),
@@ -169,6 +172,10 @@ class ThreadsSearchView(BaseSearchView):
         log_search(user, self.request.user_ip, search_query, self.is_search_public)
 
     def get_search_results_data(self, form: ThreadsSearchForm) -> dict:
+        from_throttle = (
+            self.request.is_htmx and self.request.GET.get("throttled") == "true"
+        )
+
         max_offset = self.get_max_search_offset()
         offset = self.get_search_offset(max_offset)
 
@@ -193,8 +200,11 @@ class ThreadsSearchView(BaseSearchView):
             more_url = None
 
         return {
+            "template_name": self.results_template_name,
             "title": self.get_search_results_title(results),
+            "from_throttle": from_throttle,
             "results": results_data,
+            "offset": offset,
             "has_more": bool(more_url),
             "more_url": more_url,
         }

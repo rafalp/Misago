@@ -2,7 +2,7 @@
 
 <section
   class="section"
-  hx-get="{{ full_path }}"
+  hx-get="{{ full_path }}&throttled=true"
   hx-trigger="load delay:{{ search_throttled|add:3 }}s"
   hx-target="#misago-htmx-root"
   hx-swap="innerHTML"

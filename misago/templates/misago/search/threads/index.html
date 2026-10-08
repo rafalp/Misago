@@ -69,7 +69,7 @@
       {% if search_throttled %}
         {% include "misago/search/throttled.html" %}
       {% elif search_results %}
-        {% include "misago/search/threads/results.html" %}
+        {% includecomponent search_results %}
       {% endif %}
     </div>
 

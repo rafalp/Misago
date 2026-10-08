@@ -4,10 +4,10 @@
 <section class="section">
   <div class="search-threads">
     <h2 class="search-threads-title">
-      {{ search_results.title }}
+      {{ title }}
     </h2>
-    <ul class="search-threads-results"{% if is_request_htmx %} hx-swap-oob="beforeend:.search-threads-results"{% endif %}>
-      {% for result in search_results.results %}
+    <ul class="search-threads-results"{% if is_request_htmx and not from_throttle %} hx-swap-oob="beforeend:.search-threads-results"{% endif %}>
+      {% for result in results %}
         <li class="search-threads-result">
           <div class="search-threads-result-start">
             {% if result.poster %}
@@ -67,15 +67,15 @@
         </li>
       {% endfor %}
     </ul>
-    {% if search_results.has_more %}
+    {% if has_more %}
       <div class="search-threads-footer">
-        <a class="btn btn-default d-js-none" href="{{ search_results.more_url }}">
+        <a class="btn btn-default d-js-none" href="{{ more_url }}">
           {% translate "Load more" context "search threads load more btn" %}
         </a>
         <button
           class="btn btn-default d-js-inline-block"
           type="button"
-          hx-get="{{ search_results.more_url }}"
+          hx-get="{{ more_url }}"
           hx-target=".search-threads-footer"
           hx-select=".search-threads-footer"
           hx-swap="outerHTML"
