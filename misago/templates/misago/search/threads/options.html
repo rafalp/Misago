@@ -1,48 +1,50 @@
 {% load i18n misago_forms %}
 
 <div class="search-threads-form-row">
-  <div class="search-threads-form-row-start">
-    {% with field=form.categories %}
-      <div class="form-group{% if field.errors %} has-error{% endif %}">
-        <label class="control-label">
-          {% translate "Categories:" context "search threads form" %}
-        </label>
-        <ul class="form-control-category-tree">
-          {% for branch, category in form.get_categories_with_branches %}
-            <li>
-              {% if branch %}
-                <div class="form-control-category-tree-branch">
-                  {% for image in branch %}
-                    {% if image == "I" %}
-                      {% include "tree-branch/i.svg" %}
-                    {% elif image == "T" %}
-                      {% include "tree-branch/t.svg" %}
-                    {% elif image == "L" %}
-                      {% include "tree-branch/l.svg" %}
-                    {% elif image == "S" %}
-                      {% include "tree-branch/s.svg" %}
-                    {% endif %}
-                  {% endfor %}
-                </div>
-              {% endif %}
-              <label class="form-control-category-tree-label{% if not category.is_vanilla and category.id in form.disabled_categories %} disabled{% endif %}">
-                {% if not category.is_vanilla %}
-                  <input type="checkbox" name="{{ field.html_name }}" value="{{ category.id }}"{% if category.id in form.disabled_categories %} disabled{% elif category.id in form.cleaned_data.categories %} checked{% endif %}>
+  {% if form.categories %}
+    <div class="search-threads-form-row-start">
+      {% with field=form.categories %}
+        <div class="form-group{% if field.errors %} has-error{% endif %}">
+          <label class="control-label">
+            {% translate "Categories:" context "search threads form" %}
+          </label>
+          <ul class="form-control-category-tree">
+            {% for branch, category in form.get_categories_with_branches %}
+              <li>
+                {% if branch %}
+                  <div class="form-control-category-tree-branch">
+                    {% for image in branch %}
+                      {% if image == "I" %}
+                        {% include "tree-branch/i.svg" %}
+                      {% elif image == "T" %}
+                        {% include "tree-branch/t.svg" %}
+                      {% elif image == "L" %}
+                        {% include "tree-branch/l.svg" %}
+                      {% elif image == "S" %}
+                        {% include "tree-branch/s.svg" %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
                 {% endif %}
-                {{ category.name }}
-              </label>
-            </li>
+                <label class="form-control-category-tree-label{% if not category.is_vanilla and category.id in form.disabled_categories %} disabled{% endif %}">
+                  {% if not category.is_vanilla %}
+                    <input type="checkbox" name="{{ field.html_name }}" value="{{ category.id }}"{% if category.id in form.disabled_categories %} disabled{% elif category.id in form.cleaned_data.categories %} checked{% endif %}>
+                  {% endif %}
+                  {{ category.name }}
+                </label>
+              </li>
+            {% endfor %}
+            </ul>
+          {% for error in field.errors %}
+            <p class="help-block">{{ error }}</p>
           {% endfor %}
-          </ul>
-        {% for error in field.errors %}
-          <p class="help-block">{{ error }}</p>
-        {% endfor %}
-        <p class="help-block">
-          {% translate "Select categories to limit the search to them." context "search threads form" %}
-        </p>
-      </div>
-    {% endwith %}
-  </div>
+          <p class="help-block">
+            {% translate "Select categories to limit the search to them." context "search threads form" %}
+          </p>
+        </div>
+      {% endwith %}
+    </div>
+  {% endif %}
   <div class="search-threads-form-row-end">
     {% with field=form.users %}
       <div class="form-group{% if field.errors %} has-error{% endif %}">

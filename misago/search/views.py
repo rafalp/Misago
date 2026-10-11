@@ -1,4 +1,3 @@
-from datetime import datetime, time, timedelta
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -7,7 +6,6 @@ from django.db.models import QuerySet, prefetch_related_objects
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 from django.views import View
 
@@ -238,34 +236,17 @@ class ThreadsSearchView(BaseSearchView):
             raise Http404()
 
     def search(self, form: ThreadsSearchForm, offset: int) -> ThreadsSearchResult:
-        request = self.request
-
-        filters = form.cleaned_data
-
-        mode = filters["mode"]
-        sort = filters["sort"]
-
-        categories = self.get_categories_filter(filters)
-        users = filters.get("users")
-        date_from = None
-        date_to = None
-
-        if date_from := filters.get("date_from"):
-            date_from = timezone.make_aware(datetime.combine(date_from, time.min))
-        if date_to := filters.get("date_to"):
-            date_to = timezone.make_aware(
-                datetime.combine(date_to + timedelta(days=1), time.min)
-            )
+        filters = form.get_search_filters()
 
         return search.search_threads(
-            form.search_query,
-            request.user_permissions,
-            categories=categories,
-            users=users,
-            after=date_from,
-            before=date_to,
-            mode=SearchMode(mode),
-            order_by=SearchSort(sort),
+            filters["search_query"],
+            self.request.user_permissions,
+            categories=filters["categories"],
+            users=filters["users"],
+            after=filters["date_from"],
+            before=filters["date_to"],
+            mode=SearchMode(filters["mode"]),
+            order_by=SearchSort(filters["sort"]),
             offset=offset,
             limit=self.get_search_limit(),
         )
@@ -310,7 +291,7 @@ class ThreadsSearchView(BaseSearchView):
             "post_url": reverse("misago:post", kwargs={"post_id": post.id}),
         }
 
-    def get_search_result_categories(self, post: Post) -> list[dict]:
+    def get_search_result_categories(self, post: Post) -> list[dict] | None:
         return self.request.categories.get_ancestors(
             post.category_id, include_self=True
         )
@@ -368,40 +349,23 @@ class ThreadsSearchView(BaseSearchView):
 class PrivateThreadsSearchView(ThreadsSearchView):
     is_search_public: bool = False
 
-    def get_results_data(self, form: ThreadsSearchForm) -> dict:
-        request = self.request
+    def search(self, form: ThreadsSearchForm, offset: int) -> ThreadsSearchResult:
+        filters = form.get_search_filters()
 
-        filters = form.cleaned_data
-
-        mode = filters["mode"]
-        sort = filters["sort"]
-
-        users = filters.get("users")
-        date_from = None
-        date_to = None
-
-        if date_from := filters.get("date_from"):
-            date_from = timezone.make_aware(datetime.combine(date_from, time.min))
-        if date_to := filters.get("date_to"):
-            date_to = timezone.make_aware(
-                datetime.combine(date_to + timedelta(days=1), time.min)
-            )
-
-        results = search.search_private_threads(
-            form.search_query,
-            request.user_permissions,
-            users=users,
-            after=date_from,
-            before=date_to,
-            mode=SearchMode(mode),
-            order_by=SearchSort(sort),
+        return search.search_private_threads(
+            filters["search_query"],
+            self.request.user_permissions,
+            users=filters["users"],
+            after=filters["date_from"],
+            before=filters["date_to"],
+            mode=SearchMode(filters["mode"]),
+            order_by=SearchSort(filters["sort"]),
+            offset=offset,
+            limit=self.get_search_limit(),
         )
 
-        return {
-            "header": self.get_search_results_header(results),
-            "results": results,
-            "more_url": None,
-        }
+    def get_search_result_categories(self, post: Post) -> None:
+        return None
 
     def get_search_results_title(self, results: ThreadsSearchResult) -> str:
         results_num = len(results)

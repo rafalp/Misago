@@ -8,7 +8,7 @@ from .logging import delete_old_search_logs
 logger = getLogger("misago.search")
 
 
-@shared_task(name="search.clear-old-search-logs")
+@shared_task()
 def clear_old_search_logs():
     settings = get_dynamic_settings()
     deleted = delete_old_search_logs(settings.search_log_retention)

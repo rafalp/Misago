@@ -1,8 +1,10 @@
 import re
+from datetime import datetime, time, timedelta
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
+from django.utils import timezone
 from django.utils.translation import pgettext_lazy
 
 from ..categories.display import get_categories_with_branches
@@ -51,6 +53,8 @@ class BaseThreadsSearchForm(SearchForm):
     )
     date_from = forms.DateField(required=False)
     date_to = forms.DateField(required=False)
+
+    template_name = "misago/search/threads/form.html"
 
     def __init__(self, data: dict | None = None, *args, **kwargs):
         if data:
@@ -103,6 +107,27 @@ class BaseThreadsSearchForm(SearchForm):
 
         return data
 
+    def get_search_filters(self) -> dict:
+        filters = {
+            "search_query": self.search_query,
+            "mode": self.cleaned_data["mode"],
+            "sort": self.cleaned_data["sort"],
+            "users": self.cleaned_data.get("users"),
+            "date_from": None,
+            "date_to": None,
+        }
+
+        if date_from := self.cleaned_data.get("date_from"):
+            filters["date_from"] = timezone.make_aware(
+                datetime.combine(date_from, time.min)
+            )
+        if date_to := self.cleaned_data.get("date_to"):
+            filters["date_to"] = timezone.make_aware(
+                datetime.combine(date_to + timedelta(days=1), time.min)
+            )
+
+        return filters
+
 
 def clean_search_query(
     query: str,
@@ -136,7 +161,6 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
     scope = "threads"
     name = pgettext_lazy("threads search form name", "Search threads")
     link_label = pgettext_lazy("threads search form name", "Threads")
-    template_name = "misago/search/threads/form.html"
     url_name = "misago:threads-search"
 
     categories = forms.TypedMultipleChoiceField(
@@ -186,12 +210,36 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
             )
         )
 
+    def get_search_filters(self) -> dict:
+        filters = super().get_search_filters()
+        filters["categories"] = self.get_category_filter_data()
+        return filters
+
+    def get_category_filter_data(self) -> list[CategoryProxy]:
+        request = self.request
+
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
+        )
+
+        if category_ids := self.cleaned_data.get("categories"):
+            return [
+                request.categories[category_id]
+                for category_id in category_ids
+                if category_id in searchable_categories
+            ]
+
+        return [
+            category
+            for category in request.categories.values()
+            if category.id in searchable_categories
+        ]
+
 
 class PrivateThreadsSearchForm(BaseThreadsSearchForm):
     scope = "private-threads"
     name = pgettext_lazy("private threads search form name", "Search private threads")
     link_label = pgettext_lazy("private threads search form name", "Private threads")
-    template_name = "misago/search/private_threads/form.html"
     url_name = "misago:private-threads-search"
 
 
