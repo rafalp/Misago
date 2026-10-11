@@ -19,6 +19,7 @@ from ..threads.models import Post
 from .categories import get_searchable_category_ids
 from .enums import SearchMode, SearchSort
 from .forms import (
+    BaseThreadsSearchForm,
     PrivateThreadsSearchForm,
     SearchForm,
     ThreadsSearchForm,
@@ -111,6 +112,7 @@ class ThreadsSearchView(BaseSearchView):
     template_name = "misago/search/threads/index.html"
     results_template_name = "misago/search/threads/results.html"
 
+    form_class = ThreadsSearchForm
     is_search_public: bool = True
 
     def get(self, request: HttpRequest) -> HttpResponse:
@@ -158,8 +160,8 @@ class ThreadsSearchView(BaseSearchView):
         }
 
     def get_search_form(self) -> ThreadsSearchForm:
-        form_class = extensions.get(ThreadsSearchForm)
-        return form_class(self.request.GET, request=self.request)
+        extended_form_class = extensions.get(self.form_class)
+        return extended_form_class(self.request.GET, request=self.request)
 
     def get_search_throttling(self) -> int:
         if self.request.user_permissions.bypass_search_throttling:
@@ -183,7 +185,7 @@ class ThreadsSearchView(BaseSearchView):
 
         log_search(user, self.request.user_ip, search_query, self.is_search_public)
 
-    def get_search_results_data(self, form: ThreadsSearchForm) -> dict:
+    def get_search_results_data(self, form: BaseThreadsSearchForm) -> dict:
         from_throttle = (
             self.request.is_htmx and self.request.GET.get("throttled") == "true"
         )
@@ -348,8 +350,11 @@ class ThreadsSearchView(BaseSearchView):
 
 class PrivateThreadsSearchView(ThreadsSearchView):
     is_search_public: bool = False
+    form_class = PrivateThreadsSearchForm
 
-    def search(self, form: ThreadsSearchForm, offset: int) -> ThreadsSearchResult:
+    def search(
+        self, form: PrivateThreadsSearchForm, offset: int
+    ) -> ThreadsSearchResult:
         filters = form.get_search_filters()
 
         return search.search_private_threads(
