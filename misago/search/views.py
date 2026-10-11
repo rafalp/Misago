@@ -120,7 +120,7 @@ class ThreadsSearchView(BaseSearchView):
         context = self.get_context_data()
 
         if request.is_htmx:
-            template_name = context["template_name"]
+            template_name = self.results_template_name
         else:
             template_name = self.template_name
 
@@ -331,7 +331,7 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
         if categories := cleaned_data.get("categories"):
-            data += [("categories", category_id) for category_id in categories]
+            data += [("categories", category.id) for category in categories]
 
         if users := cleaned_data.get("users"):
             data += [("users", " ".join(user.slug for user in users))]
