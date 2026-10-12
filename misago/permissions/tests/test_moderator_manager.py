@@ -113,7 +113,7 @@ def test_moderator_manager_get_moderator_permissions_returns_private_threads_fla
     assert data.private_threads
 
 
-def test_moderator_manager_get_moderator_permissions_returns_global_flag_for_user_group(
+def test_moderator_manager_get_moderator_permissions_returns_private_threads_flag_for_user_group(
     user, members_group, custom_group
 ):
     user.set_groups(members_group, [custom_group])

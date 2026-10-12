@@ -1,7 +1,6 @@
 import re
 
 from django.core.validators import RegexValidator
-from django.db.models import CharField
 from django.forms import (
     CharField,
     DateTimeField,

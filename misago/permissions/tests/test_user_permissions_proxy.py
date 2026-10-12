@@ -112,12 +112,6 @@ def test_user_permissions_proxy_returns_false_for_member_without_global_moderato
         assert not proxy.is_global_moderator
 
 
-def test_user_permissions_proxy_returns_false_for_member_without_global_moderator_permission(
-    django_assert_num_queries, user, cache_versions
-):
-    with django_assert_num_queries(1):
-        proxy = UserPermissionsProxy(user, cache_versions)
-        assert not proxy.is_global_moderator
 
 
 def test_user_permissions_proxy_returns_admins_member_private_threads_moderator_permission(
@@ -208,12 +202,6 @@ def test_user_permissions_proxy_returns_false_for_member_without_private_threads
         assert not proxy.is_private_threads_moderator
 
 
-def test_user_permissions_proxy_returns_false_for_member_without_private_threads_moderator_permission(
-    django_assert_num_queries, user, cache_versions
-):
-    with django_assert_num_queries(1):
-        proxy = UserPermissionsProxy(user, cache_versions)
-        assert not proxy.is_private_threads_moderator
 
 
 def test_user_permissions_proxy_returns_false_for_category_moderator(
@@ -350,30 +338,6 @@ def test_user_permissions_is_category_moderator_returns_true_for_category_modera
     assert proxy.is_category_moderator(other_category.id)
 
 
-def test_user_permissions_is_category_moderator_returns_true_for_category_moderator(
-    user,
-    cache_versions,
-    default_category,
-    other_category,
-):
-    CategoryGroupPermission.objects.create(
-        category=other_category,
-        group=user.group,
-        permission=CategoryPermission.SEE,
-    )
-    CategoryGroupPermission.objects.create(
-        category=other_category,
-        group=user.group,
-        permission=CategoryPermission.BROWSE,
-    )
-
-    proxy = UserPermissionsProxy(user, cache_versions)
-    proxy.permissions
-
-    Moderator.objects.create(is_global=False, user=user, categories=[other_category.id])
-
-    assert not proxy.is_category_moderator(default_category.id)
-    assert proxy.is_category_moderator(other_category.id)
 
 
 def test_user_permissions_proxy_returns_false_global_moderator_for_anonymous_user(
