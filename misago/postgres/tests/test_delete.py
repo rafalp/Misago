@@ -15,14 +15,7 @@ def test_one_object_is_deleted_from_database(db):
         cache_version.refresh_from_db()
 
 
-def test_one_object_is_deleted_from_database(db):
-    cache_version = CacheVersion.objects.create(cache="test", version="test")
 
-    result = delete_one(cache_version)
-    assert result == 1
-
-    with pytest.raises(ObjectDoesNotExist):
-        cache_version.refresh_from_db()
 
 
 def test_multiple_objects_are_deleted_from_database_using_column_equals(db):

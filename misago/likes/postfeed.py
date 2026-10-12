@@ -55,7 +55,6 @@ def _get_post_feed_post_likes_data_action(
     }
 
     show_likes_count = False
-    show_last_likes = False
 
     if can_see_post_likes_count(
         request.user_permissions, post.category, post.thread, post

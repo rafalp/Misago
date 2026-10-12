@@ -191,7 +191,7 @@ def test_private_thread_detail_view_shows_reply_ui_to_global_moderator_in_locked
     )
 
 
-def test_private_thread_detail_view_shows_reply_ui_to_private_threads_moderator_in_thread_without_other_members(
+def test_private_thread_detail_view_shows_reply_ui_to_private_threads_moderator_in_thread_without_other_members_with_moderator_client(
     moderator_client, moderator, other_user_private_thread
 ):
     PrivateThreadMember.objects.exclude(user=moderator).delete()
