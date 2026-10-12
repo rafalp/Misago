@@ -15,8 +15,11 @@
       <h2 class="search-throttled-title">
         {% translate "Search limit reached" context "search results throttled title" %}
       </h2>
-      <p class="search-throttled-message">
-        {{ search_throttled_message }}
+      <p class="search-throttled-message search-throttled-message-auto-refresh d-js-block">
+        {{ search_throttled_message.auto_refresh }}
+      </p>
+      <p class="search-throttled-message search-throttled-message-noscript d-js-none">
+        {{ search_throttled_message.noscript }}
       </p>
     </div>
   </div>

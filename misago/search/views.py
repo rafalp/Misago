@@ -135,7 +135,7 @@ class ThreadsSearchView(BaseSearchView):
 
         if self.request.is_htmx and search_throttled:
             raise PermissionDenied(
-                self.get_search_throttled_message(search_throttled),
+                self.get_search_throttled_message(search_throttled)["noscript"],
             )
 
         if form.is_valid() and not search_throttled:
@@ -169,13 +169,25 @@ class ThreadsSearchView(BaseSearchView):
 
         return throttle_search(self.request)
 
-    def get_search_throttled_message(self, throttled: int) -> str:
-        return npgettext(
-            "search results throttled message",
-            "Wait %(seconds)s second before searching again.",
-            "Wait %(seconds)s seconds before searching again.",
-            throttled,
-        ) % {"seconds": throttled}
+    def get_search_throttled_message(self, throttled: int) -> dict[str]:
+        params = {"seconds": throttled}
+
+        return {
+            "auto_refresh": npgettext(
+                "search results throttled message",
+                "Search results will load automatically in %(seconds)s second.",
+                "Search results will load automatically in %(seconds)s seconds.",
+                throttled,
+            )
+            % params,
+            "noscript": npgettext(
+                "search results throttled message",
+                "Wait %(seconds)s second before searching again.",
+                "Wait %(seconds)s seconds before searching again.",
+                throttled,
+            )
+            % params,
+        }
 
     def log_search(self, search_query: str):
         if self.request.user.is_authenticated:
