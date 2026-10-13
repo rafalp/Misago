@@ -25,9 +25,9 @@ class ThreadsFilter:
         )
 
 
-class UnreadThreadsFilter(ThreadsFilter):
-    name: str = pgettext_lazy("threads filter", "Unread threads")
-    url: str = "unread"
+class NewThreadsFilter(ThreadsFilter):
+    name: str = pgettext_lazy("threads filter", "New content")
+    url: str = "new"
 
     request: HttpRequest
 
