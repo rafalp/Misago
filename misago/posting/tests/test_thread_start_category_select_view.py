@@ -427,3 +427,31 @@ def test_thread_start_category_select_view_excludes_child_category_in_htmx_if_us
             kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
+
+
+@pytest.mark.parametrize("headers", ({}, {"hx-request": "true"}))
+def test_thread_start_category_select_view_renders_svg_branch_for_child_category(
+    user_client, default_category, child_category, headers
+):
+    response = user_client.get(
+        reverse("misago:thread-start"),
+        headers=headers,
+    )
+
+    assert_contains(response, child_category.name)
+    assert_contains(response, '<svg')
+    assert_contains(response, '<path d="M17 0l0 9')
+
+
+def test_thread_start_category_select_view_uses_category_branch_utility(
+    user_client, default_category, mocker
+):
+    get_categories_with_branches = mocker.patch(
+        "misago.posting.views.categoryselect.get_categories_with_branches",
+        return_value=[("", default_category)],
+    )
+
+    response = user_client.get(reverse("misago:thread-start"))
+
+    assert response.status_code == 200
+    get_categories_with_branches.assert_called_once()
