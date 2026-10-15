@@ -1,6 +1,7 @@
 from django.urls import path
 
 from ..plugins import extensions
+from .decorators import private_threads_search_login_required
 from .views import (
     PrivateThreadsSearchView,
     SearchView,
@@ -18,7 +19,7 @@ urlpatterns = [
     path("search/threads/", threads_search_view, name="threads-search"),
     path(
         "search/private-threads/",
-        private_threads_search_view,
+        private_threads_search_login_required(private_threads_search_view),
         name="private-threads-search",
     ),
     path("search/users/", users_search_view, name="users-search"),

@@ -364,6 +364,11 @@ class PrivateThreadsSearchView(ThreadsSearchView):
     is_search_public: bool = False
     form_class = PrivateThreadsSearchForm
 
+    def check_permission(self):
+        super().check_permission()
+
+        check_private_threads_permission(self.request.user_permissions)
+
     def search(
         self, form: PrivateThreadsSearchForm, offset: int
     ) -> ThreadsSearchResult:
