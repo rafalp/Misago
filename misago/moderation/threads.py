@@ -106,7 +106,7 @@ def _get_category_threads_moderation_actions_action(
     category: Category,
     request: HttpRequest | None = None,
 ) -> list[type[ThreadsModerationAction]]:
-    if not user_permissions.is_category_moderator(category.id):
+    if not user_permissions.is_category_moderator(category):
         return []
 
     actions = []

@@ -68,9 +68,9 @@ class GetCategoriesPageComponentHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to build a `dict`
-    with data for the categories list component, used to display the list of
-    categories on the categories page.
+    This hook wraps a Misago function used to build a `dict` with data for the
+    categories list component, used to display the list of categories on the
+    categories page.
 
     # Example
 

@@ -1,0 +1,42 @@
+/* Search forms */
+@media screen and (min-width: 500px) {
+  .search-threads-form-row {
+    display: flex;
+    gap: @grid-gutter-width;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-threads-form-row-start {
+    width: 200px;
+  }
+
+  .search-threads-form-row-end {
+    flex: 1;
+  }
+}
+
+@media screen and (min-width: 650px) {
+  .search-threads-form-row-start {
+    width: 320px;
+  }
+}
+
+@media screen and (min-width: 360px) {
+  .search-threads-form-row-mode,
+  .search-threads-form-row-date {
+    display: flex;
+    gap: @grid-gutter-width;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-threads-form-row-mode-start,
+  .search-threads-form-row-mode-end,
+  .search-threads-form-row-date-start,
+  .search-threads-form-row-date-end {
+    flex: 1;
+  }
+}

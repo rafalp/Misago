@@ -5,4 +5,5 @@ from .content import ContentSettingsForm
 from .general import GeneralSettingsForm
 from .notifications import NotificationsSettingsForm
 from .oauth2 import OAuth2SettingsForm
+from .search import SearchSettingsForm
 from .users import UsersSettingsForm

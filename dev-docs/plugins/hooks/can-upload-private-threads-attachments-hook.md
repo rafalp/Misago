@@ -1,6 +1,6 @@
 # `can_upload_private_threads_attachments_hook`
 
-This hook wraps a standard Misago function that checks whether a user has permission to upload attachments in private threads.
+This hook wraps a Misago function used to check if a user has permission to upload attachments in private threads.
 
 
 ## Location
@@ -34,7 +34,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -56,7 +56,7 @@ Misago function that checks whether a user has permission to upload attachments 
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 

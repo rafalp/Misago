@@ -51,7 +51,7 @@ from misago.posting.hooks import validate_posting_hook
 @validate_posting_hook.append_action
 def validate_posting_are_not_spam(formset, state):
     # Exclude moderators from the check
-    if state.request.user_permissions.is_category_moderator(state.category.id):
+    if state.request.user_permissions.is_category_moderator(state.category):
         return
 
     if is_spam(formset, state):

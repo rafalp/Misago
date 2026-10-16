@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetPrivateThreadStartFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `PrivateThreadStartFormset`
-    instance with forms for starting a new private thread.
+    Misago function used to create a new `PrivateThreadStartFormset` instance
+    with forms for starting a new private thread.
 
     # Arguments
 
@@ -77,8 +77,8 @@ class GetPrivateThreadStartFormsetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `PrivateThreadStartFormset` instance with forms for starting a new private thread.
+    This hook wraps a Misago function used to create a new `PrivateThreadStartFormset`
+    instance with forms for starting a new private thread.
 
     # Example
 

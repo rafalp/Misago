@@ -56,8 +56,7 @@ class GetDefaultMetatagsHook(
     FilterHook[GetDefaultMetatagsHookAction, GetDefaultMetatagsHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to get default
-    metatags for all pages.
+    This hook wraps a Misago function used to get default metatags for all pages.
 
     # Example
 

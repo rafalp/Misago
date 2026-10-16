@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetPrivateThreadReplyFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `PrivateThreadReplyFormset`
-    instance with forms for posting a new private thread reply.
+    Misago function used to create a new `PrivateThreadReplyFormset` instance
+    with forms for posting a new private thread reply.
 
     # Arguments
 
@@ -89,9 +89,8 @@ class GetPrivateThreadReplyFormsetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `PrivateThreadReplyFormset` instance with forms for posting a new private
-    thread reply.
+    This hook wraps a Misago function used to create a new `PrivateThreadReplyFormset`
+    instance with forms for posting a new private thread reply.
 
     # Example
 

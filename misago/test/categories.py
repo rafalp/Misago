@@ -12,6 +12,8 @@ from ..polls.models import Poll, PollVote
 from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadCategory, ReadThread
+from ..search.models import PostSearch, ThreadSearch
+from ..search.service import search
 from ..threadevents.create import create_test_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threads.models import Post, Thread
@@ -109,6 +111,17 @@ def category_relations_factory(
             thread=thread,
         )
 
+        search.index_thread(thread)
+        search.bulk_index_posts(
+            [
+                (thread.first_post, "first post"),
+                (thread_reply, "reply"),
+            ]
+        )
+
+        thread_search = ThreadSearch.objects.get(thread=thread)
+        thread_reply_search = PostSearch.objects.get(post=thread_reply)
+
         return CategoryRelations(
             attachment=attachment,
             category_group_permission=category_group_permission,
@@ -124,6 +137,8 @@ def category_relations_factory(
             thread_first_post=thread.first_post,
             thread_reply=thread_reply,
             thread_event=thread_event,
+            thread_search=thread_search,
+            thread_reply_search=thread_reply_search,
             watched_thread=watched_thread,
         )
 
@@ -146,6 +161,8 @@ class CategoryRelations:
     thread_first_post: Post
     thread_reply: Post
     thread_event: ThreadEvent
+    thread_search: Thread
+    thread_reply_search: Post
     watched_thread: WatchedThread
 
     def assert_relations_deleted(self):
@@ -210,6 +227,14 @@ class CategoryRelations:
         with pytest.raises(ThreadEvent.DoesNotExist):
             """Thread event should be deleted when category is deleted"""
             self.thread_event.refresh_from_db()
+
+        with pytest.raises(ThreadSearch.DoesNotExist):
+            """Thread search should be deleted when category is deleted"""
+            self.thread_search.refresh_from_db()
+
+        with pytest.raises(PostSearch.DoesNotExist):
+            """Thread reply search should be deleted when category is deleted"""
+            self.thread_reply_search.refresh_from_db()
 
         with pytest.raises(WatchedThread.DoesNotExist):
             """WatchedThread should be deleted when category is deleted"""
@@ -282,6 +307,16 @@ class CategoryRelations:
         self.thread_event.refresh_from_db()
         assert self.thread_event.category_id == new_category.id, (
             "ThreadEvent category relation was not updated"
+        )
+
+        self.thread_search.refresh_from_db()
+        assert self.thread_search.category_id == new_category.id, (
+            "ThreadSearch category relation was not updated"
+        )
+
+        self.thread_reply_search.refresh_from_db()
+        assert self.thread_reply_search.category_id == new_category.id, (
+            "PostSearch category relation was not updated"
         )
 
         self.watched_thread.refresh_from_db()

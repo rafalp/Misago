@@ -32,18 +32,13 @@ class Command(BaseCommand):
             post.content = parsing_result.markup
             post.content_parsed = parsing_result.html
             post.metadata = parsing_result.metadata
-            post.set_search_document(post.thread, parsing_result.text)
             post.save(
                 update_fields=[
                     "content",
                     "content_parsed",
                     "metadata",
-                    "search_document",
                 ]
             )
-
-            post.set_search_vector()
-            post.save(update_fields=["search_vector"])
 
             rebuild_count += 1
             show_progress(self, rebuild_count, posts_to_parse, start_time)

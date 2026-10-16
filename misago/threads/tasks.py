@@ -5,7 +5,7 @@ from .models import Thread
 from .synchronize import synchronize_thread
 
 
-@shared_task(name="threads.synchronize", serializer="json")
+@shared_task
 def synchronize_threads(thread_ids: list[int], synchronize_categories: bool = False):
     category_ids: set[int] = set()
 

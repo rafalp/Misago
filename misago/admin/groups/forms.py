@@ -138,6 +138,17 @@ class EditGroupForm(forms.ModelForm):
 
     # Permissions
 
+    can_search = YesNoNeverField(
+        label=pgettext_lazy("admin group permissions form", "Can search the site"),
+    )
+    bypass_search_throttling = YesNoNeverField(
+        label=pgettext_lazy("admin group permissions form", "Bypass search throttling"),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enable this option to allow members of this group to bypass search throttling.",
+        ),
+    )
+
     can_edit_own_threads = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can edit own threads"),
     )
@@ -427,6 +438,8 @@ class EditGroupForm(forms.ModelForm):
             "css_suffix",
             "is_page",
             "is_hidden",
+            "can_search",
+            "bypass_search_throttling",
             "can_edit_own_threads",
             "own_threads_edit_time_limit",
             "can_edit_own_posts",

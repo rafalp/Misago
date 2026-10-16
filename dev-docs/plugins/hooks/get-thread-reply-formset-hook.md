@@ -1,6 +1,6 @@
 # `get_thread_reply_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `ThreadReplyFormset` instance with forms for posting a new thread reply.
+This hook wraps a Misago function used to create a new `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
 
 ## Location
@@ -65,7 +65,7 @@ def get_thread_reply_formset_action(
     ...
 ```
 
-A standard function that Misago uses to create a new `ThreadReplyFormset` instance with forms for posting a new thread reply.
+Misago function used to create a new `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
 
 ### Arguments

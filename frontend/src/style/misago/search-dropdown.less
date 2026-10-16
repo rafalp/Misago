@@ -2,101 +2,103 @@
 // Search dropdown and overlay
 // --------------------------------------------------
 
-.search-dropdown {
-  width: 450px;
-  padding: 0;
-  overflow: hidden;
-}
-
-.search-dropdown .search-input {
-  padding: 6px 20px;
-
-  border-bottom: 1px solid @dropdown-divider-bg;
-}
-
-.search-dropdown .list-group {
-  max-height: calc(100vh - @dropdown-height-offset - 46px);
-  overflow-y: auto;
-}
-
-.search-overlay-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.search-overlay-body .search-input {
-  padding: @overlay-padding;
-
-  border-bottom: 1px solid @dropdown-divider-bg;
-}
-
-// Make font size on search input bigger to disable zoom on iOS
-.search-dropdown .form-control-search,
-.search-overlay-body .form-control-search {
-  font-size: @search-control-font-size;
-}
-
-.search-overlay-body .search-results-container {
-  flex: 1;
-  overflow-y: auto;
-  width: 100%;
-  position: relative;
-}
-
-.search-overlay-body .search-results-list {
-  position: absolute;
-  width: 100%;
-  min-height: 100%;
-}
-
-// Search results
-.search-result a {
-  display: flex;
-  align-items: center;
-  width: 100%;
-
-  &:hover {
-    cursor: pointer;
-    text-decoration: none;
+.old_stuff {
+  .search-dropdown {
+    width: 450px;
+    padding: 0;
+    overflow: hidden;
   }
 
-  img {
-    border-radius: @border-radius-small;
-    margin-right: 12px;
+  .search-dropdown .search-input {
+    padding: 6px 20px;
+
+    border-bottom: 1px solid @dropdown-divider-bg;
   }
-}
 
-// User search result
-.search-result-card {
-  width: 100%;
-}
+  .search-dropdown .list-group {
+    max-height: calc(100vh - @dropdown-height-offset - 46px);
+    overflow-y: auto;
+  }
 
-.search-result-name {
-  color: @text-color;
-  font-weight: bold;
-  overflow-wrap: anywhere;
-}
+  .search-overlay-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
 
-.search-result-summary {
-  max-height: @font-size-small * 6;
-  overflow: hidden;
-  overflow-wrap: anywhere;
+  .search-overlay-body .search-input {
+    padding: @overlay-padding;
 
-  color: @gray-light;
-  font-size: @font-size-small;
-}
+    border-bottom: 1px solid @dropdown-divider-bg;
+  }
 
-.search-result-details {
-  margin: 0;
-  padding: 0;
+  // Make font size on search input bigger to disable zoom on iOS
+  .search-dropdown .form-control-search,
+  .search-overlay-body .form-control-search {
+    font-size: @search-control-font-size;
+  }
 
-  color: @gray-light;
-  font-size: @font-size-small;
+  .search-overlay-body .search-results-container {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    position: relative;
+  }
 
-  li {
-    display: inline-block;
-    list-style: none;
-    margin-right: 12px;
+  .search-overlay-body .search-results-list {
+    position: absolute;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  // Search results
+  .search-result a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    img {
+      border-radius: @border-radius-small;
+      margin-right: 12px;
+    }
+  }
+
+  // User search result
+  .search-result-card {
+    width: 100%;
+  }
+
+  .search-result-name {
+    color: @text-color;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+  }
+
+  .search-result-summary {
+    max-height: @font-size-small * 6;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+
+    color: @gray-light;
+    font-size: @font-size-small;
+  }
+
+  .search-result-details {
+    margin: 0;
+    padding: 0;
+
+    color: @gray-light;
+    font-size: @font-size-small;
+
+    li {
+      display: inline-block;
+      list-style: none;
+      margin-right: 12px;
+    }
   }
 }

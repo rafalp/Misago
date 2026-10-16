@@ -95,13 +95,18 @@ def test_notifications_settings_form_renders(admin_client):
     assert response.status_code == 200
 
 
-def test_oauth2_settings_form_renders(admin_client):
-    response = admin_client.get(reverse("misago:admin:settings:oauth2:index"))
+def test_content_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:content:index"))
     assert response.status_code == 200
 
 
-def test_content_settings_form_renders(admin_client):
-    response = admin_client.get(reverse("misago:admin:settings:content:index"))
+def test_search_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:search:index"))
+    assert response.status_code == 200
+
+
+def test_oauth2_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:oauth2:index"))
     assert response.status_code == 200
 
 
