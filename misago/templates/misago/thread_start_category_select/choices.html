@@ -9,7 +9,7 @@
     {% with category=choice.category %}
     <li class="flex select-category-list-item">
       {% if choice.branch %}
-        <div class="form-control-category-tree-branch">
+        <div class="select-category-list-item-tree-branch">
           {% for image in choice.branch %}
             {% if image == "I" %}
               {% include "tree-branch/i.svg" %}

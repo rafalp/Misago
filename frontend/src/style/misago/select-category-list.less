@@ -39,6 +39,19 @@
   padding: 0 floor(@line-height-computed / 2);
 }
 
+.select-category-list-item-tree-branch {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  flex-shrink: 0;
+  color: @gray-300;
+
+  svg {
+    display: block;
+    transform: translateX(-5px);
+  }
+}
+
 .select-category-list-item-level {
   flex-shrink: 0;
   width: 18px;
@@ -62,6 +75,8 @@ a.select-category-list-item-btn-lg {
 }
 
 .select-category-list-item-header {
+  display: flex;
+  align-items: center;
   color: @gray;
 }
 
