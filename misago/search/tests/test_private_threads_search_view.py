@@ -221,3 +221,18 @@ def test_private_threads_search_view_shows_no_results_page_for_offset_in_htmx(
 
     assert_not_contains(response, "Search private threads")
     assert_contains(response, "No private threads found")
+
+
+def test_private_threads_search_view_returns_404_for_max_offset(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=test&offset=1000"
+    )
+    assert response.status_code == 404
+
+
+def test_private_threads_search_view_returns_404_for_max_offset_in_htmx(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=test&offset=1000",
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 404
