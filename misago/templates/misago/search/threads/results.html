@@ -61,9 +61,15 @@
         </li>
       {% empty %}
         <li class="search-threads-blankslate">
-          {% blocktranslate trimmed context "search threads empty message"%}
-            Try broadening your search.
-          {% endblocktranslate %}
+          {% if offset %}
+            {% blocktranslate trimmed context "search threads empty message"%}
+              No more threads to show.
+            {% endblocktranslate %}
+          {% else %}
+            {% blocktranslate trimmed context "search threads empty message"%}
+              Try broadening your search.
+            {% endblocktranslate %}
+          {% endif %}
         </li>
       {% endfor %}
     </ul>

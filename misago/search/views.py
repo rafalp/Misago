@@ -342,7 +342,9 @@ class ThreadsSearchView(BaseSearchView):
             ("sort", cleaned_data["sort"]),
         ]
 
-        if categories := cleaned_data.get("categories"):
+        # Put categories in URL only if they are selected
+        categories = cleaned_data.get("categories")
+        if self.request.GET.getlist("categories") and categories:
             data += [("categories", category.id) for category in categories]
 
         if users := cleaned_data.get("users"):
