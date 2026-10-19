@@ -54,6 +54,7 @@ def test_private_threads_search_view_shows_user_threads_result(
         reverse("misago:private-threads-search") + "?query=Thread"
     )
 
+    assert_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
@@ -72,6 +73,7 @@ def test_private_threads_search_view_shows_user_posts_result(
         + f"?query=Content&mode={SearchMode.POSTS}"
     )
 
+    assert_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
@@ -92,6 +94,7 @@ def test_private_threads_search_view_shows_user_thread_titles_result(
         + f"?query=Thread&mode={SearchMode.THREAD_TITLES}"
     )
 
+    assert_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
@@ -111,6 +114,7 @@ def test_private_threads_search_view_shows_deleted_user_threads_result(
         reverse("misago:private-threads-search") + "?query=Thread"
     )
 
+    assert_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": private_thread.first_post.id}),
@@ -131,6 +135,7 @@ def test_private_threads_search_view_shows_deleted_user_posts_result(
         + f"?query=Content&mode={SearchMode.POSTS}"
     )
 
+    assert_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": private_thread.first_post.id}),
@@ -151,6 +156,7 @@ def test_private_threads_search_view_shows_deleted_user_thread_titles_result(
         + f"?query=Thread&mode={SearchMode.THREAD_TITLES}"
     )
 
+    assert_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": private_thread.first_post.id}),
@@ -171,6 +177,7 @@ def test_private_threads_search_view_shows_results_in_htmx(
         headers={"hx-request": "true"},
     )
 
+    assert_not_contains(response, "Search private threads")
     assert_contains(
         response,
         reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
@@ -180,6 +187,8 @@ def test_private_threads_search_view_shows_results_in_htmx(
 
 def test_private_threads_search_view_shows_no_results_page(user_client):
     response = user_client.get(reverse("misago:private-threads-search") + "?query=test")
+
+    assert_contains(response, "Search private threads")
     assert_contains(response, "No private threads found")
 
 
@@ -188,6 +197,8 @@ def test_private_threads_search_view_shows_no_results_page_in_htmx(user_client):
         reverse("misago:private-threads-search") + "?query=test",
         headers={"hx-request": "true"},
     )
+
+    assert_not_contains(response, "Search private threads")
     assert_contains(response, "No private threads found")
 
 
@@ -195,6 +206,8 @@ def test_private_threads_search_view_shows_no_results_page_for_offset(user_clien
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=test&offset=10"
     )
+
+    assert_contains(response, "Search private threads")
     assert_contains(response, "No private threads found")
 
 
@@ -205,4 +218,6 @@ def test_private_threads_search_view_shows_no_results_page_for_offset_in_htmx(
         reverse("misago:private-threads-search") + "?query=test&offset=10",
         headers={"hx-request": "true"},
     )
+
+    assert_not_contains(response, "Search private threads")
     assert_contains(response, "No private threads found")

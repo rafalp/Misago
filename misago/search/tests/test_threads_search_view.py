@@ -19,6 +19,7 @@ def test_threads_search_view_shows_user_threads_result(user_client, user_thread)
 
     response = user_client.get(reverse("misago:threads-search") + "?query=Thread")
 
+    assert_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
     )
@@ -33,6 +34,7 @@ def test_threads_search_view_shows_user_posts_result(user_client, user_thread):
         reverse("misago:threads-search") + f"?query=Content&mode={SearchMode.POSTS}"
     )
 
+    assert_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
     )
@@ -48,6 +50,7 @@ def test_threads_search_view_shows_user_thread_titles_result(user_client, user_t
         + f"?query=Thread&mode={SearchMode.THREAD_TITLES}"
     )
 
+    assert_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
     )
@@ -60,6 +63,7 @@ def test_threads_search_view_shows_deleted_user_threads_result(user_client, thre
 
     response = user_client.get(reverse("misago:threads-search") + "?query=Thread")
 
+    assert_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
     )
@@ -74,6 +78,7 @@ def test_threads_search_view_shows_deleted_user_posts_result(user_client, thread
         reverse("misago:threads-search") + f"?query=Content&mode={SearchMode.POSTS}"
     )
 
+    assert_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
     )
@@ -91,6 +96,7 @@ def test_threads_search_view_shows_deleted_user_thread_titles_result(
         + f"?query=Thread&mode={SearchMode.THREAD_TITLES}"
     )
 
+    assert_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
     )
@@ -106,6 +112,7 @@ def test_threads_search_view_shows_result_in_htmx(user_client, user_thread):
         headers={"hx-request": "true"},
     )
 
+    assert_not_contains(response, "Search threads")
     assert_contains(
         response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
     )
@@ -114,6 +121,8 @@ def test_threads_search_view_shows_result_in_htmx(user_client, user_thread):
 
 def test_threads_search_view_shows_no_results_page(user_client):
     response = user_client.get(reverse("misago:threads-search") + "?query=test")
+
+    assert_contains(response, "Search threads")
     assert_contains(response, "No threads found")
 
 
@@ -121,6 +130,8 @@ def test_threads_search_view_shows_no_results_page_in_htmx(user_client):
     response = user_client.get(
         reverse("misago:threads-search") + "?query=test", headers={"hx-request": "true"}
     )
+
+    assert_not_contains(response, "Search threads")
     assert_contains(response, "No threads found")
 
 
@@ -128,6 +139,8 @@ def test_threads_search_view_shows_no_results_page_for_offset(user_client):
     response = user_client.get(
         reverse("misago:threads-search") + "?query=test&offset=10"
     )
+
+    assert_contains(response, "Search threads")
     assert_contains(response, "No threads found")
 
 
@@ -136,4 +149,6 @@ def test_threads_search_view_shows_no_results_page_for_offset_in_htmx(user_clien
         reverse("misago:threads-search") + "?query=test&offset=10",
         headers={"hx-request": "true"},
     )
+
+    assert_not_contains(response, "Search threads")
     assert_contains(response, "No threads found")
