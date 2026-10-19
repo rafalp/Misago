@@ -221,7 +221,8 @@ class ThreadsSearchView(BaseSearchView):
             )
 
         if results.has_more and offset < max_offset:
-            more_url = self.get_more_url(form, offset + len(results))
+            next_offset = min(offset + len(results), max_offset)
+            more_url = self.get_more_url(form, next_offset)
         else:
             more_url = None
 
