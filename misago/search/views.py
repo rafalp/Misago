@@ -287,7 +287,7 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
     def get_search_limit(self) -> tuple[int, int]:
-        return max(settings.MISAGO_SEARCH.get("RESULT_SIZE", 0), 5)
+        return max(settings.MISAGO_SEARCH.get("RESULT_SIZE", 0), 1)
 
     def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
         return Post.objects.filter(id__in=post_ids)
