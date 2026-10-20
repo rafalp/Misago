@@ -202,6 +202,33 @@ def test_private_threads_search_view_shows_no_results_page_in_htmx(user_client):
     assert_contains(response, "No private threads found")
 
 
+def test_private_threads_search_view_shows_results_after_offset(
+    user_client,
+    user_private_thread,
+    other_user_private_thread,
+):
+    search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=lorem ipsum&offset=1"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_not_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:post", kwargs={"post_id": other_user_private_thread.first_post.id}
+        ),
+    )
+    assert_not_contains(response, "No threads found")
+
+
 def test_private_threads_search_view_shows_no_results_page_for_offset(user_client):
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=test&offset=10"
@@ -221,6 +248,40 @@ def test_private_threads_search_view_shows_no_results_page_for_offset_in_htmx(
 
     assert_not_contains(response, "Search private threads")
     assert_contains(response, "No private threads found")
+
+
+def test_private_threads_search_view_returns_404_for_invalid_offset(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=test&offset=invalid"
+    )
+    assert response.status_code == 404
+
+
+def test_private_threads_search_view_returns_404_for_invalid_offset_in_htmx(
+    user_client,
+):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=test&offset=invalid",
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 404
+
+
+def test_private_threads_search_view_returns_404_for_negative_offset(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=test&offset=-1"
+    )
+    assert response.status_code == 404
+
+
+def test_private_threads_search_view_returns_404_for_negative_offset_in_htmx(
+    user_client,
+):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=test&offset=-1",
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 404
 
 
 def test_private_threads_search_view_returns_404_for_max_offset(user_client):
