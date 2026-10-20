@@ -4,6 +4,7 @@ from django.urls import reverse
 from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ..enums import SearchMode
+from ..models import SearchLog
 from ..service import search
 
 
@@ -361,3 +362,26 @@ def test_private_threads_search_view_shows_results_after_offset(
         ),
     )
     assert_not_contains(response, "No private threads found")
+
+
+def test_private_threads_search_view_logs_user_search(
+    user_client, user, user_private_thread
+):
+    search.index_thread(user_private_thread)
+    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=lorem"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
+    )
+    assert_not_contains(response, "No private threads found")
+
+    search_log = SearchLog.objects.get(user=user)
+    assert search_log.search_query == "lorem"
+    assert search_log.ip_address
+    assert not search_log.is_public

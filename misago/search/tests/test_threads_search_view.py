@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from ...test import assert_contains, assert_not_contains
 from ..enums import SearchMode
+from ..models import SearchLog
 from ..service import search
 
 
@@ -266,3 +267,39 @@ def test_threads_search_view_shows_results_after_offset(
         response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
     )
     assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_logs_user_search(user_client, user, thread):
+    search.index_thread(thread)
+    search.index_post(thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+
+    search_log = SearchLog.objects.get(user=user)
+    assert search_log.search_query == "lorem"
+    assert search_log.ip_address
+    assert search_log.is_public
+
+
+def test_threads_search_view_logs_guest_search(client, thread):
+    search.index_thread(thread)
+    search.index_post(thread.first_post, "Lorem ipsum")
+
+    response = client.get(reverse("misago:threads-search") + "?query=lorem")
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+
+    search_log = SearchLog.objects.get(user=None)
+    assert search_log.search_query == "lorem"
+    assert search_log.ip_address
+    assert search_log.is_public
