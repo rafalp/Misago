@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpRequest
 from django.utils import timezone
 
@@ -14,13 +15,10 @@ def _throttle_search_action(request: HttpRequest) -> int:
 
     if request.user.is_authenticated:
         min_search_interval = request.settings.user_min_search_interval
-        queryset = queryset.filter(user=request.user)
+        queryset = queryset.filter(Q(user=request.user) | Q(ip_address=request.user_ip))
     else:
         min_search_interval = request.settings.guest_min_search_interval
-        queryset = queryset.filter(
-            user__isnull=True,
-            ip_address=request.user_ip,
-        )
+        queryset = queryset.filter(ip_address=request.user_ip)
 
     if not min_search_interval:
         return 0

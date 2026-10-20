@@ -287,6 +287,52 @@ def test_threads_search_view_logs_user_search(user_client, user, thread):
     assert search_log.is_public
 
 
+def test_threads_search_view_throttles_user_search(user_client, user, thread):
+    SearchLog.objects.create(
+        user=user,
+        ip_address="127.0.0.1",
+        search_query="lorem",
+    )
+
+    search.index_thread(thread)
+    search.index_post(thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+    assert_contains(response, "Search limit reached")
+
+
+def test_threads_search_view_doesnt_throttle_user_with_permission(
+    user_client, user, thread
+):
+    SearchLog.objects.create(
+        user=user,
+        ip_address="127.0.0.1",
+        search_query="lorem",
+    )
+
+    user.group.bypass_search_throttling = True
+    user.group.save()
+
+    search.index_thread(thread)
+    search.index_post(thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": thread.first_post.id}),
+    )
+    assert_not_contains(response, "No threads found")
+    assert_not_contains(response, "Search limit reached")
+
+
 def test_threads_search_view_logs_guest_search(client, thread):
     search.index_thread(thread)
     search.index_post(thread.first_post, "Lorem ipsum")
@@ -303,3 +349,23 @@ def test_threads_search_view_logs_guest_search(client, thread):
     assert search_log.search_query == "lorem"
     assert search_log.ip_address
     assert search_log.is_public
+
+
+def test_threads_search_view_throttles_guest_search(client, thread):
+    SearchLog.objects.create(
+        user=None,
+        ip_address="127.0.0.1",
+        search_query="lorem",
+    )
+
+    search.index_thread(thread)
+    search.index_post(thread.first_post, "Lorem ipsum")
+
+    response = client.get(reverse("misago:threads-search") + "?query=lorem")
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+    assert_contains(response, "Search limit reached")

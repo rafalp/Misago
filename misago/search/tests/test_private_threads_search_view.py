@@ -385,3 +385,56 @@ def test_private_threads_search_view_logs_user_search(
     assert search_log.search_query == "lorem"
     assert search_log.ip_address
     assert not search_log.is_public
+
+
+def test_private_threads_search_view_throttles_user_search(
+    user_client, user, user_private_thread
+):
+    SearchLog.objects.create(
+        user=user,
+        ip_address="127.0.0.1",
+        search_query="lorem",
+    )
+
+    search.index_thread(user_private_thread)
+    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=lorem"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_not_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
+    )
+    assert_not_contains(response, "No private threads found")
+    assert_contains(response, "Search limit reached")
+
+
+def test_private_threads_search_view_doesnt_throttle_user_with_permission(
+    user_client, user, user_private_thread
+):
+    SearchLog.objects.create(
+        user=user,
+        ip_address="127.0.0.1",
+        search_query="lorem",
+    )
+
+    user.group.bypass_search_throttling = True
+    user.group.save()
+
+    search.index_thread(user_private_thread)
+    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=lorem"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
+    )
+    assert_not_contains(response, "No private threads found")
+    assert_not_contains(response, "Search limit reached")
