@@ -7,7 +7,7 @@ from ...test import (
     grant_user_group_see_browse_category_permissions,
 )
 from ...threads.move import move_thread
-from ..enums import SearchMode
+from ..enums import SearchMode, SearchSort
 from ..models import SearchLog
 from ..service import search
 
@@ -383,7 +383,7 @@ def test_threads_search_view_keeps_category_in_more_url(
 
 def test_threads_search_view_shows_error_if_users_is_invalid(user_client):
     response = user_client.get(
-        reverse("misago:threads-search") + f"?query=lorem&users=invalid"
+        reverse("misago:threads-search") + "?query=lorem&users=invalid"
     )
 
     assert_contains(response, "Search threads")
@@ -438,6 +438,60 @@ def test_threads_search_view_keeps_users_in_more_url(
         + "?query=lorem&amp;mode=threads&amp;sort=relevance"
         + f"&amp;users={user.slug}%2C+{other_user.slug}",
     )
+
+
+def test_threads_search_view_shows_error_if_mode_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:threads-search") + "?query=lorem&mode=invalid"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response, "Select a valid choice. invalid is not one of the available choices"
+    )
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_shows_error_if_sort_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:threads-search") + "?query=lorem&sort=invalid"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response, "Select a valid choice. invalid is not one of the available choices"
+    )
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_uses_sort_search_option(user_client, thread, user_thread):
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem latin ipsum")
+    search.index_post(user_thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + f"?query=lorem+ipsum&sort={SearchSort.NEWEST}"
+    )
+
+    thread_url = reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    user_thread_url = reverse(
+        "misago:post", kwargs={"post_id": user_thread.first_post.id}
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, thread_url)
+    assert_contains(response, user_thread_url)
+    assert_not_contains(response, "No threads found")
+
+    response_content = response.content.decode()
+    thread_index = response_content.index(thread_url)
+    user_thread_index = response_content.index(user_thread_url)
+
+    if thread.first_post.id > user_thread.first_post.id:
+        assert thread_index < user_thread_index
+    else:
+        assert user_thread_index < thread_index
 
 
 def test_threads_search_view_logs_user_search(user_client, user, thread):

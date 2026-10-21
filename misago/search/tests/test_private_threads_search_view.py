@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
-from ..enums import SearchMode
+from ..enums import SearchMode, SearchSort
 from ..models import SearchLog
 from ..service import search
 
@@ -402,7 +402,7 @@ def test_private_threads_search_view_keeps_search_query_in_more_url(
 
 def test_private_threads_search_view_shows_error_if_users_is_invalid(user_client):
     response = user_client.get(
-        reverse("misago:private-threads-search") + f"?query=lorem&users=invalid"
+        reverse("misago:private-threads-search") + "?query=lorem&users=invalid"
     )
 
     assert_contains(response, "Search private threads")
@@ -418,7 +418,7 @@ def test_private_threads_search_view_uses_users_search_option(
     search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
-        reverse("misago:private-threads-search") + f"?query=lorem&users={user.slug}"
+        reverse("misago:private-threads-search") + "?query=lorem&users={user.slug}"
     )
 
     assert_contains(response, "Search private threads")
@@ -455,6 +455,64 @@ def test_private_threads_search_view_keeps_users_in_more_url(
         + "?query=lorem&amp;mode=threads&amp;sort=relevance"
         + f"&amp;users={user.slug}%2C+{other_user.slug}",
     )
+
+
+def test_private_threads_search_view_shows_error_if_mode_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=lorem&mode=invalid"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(
+        response, "Select a valid choice. invalid is not one of the available choices"
+    )
+    assert_not_contains(response, "No private threads found")
+
+
+def test_private_threads_search_view_shows_error_if_sort_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + "?query=lorem&mode=invalid"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(
+        response, "Select a valid choice. invalid is not one of the available choices"
+    )
+    assert_not_contains(response, "No private threads found")
+
+
+def test_private_threads_search_view_uses_sort_search_option(
+    user_client, user_private_thread, other_user_private_thread
+):
+    search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    search.index_post(user_private_thread.first_post, "Lorem latin ipsum")
+    search.index_post(other_user_private_thread.first_post, "Lorem ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search")
+        + f"?query=lorem+ipsum&sort={SearchSort.NEWEST}"
+    )
+
+    user_thread_url = reverse(
+        "misago:post", kwargs={"post_id": user_private_thread.first_post.id}
+    )
+    other_user_thread_url = reverse(
+        "misago:post", kwargs={"post_id": other_user_private_thread.first_post.id}
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(response, user_thread_url)
+    assert_contains(response, other_user_thread_url)
+    assert_not_contains(response, "No private threads found")
+
+    response_content = response.content.decode()
+    user_thread_index = response_content.index(user_thread_url)
+    other_user_thread_index = response_content.index(other_user_thread_url)
+
+    if user_private_thread.first_post.id > other_user_private_thread.first_post.id:
+        assert user_thread_index < other_user_thread_index
+    else:
+        assert other_user_thread_index < user_thread_index
 
 
 def test_private_threads_search_view_logs_user_search(

@@ -82,6 +82,9 @@
                 </div>
               {% endfor %}
             </div>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
           </div>
         {% endwith %}
       </div>
@@ -101,6 +104,9 @@
                 </div>
               {% endfor %}
             </div>
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
           </div>
         {% endwith %}
       </div>
