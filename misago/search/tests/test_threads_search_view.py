@@ -6,6 +6,7 @@ from ...test import (
     assert_not_contains,
     grant_user_group_see_browse_category_permissions,
 )
+from ...threads.move import move_thread
 from ..enums import SearchMode
 from ..models import SearchLog
 from ..service import search
@@ -329,8 +330,34 @@ def test_threads_search_view_shows_error_if_category_is_not_visible(
     assert_not_contains(response, "No threads found")
 
 
+def test_threads_search_view_uses_category_search_option(
+    user_client, user, thread, user_thread, sibling_category
+):
+    grant_user_group_see_browse_category_permissions(user.group, sibling_category)
+
+    move_thread(user_thread, sibling_category)
+
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + f"?query=lorem&category={sibling_category.id}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+
+
 @override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
-def test_threads_search_view_keeps_categories_in_more_url(
+def test_threads_search_view_keeps_category_in_more_url(
     user_client, user, thread, user_thread, default_category, sibling_category
 ):
     grant_user_group_see_browse_category_permissions(user.group, sibling_category)
@@ -346,12 +373,70 @@ def test_threads_search_view_keeps_categories_in_more_url(
     )
 
     assert_contains(response, "Search threads")
-    print(response.content.decode())
     assert_contains(
         response,
         reverse("misago:threads-search")
         + "?query=lorem&amp;mode=threads&amp;sort=relevance"
         + f"&amp;category={default_category.id}&amp;category={sibling_category.id}",
+    )
+
+
+def test_threads_search_view_shows_error_if_users_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:threads-search") + f"?query=lorem&users=invalid"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "One or more users not found: invalid")
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_uses_users_search_option(
+    user_client, user, thread, user_thread, other_user_thread
+):
+    search.bulk_index_threads([thread, user_thread, other_user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    search.index_post(other_user_thread.first_post, "Lorem dolor ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search") + f"?query=lorem&users={user.slug}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
+    )
+    assert_not_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": other_user_thread.first_post.id}),
+    )
+    assert_not_contains(response, "No threads found")
+
+
+@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+def test_threads_search_view_keeps_users_in_more_url(
+    user_client, user, other_user, thread, user_thread, other_user_thread
+):
+    search.bulk_index_threads([thread, user_thread, other_user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    search.index_post(other_user_thread.first_post, "Lorem dolor ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + f"?query=lorem&users={user.slug},{other_user.slug}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response,
+        reverse("misago:threads-search")
+        + "?query=lorem&amp;mode=threads&amp;sort=relevance"
+        + f"&amp;users={user.slug}%2C+{other_user.slug}",
     )
 
 

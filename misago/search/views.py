@@ -349,7 +349,7 @@ class ThreadsSearchView(BaseSearchView):
             data += [("category", category.id) for category in category]
 
         if users := cleaned_data.get("users"):
-            data += [("users", " ".join(user.slug for user in users))]
+            data += [("users", ", ".join(user.slug for user in users))]
 
         if date_from := cleaned_data["date_from"]:
             data.append(("date_from", date_from))

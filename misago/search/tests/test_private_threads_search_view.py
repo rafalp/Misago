@@ -400,6 +400,63 @@ def test_private_threads_search_view_keeps_search_query_in_more_url(
     assert_contains(response, reverse("misago:private-threads-search") + "?query=lorem")
 
 
+def test_private_threads_search_view_shows_error_if_users_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:private-threads-search") + f"?query=lorem&users=invalid"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(response, "One or more users not found: invalid")
+    assert_not_contains(response, "No private threads found")
+
+
+def test_private_threads_search_view_uses_users_search_option(
+    user_client, user, user_private_thread, other_user_private_thread
+):
+    search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search") + f"?query=lorem&users={user.slug}"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(
+        response,
+        reverse("misago:post", kwargs={"post_id": user_private_thread.first_post.id}),
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:post", kwargs={"post_id": other_user_private_thread.first_post.id}
+        ),
+    )
+    assert_not_contains(response, "No private threads found")
+
+
+@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+def test_private_threads_search_view_keeps_users_in_more_url(
+    user_client, user, other_user, user_private_thread, other_user_private_thread
+):
+    search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:private-threads-search")
+        + f"?query=lorem&users={user.slug},{other_user.slug}"
+    )
+
+    assert_contains(response, "Search private threads")
+    assert_contains(
+        response,
+        reverse("misago:private-threads-search")
+        + "?query=lorem&amp;mode=threads&amp;sort=relevance"
+        + f"&amp;users={user.slug}%2C+{other_user.slug}",
+    )
+
+
 def test_private_threads_search_view_logs_user_search(
     user_client, user, user_private_thread
 ):
