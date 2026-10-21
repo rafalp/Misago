@@ -135,7 +135,7 @@ class ThreadsSearchView(BaseSearchView):
 
         if self.request.is_htmx and search_throttled:
             raise PermissionDenied(
-                self.get_search_throttled_message(search_throttled),
+                self.get_search_throttled_message(search_throttled)["noscript"],
             )
 
         if form.is_valid() and not search_throttled:
@@ -169,13 +169,25 @@ class ThreadsSearchView(BaseSearchView):
 
         return throttle_search(self.request)
 
-    def get_search_throttled_message(self, throttled: int) -> str:
-        return npgettext(
-            "search results throttled message",
-            "Wait %(seconds)s second before searching again.",
-            "Wait %(seconds)s seconds before searching again.",
-            throttled,
-        ) % {"seconds": throttled}
+    def get_search_throttled_message(self, throttled: int) -> dict[str]:
+        params = {"seconds": throttled}
+
+        return {
+            "auto_refresh": npgettext(
+                "search results throttled message",
+                "Search results will load automatically in %(seconds)s second.",
+                "Search results will load automatically in %(seconds)s seconds.",
+                throttled,
+            )
+            % params,
+            "noscript": npgettext(
+                "search results throttled message",
+                "Wait %(seconds)s second before searching again.",
+                "Wait %(seconds)s seconds before searching again.",
+                throttled,
+            )
+            % params,
+        }
 
     def log_search(self, search_query: str):
         if self.request.user.is_authenticated:
@@ -209,7 +221,8 @@ class ThreadsSearchView(BaseSearchView):
             )
 
         if results.has_more and offset < max_offset:
-            more_url = self.get_more_url(form, offset + len(results))
+            next_offset = min(offset + len(results), max_offset)
+            more_url = self.get_more_url(form, next_offset)
         else:
             more_url = None
 
@@ -274,7 +287,7 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
     def get_search_limit(self) -> tuple[int, int]:
-        return max(settings.MISAGO_SEARCH.get("RESULT_SIZE", 0), 5)
+        return max(settings.MISAGO_SEARCH.get("RESULT_SIZE", 0), 1)
 
     def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
         return Post.objects.filter(id__in=post_ids)
@@ -330,7 +343,9 @@ class ThreadsSearchView(BaseSearchView):
             ("sort", cleaned_data["sort"]),
         ]
 
-        if categories := cleaned_data.get("categories"):
+        # Put categories in URL only if they are selected
+        categories = cleaned_data.get("categories")
+        if self.request.GET.getlist("categories") and categories:
             data += [("categories", category.id) for category in categories]
 
         if users := cleaned_data.get("users"):
@@ -351,6 +366,11 @@ class ThreadsSearchView(BaseSearchView):
 class PrivateThreadsSearchView(ThreadsSearchView):
     is_search_public: bool = False
     form_class = PrivateThreadsSearchForm
+
+    def check_permission(self):
+        super().check_permission()
+
+        check_private_threads_permission(self.request.user_permissions)
 
     def search(
         self, form: PrivateThreadsSearchForm, offset: int
