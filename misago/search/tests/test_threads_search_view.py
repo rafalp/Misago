@@ -317,7 +317,7 @@ def test_threads_search_view_shows_error_if_category_is_invalid(
 
 
 def test_threads_search_view_shows_error_if_category_is_not_visible(
-    user_client, default_category, sibling_category
+    user_client, sibling_category
 ):
     response = user_client.get(
         reverse("misago:threads-search")
