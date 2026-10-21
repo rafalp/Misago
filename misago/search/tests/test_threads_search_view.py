@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.test import override_settings
 from django.urls import reverse
 
@@ -492,6 +494,159 @@ def test_threads_search_view_uses_sort_search_option(user_client, thread, user_t
         assert thread_index < user_thread_index
     else:
         assert user_thread_index < thread_index
+
+
+def test_threads_search_view_shows_error_if_date_from_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:threads-search") + "?query=lorem&date_from=invalid"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "Enter a valid date.")
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_uses_date_from_search_option(
+    user_client, thread, user_thread
+):
+    thread.started_at = thread.started_at.replace(year=2025, month=12, day=24)
+    thread.save()
+
+    thread.first_post.posted_at = thread.first_post.posted_at.replace(
+        year=2025, month=12, day=24
+    )
+    thread.first_post.save()
+
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search") + "?query=lorem+ipsum&date_from=2025-12-26"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+
+
+@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+def test_threads_search_view_keeps_date_from_in_more_url(
+    user_client, thread, user_thread
+):
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search") + "?query=lorem&date_from=2025-12-26"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response,
+        reverse("misago:threads-search")
+        + "?query=lorem&amp;mode=threads&amp;sort=relevance"
+        + "&amp;date_from=2025-12-26",
+    )
+
+
+def test_threads_search_view_shows_error_if_date_to_is_invalid(user_client):
+    response = user_client.get(
+        reverse("misago:threads-search") + "?query=lorem&date_to=invalid"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "Enter a valid date.")
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_uses_date_to_search_option(
+    user_client, thread, user_thread
+):
+    today_date = date.today()
+
+    thread.started_at += timedelta(days=5)
+    thread.save()
+
+    thread.first_post.posted_at += timedelta(days=5)
+    thread.first_post.save()
+
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search") + f"?query=lorem+ipsum&date_to={today_date}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
+
+
+@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+def test_threads_search_view_keeps_date_to_in_more_url(
+    user_client, thread, user_thread
+):
+    next_date = date.today() + timedelta(days=5)
+
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search") + f"?query=lorem&date_to={next_date}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(
+        response,
+        reverse("misago:threads-search")
+        + "?query=lorem&amp;mode=threads&amp;sort=relevance"
+        + f"&amp;date_to={next_date}",
+    )
+
+
+def test_threads_search_view_swaps_date_from_and_date_to(
+    user_client, thread, user_thread
+):
+    date_from = date.today() + timedelta(days=2)
+    date_to = date.today() - timedelta(days=2)
+
+    thread.started_at -= timedelta(days=5)
+    thread.save()
+
+    thread.first_post.posted_at -= timedelta(days=5)
+    thread.first_post.save()
+
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + f"?query=lorem&date_from={date_from}&date_to={date_to}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_not_contains(
+        response, reverse("misago:post", kwargs={"post_id": thread.first_post.id})
+    )
+    assert_contains(
+        response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
+    )
+    assert_not_contains(response, "No threads found")
 
 
 def test_threads_search_view_logs_user_search(user_client, user, thread):
