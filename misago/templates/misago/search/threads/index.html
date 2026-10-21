@@ -44,7 +44,7 @@
               </div>
             {% endwith %}
 
-            <details class="search-threads-options" {% if not form.is_valid %} open{% endif %}>
+            <details class="search-threads-options"{% if not form.has_valid_search_options %} open{% endif %}>
               <summary class="search-threads-options-title">
                 {% include "tabler/adjustments-horizontal.svg" %}
                 <span class="search-threads-options-title-text">

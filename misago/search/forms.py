@@ -3,6 +3,7 @@ from datetime import datetime, time, timedelta
 
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import pgettext_lazy
@@ -105,6 +106,10 @@ class BaseThreadsSearchForm(SearchForm):
             data["date_from"], data["date_to"] = data["date_to"], data["date_from"]
 
         return data
+
+    def has_valid_search_options(self) -> bool:
+        errors = set(self.errors) - {NON_FIELD_ERRORS, "quote"}
+        return not errors
 
     def get_search_filters(self) -> dict:
         filters = {
