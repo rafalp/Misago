@@ -400,7 +400,6 @@ def test_thread_start_category_select_view_excludes_child_category_if_user_cant_
         ),
     )
 
-
 def test_thread_start_category_select_view_excludes_child_category_in_htmx_if_user_cant_start_thread_in_it(
     user_client, default_category, child_category
 ):

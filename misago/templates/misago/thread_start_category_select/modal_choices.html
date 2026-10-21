@@ -1,14 +1,30 @@
 <ul class="select-category-list">
-  {% for category in thread_start_choices %}
+  {% for choice in thread_start_choices %}
+    {% with category=choice.category %}
     <li class="flex select-category-list-item">
-      {% if category.disabled %}
+      {% if choice.branch %}
+        <div class="select-category-list-item-tree-branch">
+          {% for image in choice.branch %}
+            {% if image == "I" %}
+              {% include "tree-branch/i.svg" %}
+            {% elif image == "T" %}
+              {% include "tree-branch/t.svg" %}
+            {% elif image == "L" %}
+              {% include "tree-branch/l.svg" %}
+            {% elif image == "S" %}
+              {% include "tree-branch/s.svg" %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if choice.disabled %}
         <span class="flex items-center font-bold select-category-list-item-btn select-category-list-item-header">
           <span class="bullet"{% if category.color %} style="--color: {{ category.color }}"{% endif %}></span>
           {{ category.name }}
         </span>
       {% else %}
         <a
-          href="{{ category.url }}"
+          href="{{ choice.url }}"
           class="flex items-center font-bold select-category-list-item-btn select-category-list-item-header"
         >
           <span class="bullet"{% if category.color %} style="--color: {{ category.color }}"{% endif %}></span>
@@ -16,29 +32,6 @@
         </a>
       {% endif %}
     </li>
-    {% for subcategory in category.children %}
-      <li class="flex items-center select-category-list-item">
-        {% for _ in subcategory.level %}
-          <div class="select-category-list-item-level"></div>
-        {% endfor %}
-        {% if subcategory.disabled %}
-          <span class="flex items-center font-medium select-category-list-item-btn select-category-list-item-name">
-            <span class="bullet"{% if subcategory.color %} style="--color: {{ subcategory.color }}"{% endif %}></span>
-            {{ subcategory.name }}
-          </span>
-        {% else %}
-          <a
-            href="{{ subcategory.url }}"
-            class="flex items-center font-medium select-category-list-item-btn select-category-list-item-name"
-          >
-            <span class="bullet"{% if subcategory.color %} style="--color: {{ subcategory.color }}"{% endif %}></span>
-            {{ subcategory.name }}
-          </a>
-        {% endif %}
-      </li>
-    {% endfor %}
-    {% if not forloop.last %}
-      <li class="select-category-list-separator"></li>
-    {% endif %}
+    {% endwith %}
   {% endfor %}
 </ul>
