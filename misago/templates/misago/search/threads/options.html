@@ -1,9 +1,9 @@
 {% load i18n misago_forms %}
 
 <div class="search-threads-form-row">
-  {% if form.categories %}
+  {% if form.category %}
     <div class="search-threads-form-row-start">
-      {% with field=form.categories %}
+      {% with field=form.category %}
         <div class="form-group{% if field.errors %} has-error{% endif %}">
           <label class="control-label">
             {% translate "Categories:" context "search threads form" %}
@@ -39,7 +39,7 @@
             <p class="help-block">{{ error }}</p>
           {% endfor %}
           <p class="help-block">
-            {% translate "Select categories to limit the search to them." context "search threads form" %}
+            {% translate "Limit search to selected categories." context "search threads form" %}
           </p>
         </div>
       {% endwith %}

@@ -344,9 +344,9 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
         # Put categories in URL only if they are selected
-        categories = cleaned_data.get("categories")
-        if self.request.GET.getlist("categories") and categories:
-            data += [("categories", category.id) for category in categories]
+        category = cleaned_data.get("category")
+        if self.request.GET.getlist("category") and category:
+            data += [("category", category.id) for category in category]
 
         if users := cleaned_data.get("users"):
             data += [("users", " ".join(user.slug for user in users))]

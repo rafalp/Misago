@@ -1,7 +1,11 @@
 from django.test import override_settings
 from django.urls import reverse
 
-from ...test import assert_contains, assert_not_contains
+from ...test import (
+    assert_contains,
+    assert_not_contains,
+    grant_user_group_see_browse_category_permissions,
+)
 from ..enums import SearchMode
 from ..models import SearchLog
 from ..service import search
@@ -267,6 +271,88 @@ def test_threads_search_view_shows_results_after_offset(
         response, reverse("misago:post", kwargs={"post_id": user_thread.first_post.id})
     )
     assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_shows_error_if_query_is_empty(user_client):
+    response = user_client.get(reverse("misago:threads-search"))
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "This field is required.")
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_shows_error_if_query_is_invalid(user_client):
+    response = user_client.get(reverse("misago:threads-search") + "?query=-lorem")
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "This search query is too broad.")
+    assert_not_contains(response, "No threads found")
+
+
+@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+def test_threads_search_view_keeps_search_query_in_more_url(
+    user_client, thread, user_thread
+):
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, reverse("misago:threads-search") + "?query=lorem")
+
+
+def test_threads_search_view_shows_error_if_category_is_invalid(
+    user_client, default_category
+):
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + f"?query=lorem&category={default_category.id + 1}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "Select a valid choice.")
+    assert_not_contains(response, "No threads found")
+
+
+def test_threads_search_view_shows_error_if_category_is_not_visible(
+    user_client, default_category, sibling_category
+):
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + f"?query=lorem&category={sibling_category.id}"
+    )
+
+    assert_contains(response, "Search threads")
+    assert_contains(response, "Select a valid choice.")
+    assert_not_contains(response, "No threads found")
+
+
+@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+def test_threads_search_view_keeps_categories_in_more_url(
+    user_client, user, thread, user_thread, default_category, sibling_category
+):
+    grant_user_group_see_browse_category_permissions(user.group, sibling_category)
+
+    search.bulk_index_threads([thread, user_thread])
+    search.index_post(thread.first_post, "Lorem ipsum")
+    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+
+    response = user_client.get(
+        reverse("misago:threads-search")
+        + "?query=lorem"
+        + f"&category={default_category.id}&category={sibling_category.id}"
+    )
+
+    assert_contains(response, "Search threads")
+    print(response.content.decode())
+    assert_contains(
+        response,
+        reverse("misago:threads-search")
+        + "?query=lorem&amp;mode=threads&amp;sort=relevance"
+        + f"&amp;category={default_category.id}&amp;category={sibling_category.id}",
+    )
 
 
 def test_threads_search_view_logs_user_search(user_client, user, thread):

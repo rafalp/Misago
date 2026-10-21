@@ -162,7 +162,7 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
     link_label = pgettext_lazy("threads search form name", "Threads")
     url_name = "misago:threads-search"
 
-    categories = forms.TypedMultipleChoiceField(
+    category = forms.TypedMultipleChoiceField(
         coerce=int,
         required=False,
         widget=forms.CheckboxSelectMultiple(),
@@ -175,7 +175,7 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
 
         self.searchable_categories = self.get_searchable_categories()
         self.disabled_categories = self.get_disabled_categories()
-        self.fields["categories"].choices = self.get_category_choices()
+        self.fields["category"].choices = self.get_category_choices()
 
     def get_searchable_categories(self) -> set[int]:
         return get_searchable_category_ids(
@@ -209,14 +209,14 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
             )
         )
 
-    def clean_categories(self) -> list[CategoryProxy]:
+    def clean_category(self) -> list[CategoryProxy]:
         request = self.request
 
         searchable_categories = get_searchable_category_ids(
             request.user_permissions, request.categories
         )
 
-        if category_ids := self.cleaned_data["categories"]:
+        if category_ids := self.cleaned_data["category"]:
             return [
                 request.categories[category_id]
                 for category_id in category_ids
@@ -231,7 +231,7 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
 
     def get_search_filters(self) -> dict:
         filters = super().get_search_filters()
-        filters["categories"] = self.cleaned_data["categories"]
+        filters["categories"] = self.cleaned_data["category"]
         return filters
 
 
