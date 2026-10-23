@@ -319,7 +319,7 @@
   align-items: center;
   gap: @line-height-computed;
 
-  padding: @line-height-computed * 2 ceil(@grid-gutter-width / 2);
+  padding: @line-height-computed * 2 @grid-gutter-width;
 
   border: 1px solid @gray-200;
   border-radius: @border-radius-base;
@@ -354,4 +354,5 @@
 
   color: @gray-600;
   font-size: ceil(@font-size-base * 1.2);
+  text-align: center;
 }
