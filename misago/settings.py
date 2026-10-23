@@ -20,7 +20,7 @@ __all__ = [
     "MISAGO_PYGMENTS_LANGUAGES",
     "MISAGO_PYGMENTS_STYLE",
     "MISAGO_QUOTED_POSTS_LIMIT",
-    "MISAGO_SEARCH",
+    "MISAGO_THREADS_SEARCH",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -259,8 +259,8 @@ MISAGO_PYGMENTS_LANGUAGES = (
 # For use in tests only
 MISAGO_PARSER_CLEAN_AST = True
 
-# Posts search configuration
-MISAGO_SEARCH = {
+# Threads and posts search configuration
+MISAGO_THREADS_SEARCH = {
     "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
     "INDEX_BATCH_SIZE": 50,
     "MAX_OFFSET": 160,

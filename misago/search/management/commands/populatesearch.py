@@ -7,8 +7,8 @@ from ....core.management.progressbar import show_progress
 from ....parser.parse import parse
 from ....privatethreads.members import prefetch_private_thread_member_ids
 from ....threads.models import Post, Thread
-from ...exceptions import SearchBackendError
-from ...service import SearchService, search
+from ...exceptions import ThreadsSearchBackendError
+from ...threads import ThreadsSearch, threads_search
 
 
 class Command(BaseCommand):
@@ -25,15 +25,15 @@ class Command(BaseCommand):
         private_threads = Category.objects.private_threads()
         post_count = Post.objects.count()
 
-        self.stdout.write(f'Populating "{search.backend.name}"...\n\n')
+        self.stdout.write(f'Populating "{threads_search.backend.name}"...\n\n')
 
         if options["no_clear"]:
             self.stdout.write("Keeping existing search data.\n\n")
         else:
             try:
                 start_time = time()
-                search.clear()
-            except SearchBackendError as exc:
+                threads_search.clear()
+            except ThreadsSearchBackendError as exc:
                 self.stderr.write(f"\nError clearing search data:\n\n{exc}")
                 return
             else:
@@ -52,16 +52,16 @@ class Command(BaseCommand):
         show_progress(self, indexed_count, post_count)
         start_time = time()
 
-        search_index = SearchIndexBuffer(search, 50)
+        search_index = SearchIndexBuffer(threads_search, 50)
 
         queryset = Post.objects.select_related("thread").order_by("id")
         for post in queryset.iterator(chunk_size=50):
             if post.id == post.thread.first_post_id:
                 thread = post.thread
                 if thread.category_id == private_threads.id:
-                    search.index_thread(thread)
+                    threads_search.index_thread(thread)
                     prefetch_private_thread_member_ids([thread])
-                    search.update_thread_members(
+                    threads_search.update_thread_members(
                         thread, thread.private_thread_member_ids
                     )
                 else:
@@ -82,7 +82,7 @@ class Command(BaseCommand):
 
 
 class SearchIndexBuffer:
-    search: SearchService
+    search: ThreadsSearch
     max_size: int
 
     threads: list[Thread]
@@ -91,7 +91,7 @@ class SearchIndexBuffer:
     posts: list[Post]
     posts_size: int
 
-    def __init__(self, search: SearchService, max_size: int):
+    def __init__(self, search: ThreadsSearch, max_size: int):
         self.search = search
         self.max_size = max_size
 

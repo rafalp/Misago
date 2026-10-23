@@ -19,12 +19,12 @@ def backend(db):
     return PostgreSQLSearchBackend({"PG_SEARCH_CONFIG": "english"})
 
 
-def test_postgresql_backend_initialize_does_nothing(backend):
+def test_postgresql_search_backend_initialize_does_nothing(backend):
     backend.initialize()
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_threads(
+def test_postgresql_search_backend_search_threads_searches_threads(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -76,7 +76,7 @@ def test_postgresql_backend_search_threads_searches_threads(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_threads_using_phrase(
+def test_postgresql_search_backend_search_threads_searches_threads_using_phrase(
     thread_factory,
     user_permissions_factory,
     user,
@@ -116,7 +116,7 @@ def test_postgresql_backend_search_threads_searches_threads_using_phrase(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_threads_using_not_query(
+def test_postgresql_search_backend_search_threads_searches_threads_using_not_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -154,7 +154,7 @@ def test_postgresql_backend_search_threads_searches_threads_using_not_query(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_threads_using_and_query(
+def test_postgresql_search_backend_search_threads_searches_threads_using_and_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -194,7 +194,7 @@ def test_postgresql_backend_search_threads_searches_threads_using_and_query(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_threads_using_or_query(
+def test_postgresql_search_backend_search_threads_searches_threads_using_or_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -232,7 +232,7 @@ def test_postgresql_backend_search_threads_searches_threads_using_or_query(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_posts(
+def test_postgresql_search_backend_search_threads_searches_posts(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -281,7 +281,7 @@ def test_postgresql_backend_search_threads_searches_posts(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_posts_using_phrase(
+def test_postgresql_search_backend_search_threads_searches_posts_using_phrase(
     thread_factory,
     user_permissions_factory,
     user,
@@ -322,7 +322,7 @@ def test_postgresql_backend_search_threads_searches_posts_using_phrase(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_posts_using_not_query(
+def test_postgresql_search_backend_search_threads_searches_posts_using_not_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -361,7 +361,7 @@ def test_postgresql_backend_search_threads_searches_posts_using_not_query(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_posts_using_and_query(
+def test_postgresql_search_backend_search_threads_searches_posts_using_and_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -402,7 +402,7 @@ def test_postgresql_backend_search_threads_searches_posts_using_and_query(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_posts_using_or_query(
+def test_postgresql_search_backend_search_threads_searches_posts_using_or_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -441,7 +441,7 @@ def test_postgresql_backend_search_threads_searches_posts_using_or_query(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_thread_titles(
+def test_postgresql_search_backend_search_threads_searches_thread_titles(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -496,7 +496,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_thread_titles_using_phrase(
+def test_postgresql_search_backend_search_threads_searches_thread_titles_using_phrase(
     thread_factory,
     user_permissions_factory,
     user,
@@ -537,7 +537,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles_using_phrase(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_thread_titles_using_not_query(
+def test_postgresql_search_backend_search_threads_searches_thread_titles_using_not_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -576,7 +576,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles_using_not_quer
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_thread_titles_using_and_query(
+def test_postgresql_search_backend_search_threads_searches_thread_titles_using_and_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -617,7 +617,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles_using_and_quer
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_threads_searches_thread_titles_using_or_query(
+def test_postgresql_search_backend_search_threads_searches_thread_titles_using_or_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -656,7 +656,7 @@ def test_postgresql_backend_search_threads_searches_thread_titles_using_or_query
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_threads(
+def test_postgresql_search_backend_search_private_threads_searches_threads(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -712,7 +712,7 @@ def test_postgresql_backend_search_private_threads_searches_threads(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_threads_using_phrase(
+def test_postgresql_search_backend_search_private_threads_searches_threads_using_phrase(
     thread_factory,
     user_permissions_factory,
     user,
@@ -754,7 +754,7 @@ def test_postgresql_backend_search_private_threads_searches_threads_using_phrase
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_threads_using_not_query(
+def test_postgresql_search_backend_search_private_threads_searches_threads_using_not_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -794,7 +794,7 @@ def test_postgresql_backend_search_private_threads_searches_threads_using_not_qu
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_threads_using_and_query(
+def test_postgresql_search_backend_search_private_threads_searches_threads_using_and_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -836,7 +836,7 @@ def test_postgresql_backend_search_private_threads_searches_threads_using_and_qu
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_threads_using_or_query(
+def test_postgresql_search_backend_search_private_threads_searches_threads_using_or_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -876,7 +876,7 @@ def test_postgresql_backend_search_private_threads_searches_threads_using_or_que
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_posts(
+def test_postgresql_search_backend_search_private_threads_searches_posts(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -927,7 +927,7 @@ def test_postgresql_backend_search_private_threads_searches_posts(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_posts_using_phrase(
+def test_postgresql_search_backend_search_private_threads_searches_posts_using_phrase(
     thread_factory,
     user_permissions_factory,
     user,
@@ -970,7 +970,7 @@ def test_postgresql_backend_search_private_threads_searches_posts_using_phrase(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_posts_using_not_query(
+def test_postgresql_search_backend_search_private_threads_searches_posts_using_not_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1011,7 +1011,7 @@ def test_postgresql_backend_search_private_threads_searches_posts_using_not_quer
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_posts_using_and_query(
+def test_postgresql_search_backend_search_private_threads_searches_posts_using_and_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1054,7 +1054,7 @@ def test_postgresql_backend_search_private_threads_searches_posts_using_and_quer
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_posts_using_or_query(
+def test_postgresql_search_backend_search_private_threads_searches_posts_using_or_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1095,7 +1095,7 @@ def test_postgresql_backend_search_private_threads_searches_posts_using_or_query
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_thread_titles(
+def test_postgresql_search_backend_search_private_threads_searches_thread_titles(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -1152,7 +1152,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles(
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_thread_titles_using_phrase(
+def test_postgresql_search_backend_search_private_threads_searches_thread_titles_using_phrase(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1195,7 +1195,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles_using_
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_thread_titles_using_not_query(
+def test_postgresql_search_backend_search_private_threads_searches_thread_titles_using_not_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1236,7 +1236,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles_using_
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_thread_titles_using_and_query(
+def test_postgresql_search_backend_search_private_threads_searches_thread_titles_using_and_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1279,7 +1279,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles_using_
 
 
 @pytest.mark.parametrize("order_by", SearchSort)
-def test_postgresql_backend_search_private_threads_searches_thread_titles_using_or_query(
+def test_postgresql_search_backend_search_private_threads_searches_thread_titles_using_or_query(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1320,7 +1320,7 @@ def test_postgresql_backend_search_private_threads_searches_thread_titles_using_
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_inaccessible_threads(
+def test_postgresql_search_backend_search_threads_filters_inaccessible_threads(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1347,7 +1347,7 @@ def test_postgresql_backend_search_threads_filters_inaccessible_threads(
 
 
 @pytest.mark.parametrize("search_mode", [SearchMode.THREADS, SearchMode.POSTS])
-def test_postgresql_backend_search_threads_filters_inaccessible_posts(
+def test_postgresql_search_backend_search_threads_filters_inaccessible_posts(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -1383,7 +1383,7 @@ def test_postgresql_backend_search_threads_filters_inaccessible_posts(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_private_threads_filters_inaccessible_threads(
+def test_postgresql_search_backend_search_private_threads_filters_inaccessible_threads(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1409,7 +1409,7 @@ def test_postgresql_backend_search_private_threads_filters_inaccessible_threads(
 
 
 @pytest.mark.parametrize("search_mode", [SearchMode.THREADS, SearchMode.POSTS])
-def test_postgresql_backend_search_private_threads_filters_inaccessible_posts(
+def test_postgresql_search_backend_search_private_threads_filters_inaccessible_posts(
     thread_factory,
     thread_reply_factory,
     user_permissions_factory,
@@ -1446,7 +1446,7 @@ def test_postgresql_backend_search_private_threads_filters_inaccessible_posts(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_by_category(
+def test_postgresql_search_backend_search_threads_filters_by_category(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1489,7 +1489,7 @@ def test_postgresql_backend_search_threads_filters_by_category(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_by_thread(
+def test_postgresql_search_backend_search_threads_filters_by_thread(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1528,7 +1528,7 @@ def test_postgresql_backend_search_threads_filters_by_thread(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_private_threads_filters_by_thread(
+def test_postgresql_search_backend_search_private_threads_filters_by_thread(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1569,7 +1569,7 @@ def test_postgresql_backend_search_private_threads_filters_by_thread(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_by_user(
+def test_postgresql_search_backend_search_threads_filters_by_user(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1617,7 +1617,7 @@ def test_postgresql_backend_search_threads_filters_by_user(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_private_threads_filters_by_user(
+def test_postgresql_search_backend_search_private_threads_filters_by_user(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1668,7 +1668,7 @@ def test_postgresql_backend_search_private_threads_filters_by_user(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_after_date(
+def test_postgresql_search_backend_search_threads_filters_after_date(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1709,7 +1709,7 @@ def test_postgresql_backend_search_threads_filters_after_date(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_private_threads_filters_after_date(
+def test_postgresql_search_backend_search_private_threads_filters_after_date(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1752,7 +1752,7 @@ def test_postgresql_backend_search_private_threads_filters_after_date(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_before_date(
+def test_postgresql_search_backend_search_threads_filters_before_date(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1793,7 +1793,7 @@ def test_postgresql_backend_search_threads_filters_before_date(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_private_threads_filters_before_date(
+def test_postgresql_search_backend_search_private_threads_filters_before_date(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1836,7 +1836,7 @@ def test_postgresql_backend_search_private_threads_filters_before_date(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_threads_filters_between_dates(
+def test_postgresql_search_backend_search_threads_filters_between_dates(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1884,7 +1884,7 @@ def test_postgresql_backend_search_threads_filters_between_dates(
 
 
 @pytest.mark.parametrize("search_mode", SearchMode)
-def test_postgresql_backend_search_private_threads_filters_between_dates(
+def test_postgresql_search_backend_search_private_threads_filters_between_dates(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1934,7 +1934,7 @@ def test_postgresql_backend_search_private_threads_filters_between_dates(
     assert results.items[0].post_content == "Post <strong>ipsum</strong> dolor"
 
 
-def test_postgresql_backend_search_escapes_html_in_threads_search_results(
+def test_postgresql_search_backend_search_escapes_html_in_threads_search_results(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1965,7 +1965,7 @@ def test_postgresql_backend_search_escapes_html_in_threads_search_results(
     )
 
 
-def test_postgresql_backend_search_escapes_html_in_posts_search_results(
+def test_postgresql_search_backend_search_escapes_html_in_posts_search_results(
     thread_factory,
     user_permissions_factory,
     user,
@@ -1997,7 +1997,7 @@ def test_postgresql_backend_search_escapes_html_in_posts_search_results(
     )
 
 
-def test_postgresql_backend_search_escapes_html_in_thread_titles_search_results(
+def test_postgresql_search_backend_search_escapes_html_in_thread_titles_search_results(
     thread_factory,
     user_permissions_factory,
     user,
@@ -2029,7 +2029,7 @@ def test_postgresql_backend_search_escapes_html_in_thread_titles_search_results(
     )
 
 
-def test_postgresql_backend_search_escapes_html_in_private_threads_search_results(
+def test_postgresql_search_backend_search_escapes_html_in_private_threads_search_results(
     thread_factory,
     user_permissions_factory,
     user,
@@ -2061,7 +2061,7 @@ def test_postgresql_backend_search_escapes_html_in_private_threads_search_result
     )
 
 
-def test_postgresql_backend_search_escapes_html_in_private_threads_posts_search_results(
+def test_postgresql_search_backend_search_escapes_html_in_private_threads_posts_search_results(
     thread_factory,
     user_permissions_factory,
     user,
@@ -2094,7 +2094,7 @@ def test_postgresql_backend_search_escapes_html_in_private_threads_posts_search_
     )
 
 
-def test_postgresql_backend_search_escapes_html_in_private_threads_titles_search_results(
+def test_postgresql_search_backend_search_escapes_html_in_private_threads_titles_search_results(
     thread_factory,
     user_permissions_factory,
     user,
@@ -2127,7 +2127,7 @@ def test_postgresql_backend_search_escapes_html_in_private_threads_titles_search
     )
 
 
-def test_postgresql_backend_index_threads_indexes_threads(
+def test_postgresql_search_backend_index_threads_indexes_threads(
     thread_factory, backend, default_category, other_category, user, other_user
 ):
     thread = thread_factory(
@@ -2156,7 +2156,7 @@ def test_postgresql_backend_index_threads_indexes_threads(
     assert deleted_user_thread_search.started_at == deleted_user_thread.started_at
 
 
-def test_postgresql_backend_index_posts_indexes_posts(
+def test_postgresql_search_backend_index_posts_indexes_posts(
     thread_factory, thread_reply_factory, backend, default_category, user, other_user
 ):
     thread = thread_factory(
@@ -2197,7 +2197,7 @@ def test_postgresql_backend_index_posts_indexes_posts(
     assert reply_search.posted_at == reply_search.posted_at
 
 
-def test_postgresql_backend_index_posts_reindexes_existing_posts(
+def test_postgresql_search_backend_index_posts_reindexes_existing_posts(
     thread_reply_factory, backend, user, thread
 ):
     post = thread_reply_factory(thread, poster=user, content="Hello world")
@@ -2215,7 +2215,7 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
     assert post_search.content == "Updated"
 
 
-def test_postgresql_backend_create_search_result_excerpt_returns_full_length_excerpt(
+def test_postgresql_search_backend_create_search_result_excerpt_returns_full_length_excerpt(
     backend,
 ):
     result = backend.create_search_result_excerpt(
@@ -2227,7 +2227,9 @@ def test_postgresql_backend_create_search_result_excerpt_returns_full_length_exc
     assert result == "Lorem <strong>ipsum dolor</strong> met"
 
 
-def test_postgresql_backend_create_search_result_excerpt_appends_short_prefix(backend):
+def test_postgresql_search_backend_create_search_result_excerpt_appends_short_prefix(
+    backend,
+):
     result = backend.create_search_result_excerpt(
         "Lorem ipsum dolor met",
         "STARTipsum dolorEND met",
@@ -2237,7 +2239,7 @@ def test_postgresql_backend_create_search_result_excerpt_appends_short_prefix(ba
     assert result == "Lorem <strong>ipsum dolor</strong> met"
 
 
-def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_at_start(
+def test_postgresql_search_backend_create_search_result_excerpt_appends_ellipsis_at_start(
     backend,
 ):
     result = backend.create_search_result_excerpt(
@@ -2249,7 +2251,9 @@ def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_at_sta
     assert result == "...<strong>ipsum dolor</strong> met"
 
 
-def test_postgresql_backend_create_search_result_excerpt_appends_short_suffix(backend):
+def test_postgresql_search_backend_create_search_result_excerpt_appends_short_suffix(
+    backend,
+):
     result = backend.create_search_result_excerpt(
         "Lorem ipsum dolor met",
         "Lorem STARTipsum dolorEND",
@@ -2259,7 +2263,9 @@ def test_postgresql_backend_create_search_result_excerpt_appends_short_suffix(ba
     assert result == "Lorem <strong>ipsum dolor</strong> met"
 
 
-def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_end(backend):
+def test_postgresql_search_backend_create_search_result_excerpt_appends_ellipsis_end(
+    backend,
+):
     result = backend.create_search_result_excerpt(
         "Lorem ipsum dolor met" + (" elit" * 15),
         "STARTipsum dolorEND met",
@@ -2269,7 +2275,7 @@ def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_end(ba
     assert result == "Lorem <strong>ipsum dolor</strong> met..."
 
 
-def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_at_both_ends(
+def test_postgresql_search_backend_create_search_result_excerpt_appends_ellipsis_at_both_ends(
     backend,
 ):
     result = backend.create_search_result_excerpt(
@@ -2281,22 +2287,26 @@ def test_postgresql_backend_create_search_result_excerpt_appends_ellipsis_at_bot
     assert result == "...sit <strong>ipsum dolor</strong> met..."
 
 
-def test_postgresql_backend_prepare_headline_value_breaks_down_html_tags(backend):
+def test_postgresql_search_backend_prepare_headline_value_breaks_down_html_tags(
+    backend,
+):
     result = backend.prepare_headline_value("How to use <article> html tag?")
     assert result == "How to use < article > html tag?"
 
 
-def test_postgresql_backend_prepare_headline_value_normalizes_whitespace(backend):
+def test_postgresql_search_backend_prepare_headline_value_normalizes_whitespace(
+    backend,
+):
     result = backend.prepare_headline_value("Lorem   ipsum\n \ndolor")
     assert result == "Lorem ipsum dolor"
 
 
-def test_postgresql_backend_prepare_indexed_value_strips_html_tags(backend):
+def test_postgresql_search_backend_prepare_indexed_value_strips_html_tags(backend):
     result = backend.prepare_indexed_value("How to use <article> html tag?")
     assert result == "How to use article html tag?"
 
 
-def test_postgresql_backend_update_thread_first_post_updates_thread_first_post(
+def test_postgresql_search_backend_update_thread_first_post_updates_thread_first_post(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category, title="Lorem ipsum")
@@ -2324,7 +2334,7 @@ def test_postgresql_backend_update_thread_first_post_updates_thread_first_post(
     assert new_first_post_index.is_first_post
 
 
-def test_postgresql_backend_update_thread_first_post_doesnt_update_thread_first_post(
+def test_postgresql_search_backend_update_thread_first_post_doesnt_update_thread_first_post(
     thread_factory, backend, default_category
 ):
     thread = thread_factory(default_category, title="Lorem ipsum")
@@ -2340,7 +2350,7 @@ def test_postgresql_backend_update_thread_first_post_doesnt_update_thread_first_
     assert first_post_index.is_first_post
 
 
-def test_postgresql_backend_update_thread_title_updates_thread_and_post_index(
+def test_postgresql_search_backend_update_thread_title_updates_thread_and_post_index(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category, title="Lorem ipsum")
@@ -2373,7 +2383,7 @@ def test_postgresql_backend_update_thread_title_updates_thread_and_post_index(
     ).exists()
 
 
-def test_postgresql_backend_update_thread_members_is_noop(
+def test_postgresql_search_backend_update_thread_members_is_noop(
     thread_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
@@ -2384,7 +2394,7 @@ def test_postgresql_backend_update_thread_members_is_noop(
     assert updated == 0
 
 
-def test_postgresql_backend_update_threads_raises_exception_if_no_filter_is_set(
+def test_postgresql_search_backend_update_threads_raises_exception_if_no_filter_is_set(
     thread_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2398,7 +2408,7 @@ def test_postgresql_backend_update_threads_raises_exception_if_no_filter_is_set(
     assert thread_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_threads_filters_by_category(
+def test_postgresql_search_backend_update_threads_filters_by_category(
     thread_factory, backend, default_category, sibling_category, other_category
 ):
     thread = thread_factory(default_category)
@@ -2418,7 +2428,7 @@ def test_postgresql_backend_update_threads_filters_by_category(
     assert other_thread_search.category_id == other_category.id
 
 
-def test_postgresql_backend_update_threads_filters_by_thread(
+def test_postgresql_search_backend_update_threads_filters_by_thread(
     thread_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2436,7 +2446,7 @@ def test_postgresql_backend_update_threads_filters_by_thread(
     assert other_thread_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_threads_filters_by_starter(
+def test_postgresql_search_backend_update_threads_filters_by_starter(
     thread_factory, backend, user, default_category, sibling_category
 ):
     thread = thread_factory(default_category, starter=user)
@@ -2454,7 +2464,7 @@ def test_postgresql_backend_update_threads_filters_by_starter(
     assert other_thread_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_threads_updates_thread_category(
+def test_postgresql_search_backend_update_threads_updates_thread_category(
     thread_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2467,7 +2477,7 @@ def test_postgresql_backend_update_threads_updates_thread_category(
     assert thread_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_threads_updates_thread_category_id(
+def test_postgresql_search_backend_update_threads_updates_thread_category_id(
     thread_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2482,7 +2492,7 @@ def test_postgresql_backend_update_threads_updates_thread_category_id(
     assert thread_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_threads_raises_exception_if_category_and_category_id_is_used_together(
+def test_postgresql_search_backend_update_threads_raises_exception_if_category_and_category_id_is_used_together(
     thread_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2498,7 +2508,7 @@ def test_postgresql_backend_update_threads_raises_exception_if_category_and_cate
     assert thread_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_threads_updates_thread_starter(
+def test_postgresql_search_backend_update_threads_updates_thread_starter(
     thread_factory, backend, user, default_category
 ):
     thread = thread_factory(default_category)
@@ -2511,7 +2521,7 @@ def test_postgresql_backend_update_threads_updates_thread_starter(
     assert thread_search.starter_id == user.id
 
 
-def test_postgresql_backend_update_threads_updates_thread_starter_id(
+def test_postgresql_search_backend_update_threads_updates_thread_starter_id(
     thread_factory, backend, user, default_category
 ):
     thread = thread_factory(default_category, starter=user)
@@ -2524,7 +2534,7 @@ def test_postgresql_backend_update_threads_updates_thread_starter_id(
     assert thread_search.starter_id == user.id
 
 
-def test_postgresql_backend_update_threads_raises_exception_if_starter_and_starter_id_is_used_together(
+def test_postgresql_search_backend_update_threads_raises_exception_if_starter_and_starter_id_is_used_together(
     thread_factory, backend, user, default_category
 ):
     thread = thread_factory(default_category)
@@ -2540,7 +2550,7 @@ def test_postgresql_backend_update_threads_raises_exception_if_starter_and_start
     assert thread_search.starter_id is None
 
 
-def test_postgresql_backend_update_threads_update_is_hidden_is_noop(
+def test_postgresql_search_backend_update_threads_update_is_hidden_is_noop(
     thread_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
@@ -2550,7 +2560,7 @@ def test_postgresql_backend_update_threads_update_is_hidden_is_noop(
     assert updated == 0
 
 
-def test_postgresql_backend_update_threads_update_is_unapproved_is_noop(
+def test_postgresql_search_backend_update_threads_update_is_unapproved_is_noop(
     thread_factory, backend, default_category
 ):
     thread = thread_factory(default_category)
@@ -2560,7 +2570,7 @@ def test_postgresql_backend_update_threads_update_is_unapproved_is_noop(
     assert updated == 0
 
 
-def test_postgresql_backend_update_posts_raises_exception_if_no_filter_is_set(
+def test_postgresql_search_backend_update_posts_raises_exception_if_no_filter_is_set(
     thread_factory, thread_reply_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2579,7 +2589,7 @@ def test_postgresql_backend_update_posts_raises_exception_if_no_filter_is_set(
     assert post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_filters_by_category(
+def test_postgresql_search_backend_update_posts_filters_by_category(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2605,7 +2615,7 @@ def test_postgresql_backend_update_posts_filters_by_category(
     assert other_post_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_posts_filters_by_thread(
+def test_postgresql_search_backend_update_posts_filters_by_thread(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2631,7 +2641,7 @@ def test_postgresql_backend_update_posts_filters_by_thread(
     assert other_post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_filters_by_post(
+def test_postgresql_search_backend_update_posts_filters_by_post(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2655,7 +2665,7 @@ def test_postgresql_backend_update_posts_filters_by_post(
     assert other_post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_filters_by_poster(
+def test_postgresql_search_backend_update_posts_filters_by_poster(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2680,7 +2690,7 @@ def test_postgresql_backend_update_posts_filters_by_poster(
     assert other_post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_updates_post_category(
+def test_postgresql_search_backend_update_posts_updates_post_category(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2700,7 +2710,7 @@ def test_postgresql_backend_update_posts_updates_post_category(
     assert post_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_posts_updates_post_category_id(
+def test_postgresql_search_backend_update_posts_updates_post_category_id(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2720,7 +2730,7 @@ def test_postgresql_backend_update_posts_updates_post_category_id(
     assert post_search.category_id == sibling_category.id
 
 
-def test_postgresql_backend_update_posts_raises_exception_if_category_and_category_id_is_used_together(
+def test_postgresql_search_backend_update_posts_raises_exception_if_category_and_category_id_is_used_together(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2743,7 +2753,7 @@ def test_postgresql_backend_update_posts_raises_exception_if_category_and_catego
     assert post_search.category_id == default_category.id
 
 
-def test_postgresql_backend_update_posts_updates_post_thread(
+def test_postgresql_search_backend_update_posts_updates_post_thread(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2763,7 +2773,7 @@ def test_postgresql_backend_update_posts_updates_post_thread(
     assert post_search.thread_id == other_thread.id
 
 
-def test_postgresql_backend_update_posts_updates_post_thread_id(
+def test_postgresql_search_backend_update_posts_updates_post_thread_id(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2783,7 +2793,7 @@ def test_postgresql_backend_update_posts_updates_post_thread_id(
     assert post_search.thread_id == other_thread.id
 
 
-def test_postgresql_backend_update_posts_raises_exception_if_thread_and_thread_id_is_used_together(
+def test_postgresql_search_backend_update_posts_raises_exception_if_thread_and_thread_id_is_used_together(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2806,7 +2816,7 @@ def test_postgresql_backend_update_posts_raises_exception_if_thread_and_thread_i
     assert post_search.thread_id == thread.id
 
 
-def test_postgresql_backend_update_posts_updates_post_poster(
+def test_postgresql_search_backend_update_posts_updates_post_poster(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2826,7 +2836,7 @@ def test_postgresql_backend_update_posts_updates_post_poster(
     assert post_search.poster_id == user.id
 
 
-def test_postgresql_backend_update_posts_updates_post_poster_id(
+def test_postgresql_search_backend_update_posts_updates_post_poster_id(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2846,7 +2856,7 @@ def test_postgresql_backend_update_posts_updates_post_poster_id(
     assert post_search.poster_id == user.id
 
 
-def test_postgresql_backend_update_posts_raises_exception_if_poster_and_poster_id_is_used_together(
+def test_postgresql_search_backend_update_posts_raises_exception_if_poster_and_poster_id_is_used_together(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2869,7 +2879,7 @@ def test_postgresql_backend_update_posts_raises_exception_if_poster_and_poster_i
     assert post_search.poster_id is None
 
 
-def test_postgresql_backend_update_posts_update_is_hidden_is_noop(
+def test_postgresql_search_backend_update_posts_update_is_hidden_is_noop(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2885,7 +2895,7 @@ def test_postgresql_backend_update_posts_update_is_hidden_is_noop(
     assert updated == 0
 
 
-def test_postgresql_backend_update_posts_update_is_unapproved_is_noop(
+def test_postgresql_search_backend_update_posts_update_is_unapproved_is_noop(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2901,7 +2911,7 @@ def test_postgresql_backend_update_posts_update_is_unapproved_is_noop(
     assert updated == 0
 
 
-def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_category(
+def test_postgresql_search_backend_delete_deletes_all_threads_and_posts_in_category(
     thread_factory, thread_reply_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2926,7 +2936,7 @@ def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_category(
     PostSearch.objects.get(post=other_post)
 
 
-def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_thread(
+def test_postgresql_search_backend_delete_deletes_all_threads_and_posts_in_thread(
     thread_factory, thread_reply_factory, backend, default_category, sibling_category
 ):
     thread = thread_factory(default_category)
@@ -2951,7 +2961,7 @@ def test_postgresql_backend_delete_deletes_all_threads_and_posts_in_thread(
     PostSearch.objects.get(post=other_post)
 
 
-def test_postgresql_backend_delete_posts_deletes_posts(
+def test_postgresql_search_backend_delete_posts_deletes_posts(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -2979,7 +2989,7 @@ def test_postgresql_backend_delete_posts_deletes_posts(
     PostSearch.objects.get(post=post)
 
 
-def test_postgresql_backend_delete_deletes_all_threads_and_posts_by_user(
+def test_postgresql_search_backend_delete_deletes_all_threads_and_posts_by_user(
     thread_factory,
     thread_reply_factory,
     backend,
@@ -3009,7 +3019,7 @@ def test_postgresql_backend_delete_deletes_all_threads_and_posts_by_user(
     PostSearch.objects.get(post=post)
 
 
-def test_postgresql_backend_clear_deletes_all_threads_and_posts(
+def test_postgresql_search_backend_clear_deletes_all_threads_and_posts(
     thread_factory, thread_reply_factory, backend, default_category
 ):
     thread = thread_factory(default_category)

@@ -3,7 +3,7 @@ from io import StringIO
 import pytest
 from django.core import management
 
-from ..exceptions import SearchBackendError
+from ..exceptions import ThreadsSearchBackendError
 from ..management.commands import clearsearch
 from ..models import PostSearch, ThreadSearch
 
@@ -53,8 +53,8 @@ def test_clearsearch_command_clears_search_index(thread, post):
 
 def test_clearsearch_command_prints_backend_error(mocker):
     mocker.patch(
-        "misago.search.service.search.backend.clear",
-        side_effect=SearchBackendError("This backend is not available."),
+        "misago.search.threads.threads_search.backend.clear",
+        side_effect=ThreadsSearchBackendError("This backend is not available."),
     )
 
     stdout, stderr = call_command()

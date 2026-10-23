@@ -1,4 +1,4 @@
-class SearchBackendError(Exception):
+class ThreadsSearchBackendError(Exception):
     def __init__(self, message: str):
         self.message = message
 

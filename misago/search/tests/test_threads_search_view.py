@@ -11,7 +11,7 @@ from ...test import (
 from ...threads.move import move_thread
 from ..enums import SearchMode, SearchSort
 from ..models import SearchLog
-from ..service import search
+from ..threads import threads_search
 
 
 def test_threads_search_view_returns_error_403_if_user_cant_search(user_client, user):
@@ -23,8 +23,8 @@ def test_threads_search_view_returns_error_403_if_user_cant_search(user_client, 
 
 
 def test_threads_search_view_shows_user_threads_result(user_client, user_thread):
-    search.index_thread(user_thread)
-    search.index_post(user_thread.first_post, user_thread.first_post.content)
+    threads_search.index_thread(user_thread)
+    threads_search.index_post(user_thread.first_post, user_thread.first_post.content)
 
     response = user_client.get(reverse("misago:threads-search") + "?query=Thread")
 
@@ -36,8 +36,8 @@ def test_threads_search_view_shows_user_threads_result(user_client, user_thread)
 
 
 def test_threads_search_view_shows_user_posts_result(user_client, user_thread):
-    search.index_thread(user_thread)
-    search.index_post(user_thread.first_post, "Content")
+    threads_search.index_thread(user_thread)
+    threads_search.index_post(user_thread.first_post, "Content")
 
     response = user_client.get(
         reverse("misago:threads-search") + f"?query=Content&mode={SearchMode.POSTS}"
@@ -51,8 +51,8 @@ def test_threads_search_view_shows_user_posts_result(user_client, user_thread):
 
 
 def test_threads_search_view_shows_user_thread_titles_result(user_client, user_thread):
-    search.index_thread(user_thread)
-    search.index_post(user_thread.first_post, user_thread.first_post.content)
+    threads_search.index_thread(user_thread)
+    threads_search.index_post(user_thread.first_post, user_thread.first_post.content)
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -67,8 +67,8 @@ def test_threads_search_view_shows_user_thread_titles_result(user_client, user_t
 
 
 def test_threads_search_view_shows_deleted_user_threads_result(user_client, thread):
-    search.index_thread(thread)
-    search.index_post(thread.first_post, thread.first_post.content)
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, thread.first_post.content)
 
     response = user_client.get(reverse("misago:threads-search") + "?query=Thread")
 
@@ -80,8 +80,8 @@ def test_threads_search_view_shows_deleted_user_threads_result(user_client, thre
 
 
 def test_threads_search_view_shows_deleted_user_posts_result(user_client, thread):
-    search.index_thread(thread)
-    search.index_post(thread.first_post, "Content")
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "Content")
 
     response = user_client.get(
         reverse("misago:threads-search") + f"?query=Content&mode={SearchMode.POSTS}"
@@ -97,8 +97,8 @@ def test_threads_search_view_shows_deleted_user_posts_result(user_client, thread
 def test_threads_search_view_shows_deleted_user_thread_titles_result(
     user_client, thread
 ):
-    search.index_thread(thread)
-    search.index_post(thread.first_post, thread.first_post.content)
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, thread.first_post.content)
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -113,8 +113,8 @@ def test_threads_search_view_shows_deleted_user_thread_titles_result(
 
 
 def test_threads_search_view_shows_result_in_htmx(user_client, user_thread):
-    search.index_thread(user_thread)
-    search.index_post(user_thread.first_post, user_thread.first_post.content)
+    threads_search.index_thread(user_thread)
+    threads_search.index_post(user_thread.first_post, user_thread.first_post.content)
 
     response = user_client.get(
         reverse("misago:threads-search") + "?query=Thread",
@@ -208,13 +208,13 @@ def test_threads_search_view_returns_404_for_max_offset_in_htmx(user_client):
     assert response.status_code == 404
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_threads_search_view_shows_results_with_next_page(
     user_client, thread, user_thread
 ):
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(reverse("misago:threads-search") + "?query=lorem ipsum")
 
@@ -237,9 +237,9 @@ def test_threads_search_view_shows_results_with_next_page(
 def test_threads_search_view_shows_results_without_next_page(
     user_client, thread, user_thread
 ):
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(reverse("misago:threads-search") + "?query=lorem ipsum")
 
@@ -258,9 +258,9 @@ def test_threads_search_view_shows_results_without_next_page(
 def test_threads_search_view_shows_results_after_offset(
     user_client, thread, user_thread
 ):
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search") + "?query=lorem ipsum&offset=1"
@@ -292,13 +292,13 @@ def test_threads_search_view_shows_error_if_query_is_invalid(user_client):
     assert_not_contains(response, "No threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_threads_search_view_keeps_search_query_in_more_url(
     user_client, thread, user_thread
 ):
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
 
@@ -339,9 +339,9 @@ def test_threads_search_view_uses_category_search_option(
 
     move_thread(user_thread, sibling_category)
 
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -358,15 +358,15 @@ def test_threads_search_view_uses_category_search_option(
     assert_not_contains(response, "No threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_threads_search_view_keeps_category_in_more_url(
     user_client, user, thread, user_thread, default_category, sibling_category
 ):
     grant_user_group_see_browse_category_permissions(user.group, sibling_category)
 
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -396,10 +396,10 @@ def test_threads_search_view_shows_error_if_users_is_invalid(user_client):
 def test_threads_search_view_uses_users_search_option(
     user_client, user, thread, user_thread, other_user_thread
 ):
-    search.bulk_index_threads([thread, user_thread, other_user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
-    search.index_post(other_user_thread.first_post, "Lorem dolor ipsum")
+    threads_search.bulk_index_threads([thread, user_thread, other_user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.index_post(other_user_thread.first_post, "Lorem dolor ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search") + f"?query=lorem&users={user.slug}"
@@ -419,14 +419,14 @@ def test_threads_search_view_uses_users_search_option(
     assert_not_contains(response, "No threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_threads_search_view_keeps_users_in_more_url(
     user_client, user, other_user, thread, user_thread, other_user_thread
 ):
-    search.bulk_index_threads([thread, user_thread, other_user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
-    search.index_post(other_user_thread.first_post, "Lorem dolor ipsum")
+    threads_search.bulk_index_threads([thread, user_thread, other_user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.index_post(other_user_thread.first_post, "Lorem dolor ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -467,9 +467,9 @@ def test_threads_search_view_shows_error_if_sort_is_invalid(user_client):
 
 
 def test_threads_search_view_uses_sort_search_option(user_client, thread, user_thread):
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem latin ipsum")
-    search.index_post(user_thread.first_post, "Lorem ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem latin ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -517,9 +517,9 @@ def test_threads_search_view_uses_date_from_search_option(
     )
     thread.first_post.save()
 
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search") + "?query=lorem+ipsum&date_from=2025-12-26"
@@ -535,13 +535,13 @@ def test_threads_search_view_uses_date_from_search_option(
     assert_not_contains(response, "No threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_threads_search_view_keeps_date_from_in_more_url(
     user_client, thread, user_thread
 ):
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search") + "?query=lorem&date_from=2025-12-26"
@@ -577,9 +577,9 @@ def test_threads_search_view_uses_date_to_search_option(
     thread.first_post.posted_at += timedelta(days=5)
     thread.first_post.save()
 
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search") + f"?query=lorem+ipsum&date_to={today_date}"
@@ -595,15 +595,15 @@ def test_threads_search_view_uses_date_to_search_option(
     assert_not_contains(response, "No threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_threads_search_view_keeps_date_to_in_more_url(
     user_client, thread, user_thread
 ):
     next_date = date.today() + timedelta(days=5)
 
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search") + f"?query=lorem&date_to={next_date}"
@@ -630,9 +630,9 @@ def test_threads_search_view_swaps_date_from_and_date_to(
     thread.first_post.posted_at -= timedelta(days=5)
     thread.first_post.save()
 
-    search.bulk_index_threads([thread, user_thread])
-    search.index_post(thread.first_post, "Lorem ipsum")
-    search.index_post(user_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([thread, user_thread])
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_post(user_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:threads-search")
@@ -650,8 +650,8 @@ def test_threads_search_view_swaps_date_from_and_date_to(
 
 
 def test_threads_search_view_logs_user_search(user_client, user, thread):
-    search.index_thread(thread)
-    search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
 
     response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
 
@@ -674,8 +674,8 @@ def test_threads_search_view_throttles_user_search(user_client, user, thread):
         search_query="lorem",
     )
 
-    search.index_thread(thread)
-    search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
 
     response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
 
@@ -699,8 +699,8 @@ def test_threads_search_view_doesnt_throttle_user_with_permission(
     user.group.bypass_search_throttling = True
     user.group.save()
 
-    search.index_thread(thread)
-    search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
 
     response = user_client.get(reverse("misago:threads-search") + "?query=lorem")
 
@@ -714,8 +714,8 @@ def test_threads_search_view_doesnt_throttle_user_with_permission(
 
 
 def test_threads_search_view_logs_guest_search(client, thread):
-    search.index_thread(thread)
-    search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
 
     response = client.get(reverse("misago:threads-search") + "?query=lorem")
 
@@ -738,8 +738,8 @@ def test_threads_search_view_throttles_guest_search(client, thread):
         search_query="lorem",
     )
 
-    search.index_thread(thread)
-    search.index_post(thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "Lorem ipsum")
 
     response = client.get(reverse("misago:threads-search") + "?query=lorem")
 

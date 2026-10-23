@@ -7,7 +7,7 @@ from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ..enums import SearchMode, SearchSort
 from ..models import SearchLog
-from ..service import search
+from ..threads import threads_search
 
 
 def test_private_threads_search_view_returns_sign_in_page_if_user_is_not_signed_in(
@@ -49,8 +49,8 @@ def test_private_threads_search_view_returns_error_403_if_user_cant_use_private_
 def test_private_threads_search_view_shows_user_threads_result(
     user_client, user_private_thread
 ):
-    search.index_thread(user_private_thread)
-    search.index_post(
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(
         user_private_thread.first_post, user_private_thread.first_post.content
     )
 
@@ -69,8 +69,8 @@ def test_private_threads_search_view_shows_user_threads_result(
 def test_private_threads_search_view_shows_user_posts_result(
     user_client, user_private_thread
 ):
-    search.index_thread(user_private_thread)
-    search.index_post(user_private_thread.first_post, "Content")
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(user_private_thread.first_post, "Content")
 
     response = user_client.get(
         reverse("misago:private-threads-search")
@@ -88,8 +88,8 @@ def test_private_threads_search_view_shows_user_posts_result(
 def test_private_threads_search_view_shows_user_thread_titles_result(
     user_client, user_private_thread
 ):
-    search.index_thread(user_private_thread)
-    search.index_post(
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(
         user_private_thread.first_post, user_private_thread.first_post.content
     )
 
@@ -111,8 +111,10 @@ def test_private_threads_search_view_shows_deleted_user_threads_result(
 ):
     PrivateThreadMember.objects.create(user=user, thread=private_thread)
 
-    search.index_thread(private_thread)
-    search.index_post(private_thread.first_post, private_thread.first_post.content)
+    threads_search.index_thread(private_thread)
+    threads_search.index_post(
+        private_thread.first_post, private_thread.first_post.content
+    )
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=Thread"
@@ -131,8 +133,8 @@ def test_private_threads_search_view_shows_deleted_user_posts_result(
 ):
     PrivateThreadMember.objects.create(user=user, thread=private_thread)
 
-    search.index_thread(private_thread)
-    search.index_post(private_thread.first_post, "Content")
+    threads_search.index_thread(private_thread)
+    threads_search.index_post(private_thread.first_post, "Content")
 
     response = user_client.get(
         reverse("misago:private-threads-search")
@@ -152,8 +154,10 @@ def test_private_threads_search_view_shows_deleted_user_thread_titles_result(
 ):
     PrivateThreadMember.objects.create(user=user, thread=private_thread)
 
-    search.index_thread(private_thread)
-    search.index_post(private_thread.first_post, private_thread.first_post.content)
+    threads_search.index_thread(private_thread)
+    threads_search.index_post(
+        private_thread.first_post, private_thread.first_post.content
+    )
 
     response = user_client.get(
         reverse("misago:private-threads-search")
@@ -171,8 +175,8 @@ def test_private_threads_search_view_shows_deleted_user_thread_titles_result(
 def test_private_threads_search_view_shows_results_in_htmx(
     user_client, user_private_thread
 ):
-    search.index_thread(user_private_thread)
-    search.index_post(
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(
         user_private_thread.first_post, user_private_thread.first_post.content
     )
 
@@ -276,15 +280,15 @@ def test_private_threads_search_view_returns_404_for_max_offset_in_htmx(user_cli
     assert response.status_code == 404
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_private_threads_search_view_shows_results_with_next_page(
     user_client,
     user_private_thread,
     other_user_private_thread,
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem ipsum"
@@ -315,9 +319,9 @@ def test_private_threads_search_view_shows_results_without_next_page(
     user_private_thread,
     other_user_private_thread,
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem ipsum"
@@ -344,9 +348,9 @@ def test_private_threads_search_view_shows_results_after_offset(
     user_private_thread,
     other_user_private_thread,
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem ipsum&offset=1"
@@ -384,15 +388,15 @@ def test_private_threads_search_view_shows_error_if_query_is_invalid(user_client
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_private_threads_search_view_keeps_search_query_in_more_url(
     user_client,
     user_private_thread,
     other_user_private_thread,
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem"
@@ -415,9 +419,9 @@ def test_private_threads_search_view_shows_error_if_users_is_invalid(user_client
 def test_private_threads_search_view_uses_users_search_option(
     user_client, user, user_private_thread, other_user_private_thread
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + f"?query=lorem&users={user.slug}"
@@ -437,13 +441,13 @@ def test_private_threads_search_view_uses_users_search_option(
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_private_threads_search_view_keeps_users_in_more_url(
     user_client, user, other_user, user_private_thread, other_user_private_thread
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search")
@@ -486,9 +490,9 @@ def test_private_threads_search_view_shows_error_if_sort_is_invalid(user_client)
 def test_private_threads_search_view_uses_sort_search_option(
     user_client, user_private_thread, other_user_private_thread
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem latin ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search")
@@ -542,9 +546,9 @@ def test_private_threads_search_view_uses_date_from_search_option(
     )
     user_private_thread.first_post.save()
 
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem&date_from=2025-12-26"
@@ -564,13 +568,13 @@ def test_private_threads_search_view_uses_date_from_search_option(
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_private_threads_search_view_keeps_date_from_in_more_url(
     user_client, user_private_thread, other_user_private_thread
 ):
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem&date_from=2025-12-26"
@@ -608,9 +612,9 @@ def test_private_threads_search_view_uses_date_to_search_option(
     user_private_thread.first_post.posted_at += timedelta(days=5)
     user_private_thread.first_post.save()
 
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + f"?query=lorem&date_to={today_date}"
@@ -630,15 +634,15 @@ def test_private_threads_search_view_uses_date_to_search_option(
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_SEARCH={"RESULT_SIZE": 1})
+@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
 def test_private_threads_search_view_keeps_date_to_in_more_url(
     user_client, user_private_thread, other_user_private_thread
 ):
     next_date = date.today() + timedelta(days=5)
 
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + f"?query=lorem&date_to={next_date}"
@@ -667,9 +671,9 @@ def test_private_threads_search_view_swaps_date_from_and_date_to(
     user_private_thread.first_post.posted_at -= timedelta(days=5)
     user_private_thread.first_post.save()
 
-    search.bulk_index_threads([user_private_thread, other_user_private_thread])
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
-    search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
+    threads_search.bulk_index_threads([user_private_thread, other_user_private_thread])
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_post(other_user_private_thread.first_post, "Lorem latin ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search")
@@ -693,8 +697,8 @@ def test_private_threads_search_view_swaps_date_from_and_date_to(
 def test_private_threads_search_view_logs_user_search(
     user_client, user, user_private_thread
 ):
-    search.index_thread(user_private_thread)
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem"
@@ -722,8 +726,8 @@ def test_private_threads_search_view_throttles_user_search(
         search_query="lorem",
     )
 
-    search.index_thread(user_private_thread)
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem"
@@ -750,8 +754,8 @@ def test_private_threads_search_view_doesnt_throttle_user_with_permission(
     user.group.bypass_search_throttling = True
     user.group.save()
 
-    search.index_thread(user_private_thread)
-    search.index_post(user_private_thread.first_post, "Lorem ipsum")
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(user_private_thread.first_post, "Lorem ipsum")
 
     response = user_client.get(
         reverse("misago:private-threads-search") + "?query=lorem"

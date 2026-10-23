@@ -13,7 +13,7 @@ from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadCategory, ReadThread
 from ..search.models import PostSearch, ThreadSearch
-from ..search.service import search
+from ..search.threads import threads_search
 from ..threadevents.create import create_test_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threads.models import Post, Thread
@@ -111,8 +111,8 @@ def category_relations_factory(
             thread=thread,
         )
 
-        search.index_thread(thread)
-        search.bulk_index_posts(
+        threads_search.index_thread(thread)
+        threads_search.bulk_index_posts(
             [
                 (thread.first_post, "first post"),
                 (thread_reply, "reply"),

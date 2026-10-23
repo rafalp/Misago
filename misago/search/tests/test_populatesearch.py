@@ -3,7 +3,7 @@ from io import StringIO
 from django.core import management
 
 from ...privatethreads.members import get_private_thread_members
-from ..exceptions import SearchBackendError
+from ..exceptions import ThreadsSearchBackendError
 from ..management.commands import populatesearch
 from ..models import PostSearch, ThreadSearch
 
@@ -68,7 +68,7 @@ def test_populatesearch_command_indexes_private_thread_members(
     mocker, thread, post, user_private_thread
 ):
     mock_update_thread_members = mocker.patch(
-        "misago.search.service.search.update_thread_members", autospec=True
+        "misago.search.threads.threads_search.update_thread_members", autospec=True
     )
 
     thread_search = ThreadSearch.objects.create(
@@ -137,8 +137,8 @@ def test_populatesearch_command_skips_search_index_clear_on_option(thread, post)
 
 def test_populatesearch_command_prints_clear_error(mocker, db):
     mocker.patch(
-        "misago.search.service.search.backend.clear",
-        side_effect=SearchBackendError("This backend is not available."),
+        "misago.search.threads.threads_search.backend.clear",
+        side_effect=ThreadsSearchBackendError("This backend is not available."),
     )
 
     stdout, stderr = call_command()

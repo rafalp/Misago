@@ -2,7 +2,7 @@ from io import StringIO
 
 from django.core import management
 
-from ..exceptions import SearchBackendError
+from ..exceptions import ThreadsSearchBackendError
 from ..management.commands import initializesearch
 
 
@@ -28,8 +28,8 @@ def test_initializesearch_command_initializes_search_backend():
 
 def test_initializesearch_command_prints_backend_error(mocker):
     mocker.patch(
-        "misago.search.service.search.backend.initialize",
-        side_effect=SearchBackendError("This backend is not available."),
+        "misago.search.threads.threads_search.backend.initialize",
+        side_effect=ThreadsSearchBackendError("This backend is not available."),
     )
 
     stdout, stderr = call_command()
