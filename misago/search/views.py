@@ -29,6 +29,7 @@ from .logging import log_search
 from .threads import threads_search
 from .throttling import throttle_search
 from .types import ThreadsSearchResult, ThreadsSearchResultItem
+from .users import search_users
 
 
 class SearchView(View):
@@ -419,4 +420,10 @@ class PrivateThreadsSearchView(ThreadsSearchView):
 
 
 class UsersSearchView(BaseSearchView):
-    pass
+    def get(self, request: HttpRequest) -> HttpResponse:
+        username = request.GET.get("username", "").strip()
+        if not username:
+            return HttpResponse("NADA")
+
+        results = search_users(request.user_permissions, username, include_self=True)
+        return HttpResponse(" ".join(user.username for user in results))

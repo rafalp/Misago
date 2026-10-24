@@ -254,4 +254,4 @@ class UsersSearchForm(SearchForm):
     template_name = "misago/search/users/form.html"
     url_name = "misago:users-search"
 
-    query = forms.CharField(min_length=1, max_length=255)
+    username = forms.CharField(min_length=1, max_length=255)
