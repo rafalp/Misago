@@ -1,6 +1,6 @@
 # `get_thread_edit_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `ThreadEditFormset` instance with forms for editing a thread.
+This hook wraps a Misago function used to create a new `ThreadEditFormset` instance with forms for editing a thread.
 
 
 ## Location
@@ -57,7 +57,7 @@ def get_thread_edit_formset_action(request: HttpRequest, post: Post) -> 'ThreadE
     ...
 ```
 
-A standard function that Misago uses to create a new `ThreadEditFormset` instance with forms for editing a thread.
+Misago function used to create a new `ThreadEditFormset` instance with forms for editing a thread.
 
 
 ### Arguments

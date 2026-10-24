@@ -1,6 +1,6 @@
 # `replace_rich_text_tokens_hook`
 
-This hook wraps the standard function that Misago uses to replace rich-text tokens in pre-rendered HTML or the next filter from another plugin.
+This hook wraps a Misago function used to replace rich-text tokens in a pre-rendered HTML.
 
 Tokens are pseudo-HTML elements like `<misago-attachment="..">` that are replaced with real HTML markup instead.
 

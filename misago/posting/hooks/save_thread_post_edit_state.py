@@ -10,8 +10,7 @@ if TYPE_CHECKING:
 
 class SaveThreadPostEditStateHookAction(Protocol):
     """
-    A standard function that Misago uses to save
-    edited thread post to the database.
+    Misago function used to save edited thread post to the database.
 
     # Arguments
 
@@ -65,8 +64,7 @@ class SaveThreadPostEditStateHook(
     FilterHook[SaveThreadPostEditStateHookAction, SaveThreadPostEditStateHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to save
-    edited thread post to the database.
+    This hook wraps a Misago function used to save edited thread post to the database.
 
     # Example
 

@@ -12,6 +12,7 @@ from .forms import (
     GeneralSettingsForm,
     NotificationsSettingsForm,
     OAuth2SettingsForm,
+    SearchSettingsForm,
     UsersSettingsForm,
 )
 
@@ -93,6 +94,11 @@ class OAuth2SettingsView(SettingsView):
 class ContentSettingsView(SettingsView):
     form_class = ContentSettingsForm
     template_name = "misago/admin/conf/content_settings.html"
+
+
+class SearchSettingsView(SettingsView):
+    form_class = SearchSettingsForm
+    template_name = "misago/admin/conf/search_settings.html"
 
 
 class UsersSettingsView(SettingsView):

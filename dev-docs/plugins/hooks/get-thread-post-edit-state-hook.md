@@ -1,6 +1,6 @@
 # `get_thread_post_edit_state_hook`
 
-This hook wraps the standard function Misago uses to create a new `EditThreadPostState` instance for editing a thread post.
+This hook wraps a Misago function used to create a new `EditThreadPostState` instance for editing a thread post.
 
 
 ## Location
@@ -57,7 +57,7 @@ def get_thread_post_edit_state_action(request: HttpRequest, post: Post) -> 'Edit
     ...
 ```
 
-A standard function that Misago uses to create a new `EditThreadPostState` instance for editing a thread post.
+Misago function used to create a new `EditThreadPostState` instance for editing a thread post.
 
 
 ### Arguments

@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetEditThreadPostStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `EditThreadPostState`
-    instance for editing a thread post.
+    Misago function used to create a new `EditThreadPostState` instance for
+    editing a thread post.
 
     # Arguments
 
@@ -76,8 +76,8 @@ class GetEditThreadPostStateHook(
     FilterHook[GetEditThreadPostStateHookAction, GetEditThreadPostStateHookFilter]
 ):
     """
-    This hook wraps the standard function Misago uses to create a new
-    `EditThreadPostState` instance for editing a thread post.
+    This hook wraps a Misago function used to create a new `EditThreadPostState`
+    instance for editing a thread post.
 
     # Example
 

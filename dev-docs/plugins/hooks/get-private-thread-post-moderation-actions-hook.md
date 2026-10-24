@@ -1,6 +1,6 @@
 # `get_private_thread_post_moderation_actions_hook`
 
-This hook wraps the standard function Misago uses to retrieve available moderation actions for a private thread’s post.
+This hook wraps a Misago function used to retrieve available moderation actions for a private thread’s post.
 
 
 ## Location

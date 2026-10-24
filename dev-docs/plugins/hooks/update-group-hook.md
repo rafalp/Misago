@@ -1,6 +1,6 @@
 # `update_group_hook`
 
-This hook wraps the standard function that Misago uses to update user group.
+This hook wraps a Misago function used to update user group.
 
 
 ## Location

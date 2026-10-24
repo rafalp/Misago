@@ -1,6 +1,6 @@
 # `check_edit_private_thread_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to edit a private thread. It raises Django's `PermissionDenied` with an error message if they can't edit it.
+This hook wraps a Misago function used to check if a user has permission to edit a private thread. It raises Django's `PermissionDenied` with an error message if they don't.
 
 
 ## Location
@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -59,7 +59,7 @@ Misago function used to check if the user has permission to edit a private threa
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 

@@ -18,3 +18,6 @@ class AdminBaseMixin:
     def get_model(self):
         """basic method for retrieving Model, used in cases such as User model."""
         return self.model
+
+    def get_queryset(self):
+        return self.get_model().objects.all()

@@ -1,12 +1,15 @@
 """Misago's default Django Project settings."""
 
+from celery.schedules import crontab
+
 __all__ = [
     "INSTALLED_APPS",
     "INSTALLED_PLUGINS",
     "MISAGO_ATTACHMENTS_SERVER",
-    "MISAGO_DEFAULT_OG_IMAGE",
-    "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
+    "MISAGO_CELERY_BEAT_SCHEDULE",
     "MISAGO_DEFAULT_OG_IMAGE_HEIGHT",
+    "MISAGO_DEFAULT_OG_IMAGE_WIDTH",
+    "MISAGO_DEFAULT_OG_IMAGE",
     "MISAGO_EMAIL_CHANGE_TOKEN_EXPIRES",
     "MISAGO_MIDDLEWARE",
     "MISAGO_NOTIFICATIONS_RETRY_DELAY",
@@ -17,6 +20,8 @@ __all__ = [
     "MISAGO_PYGMENTS_LANGUAGES",
     "MISAGO_PYGMENTS_STYLE",
     "MISAGO_QUOTED_POSTS_LIMIT",
+    "MISAGO_THREADS_SEARCH",
+    "MISAGO_USERS_SEARCH",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -111,7 +116,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.core.context_processors.misago_version",
     "misago.core.context_processors.momentjs_locale",
     "misago.icons.context_processors.icons",
-    "misago.search.context_processors.search_providers",
     "misago.themes.context_processors.theme",
     "misago.legal.context_processors.legal_links",
     "misago.menus.context_processors.menus",
@@ -155,6 +159,14 @@ MISAGO_MIDDLEWARE = [
     "misago.admin.middleware.AdminAuthMiddleware",
     "misago.middleware.privatethreads.sync_user_unread_private_threads",
 ]
+
+MISAGO_CELERY_BEAT_SCHEDULE = {
+    "clear-old-search-logs": {
+        "task": "misago.search.tasks.clear_old_search_logs",
+        "schedule": crontab(hour=0, minute=0),
+    },
+}
+
 
 MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_redirect_response"
 
@@ -247,3 +259,50 @@ MISAGO_PYGMENTS_LANGUAGES = (
 
 # For use in tests only
 MISAGO_PARSER_CLEAN_AST = True
+
+# Search configurations
+MISAGO_THREADS_SEARCH = {
+    "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
+    "INDEX_BATCH_SIZE": 50,
+    "MAX_OFFSET": 160,
+    "RESULT_SIZE": 40,
+    "PG_SEARCH_CONFIG": "auto",
+}
+
+MISAGO_USERS_SEARCH = {
+    "USE_TRIGRAM_LOOKUP": False,
+    "STAGES": [
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 1,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 0,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 2,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 1,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 3,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 1,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 4,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 2,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+    ],
+}

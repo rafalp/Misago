@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class SaveThreadStartStateHookAction(Protocol):
     """
-    A standard function that Misago uses to save a new thread to the database.
+    Misago function used to save a new thread to the database.
 
     # Arguments
 
@@ -64,8 +64,7 @@ class SaveThreadStartStateHook(
     FilterHook[SaveThreadStartStateHookAction, SaveThreadStartStateHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to save a new thread
-    to the database.
+    This hook wraps a Misago function used to save a new thread to the database.
 
     # Example
 

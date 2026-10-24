@@ -1,6 +1,6 @@
 # `populate_post_feed_data_hook`
 
-This hook wraps the standard function that Misago uses to populate post feed data using the `prefetched_data` dictionary.
+This hook wraps a Misago function used to populate post feed data using the `prefetched_data` dictionary.
 
 
 ## Location

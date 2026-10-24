@@ -79,8 +79,7 @@ class TokenizeHookFilter(Protocol):
 
 class TokenizeHook(FilterHook[TokenizeHookAction, TokenizeHookFilter]):
     """
-    This hook wraps the standard function Misago uses to create a token stream
-    from markup.
+    This hook wraps a Misago function used to create a token stream from a markup.
 
     Token stream is a list of the `Token` instances from `markdown_it.tokens` module.
 

@@ -88,8 +88,8 @@ class GetPrivateThreadModerationActionsHook(
     ]
 ):
     """
-    This hook wraps the standard function Misago uses to retrieve available
-    moderation actions for a private thread.
+    This hook wraps a Misago function used to retrieve available moderation
+    actions for a private thread.
 
     # Example
 

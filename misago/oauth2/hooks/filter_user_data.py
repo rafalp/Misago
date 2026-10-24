@@ -119,8 +119,8 @@ class FilterUserDataHook(
     FilterHook[FilterUserDataHookAction, FilterUserDataHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to filter a Python `dict`
-    containing the user data extracted from the OAuth 2 server's response.
+    This hook wraps a Misago function used to filter a Python `dict` containing
+    the user data extracted from the OAuth 2 server's response.
 
     User data filtering is part of the [user data validation by the OAuth 2
     client](./validate-user-data-hook.md), which itself is part of a function that

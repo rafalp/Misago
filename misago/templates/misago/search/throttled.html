@@ -1,0 +1,26 @@
+{% load i18n %}
+
+<section
+  class="section"
+  hx-get="{{ full_path }}&throttled=true"
+  hx-trigger="load delay:{{ search_throttled|add:3 }}s"
+  hx-target="#misago-htmx-root"
+  hx-swap="innerHTML"
+>
+  <div class="search-throttled">
+    <div class="search-throttled-icon" aria-hidden="true">
+      {% include "tabler/alarm.svg" %}
+    </div>
+    <div class="search-throttled-body">
+      <h2 class="search-throttled-title">
+        {% translate "Search limit reached" context "search results throttled title" %}
+      </h2>
+      <p class="search-throttled-message search-throttled-message-auto-refresh d-js-block">
+        {{ search_throttled_message.auto_refresh }}
+      </p>
+      <p class="search-throttled-message search-throttled-message-noscript d-js-none">
+        {{ search_throttled_message.noscript }}
+      </p>
+    </div>
+  </div>
+</section>
