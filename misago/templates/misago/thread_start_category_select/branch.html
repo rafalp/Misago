@@ -1,0 +1,12 @@
+<span class="select-category-list-branch" aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" width="34" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    {% if image == "I" or image == "T" %}
+      <line x1="17" y1="0" x2="17" y2="100%" />
+    {% endif %}
+    {% if image == "T" %}
+      <path class="select-category-list-branch-elbow" d="M17 0v9c0 4.4 3.6 8 8 8h9" />
+    {% elif image == "L" %}
+      <path class="select-category-list-branch-elbow" d="M17 -1000V9c0 4.4 3.6 8 8 8h9" />
+    {% endif %}
+  </svg>
+</span>

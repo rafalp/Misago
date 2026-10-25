@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.translation import pgettext
 from django.views import View
 
+from ...categories.display import get_categories_with_branches
 from ...categories.models import Category
 from ...permissions.checkutils import check_permissions
 from ...permissions.threads import check_start_thread_permission
@@ -33,50 +34,47 @@ class ThreadStartCategorySelectView(View):
         return render(request, template_name, {"thread_start_choices": choices})
 
     def get_category_choices(self, request: HttpRequest) -> list[dict]:
-        queryset = Category.objects.filter(
-            id__in=request.categories,
-        ).order_by("lft")
+        categories = list(
+            Category.objects.filter(id__in=request.categories).order_by("lft")
+        )
+        category_data: dict[int, dict] = {}
 
-        choices: list[dict] = []
-        for category in queryset:
+        for category in categories:
             with check_permissions() as has_permission:
                 check_start_thread_permission(request.user_permissions, category)
 
-            choice = {
-                "id": category.id,
-                "name": category.name,
-                "description": category.description,
-                "color": category.color,
-                "level": "",
-                "is_vanilla": category.is_vanilla,
+            category_data[category.id] = {
                 "disabled": category.is_vanilla or not has_permission,
                 "url": reverse(
                     "misago:thread-start",
                     kwargs={"category_id": category.id, "slug": category.slug},
                 ),
-                "category": category,
             }
 
-            if category.level == 1:
-                choice["children"] = []
-                choices.append(choice)
-            else:
-                parent = choices[-1]
-                choice["level"] = "1" * (category.level - 1)
-                parent["children"].append(choice)
+        visible_ids = {
+            category.id
+            for category in categories
+            if not category_data[category.id]["disabled"]
+        }
+        categories_by_id = {category.id: category for category in categories}
 
-        # Remove branches where entire branch is disabled
-        clean_choices: list[dict] = []
-        for category in choices:
-            clean_children: list[dict] = []
-            for child in reversed(category["children"]):
-                if not child["disabled"] or (
-                    clean_children and clean_children[-1]["level"] > child["level"]
-                ):
-                    clean_children.append(child)
+        for category_id in tuple(visible_ids):
+            parent_id = categories_by_id[category_id].parent_id
+            while parent_id in categories_by_id:
+                visible_ids.add(parent_id)
+                parent_id = categories_by_id[parent_id].parent_id
 
-            if not category["disabled"] or clean_children:
-                category["children"] = list(reversed(clean_children))
-                clean_choices.append(category)
+        choices: list[dict] = []
+        visible_categories = [
+            category for category in categories if category.id in visible_ids
+        ]
+        for branch, category in get_categories_with_branches(visible_categories):
+            choices.append(
+                {
+                    "branch": branch,
+                    "category": category,
+                    **category_data[category.id],
+                }
+            )
 
-        return clean_choices
+        return choices

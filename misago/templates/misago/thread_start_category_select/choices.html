@@ -5,9 +5,17 @@
       {% translate "Start new thread in" context "thread start category select title" %}
     </h3>
   </li>
-  {% for category in thread_start_choices %}
+  {% for choice in thread_start_choices %}
+    {% with category=choice.category %}
     <li class="flex select-category-list-item">
-      {% if category.disabled %}
+      {% if choice.branch %}
+        <div class="select-category-list-item-tree-branch">
+          {% for image in choice.branch %}
+            {% include "misago/thread_start_category_select/branch.html" %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if choice.disabled %}
         <span class="select-category-list-item-btn-lg select-category-list-item-header">
           <div class="flex items-center">
             <span class="bullet"{% if category.color %} style="--color: {{ category.color }}"{% endif %}></span>
@@ -23,7 +31,7 @@
         </span>
       {% else %}
         <a
-          href="{{ category.url }}"
+          href="{{ choice.url }}"
           class="select-category-list-item-btn-lg select-category-list-item-header"
         >
           <div class="flex items-center">
@@ -40,47 +48,6 @@
         </a>
       {% endif %}
     </li>
-    {% for subcategory in category.children %}
-      <li class="flex items-center select-category-list-item">
-        {% for _ in subcategory.level %}
-          <div class="select-category-list-item-level"></div>
-        {% endfor %}
-        {% if subcategory.disabled %}
-          <span class="select-category-list-item-btn-lg select-category-list-item-name">
-            <div class="flex items-center">
-              <span class="bullet"{% if subcategory.color %} style="--color: {{ subcategory.color }}"{% endif %}></span>
-              <span class="text-lg">
-                {{ subcategory.name }}
-              </span>
-            </div>
-            {% if subcategory.description %}
-              <div class="select-category-list-item-description">
-                {{ subcategory.description|force_escape|linebreaks }}
-              </div>
-            {% endif %}
-          </span>
-        {% else %}
-          <a
-            href="{{ subcategory.url }}"
-            class="select-category-list-item-btn-lg select-category-list-item-name"
-          >
-            <div class="flex items-center">
-              <span class="bullet"{% if subcategory.color %} style="--color: {{ subcategory.color }}"{% endif %}></span>
-              <span class="text-lg">
-                {{ subcategory.name }}
-              </span>
-            </div>
-            {% if subcategory.description %}
-              <div class="select-category-list-item-description">
-                {{ subcategory.description|force_escape|linebreaks }}
-              </div>
-            {% endif %}
-          </a>
-        {% endif %}
-      </li>
-    {% endfor %}
-    {% if not forloop.last %}
-      <li class="select-category-list-separator"></li>
-    {% endif %}
+    {% endwith %}
   {% endfor %}
 </ul>
