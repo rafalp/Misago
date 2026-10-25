@@ -5,15 +5,7 @@
       {% if choice.branch %}
         <div class="select-category-list-item-tree-branch">
           {% for image in choice.branch %}
-            {% if image == "I" %}
-              {% include "tree-branch/i.svg" %}
-            {% elif image == "T" %}
-              {% include "tree-branch/t.svg" %}
-            {% elif image == "L" %}
-              {% include "tree-branch/l.svg" %}
-            {% elif image == "S" %}
-              {% include "tree-branch/s.svg" %}
-            {% endif %}
+            {% include "misago/thread_start_category_select/branch.html" %}
           {% endfor %}
         </div>
       {% endif %}
