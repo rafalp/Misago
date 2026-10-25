@@ -26,9 +26,10 @@ from .forms import (
     UsersSearchForm,
 )
 from .logging import log_search
-from .service import search
+from .threads import threads_search
 from .throttling import throttle_search
 from .types import ThreadsSearchResult, ThreadsSearchResultItem
+from .users import search_users
 
 
 class SearchView(View):
@@ -237,7 +238,7 @@ class ThreadsSearchView(BaseSearchView):
         }
 
     def get_max_search_offset(self) -> int:
-        return max(settings.MISAGO_SEARCH.get("MAX_OFFSET", 0), 20)
+        return max(settings.MISAGO_THREADS_SEARCH.get("MAX_OFFSET", 0), 20)
 
     def get_search_offset(self, max_offset: int) -> int:
         try:
@@ -253,7 +254,7 @@ class ThreadsSearchView(BaseSearchView):
     def search(self, form: ThreadsSearchForm, offset: int) -> ThreadsSearchResult:
         filters = form.get_search_filters()
 
-        return search.search_threads(
+        return threads_search.search_threads(
             filters["search_query"],
             self.request.user_permissions,
             categories=filters["categories"],
@@ -287,7 +288,7 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
     def get_search_limit(self) -> tuple[int, int]:
-        return max(settings.MISAGO_SEARCH.get("RESULT_SIZE", 0), 1)
+        return max(settings.MISAGO_THREADS_SEARCH.get("RESULT_SIZE", 0), 1)
 
     def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
         return Post.objects.filter(id__in=post_ids)
@@ -344,12 +345,12 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
         # Put categories in URL only if they are selected
-        categories = cleaned_data.get("categories")
-        if self.request.GET.getlist("categories") and categories:
-            data += [("categories", category.id) for category in categories]
+        category = cleaned_data.get("category")
+        if self.request.GET.getlist("category") and category:
+            data += [("category", category.id) for category in category]
 
         if users := cleaned_data.get("users"):
-            data += [("users", " ".join(user.slug for user in users))]
+            data += [("users", ", ".join(user.slug for user in users))]
 
         if date_from := cleaned_data["date_from"]:
             data.append(("date_from", date_from))
@@ -377,7 +378,7 @@ class PrivateThreadsSearchView(ThreadsSearchView):
     ) -> ThreadsSearchResult:
         filters = form.get_search_filters()
 
-        return search.search_private_threads(
+        return threads_search.search_private_threads(
             filters["search_query"],
             self.request.user_permissions,
             users=filters["users"],
@@ -419,4 +420,10 @@ class PrivateThreadsSearchView(ThreadsSearchView):
 
 
 class UsersSearchView(BaseSearchView):
-    pass
+    def get(self, request: HttpRequest) -> HttpResponse:
+        username = request.GET.get("username", "").strip()
+        if not username:
+            return HttpResponse("NADA")
+
+        results = search_users(request.user_permissions, username, include_self=True)
+        return HttpResponse(" ".join(user.username for user in results))

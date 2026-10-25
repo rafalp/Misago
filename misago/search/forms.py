@@ -3,6 +3,7 @@ from datetime import datetime, time, timedelta
 
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import pgettext_lazy
@@ -106,6 +107,10 @@ class BaseThreadsSearchForm(SearchForm):
 
         return data
 
+    def has_valid_search_options(self) -> bool:
+        errors = set(self.errors) - {NON_FIELD_ERRORS, "quote"}
+        return not errors
+
     def get_search_filters(self) -> dict:
         filters = {
             "search_query": self.cleaned_data["search_query"],
@@ -162,7 +167,7 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
     link_label = pgettext_lazy("threads search form name", "Threads")
     url_name = "misago:threads-search"
 
-    categories = forms.TypedMultipleChoiceField(
+    category = forms.TypedMultipleChoiceField(
         coerce=int,
         required=False,
         widget=forms.CheckboxSelectMultiple(),
@@ -175,7 +180,7 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
 
         self.searchable_categories = self.get_searchable_categories()
         self.disabled_categories = self.get_disabled_categories()
-        self.fields["categories"].choices = self.get_category_choices()
+        self.fields["category"].choices = self.get_category_choices()
 
     def get_searchable_categories(self) -> set[int]:
         return get_searchable_category_ids(
@@ -209,14 +214,14 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
             )
         )
 
-    def clean_categories(self) -> list[CategoryProxy]:
+    def clean_category(self) -> list[CategoryProxy]:
         request = self.request
 
         searchable_categories = get_searchable_category_ids(
             request.user_permissions, request.categories
         )
 
-        if category_ids := self.cleaned_data["categories"]:
+        if category_ids := self.cleaned_data["category"]:
             return [
                 request.categories[category_id]
                 for category_id in category_ids
@@ -231,7 +236,7 @@ class ThreadsSearchForm(BaseThreadsSearchForm):
 
     def get_search_filters(self) -> dict:
         filters = super().get_search_filters()
-        filters["categories"] = self.cleaned_data["categories"]
+        filters["categories"] = self.cleaned_data["category"]
         return filters
 
 
@@ -249,4 +254,4 @@ class UsersSearchForm(SearchForm):
     template_name = "misago/search/users/form.html"
     url_name = "misago:users-search"
 
-    query = forms.CharField(min_length=1, max_length=255)
+    username = forms.CharField(min_length=1, max_length=255)

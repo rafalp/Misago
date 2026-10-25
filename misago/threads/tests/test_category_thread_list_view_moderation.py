@@ -734,7 +734,7 @@ def test_category_thread_list_view_shows_error_for_thread_in_selection_user_cant
         {"moderation": "pin_category", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    print(response.content.decode())
+
     assert_contains(
         response,
         f'Can\'t moderate the \\"{thread.title}\\" thread.',

@@ -20,7 +20,8 @@ __all__ = [
     "MISAGO_PYGMENTS_LANGUAGES",
     "MISAGO_PYGMENTS_STYLE",
     "MISAGO_QUOTED_POSTS_LIMIT",
-    "MISAGO_SEARCH",
+    "MISAGO_THREADS_SEARCH",
+    "MISAGO_USERS_SEARCH",
     "TEMPLATE_CONTEXT_PROCESSORS",
 ]
 
@@ -259,11 +260,49 @@ MISAGO_PYGMENTS_LANGUAGES = (
 # For use in tests only
 MISAGO_PARSER_CLEAN_AST = True
 
-# Posts search configuration
-MISAGO_SEARCH = {
+# Search configurations
+MISAGO_THREADS_SEARCH = {
     "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
     "INDEX_BATCH_SIZE": 50,
     "MAX_OFFSET": 160,
     "RESULT_SIZE": 40,
     "PG_SEARCH_CONFIG": "auto",
+}
+
+MISAGO_USERS_SEARCH = {
+    "USE_TRIGRAM_LOOKUP": False,
+    "STAGES": [
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 1,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 0,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 2,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 1,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 3,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 1,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+        {
+            "MIN_LENGTH": 4,
+            "PREFIX_LENGTH": 4,
+            "LENGTH_LT": 0,
+            "LENGTH_GT": 2,
+            "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},
+            "LIMIT": 3,
+        },
+    ],
 }

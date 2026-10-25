@@ -67,7 +67,7 @@ class PostsSearchUpdate(TypedDict, total=False):
     is_unapproved: bool
 
 
-class SearchBackend(ABC):
+class ThreadsSearchBackend(ABC):
     name: str
 
     def __init__(self, options: dict):
@@ -170,7 +170,7 @@ class SearchBackend(ABC):
         pass
 
 
-class PostgreSQLSearchBackend(SearchBackend):
+class PostgreSQLSearchBackend(ThreadsSearchBackend):
     name = "PostgreSQL full-text search"
     search_config: str
     min_rank: float | None

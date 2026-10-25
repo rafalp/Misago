@@ -8,7 +8,7 @@ from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
-from .backends import SearchBackend
+from .backends import ThreadsSearchBackend
 from .enums import SearchMode, SearchSort
 from .query import SearchQuery
 from .types import ThreadsSearchResult
@@ -17,17 +17,17 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-class SearchService:
-    backend: SearchBackend
+class ThreadsSearch:
+    backend: ThreadsSearchBackend
 
     def __init__(self, options: dict):
         if not isinstance(options, dict):
-            raise TypeError("MISAGO_SEARCH must be a dictionary")
+            raise TypeError("MISAGO_THREADS_SEARCH must be a dictionary")
 
         try:
             backend_name = options["BACKEND"]
         except KeyError:
-            raise ValueError("MISAGO_SEARCH is missing the 'BACKEND' option")
+            raise ValueError("MISAGO_THREADS_SEARCH is missing the 'BACKEND' option")
 
         try:
             backend_class = import_string(backend_name)
@@ -153,4 +153,4 @@ class SearchService:
         return self.backend.clear()
 
 
-search = SearchService(settings.MISAGO_SEARCH)
+threads_search = ThreadsSearch(settings.MISAGO_THREADS_SEARCH)

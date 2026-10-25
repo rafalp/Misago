@@ -68,13 +68,6 @@ MISAGO_THREAD_TYPES = [
 ]
 
 
-# Search extensions
-
-MISAGO_SEARCH_EXTENSIONS = [
-    "misago.users.search.SearchUsers",
-]
-
-
 # Additional registration validators
 # https://misago.readthedocs.io/en/latest/developers/validating_registrations.html
 
