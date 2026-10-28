@@ -11,6 +11,7 @@ from ..users.signals import (
 )
 from .models import Notification, WatchedThread
 from .registry import registry
+from .utils import delete_user_account
 
 
 @receiver(archive_user_data)
@@ -37,10 +38,3 @@ def update_actor_name(sender, **kwargs):
 def delete_user_data(sender, **kwargs):
     Notification.objects.filter(Q(user=sender) | Q(actor=sender)).delete()
     WatchedThread.objects.filter(user=sender).delete()
-
-
-@receiver(pre_delete, sender=get_user_model())
-def delete_user_account(sender, *, instance, **kwargs):
-    Notification.objects.filter(actor=instance).update(actor=None)
-    Notification.objects.filter(user=instance).delete()
-    WatchedThread.objects.filter(user=instance).delete()

@@ -24,6 +24,7 @@ from ..users.signals import (
 from .anonymize import anonymize_post_last_likes
 from .models import Post, Thread
 from .synchronize import synchronize_thread
+from .utils import remove_private_threads_without_members
 
 delete_post = Signal()
 delete_thread = Signal()
@@ -286,14 +287,3 @@ def update_usernames(sender, **kwargs):
     PollVote.objects.filter(voter=sender).update(
         voter_name=sender.username, voter_slug=sender.slug
     )
-
-
-@receiver(pre_delete, sender=get_user_model())
-def remove_private_threads_without_members(sender, **kwargs):
-    queryset = Thread.objects.filter(
-        id__in=kwargs["instance"].privatethreadmember_set.values("thread_id"),
-    ).order_by("-id")
-    for thread in queryset.iterator(chunk_size=50):
-        if thread.privatethreadmember_set.count() <= 1:
-            with transaction.atomic():
-                thread.delete()

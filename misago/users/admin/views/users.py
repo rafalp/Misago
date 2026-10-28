@@ -11,6 +11,7 @@ from ....admin.views import generic
 from ....core.mail import mail_users
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
+from ...delete import UserContentAction, delete_user
 from ...deletesrecord import record_user_deleted_by_staff
 from ...models import Ban
 from ...profilefields import profilefields
@@ -236,7 +237,12 @@ class UsersList(UserAdmin, generic.ListView):
                 )
 
         for user in users:
-            user.delete(anonymous_username=request.settings.anonymous_username)
+            # TODO: here should be called the delete_user Celery task with correct content_action
+            delete_user(
+                user,
+                content_action=UserContentAction.LEAVE,
+                anonymous_username=request.settings.anonymous_username,
+            )
             record_user_deleted_by_staff()
 
         messages.success(

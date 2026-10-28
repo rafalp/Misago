@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
 from ....conf.shortcuts import get_dynamic_settings
+from ...delete import UserContentAction, delete_user
 from ...deletesrecord import record_user_deleted_by_self
 from ...permissions import can_delete_own_account
 
@@ -22,7 +23,12 @@ class Command(BaseCommand):
 
         for user in queryset.iterator(chunk_size=50):
             if can_delete_own_account(settings, user, user):
-                user.delete(anonymous_username=settings.anonymous_username)
+                # TODO: set correct value of content_action
+                delete_user(
+                    user,
+                    content_action=UserContentAction.LEAVE,
+                    anonymous_username=settings.anonymous_username,
+                )
                 record_user_deleted_by_self()
                 users_deleted += 1
 

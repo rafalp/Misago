@@ -1,6 +1,9 @@
 from urllib.parse import urlparse
 
+from django.db import transaction
 from django.urls import Resolver404, resolve
+
+from .models import Thread
 
 SUPPORTED_THREAD_ROUTES = {
     "misago:thread": "thread_id",
@@ -46,3 +49,13 @@ def get_thread_id_from_url(request, url):
         return int(resolution.kwargs.get(kwargname))
     except (TypeError, ValueError):
         return None
+
+
+def remove_private_threads_without_members(user):
+    queryset = Thread.objects.filter(
+        id__in=user.privatethreadmember_set.values("thread_id"),
+    ).order_by("-id")
+    for thread in queryset.iterator(chunk_size=50):
+        if thread.privatethreadmember_set.count() <= 1:
+            with transaction.atomic():
+                thread.delete()

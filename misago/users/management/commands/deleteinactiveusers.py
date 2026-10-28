@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from ....conf.shortcuts import get_dynamic_settings
+from ...delete import UserContentAction, delete_user
 from ...deletesrecord import record_user_deleted_by_system
 
 User = get_user_model()
@@ -33,7 +34,12 @@ class Command(BaseCommand):
         )
 
         for user in queryset.iterator(chunk_size=50):
-            user.delete(anonymous_username=settings.anonymous_username)
+            # TODO: set correct value of content_action
+            delete_user(
+                user,
+                content_action=UserContentAction.LEAVE,
+                anonymous_username=settings.anonymous_username,
+            )
             record_user_deleted_by_system()
             users_deleted += 1
 
