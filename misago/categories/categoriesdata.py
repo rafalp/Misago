@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Any
 
 from django.core.cache import cache
@@ -5,7 +6,7 @@ from django.core.cache import cache
 from ..cache.enums import CacheName
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
-from .hooks import serialize_category_data_hook
+from .hooks import serialize_category_plugin_data_hook
 from .models import Category
 
 CACHE_PREFIX = "categories"
@@ -69,10 +70,6 @@ def get_categories_data_from_db(user_permissions: UserPermissionsProxy) -> list[
 
 
 def serialize_category_data(result: dict[str, Any]) -> dict[str, Any]:
-    return serialize_category_data_hook(_serialize_category_data_action, result)
-
-
-def _serialize_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
     return {
         "id": result["id"],
         "parent_id": result["parent_id"] if result["level"] > 1 else None,
@@ -87,5 +84,15 @@ def _serialize_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
         "delay_browse_check": result["delay_browse_check"],
         "show_started_only": result["show_started_only"],
         "is_vanilla": result["is_vanilla"],
-        "plugin_data": {},
+        "plugin_data": serialize_category_plugin_data(deepcopy(result)),
     }
+
+
+def serialize_category_plugin_data(result: dict[str, Any]) -> dict[str, Any]:
+    return serialize_category_plugin_data_hook(
+        _serialize_category_plugin_data_action, result
+    )
+
+
+def _serialize_category_plugin_data_action(result: dict[str, Any]) -> dict[str, Any]:
+    return {}

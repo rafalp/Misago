@@ -45,7 +45,7 @@ Hooks instances are importable from the following Python modules:
 - [`delete_categories_hook`](./delete-categories-hook.md)
 - [`get_categories_page_component_hook`](./get-categories-page-component-hook.md)
 - [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
-- [`serialize_category_data_hook`](./serialize-category-data-hook.md)
+- [`serialize_category_plugin_data_hook`](./serialize-category-plugin-data-hook.md)
 - [`synchronize_category_hook`](./synchronize-category-hook.md)
 
 
@@ -341,5 +341,6 @@ Hooks instances are importable from the following Python modules:
 
 - [`create_group_hook`](./create-group-hook.md)
 - [`delete_group_hook`](./delete-group-hook.md)
+- [`serialize_group_plugin_data_hook`](./serialize-group-plugin-data-hook.md)
 - [`set_default_group_hook`](./set-default-group-hook.md)
 - [`update_group_hook`](./update-group-hook.md)
