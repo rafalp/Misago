@@ -431,14 +431,16 @@
   font-size: @font-size-small;
 }
 
-.misago-javascript .markup-editor-attachments-other-list-item-body {
-  cursor: pointer;
+@media (scripting: enabled) {
+  .markup-editor-attachments-other-list-item-body {
+    cursor: pointer;
 
-  &:hover,
-  &:active {
-    .markup-editor-attachments-other-list-item-cta {
-      color: @gray-dark;
-      text-decoration: underline;
+    &:hover,
+    &:active {
+      .markup-editor-attachments-other-list-item-cta {
+        color: @gray-dark;
+        text-decoration: underline;
+      }
     }
   }
 }

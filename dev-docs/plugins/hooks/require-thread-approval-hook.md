@@ -1,6 +1,6 @@
 # `require_thread_approval_hook`
 
-This hook wraps the standard function Misago uses to check if a new thread should require moderator approval.
+This hook wraps a Misago function used to check if a new thread should require moderator approval.
 
 
 ## Location
@@ -50,7 +50,7 @@ def require_thread_approval_action(state: 'ThreadStartState') -> bool:
     ...
 ```
 
-A standard function that Misago uses to check if a new thread should require moderator approval.
+Misago function used to check if a new thread should require moderator approval.
 
 
 ### Arguments

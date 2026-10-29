@@ -63,7 +63,7 @@ class SetDefaultGroupHook(
     FilterHook[SetDefaultGroupHookAction, SetDefaultGroupHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to set a default user group.
+    This hook wraps a Misago function used to set a default user group.
 
     The default user group is the group assigned to a user at account creation time.
 

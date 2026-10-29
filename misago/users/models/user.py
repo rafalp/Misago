@@ -12,7 +12,7 @@ from django.contrib.auth.models import (
     UserManager as BaseUserManager,
 )
 from django.contrib.postgres.fields import ArrayField, HStoreField
-from django.contrib.postgres.indexes import GinIndex, GistIndex
+from django.contrib.postgres.indexes import GinIndex, GistIndex, OpClass
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
@@ -349,8 +349,8 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                 fields=["groups_ids"],
             ),
             GistIndex(
-                name="misago_user_username_trgrm",
-                fields=["username"],
+                OpClass("slug", name="gist_trgm_ops"),
+                name="misago_user_slug_trgrm",
             ),
         ]
 

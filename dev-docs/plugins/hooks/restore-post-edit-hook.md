@@ -1,6 +1,6 @@
 # `restore_post_edit_hook`
 
-This hook wraps a standard Misago function used to restore post content from a related PostEdit object.
+This hook wraps a Misago function used to restore post content from a related `PostEdit` object.
 
 
 ## Location

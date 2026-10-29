@@ -1,6 +1,6 @@
 # `get_private_thread_post_edit_state_hook`
 
-This hook wraps the standard function Misago uses to create a new `EditPrivateThreadPostState` instance for editing a private thread post.
+This hook wraps a Misago function used to create a new `EditPrivateThreadPostState` instance for editing a private thread post.
 
 
 ## Location
@@ -57,7 +57,7 @@ def get_private_thread_post_edit_state_action(request: HttpRequest, post: Post) 
     ...
 ```
 
-A standard function that Misago uses to create a new `EditPrivateThreadPostState` instance for editing a private thread post.
+Misago function used to create a new `EditPrivateThreadPostState` instance for editing a private thread post.
 
 
 ### Arguments

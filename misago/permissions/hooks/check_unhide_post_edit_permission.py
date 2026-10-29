@@ -15,7 +15,7 @@ class CheckUnhidePostEditPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -44,7 +44,7 @@ class CheckUnhidePostEditPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,9 +68,8 @@ class CheckUnhidePostEditPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard Misago function used to check whether a user has
-    permission to unhide a hidden post edit.
-    Raises Django's `PermissionDenied` if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    unhide a hidden post edit. Raises Django's `PermissionDenied` if they don't.
 
     # Example
 

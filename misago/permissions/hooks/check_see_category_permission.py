@@ -14,7 +14,7 @@ class CheckSeeCategoryPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -43,7 +43,7 @@ class CheckSeeCategoryPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -67,8 +67,8 @@ class CheckSeeCategoryPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to check if the user
-    has a permission to see a category. Raises Django's `Http404` error if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    see a category. Raises Django's `Http404` error if they don't.
 
     # Example
 

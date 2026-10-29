@@ -88,8 +88,8 @@ class GetCategoryThreadsModerationActionsHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get available
-    moderation actions for a category's threads list.
+    This hook wraps a Misago function used to get available moderation actions
+    for a category's threads list.
 
     # Example
 

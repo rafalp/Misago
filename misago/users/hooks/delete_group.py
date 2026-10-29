@@ -61,7 +61,7 @@ class DeleteGroupHookFilter(Protocol):
 
 class DeleteGroupHook(FilterHook[DeleteGroupHookAction, DeleteGroupHookFilter]):
     """
-    This hook wraps the standard function that Misago uses to delete a user group.
+    This hook wraps a Misago function used to delete a user group.
 
     Misago executes delete queries for groups and their relations directly, skipping
     the Django ORM which uses the Object Collector logic to simulate the delete cascade

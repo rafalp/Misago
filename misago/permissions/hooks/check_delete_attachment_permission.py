@@ -17,7 +17,7 @@ class CheckDeleteAttachmentPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -61,7 +61,7 @@ class CheckDeleteAttachmentPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -100,9 +100,8 @@ class CheckDeleteAttachmentPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to check if the user
-    has permission to delete an attachment. It raises `PermissionDenied` if they
-    are not allowed to delete it.
+    This hook wraps a Misago function used to check if a user has permission to
+    delete an attachment. Raises `PermissionDenied` if they don't.
 
     # Example
 

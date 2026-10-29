@@ -51,8 +51,8 @@ def mark_as_read(request: HttpRequest) -> HttpResponse | None:
     if not request.POST.get("confirm"):
         return render(request, "misago/categories/mark_as_read_page.html")
 
-    if categories_ids := list(request.categories.categories):
-        read_all_categories(request.user, categories_ids)
+    if request.categories:
+        read_all_categories(request.user, request.categories)
         messages.success(
             request, pgettext("mark categories as read", "Categories marked as read")
         )

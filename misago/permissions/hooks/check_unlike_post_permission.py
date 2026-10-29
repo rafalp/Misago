@@ -15,7 +15,7 @@ class CheckUnlikePostPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -54,7 +54,7 @@ class CheckUnlikePostPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -88,8 +88,8 @@ class CheckUnlikePostPermissionHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if a user has permission
-    to unlike a post. Raises Django's `PermissionDenied` if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    unlike a post. Raises Django's `PermissionDenied` if they don't.
 
     # Example
 

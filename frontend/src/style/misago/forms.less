@@ -11,6 +11,60 @@
   line-height: @line-height-base;
 }
 
+// Details with help text
+.help-text-extended {
+  display: flex;
+  flex-direction: column;
+
+  margin-top: @line-height-computed;
+  padding: @padding-base-horizontal;
+
+  background-color: @gray-100;
+  border-radius: @border-radius-small;
+
+  &[open],
+  &:open {
+    gap: @line-height-computed;
+  }
+}
+
+.help-text-extended-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: @padding-base-horizontal;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  svg {
+    width: 24px;
+    height: 24px;
+
+    color: @gray-500;
+  }
+
+  &:hover span {
+    text-decoration: underline;
+  }
+}
+
+.help-text-extended-body {
+  display: flex;
+  flex-direction: column;
+  gap: @line-height-computed;
+
+  p {
+    margin: 0;
+  }
+
+  code {
+    background-color: @blue-100;
+    color: @blue-900;
+    font-weight: bold;
+  }
+}
+
 // Well done
 .well.well-form.well-done {
   font-size: @font-size-large;

@@ -16,7 +16,7 @@ class CheckAccessPostPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -55,7 +55,7 @@ class CheckAccessPostPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -89,8 +89,8 @@ class CheckAccessPostPermissionHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if a user has permission
-    to access a post of any type (threads, private threads, or plugin-defined).
+    This hook wraps a Misago function used to check if a user has permission to
+    access a post of any type (threads, private threads, or plugin-defined).
     Raises Django's `Http404` or `PermissionDenied` if they don't.
 
     # Example

@@ -1,40 +1,510 @@
+from typing import TYPE_CHECKING
+from urllib.parse import urlencode
+
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
-from django.shortcuts import redirect, render
-from django.utils.translation import pgettext
+from django.db.models import QuerySet, prefetch_related_objects
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.urls import reverse
+from django.utils.translation import npgettext, pgettext
+from django.views import View
 
-from .searchproviders import searchproviders
+from ..categories.models import Category
+from ..categories.proxy import CategoryProxy
+from ..permissions.checkutils import check_permissions
+from ..permissions.privatethreads import check_private_threads_permission
+from ..permissions.search import check_search_permission
+from ..plugins import extensions
+from ..threads.models import Post
+from .categories import get_searchable_category_ids
+from .enums import SearchMode, SearchSort
+from .forms import (
+    BaseThreadsSearchForm,
+    PrivateThreadsSearchForm,
+    SearchForm,
+    ThreadsSearchForm,
+    UsersSearchForm,
+)
+from .logging import log_search
+from .threads import threads_search
+from .throttling import throttle_search
+from .types import ThreadsSearchResult, ThreadsSearchResultItem
+from .users import search_users
+
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
-def landing(request):
-    allowed_providers = searchproviders.get_allowed_providers(request)
-    if not request.user_acl["can_search"] or not allowed_providers:
-        raise PermissionDenied(
-            pgettext("search view", "You don't have permission to search site.")
+class SearchView(View):
+    template_name = "misago/search/index.html"
+    header_template_name = "misago/search/header.html"
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        self.check_permission()
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+
+    def check_permission(self):
+        check_search_permission(self.request.user_permissions)
+
+    def get_context_data(self):
+        search_forms = self.get_search_forms()
+
+        return {
+            "header": self.get_header_data(),
+            "search_forms": search_forms,
+        }
+
+    def get_header_data(self) -> dict:
+        return {"template_name": self.header_template_name}
+
+    def get_search_forms(self) -> list[SearchForm]:
+        forms = []
+
+        if threads_search_form := self.get_threads_search_form():
+            forms.append(threads_search_form)
+
+        if private_threads_form := self.get_private_threads_search_form():
+            forms.append(private_threads_form)
+
+        if users_form := self.get_users_search_form():
+            forms.append(users_form)
+
+        if not forms:
+            raise PermissionDenied(
+                pgettext(
+                    "search permission error",
+                    "You can't search this site.",
+                )
+            )
+
+        return forms
+
+    def get_threads_search_form(self) -> ThreadsSearchForm:
+        request = self.request
+
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
         )
 
-    default_provider = allowed_providers[0]
-    return redirect("misago:search", search_provider=default_provider.url)
+        if searchable_categories:
+            form_class = extensions.get(ThreadsSearchForm)
+            return form_class(request=self.request)
+
+    def get_private_threads_search_form(self) -> PrivateThreadsSearchForm | None:
+        with check_permissions():
+            check_private_threads_permission(self.request.user_permissions)
+            form_class = extensions.get(PrivateThreadsSearchForm)
+            return form_class(request=self.request)
+
+    def get_users_search_form(self) -> UsersSearchForm | None:
+        form_class = extensions.get(UsersSearchForm)
+        return form_class(request=self.request)
 
 
-def search(request, search_provider):
-    all_providers = searchproviders.get_providers(request)
-    if not request.user_acl["can_search"] or not all_providers:
-        raise PermissionDenied(
-            pgettext("search view", "You don't have permission to search site.")
+class BaseSearchView(View):
+    breadcrumbs_template_name = "misago/search/breadcrumbs.html"
+
+    def get_breadcrumbs(self):
+        return {
+            "id": "breadcrumbs",
+            "template_name": self.breadcrumbs_template_name,
+        }
+
+
+class ThreadsSearchView(BaseSearchView):
+    template_name = "misago/search/threads/index.html"
+    results_template_name = "misago/search/threads/results.html"
+
+    form_class = ThreadsSearchForm
+    is_search_public: bool = True
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        self.check_permission()
+        context = self.get_context_data()
+
+        if request.is_htmx:
+            template_name = self.results_template_name
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
+
+    def check_permission(self):
+        check_search_permission(self.request.user_permissions)
+
+    def get_context_data(self) -> dict:
+        form = self.get_search_form()
+        search_throttled = self.get_search_throttling()
+
+        if self.request.is_htmx and search_throttled:
+            raise PermissionDenied(
+                self.get_search_throttled_message(search_throttled)["noscript"],
+            )
+
+        if form.is_valid() and not search_throttled:
+            self.log_search(form.cleaned_data["query"])
+            search_results = self.get_search_results_data(form)
+        else:
+            search_results = None
+
+        if self.request.is_htmx:
+            # In HTMX return only search results component
+            return search_results
+
+        return {
+            "page_title": form.name,
+            "breadcrumbs": self.get_breadcrumbs(),
+            "form": form,
+            "search_throttled": search_throttled,
+            "search_throttled_message": self.get_search_throttled_message(
+                search_throttled
+            ),
+            "search_results": search_results,
+        }
+
+    def get_search_form(self) -> ThreadsSearchForm:
+        extended_form_class = extensions.get(self.form_class)
+        return extended_form_class(self.request.GET, request=self.request)
+
+    def get_search_throttling(self) -> int:
+        if self.request.user_permissions.bypass_search_throttling:
+            return 0
+
+        return throttle_search(self.request)
+
+    def get_search_throttled_message(self, throttled: int) -> dict[str]:
+        params = {"seconds": throttled}
+
+        return {
+            "auto_refresh": npgettext(
+                "search results throttled message",
+                "Search results will load automatically in %(seconds)s second.",
+                "Search results will load automatically in %(seconds)s seconds.",
+                throttled,
+            )
+            % params,
+            "noscript": npgettext(
+                "search results throttled message",
+                "Wait %(seconds)s second before searching again.",
+                "Wait %(seconds)s seconds before searching again.",
+                throttled,
+            )
+            % params,
+        }
+
+    def log_search(self, search_query: str):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+
+        log_search(user, self.request.user_ip, search_query, self.is_search_public)
+
+    def get_search_results_data(self, form: BaseThreadsSearchForm) -> dict:
+        from_throttle = (
+            self.request.is_htmx and self.request.GET.get("throttled") == "true"
         )
 
-    for provider in all_providers:
-        if provider.url == search_provider:
-            provider.allow_search()
-            break
-    else:
-        raise Http404()
+        max_offset = self.get_max_search_offset()
+        offset = self.get_search_offset(max_offset)
 
-    if "q" in request.GET:
-        search_query = request.GET.get("q").strip()
-        request.frontend_context["SEARCH_QUERY"] = search_query
-    else:
-        search_query = ""
+        results = self.search(form, offset)
+        post_ids = [result.post_id for result in results]
 
-    return render(request, "misago/search.html", {"search_query": search_query})
+        posts: dict[int, Post] = {}
+        for post in self.get_posts_queryset(post_ids):
+            posts[post.id] = post
+
+        prefetch_related_objects(list(posts.values()), "poster")
+
+        results_data = []
+        for result in results:
+            results_data.append(
+                self.get_search_result_data(result, posts[result.post_id])
+            )
+
+        if results.has_more and offset < max_offset:
+            next_offset = min(offset + len(results), max_offset)
+            more_url = self.get_more_url(form, next_offset)
+        else:
+            more_url = None
+
+        return {
+            "template_name": self.results_template_name,
+            "title": self.get_search_results_title(results),
+            "from_throttle": from_throttle,
+            "results": results_data,
+            "offset": offset,
+            "has_more": bool(more_url),
+            "more_url": more_url,
+        }
+
+    def get_max_search_offset(self) -> int:
+        return max(settings.MISAGO_THREADS_SEARCH.get("MAX_OFFSET", 0), 20)
+
+    def get_search_offset(self, max_offset: int) -> int:
+        try:
+            if offset := self.request.GET.get("offset", 0):
+                offset = int(offset)
+            if offset < 0 or offset > max_offset:
+                raise ValueError()
+
+            return offset
+        except (ValueError, TypeError):
+            raise Http404()
+
+    def search(self, form: ThreadsSearchForm, offset: int) -> ThreadsSearchResult:
+        filters = form.get_search_filters()
+
+        return threads_search.search_threads(
+            filters["search_query"],
+            self.request.user_permissions,
+            categories=filters["categories"],
+            users=filters["users"],
+            after=filters["date_from"],
+            before=filters["date_to"],
+            mode=SearchMode(filters["mode"]),
+            order_by=SearchSort(filters["sort"]),
+            offset=offset,
+            limit=self.get_search_limit(),
+        )
+
+    def get_categories_filter(self, filters: dict) -> list[Category | CategoryProxy]:
+        request = self.request
+
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
+        )
+
+        if category_ids := filters.get("categories"):
+            return [
+                request.categories[category_id]
+                for category_id in category_ids
+                if category_id in searchable_categories
+            ]
+
+        return [
+            category
+            for category in request.categories.values()
+            if category.id in searchable_categories
+        ]
+
+    def get_search_limit(self) -> tuple[int, int]:
+        return max(settings.MISAGO_THREADS_SEARCH.get("RESULT_SIZE", 0), 1)
+
+    def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
+        return Post.objects.filter(id__in=post_ids)
+
+    def get_search_result_data(
+        self, result: ThreadsSearchResultItem, post: Post
+    ) -> dict:
+        return {
+            "id": post.id,
+            "poster": post.poster,
+            "poster_name": post.poster_name,
+            "posted_at": post.posted_at,
+            "categories": self.get_search_result_categories(post),
+            "thread_title": result.thread_title,
+            "post_content": result.post_content,
+            "post_url": reverse("misago:post", kwargs={"post_id": post.id}),
+        }
+
+    def get_search_result_categories(self, post: Post) -> list[dict] | None:
+        return self.request.categories.get_ancestors(
+            post.category_id, include_self=True
+        )
+
+    def get_search_results_title(self, results: ThreadsSearchResult) -> str:
+        results_num = len(results)
+
+        if not results_num:
+            return pgettext("search threads results title", "No threads found")
+
+        if results.has_more:
+            message = npgettext(
+                "search threads results title",
+                "Found %(results)s+ thread",
+                "Found %(results)s+ threads",
+                results_num,
+            )
+        else:
+            message = npgettext(
+                "search threads results title",
+                "Found %(results)s thread",
+                "Found %(results)s threads",
+                results_num,
+            )
+
+        return message % {"results": results_num}
+
+    def get_more_url(self, form: ThreadsSearchForm, offset: int | None = None) -> str:
+        cleaned_data = form.cleaned_data
+
+        data = [
+            ("query", cleaned_data["query"]),
+            ("mode", cleaned_data["mode"]),
+            ("sort", cleaned_data["sort"]),
+        ]
+
+        # Put categories in URL only if they are selected
+        category = cleaned_data.get("category")
+        if self.request.GET.getlist("category") and category:
+            data += [("category", category.id) for category in category]
+
+        if users := cleaned_data.get("users"):
+            data += [("users", ", ".join(user.slug for user in users))]
+
+        if date_from := cleaned_data["date_from"]:
+            data.append(("date_from", date_from))
+
+        if date_to := cleaned_data["date_to"]:
+            data.append(("date_to", date_to))
+
+        if offset:
+            data.append(("offset", offset))
+
+        return f"{self.request.path}?{urlencode(data)}"
+
+
+class PrivateThreadsSearchView(ThreadsSearchView):
+    is_search_public: bool = False
+    form_class = PrivateThreadsSearchForm
+
+    def check_permission(self):
+        super().check_permission()
+
+        check_private_threads_permission(self.request.user_permissions)
+
+    def search(
+        self, form: PrivateThreadsSearchForm, offset: int
+    ) -> ThreadsSearchResult:
+        filters = form.get_search_filters()
+
+        return threads_search.search_private_threads(
+            filters["search_query"],
+            self.request.user_permissions,
+            users=filters["users"],
+            after=filters["date_from"],
+            before=filters["date_to"],
+            mode=SearchMode(filters["mode"]),
+            order_by=SearchSort(filters["sort"]),
+            offset=offset,
+            limit=self.get_search_limit(),
+        )
+
+    def get_search_result_categories(self, post: Post) -> None:
+        return None
+
+    def get_search_results_title(self, results: ThreadsSearchResult) -> str:
+        results_num = len(results)
+
+        if not results_num:
+            return pgettext(
+                "search private threads results title", "No private threads found"
+            )
+
+        if results.has_more:
+            message = npgettext(
+                "search private threads results title",
+                "Found %(results)s+ private thread",
+                "Found %(results)s+ private threads",
+                results_num,
+            )
+        else:
+            message = npgettext(
+                "search private threads results title",
+                "Found %(results)s private thread",
+                "Found %(results)s private threads",
+                results_num,
+            )
+
+        return message % {"results": results_num}
+
+
+class UsersSearchView(BaseSearchView):
+    template_name = "misago/search/users/index.html"
+    results_template_name = "misago/search/users/results.html"
+
+    form_class = UsersSearchForm
+    is_search_public: bool = True
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        self.check_permission()
+        context = self.get_context_data()
+
+        if request.is_htmx:
+            template_name = self.results_template_name
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
+
+    def check_permission(self):
+        check_search_permission(self.request.user_permissions)
+
+    def get_context_data(self) -> dict:
+        form = self.get_search_form()
+
+        if form.is_valid():
+            search_results = self.get_search_results_data(form)
+        else:
+            search_results = None
+
+        return {
+            "page_title": form.name,
+            "breadcrumbs": self.get_breadcrumbs(),
+            "form": form,
+            "search_results": search_results,
+        }
+
+    def get_search_form(self) -> ThreadsSearchForm:
+        extended_form_class = extensions.get(self.form_class)
+        return extended_form_class(self.request.GET, request=self.request)
+
+    def get_search_results_data(self, form: BaseThreadsSearchForm) -> dict:
+        results = search_users(
+            self.request.user_permissions,
+            form.cleaned_data["username"],
+            include_self=True,
+        )
+
+        return {
+            "template_name": self.results_template_name,
+            "title": self.get_search_results_title(results),
+            "results": [self.get_search_result_data(user) for user in results],
+        }
+
+    def get_search_results_title(self, results: list["User"]) -> str:
+        results_num = len(results)
+
+        if not results_num:
+            return pgettext("search users results title", "No users found")
+
+        return npgettext(
+            "search users results title",
+            "Found %(results)s user",
+            "Found %(results)s users",
+            results_num,
+        ) % {"results": results_num}
+
+    def get_search_result_data(self, user: "User") -> dict:
+        group = self.request.groups[user.group_id]
+
+        if user.title:
+            title = user.title
+        elif group and group.user_title:
+            title = group.user_title
+        else:
+            title = None
+
+        return {
+            "id": user.id,
+            "avatars": user.avatars,
+            "username": user.username,
+            "title": title,
+            "url": reverse(
+                "misago:user", kwargs={"user_id": user.id, "slug": user.slug}
+            ),
+        }

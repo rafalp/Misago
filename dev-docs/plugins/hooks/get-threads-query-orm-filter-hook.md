@@ -1,6 +1,6 @@
 # `get_threads_query_orm_filter_hook`
 
-This hook wraps the standard function that Misago uses to get Django's `Q` object instance to retrieve threads using a specified query.
+This hook wraps a Misago function used to get Django's `Q` object instance to retrieve threads using a specified query.
 
 
 ## Location
