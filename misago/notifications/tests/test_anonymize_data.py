@@ -1,5 +1,5 @@
-from ..models import Notification
 from ...users.anonymize import anonymize_user_data
+from ..models import Notification
 
 
 def test_notification_actor_name_is_anonymized(user, other_user):

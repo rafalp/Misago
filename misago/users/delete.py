@@ -1,11 +1,11 @@
 from typing import Any
 
-from .enums import DeleteUserContentAction
 from ..notifications.utils import delete_user_account, delete_user_data
 from ..threads.delete import delete_user_threads
 from ..threads.utils import remove_private_threads_without_members
 from .anonymize import anonymize_user_data
 from .avatars import delete_avatar
+from .enums import DeleteUserContentAction
 from .models import User
 
 __all__ = ["delete_user"]

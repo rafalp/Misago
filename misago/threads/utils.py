@@ -8,10 +8,8 @@ from ..likes.models import Like
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..threadevents.models import ThreadEvent
-
 from .anonymize import anonymize_post_last_likes
 from .models import Post, Thread
-
 
 SUPPORTED_THREAD_ROUTES = {
     "misago:thread": "thread_id",
@@ -121,9 +119,7 @@ def update_usernames(user, **kwargs):
         hidden_by_name=user.username, hidden_by_slug=user.slug
     )
 
-    Like.objects.filter(user=user).update(
-        user_name=user.username, user_slug=user.slug
-    )
+    Like.objects.filter(user=user).update(user_name=user.username, user_slug=user.slug)
 
     liked_posts = Post.objects.filter(
         id__in=Like.objects.filter(user=user).values("post_id"),

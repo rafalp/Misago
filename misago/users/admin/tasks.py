@@ -3,8 +3,8 @@ from django.contrib.auth import get_user_model
 
 from ...conf.shortcuts import get_dynamic_settings
 from ..delete import delete_user
-from ..enums import DeleteUserContentAction
 from ..deletesrecord import record_user_deleted_by_staff
+from ..enums import DeleteUserContentAction
 
 User = get_user_model()
 

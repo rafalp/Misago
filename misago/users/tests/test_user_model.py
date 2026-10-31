@@ -4,10 +4,10 @@ import pytest
 
 from ...core.utils import slugify
 from ...permissions.permissionsid import get_permissions_id
+from ..anonymize import anonymize_user_data
 from ..datadownloads import request_user_data_download
 from ..models import DataDownload, User
 from ..utils import hash_email
-from ..anonymize import anonymize_user_data
 
 
 def test_username_and_slug_is_anonymized(user):

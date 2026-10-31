@@ -103,9 +103,7 @@ def delete_user_threads(user, **kwargs):
     recount_categories = set()
     recount_threads = set()
 
-    Notification.objects.filter(
-        Q(thread__starter=user) | Q(post__poster=user)
-    ).delete()
+    Notification.objects.filter(Q(thread__starter=user) | Q(post__poster=user)).delete()
 
     ThreadEvent.objects.filter(actor=user).delete()
     ThreadEvent.objects.content_object(user).clear_content_objects()
@@ -138,4 +136,3 @@ def delete_user_threads(user, **kwargs):
     if recount_categories:
         for category in Category.objects.filter(id__in=recount_categories):
             synchronize_category(category)
-

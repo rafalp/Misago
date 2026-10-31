@@ -5,7 +5,6 @@ from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
 from django.utils.translation import pgettext
 
-
 from ..attachments.models import Attachment
 from ..postedits.models import PostEdit
 from ..threadevents.models import ThreadEvent
@@ -13,7 +12,6 @@ from ..users.signals import (
     archive_user_data,
     username_changed,
 )
-
 from .utils import update_usernames as update_usernames_util
 
 delete_post = Signal()
@@ -69,7 +67,6 @@ def move_thread_content(sender, **kwargs):
 @receiver(update_thread_title)
 def change_thread_title(sender, **kwargs):
     sender.notification_set.update(thread_title=sender.title)
-
 
 
 @receiver(archive_user_data)

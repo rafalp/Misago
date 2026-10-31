@@ -30,7 +30,9 @@ def test_user_delete_clears_notifications_actor(user, other_user):
     )
 
     delete_user(
-        other_user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
+        other_user,
+        content_action=DeleteUserContentAction.LEAVE,
+        anonymous_username="Deleted",
     )
 
     notification.refresh_from_db()

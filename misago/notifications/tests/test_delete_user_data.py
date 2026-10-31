@@ -1,6 +1,7 @@
 import pytest
 
 from misago.users.delete import delete_user_content
+
 from ..models import Notification, WatchedThread
 
 

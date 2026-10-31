@@ -15,7 +15,9 @@ def test_delete_user_deletes_private_thread_if_it_has_no_other_members(
 ):
     PrivateThreadMember.objects.exclude(user=user).delete()
 
-    delete_user(user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Anon")
+    delete_user(
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Anon"
+    )
 
     with pytest.raises(Thread.DoesNotExist):
         user_private_thread.refresh_from_db()
@@ -24,7 +26,9 @@ def test_delete_user_deletes_private_thread_if_it_has_no_other_members(
 def test_delete_user_leaves_private_thread_if_it_has_other_members(
     user, user_private_thread
 ):
-    delete_user(user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Anon")
+    delete_user(
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Anon"
+    )
     user_private_thread.refresh_from_db()
 
 

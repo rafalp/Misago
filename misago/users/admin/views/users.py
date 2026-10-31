@@ -12,8 +12,8 @@ from ....core.mail import mail_users
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
 from ...delete import delete_user
-from ...enums import DeleteUserContentAction
 from ...deletesrecord import record_user_deleted_by_staff
+from ...enums import DeleteUserContentAction
 from ...models import Ban
 from ...profilefields import profilefields
 from ...setupnewuser import setup_new_user

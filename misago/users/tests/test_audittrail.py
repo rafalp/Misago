@@ -67,7 +67,9 @@ def test_audit_trail_is_deleted_together_with_user(request_mock, user, other_use
 def test_audit_trail_is_kept_after_its_target_is_deleted(request_mock, other_user):
     audit_trail = create_audit_trail(request_mock, other_user)
     delete_user(
-        other_user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
+        other_user,
+        content_action=DeleteUserContentAction.LEAVE,
+        anonymous_username="Deleted",
     )
     audit_trail.refresh_from_db()
 
