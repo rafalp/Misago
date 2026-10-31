@@ -18,7 +18,9 @@ from ...core.shortcuts import get_int_or_404
 from ...threads.hide import hide_post, hide_thread
 from ...threads.synchronize import synchronize_thread
 from ..bans import get_user_ban
-from ..datadownloads import request_user_data_download, user_has_data_download_request
+from ..delete import DeleteUserContentAction, delete_user
+
+# from ..datadownloads import request_user_data_download, user_has_data_download_request
 from ..deletesrecord import record_user_deleted_by_staff
 from ..online.utils import get_user_status
 from ..permissions import (
@@ -206,9 +208,9 @@ class UserViewSet(viewsets.GenericViewSet):
         if request.method == "POST":
             with transaction.atomic():
                 profile.lock()
-
+                content_action = DeleteUserContentAction.LEAVE
                 if request.data.get("with_content"):
-                    profile.delete_content()
+                    content_action = DeleteUserContentAction.DELETE
                 else:
                     categories_to_sync = set()
 
@@ -231,7 +233,12 @@ class UserViewSet(viewsets.GenericViewSet):
                     for category in categories.iterator():
                         synchronize_category(category)
 
-                profile.delete(anonymous_username=request.settings.anonymous_username)
+                # TODO: here should be called the delete_user Celery task with correct content_action
+                delete_user(
+                    profile,
+                    content_action=content_action,
+                    anonymous_username=request.settings.anonymous_username,
+                )
                 record_user_deleted_by_staff()
 
         return Response({})

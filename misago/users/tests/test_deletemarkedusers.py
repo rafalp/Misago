@@ -8,7 +8,6 @@ from django.test import TestCase
 from ...conf.test import override_dynamic_settings
 from ..management.commands import deletemarkedusers
 from ..models import DeletedUser
-from ..test import create_test_user
 
 User = get_user_model()
 

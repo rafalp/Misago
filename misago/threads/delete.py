@@ -1,9 +1,14 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpRequest
 
+from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
+from ..categories.models import Category
+from ..categories.synchronize import synchronize_category
 from ..likes.models import Like
+from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
@@ -90,3 +95,44 @@ def _delete_post_action(post: Post, request: HttpRequest | None = None):
         thread.save(update_fields=save_thread_fields)
 
     delete_one(post)
+
+
+def delete_user_threads(user, **kwargs):
+    delete_users_attachments([user])
+
+    recount_categories = set()
+    recount_threads = set()
+
+    Notification.objects.filter(Q(thread__starter=user) | Q(post__poster=user)).delete()
+
+    ThreadEvent.objects.filter(actor=user).delete()
+    ThreadEvent.objects.content_object(user).clear_content_objects()
+
+    WatchedThread.objects.filter(thread__starter=user).delete()
+
+    liked_posts = Post.objects.filter(
+        id__in=Like.objects.filter(user=user).values("post_id"),
+    )
+    for post in liked_posts.iterator(chunk_size=50):
+        synchronize_post_likes(post, Like.objects.exclude(user=user))
+
+    PostEdit.objects.filter(user=user).delete()
+    Like.objects.filter(user=user).delete()
+
+    for thread in user.thread_set.iterator(chunk_size=50):
+        recount_categories.add(thread.category_id)
+        with transaction.atomic():
+            thread.delete()
+
+    for post in Post.objects.filter(poster=user).iterator(chunk_size=50):
+        with transaction.atomic():
+            post.delete()
+
+    if recount_threads:
+        changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
+        for thread in changed_threads_qs.iterator(chunk_size=50):
+            synchronize_thread(thread)
+
+    if recount_categories:
+        for category in Category.objects.filter(id__in=recount_categories):
+            synchronize_category(category)
