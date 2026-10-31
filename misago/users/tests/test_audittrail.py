@@ -4,7 +4,7 @@ import pytest
 from django.utils import timezone
 
 from ..audittrail import create_audit_trail, create_user_audit_trail
-from ..delete import UserContentAction, delete_user
+from ..delete import DeleteUserContentAction, delete_user
 from ..models import AuditTrail
 from ..signals import remove_old_ips
 
@@ -58,7 +58,7 @@ def test_audit_trail_is_created_with_generic_relation_to_target(
 def test_audit_trail_is_deleted_together_with_user(request_mock, user, other_user):
     audit_trail = create_audit_trail(request_mock, other_user)
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
     with pytest.raises(AuditTrail.DoesNotExist):
         audit_trail.refresh_from_db()
@@ -67,7 +67,7 @@ def test_audit_trail_is_deleted_together_with_user(request_mock, user, other_use
 def test_audit_trail_is_kept_after_its_target_is_deleted(request_mock, other_user):
     audit_trail = create_audit_trail(request_mock, other_user)
     delete_user(
-        other_user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        other_user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
     audit_trail.refresh_from_db()
 

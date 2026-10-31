@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from .models import Notification, WatchedThread
 
 
@@ -19,3 +21,12 @@ def delete_user_account(user):
     Notification.objects.filter(actor=user).update(actor=None)
     Notification.objects.filter(user=user).delete()
     WatchedThread.objects.filter(user=user).delete()
+
+
+def delete_user_data(user):
+    Notification.objects.filter(Q(user=user) | Q(actor=user)).delete()
+    WatchedThread.objects.filter(user=user).delete()
+
+
+def update_actor_name(user, **kwargs):
+    Notification.objects.filter(actor=user).update(actor_name=user.username)

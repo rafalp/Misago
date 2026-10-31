@@ -2,7 +2,8 @@ from celery import shared_task
 from django.contrib.auth import get_user_model
 
 from ...conf.shortcuts import get_dynamic_settings
-from ..delete import UserContentAction, delete_user
+from ..delete import delete_user
+from ..enums import DeleteUserContentAction
 from ..deletesrecord import record_user_deleted_by_staff
 
 User = get_user_model()
@@ -19,7 +20,7 @@ def delete_user_with_content(id):
         settings = get_dynamic_settings()
         delete_user(
             user,
-            content_action=UserContentAction.DELETE,
+            content_action=DeleteUserContentAction.DELETE,
             anonymous_username=settings.anonymous_username,
         )
         record_user_deleted_by_staff()

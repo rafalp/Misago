@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from ..conf.shortcuts import get_dynamic_settings
 from ..permissions.permissionsid import get_permissions_id
-from .delete import UserContentAction
+from .delete import DeleteUserContentAction
 from .delete import delete_user as delete_user_util
 from .deletesrecord import record_user_deleted_by_self
 
@@ -33,6 +33,6 @@ def delete_user(user_id: int):
     # TODO: set correct value of content_action
     delete_user_util(
         user,
-        content_action=UserContentAction.LEAVE,
+        content_action=DeleteUserContentAction.LEAVE,
         anonymous_username=settings.anonymous_username,
     )

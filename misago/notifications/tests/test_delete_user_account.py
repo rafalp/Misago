@@ -1,6 +1,6 @@
 import pytest
 
-from misago.users.delete import UserContentAction, delete_user
+from misago.users.delete import DeleteUserContentAction, delete_user
 
 from ..models import Notification, WatchedThread
 
@@ -14,7 +14,7 @@ def test_user_delete_deletes_user_notifications(user, other_user):
     )
 
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     with pytest.raises(Notification.DoesNotExist):
@@ -30,7 +30,7 @@ def test_user_delete_clears_notifications_actor(user, other_user):
     )
 
     delete_user(
-        other_user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        other_user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     notification.refresh_from_db()
@@ -44,7 +44,7 @@ def test_user_delete_excludes_other_users_notifications(user, other_user):
     )
 
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     notification.refresh_from_db()
@@ -56,7 +56,7 @@ def test_user_delete_deletes_users_watched_threads(
     watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     with pytest.raises(WatchedThread.DoesNotExist):
@@ -69,7 +69,7 @@ def test_user_delete_excludes_other_users_watched_threads(
     watched_thread = watched_thread_factory(other_user, old_thread, send_emails=True)
 
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     watched_thread.refresh_from_db()

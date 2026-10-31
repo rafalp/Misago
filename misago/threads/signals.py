@@ -5,26 +5,16 @@ from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
 from django.utils.translation import pgettext
 
-from ..attachments.delete import delete_users_attachments
+
 from ..attachments.models import Attachment
-from ..categories.models import Category
-from ..categories.synchronize import synchronize_category
-from ..likes.models import Like
-from ..likes.synchronize import synchronize_post_likes
-from ..notifications.models import Notification, WatchedThread
-from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..threadevents.models import ThreadEvent
 from ..users.signals import (
-    anonymize_user_data,
     archive_user_data,
-    delete_user_content,
     username_changed,
 )
-from .anonymize import anonymize_post_last_likes
-from .models import Post, Thread
-from .synchronize import synchronize_thread
-from .utils import remove_private_threads_without_members
+
+from .utils import update_usernames as update_usernames_util
 
 delete_post = Signal()
 delete_thread = Signal()
@@ -80,49 +70,6 @@ def move_thread_content(sender, **kwargs):
 def change_thread_title(sender, **kwargs):
     sender.notification_set.update(thread_title=sender.title)
 
-
-@receiver(delete_user_content)
-def delete_user_threads(sender, **kwargs):
-    delete_users_attachments([sender])
-
-    recount_categories = set()
-    recount_threads = set()
-
-    Notification.objects.filter(
-        Q(thread__starter=sender) | Q(post__poster=sender)
-    ).delete()
-
-    ThreadEvent.objects.filter(actor=sender).delete()
-    ThreadEvent.objects.content_object(sender).clear_content_objects()
-
-    WatchedThread.objects.filter(thread__starter=sender).delete()
-
-    liked_posts = Post.objects.filter(
-        id__in=Like.objects.filter(user=sender).values("post_id"),
-    )
-    for post in liked_posts.iterator(chunk_size=50):
-        synchronize_post_likes(post, Like.objects.exclude(user=sender))
-
-    PostEdit.objects.filter(user=sender).delete()
-    Like.objects.filter(user=sender).delete()
-
-    for thread in sender.thread_set.iterator(chunk_size=50):
-        recount_categories.add(thread.category_id)
-        with transaction.atomic():
-            thread.delete()
-
-    for post in Post.objects.filter(poster=sender).iterator(chunk_size=50):
-        with transaction.atomic():
-            post.delete()
-
-    if recount_threads:
-        changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
-        for thread in changed_threads_qs.iterator(chunk_size=50):
-            synchronize_thread(thread)
-
-    if recount_categories:
-        for category in Category.objects.filter(id__in=recount_categories):
-            synchronize_category(category)
 
 
 @receiver(archive_user_data)
@@ -205,85 +152,6 @@ def archive_user_content_object_thread_events(sender, archive=None, **kwargs):
         )
 
 
-@receiver(anonymize_user_data)
-def anonymize_user_in_thread_events(sender, **kwargs):
-    ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
-    ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadEvent.objects.content_object(sender).update(detail=sender.username)
-
-
-@receiver([anonymize_user_data])
-def anonymize_user_in_likes(sender, **kwargs):
-    queryset = Post.objects.filter(
-        id__in=Like.objects.filter(user=sender).values("post_id")
-    ).order_by("-id")
-
-    for post in queryset.iterator(chunk_size=50):
-        anonymize_post_last_likes(sender, post)
-
-
-@receiver([anonymize_user_data, username_changed])
+@receiver(username_changed)
 def update_usernames(sender, **kwargs):
-    Thread.objects.filter(starter=sender).update(
-        starter_name=sender.username, starter_slug=sender.slug
-    )
-
-    Thread.objects.filter(last_poster=sender).update(
-        last_poster_name=sender.username, last_poster_slug=sender.slug
-    )
-
-    Thread.objects.filter(solution_by=sender).update(
-        solution_by_name=sender.username,
-        solution_by_slug=sender.slug,
-    )
-    Thread.objects.filter(solution_selected_by=sender).update(
-        solution_selected_by_name=sender.username,
-        solution_selected_by_slug=sender.slug,
-    )
-
-    ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
-    ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadEvent.objects.content_object(sender).update(detail=sender.username)
-
-    Post.objects.filter(poster=sender).update(poster_name=sender.username)
-    Post.objects.filter(last_editor=sender).update(
-        last_editor_name=sender.username, last_editor_slug=sender.slug
-    )
-    Post.objects.filter(hidden_by=sender).update(
-        hidden_by_name=sender.username, hidden_by_slug=sender.slug
-    )
-
-    PostEdit.objects.filter(user=sender).update(
-        user_name=sender.username, user_slug=sender.slug
-    )
-    PostEdit.objects.filter(hidden_by=sender).update(
-        hidden_by_name=sender.username, hidden_by_slug=sender.slug
-    )
-
-    Like.objects.filter(user=sender).update(
-        user_name=sender.username, user_slug=sender.slug
-    )
-
-    liked_posts = Post.objects.filter(
-        id__in=Like.objects.filter(user=sender).values("post_id"),
-    )
-    for post in liked_posts.iterator(chunk_size=50):
-        update_post_last_likes = False
-        for like in post.last_likes:
-            if like["id"] == sender.id:
-                like["username"] = sender.username
-                update_post_last_likes = True
-        if update_post_last_likes:
-            post.save(update_fields=["last_likes"])
-
-    Attachment.objects.filter(uploader=sender).update(
-        uploader_name=sender.username, uploader_slug=sender.slug
-    )
-
-    Poll.objects.filter(starter=sender).update(
-        starter_name=sender.username, starter_slug=sender.slug
-    )
-
-    PollVote.objects.filter(voter=sender).update(
-        voter_name=sender.username, voter_slug=sender.slug
-    )
+    update_usernames_util(sender)

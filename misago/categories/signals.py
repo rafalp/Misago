@@ -1,11 +1,9 @@
 from django.dispatch import Signal, receiver
 
-from ..users.signals import anonymize_user_data, username_changed
-from .models import Category
+from ..users.signals import username_changed
+from .utils import update_usernames as update_usernames_util
 
 
-@receiver([anonymize_user_data, username_changed])
+@receiver(username_changed)
 def update_usernames(sender, **kwargs):
-    Category.objects.filter(last_poster=sender).update(
-        last_poster_name=sender.username, last_poster_slug=sender.slug
-    )
+    update_usernames_util(sender)

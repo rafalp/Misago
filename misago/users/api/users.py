@@ -18,7 +18,7 @@ from ...core.shortcuts import get_int_or_404
 from ...threads.hide import hide_post, hide_thread
 from ...threads.synchronize import synchronize_thread
 from ..bans import get_user_ban
-from ..delete import UserContentAction, delete_user
+from ..delete import DeleteUserContentAction, delete_user
 
 # from ..datadownloads import request_user_data_download, user_has_data_download_request
 from ..deletesrecord import record_user_deleted_by_staff
@@ -208,9 +208,9 @@ class UserViewSet(viewsets.GenericViewSet):
         if request.method == "POST":
             with transaction.atomic():
                 profile.lock()
-                content_action = UserContentAction.LEAVE
+                content_action = DeleteUserContentAction.LEAVE
                 if request.data.get("with_content"):
-                    content_action = UserContentAction.DELETE
+                    content_action = DeleteUserContentAction.DELETE
                 else:
                     categories_to_sync = set()
 

@@ -1,5 +1,6 @@
 import pytest
 
+from misago.users.delete import delete_user_content
 from ..models import Notification, WatchedThread
 
 
@@ -11,7 +12,7 @@ def test_user_content_delete_deletes_user_notifications(user, other_user):
         verb="TEST",
     )
 
-    user.delete_content()
+    delete_user_content(user)
 
     with pytest.raises(Notification.DoesNotExist):
         notification.refresh_from_db()
@@ -25,7 +26,7 @@ def test_user_content_delete_deletes_actor_notifications(user, other_user):
         verb="TEST",
     )
 
-    other_user.delete_content()
+    delete_user_content(other_user)
 
     with pytest.raises(Notification.DoesNotExist):
         notification.refresh_from_db()
@@ -37,7 +38,7 @@ def test_user_content_delete_excludes_other_users_notifications(user, other_user
         verb="TEST",
     )
 
-    user.delete_content()
+    delete_user_content(user)
 
     notification.refresh_from_db()
 
@@ -47,7 +48,7 @@ def test_user_content_delete_deletes_users_watched_threads(
 ):
     watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
-    user.delete_content()
+    delete_user_content(user)
 
     with pytest.raises(WatchedThread.DoesNotExist):
         watched_thread.refresh_from_db()
@@ -58,6 +59,6 @@ def test_user_content_delete_excludes_other_users_watched_threads(
 ):
     watched_thread = watched_thread_factory(other_user, old_thread, send_emails=True)
 
-    user.delete_content()
+    delete_user_content(user)
 
     watched_thread.refresh_from_db()

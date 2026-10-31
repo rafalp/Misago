@@ -7,10 +7,11 @@ from ...permissions.permissionsid import get_permissions_id
 from ..datadownloads import request_user_data_download
 from ..models import DataDownload, User
 from ..utils import hash_email
+from ..anonymize import anonymize_user_data
 
 
 def test_username_and_slug_is_anonymized(user):
-    user.anonymize_data(anonymous_username="Deleted")
+    anonymize_user_data(user, anonymous_username="Deleted")
     assert user.username == "Deleted"
     assert user.slug == slugify("Deleted")
 
@@ -102,7 +103,7 @@ def test_marking_user_for_deletion_deactivates_their_account_in_db(user):
 
 def test_user_data_downloads_are_removed_by_anonymization(user):
     data_download = request_user_data_download(user)
-    user.anonymize_data(anonymous_username="Deleted")
+    anonymize_user_data(user, anonymous_username="Deleted")
 
     with pytest.raises(DataDownload.DoesNotExist):
         data_download.refresh_from_db()

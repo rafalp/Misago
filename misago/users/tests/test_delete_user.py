@@ -6,7 +6,7 @@ from ...privatethreads.models import PrivateThreadMember
 from ...threads.models import Thread
 from ..avatars import dynamic
 from ..datadownloads import request_user_data_download
-from ..delete import UserContentAction, delete_user
+from ..delete import DeleteUserContentAction, delete_user
 from ..models import Avatar, DataDownload
 
 
@@ -15,7 +15,7 @@ def test_delete_user_deletes_private_thread_if_it_has_no_other_members(
 ):
     PrivateThreadMember.objects.exclude(user=user).delete()
 
-    delete_user(user, content_action=UserContentAction.LEAVE, anonymous_username="Anon")
+    delete_user(user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Anon")
 
     with pytest.raises(Thread.DoesNotExist):
         user_private_thread.refresh_from_db()
@@ -24,7 +24,7 @@ def test_delete_user_deletes_private_thread_if_it_has_no_other_members(
 def test_delete_user_leaves_private_thread_if_it_has_other_members(
     user, user_private_thread
 ):
-    delete_user(user, content_action=UserContentAction.LEAVE, anonymous_username="Anon")
+    delete_user(user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Anon")
     user_private_thread.refresh_from_db()
 
 
@@ -41,7 +41,7 @@ def test_delete_user_deletes_user_avatar_files(user):
     assert user_avatars
 
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     for removed_avatar in user_avatars:
@@ -56,7 +56,7 @@ def test_delete_user_deletes_user_avatar_files(user):
 def test_delete_user_also_deletes_their_data_downloads(user):
     data_download = request_user_data_download(user)
     delete_user(
-        user, content_action=UserContentAction.LEAVE, anonymous_username="Deleted"
+        user, content_action=DeleteUserContentAction.LEAVE, anonymous_username="Deleted"
     )
 
     with pytest.raises(DataDownload.DoesNotExist):
