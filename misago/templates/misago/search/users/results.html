@@ -1,0 +1,36 @@
+{% load i18n misago_avatars %}
+
+<section class="section">
+  <div class="search-users">
+    <h2 class="search-users-title">
+      {{ title }}
+    </h2>
+    {% if results %}
+      <ul class="search-users-results">
+        {% for result in results %}
+          <li class="search-users-result">
+            <div class="search-users-card">
+              <div class="search-users-card-start">
+                <a class="search-users-card-avatar" href="{{ result.url }}">
+                  <img src="{{ result|avatar:128 }}" srcset="{{ result|avatar:256 }}" alt="">
+                </a>
+              </div>
+              <div class="search-users-card-end">
+                <div>{{ result.username }}</div>
+                <div>{{ result.title }}</div>
+                <div>account attrs</div>
+                <div>account stats</div>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="search-users-blankslate">
+        {% blocktranslate trimmed context "search users empty message"%}
+          Check the spelling or try a different username.
+        {% endblocktranslate %}
+      </div>
+    {% endif %}
+  </div>
+</section>

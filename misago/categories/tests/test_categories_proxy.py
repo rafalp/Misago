@@ -46,8 +46,7 @@ def test_categories_proxy_evaluates_to_true_if_it_contains_categories(
     user_permissions_factory, default_category, user, cache_versions
 ):
     user_permissions = user_permissions_factory(user)
-    proxy = CategoriesProxy(user_permissions, cache_versions)
-    assert proxy
+    assert CategoriesProxy(user_permissions, cache_versions)
 
 
 def test_categories_proxy_evaluates_to_false_if_it_contains_no_categories(
@@ -56,8 +55,7 @@ def test_categories_proxy_evaluates_to_false_if_it_contains_no_categories(
     CategoryGroupPermission.objects.all().delete()
 
     user_permissions = user_permissions_factory(user)
-    proxy = CategoriesProxy(user_permissions, cache_versions)
-    assert not proxy
+    assert not CategoriesProxy(user_permissions, cache_versions)
 
 
 def test_categories_proxy_contains_returns_true_for_contained_category(
@@ -155,7 +153,7 @@ def test_categories_proxy_get_returns_visible_category_proxy(
     assert proxy.get(default_category.id) == get_category_proxy(default_category)
 
 
-def test_categories_proxy_get_returns_false_for_category_without_permission(
+def test_categories_proxy_get_returns_none_for_category_without_permission(
     user_permissions_factory, sibling_category, user, cache_versions
 ):
     user_permissions = user_permissions_factory(user)

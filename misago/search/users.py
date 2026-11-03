@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from typing import TYPE_CHECKING, Optional, TypedDict
 
 from django.conf import settings
@@ -22,11 +23,13 @@ class Stage(TypedDict):
     limit: int
 
 
-class UserSearch:
+class UsersSearch:
+    limit: int
     use_trigram_lookup: bool
-    stages = list[Stage]
+    stages: list[Stage]
 
     def __init__(self, options: dict):
+        self.limit = max(int(options.get("LIMIT", 0)), 3)
         self.use_trigram_lookup = bool(options.get("USE_TRIGRAM_LOOKUP"))
 
         self.stages = []
@@ -83,14 +86,29 @@ class UserSearch:
         if self.use_trigram_lookup:
             queryset = queryset.filter(slug__trigram_similar=username)
 
-        # Next stages
-        for stage in self.stages:
-            print(stage)
-            results += self.search_matches(
-                self.exclude_results(queryset, results), username, **stage
+        results += list(
+            self.exclude_results(queryset, results)
+            .filter(
+                slug__startswith=username[0],
             )
+            .annotate(
+                similarity=TrigramSimilarity("slug", username),
+            )
+            .filter(
+                similarity__gte=0.2,
+            )
+            .order_by("-similarity")[:15]
+        )
 
-        return results
+        results += list(
+            self.exclude_results(queryset, results)
+            .filter(
+                slug__startswith=username,
+            )
+            .order_by("slug")[:15]
+        )
+
+        return self.sort_results(results, username)[: self.limit]
 
     def normalize_username(self, username: str) -> str:
         return slugify(username)
@@ -176,5 +194,76 @@ class UserSearch:
             similarity__gte=similarity,
         )
 
+    def sort_results(self, results: list["User"], username: str) -> list["User"]:
+        username_len = len(username)
 
-search_users = UserSearch(settings.MISAGO_USERS_SEARCH)
+        return sorted(
+            results,
+            key=cmp_to_key(
+                lambda a, b: self.compare_results(a, b, username, username_len)
+            ),
+        )
+
+    def compare_results(
+        self, a: "User", b: "User", username: str, username_len: int
+    ) -> int:
+        # Exact match wins
+        if a.slug == username:
+            return -1
+        if b.slug == username:
+            return 1
+
+        a_len = len(a.slug)
+        b_len = len(b.slug)
+
+        # If both matches have target length, closer match wins
+        if a_len == b_len == username_len:
+            a_similarity = calc_similarity(a.slug, username)
+            b_similarity = calc_similarity(b.slug, username)
+
+            if a_similarity > b_similarity:
+                return -1
+            if a_similarity < b_similarity:
+                return 1
+
+        if a_len < b_len:
+            return -1
+        if a_len > b_len:
+            return 1
+
+        a_starts_with = a.slug.startswith(username)
+        b_starts_with = b.slug.startswith(username)
+
+        # If both matches start with search, shorter match wins
+        if a_starts_with and b_starts_with:
+            if a_len < b_len:
+                return -1
+            if a_len > b_len:
+                return 1
+
+        # Match that starts with search wins
+        if a_starts_with:
+            return -1
+        if b_starts_with:
+            return 1
+
+        # Match with better prefix similarity wins
+        a_similarity = calc_similarity(username, a.slug)
+        b_similarity = calc_similarity(username, b.slug)
+
+        if a_similarity > b_similarity:
+            return -1
+        if a_similarity < b_similarity:
+            return 1
+
+        return 0
+
+
+search_users = UsersSearch(settings.MISAGO_USERS_SEARCH)
+
+
+def calc_similarity(a: str, b: str) -> int:
+    similarity = []
+    for i, c in enumerate(a):
+        similarity.append(c == b[i])
+    return sum(i if v else 0 for i, v in enumerate(reversed(similarity), 1))

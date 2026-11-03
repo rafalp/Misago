@@ -271,10 +271,11 @@ MISAGO_THREADS_SEARCH = {
 
 MISAGO_USERS_SEARCH = {
     "USE_TRIGRAM_LOOKUP": False,
+    "LIMIT": 12,
     "STAGES": [
         {
+            "TYPE": "SIMILAR",
             "MIN_LENGTH": 4,
-            "PREFIX_LENGTH": 1,
             "LENGTH_LT": 0,
             "LENGTH_GT": 0,
             "THRESHOLDS": {4: 0.2, 6: 0.3, 8: 0.4},

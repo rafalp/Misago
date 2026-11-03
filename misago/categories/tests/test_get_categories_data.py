@@ -123,7 +123,7 @@ def test_get_categories_data_excludes_special_categories(
     }
 
 
-def test_get_categories_data_skips_database_read_if_there_is_cache(
+def test_get_categories_data_skips_database_read_if_cache_exists(
     mocker,
     django_assert_num_queries,
     cache_versions,

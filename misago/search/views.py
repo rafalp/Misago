@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -30,6 +31,9 @@ from .threads import threads_search
 from .throttling import throttle_search
 from .types import ThreadsSearchResult, ThreadsSearchResultItem
 from .users import search_users
+
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
 class SearchView(View):
@@ -420,10 +424,87 @@ class PrivateThreadsSearchView(ThreadsSearchView):
 
 
 class UsersSearchView(BaseSearchView):
-    def get(self, request: HttpRequest) -> HttpResponse:
-        username = request.GET.get("username", "").strip()
-        if not username:
-            return HttpResponse("NADA")
+    template_name = "misago/search/users/index.html"
+    results_template_name = "misago/search/users/results.html"
 
-        results = search_users(request.user_permissions, username, include_self=True)
-        return HttpResponse(" ".join(user.username for user in results))
+    form_class = UsersSearchForm
+    is_search_public: bool = True
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        self.check_permission()
+        context = self.get_context_data()
+
+        if request.is_htmx:
+            template_name = self.results_template_name
+        else:
+            template_name = self.template_name
+
+        return render(request, template_name, context)
+
+    def check_permission(self):
+        check_search_permission(self.request.user_permissions)
+
+    def get_context_data(self) -> dict:
+        form = self.get_search_form()
+
+        if form.is_valid():
+            search_results = self.get_search_results_data(form)
+        else:
+            search_results = None
+
+        return {
+            "page_title": form.name,
+            "breadcrumbs": self.get_breadcrumbs(),
+            "form": form,
+            "search_results": search_results,
+        }
+
+    def get_search_form(self) -> ThreadsSearchForm:
+        extended_form_class = extensions.get(self.form_class)
+        return extended_form_class(self.request.GET, request=self.request)
+
+    def get_search_results_data(self, form: BaseThreadsSearchForm) -> dict:
+        results = search_users(
+            self.request.user_permissions,
+            form.cleaned_data["username"],
+            include_self=True,
+        )
+
+        return {
+            "template_name": self.results_template_name,
+            "title": self.get_search_results_title(results),
+            "results": [self.get_search_result_data(user) for user in results],
+        }
+
+    def get_search_results_title(self, results: list["User"]) -> str:
+        results_num = len(results)
+
+        if not results_num:
+            return pgettext("search users results title", "No users found")
+
+        return npgettext(
+            "search users results title",
+            "Found %(results)s user",
+            "Found %(results)s users",
+            results_num,
+        ) % {"results": results_num}
+
+    def get_search_result_data(self, user: "User") -> dict:
+        group = self.request.groups[user.group_id]
+
+        if user.title:
+            title = user.title
+        elif group and group.user_title:
+            title = group.user_title
+        else:
+            title = None
+
+        return {
+            "id": user.id,
+            "avatars": user.avatars,
+            "username": user.username,
+            "title": title,
+            "url": reverse(
+                "misago:user", kwargs={"user_id": user.id, "slug": user.slug}
+            ),
+        }
