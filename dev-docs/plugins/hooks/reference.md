@@ -323,7 +323,9 @@ Hooks instances are importable from the following Python modules:
 
 `misago.users.hooks` defines the following hooks:
 
+- [`anonymize_user_data_hook`](./anonymize-user-data-hook.md)
 - [`create_group_hook`](./create-group-hook.md)
 - [`delete_group_hook`](./delete-group-hook.md)
+- [`delete_user_hook`](./delete-user-hook.md)
 - [`set_default_group_hook`](./set-default-group-hook.md)
 - [`update_group_hook`](./update-group-hook.md)
