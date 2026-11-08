@@ -33,6 +33,7 @@ def create_default_groups(apps, schema_editor):
                 ordering=0,
                 # Permissions
                 can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
                 bypass_search_throttling=PermissionValue.YES,
                 can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
@@ -78,6 +79,7 @@ def create_default_groups(apps, schema_editor):
                 ordering=1,
                 # Permissions
                 can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
                 bypass_search_throttling=PermissionValue.YES,
                 can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
@@ -120,6 +122,7 @@ def create_default_groups(apps, schema_editor):
                 ordering=2,
                 # Permissions
                 can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
                 can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
@@ -160,6 +163,7 @@ def create_default_groups(apps, schema_editor):
                 ordering=3,
                 # Permissions
                 can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_see_others_post_likes=CanSeePostLikes.USERS,
                 can_see_user_profiles=PermissionValue.YES,

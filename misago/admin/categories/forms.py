@@ -114,12 +114,12 @@ class CategoryForm(forms.ModelForm):
     delay_browse_check = YesNoField(
         label=pgettext_lazy(
             "admin category form",
-            'Allow users without the "browse contents" permission to access category\'s threads list',
+            'Allow users without the "browse contents" permission to access category\'s thread list',
         ),
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            'Enabling this option will allow users with permission to "see" this category to access it\'s threads list page. They will receive an error if they try to see threads replies.',
+            'Enabling this option will allow users with permission to "see" this category to access its threads list page. They will receive an error if they try to view a thread\'s replies.',
         ),
     )
     show_started_only = YesNoField(

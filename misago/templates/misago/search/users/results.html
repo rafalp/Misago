@@ -19,7 +19,12 @@
                 <div>{{ result.username }}</div>
                 <div>{{ result.title }}</div>
                 <div>account attrs</div>
-                <div>account stats</div>
+                {% if result.stats %}
+                  <ul class="search-users-card-stats">
+                    {% for stat in result.stats %}
+                    {% endfor %}
+                  </ul>
+                {% endif %}
               </div>
             </div>
           </li>

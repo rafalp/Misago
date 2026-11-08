@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -12,9 +12,14 @@ from django.views import View
 
 from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
+from ..metadata import (
+    DatetimeMetadata,
+    NumberMetadata,
+    TextMetadata,
+)
 from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import check_private_threads_permission
-from ..permissions.search import check_search_permission
+from ..permissions.search import check_search_permission, check_search_users_permission
 from ..plugins import extensions
 from ..threads.models import Post
 from .categories import get_searchable_category_ids
@@ -99,8 +104,10 @@ class SearchView(View):
             return form_class(request=self.request)
 
     def get_users_search_form(self) -> UsersSearchForm | None:
-        form_class = extensions.get(UsersSearchForm)
-        return form_class(request=self.request)
+        with check_permissions():
+            check_search_users_permission(self.request.user_permissions)
+            form_class = extensions.get(UsersSearchForm)
+            return form_class(request=self.request)
 
 
 class BaseSearchView(View):
@@ -442,7 +449,10 @@ class UsersSearchView(BaseSearchView):
         return render(request, template_name, context)
 
     def check_permission(self):
-        check_search_permission(self.request.user_permissions)
+        user_permissions = self.request.user_permissions
+
+        check_search_permission(user_permissions)
+        check_search_users_permission(user_permissions)
 
     def get_context_data(self) -> dict:
         form = self.get_search_form()
@@ -507,4 +517,29 @@ class UsersSearchView(BaseSearchView):
             "url": reverse(
                 "misago:user", kwargs={"user_id": user.id, "slug": user.slug}
             ),
+            "stats": self.get_get_search_result_stats(user),
         }
+
+    def get_search_result_stats(self, user: "User") -> list[NumberMetadata]:
+        return [
+            NumberMetadata(
+                id="user-threads",
+                text=npgettext(
+                    "user card threads stat",
+                    "%(number)s thread",
+                    "%(number)s threads",
+                    user.threads,
+                ),
+                number=user.threads,
+            ),
+            NumberMetadata(
+                id="user-posts",
+                text=npgettext(
+                    "user card posts stat",
+                    "%(number)s post",
+                    "%(number)s posts",
+                    user.posts,
+                ),
+                number=user.posts,
+            ),
+        ]

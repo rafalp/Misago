@@ -81,6 +81,7 @@ if_true = lambda x: bool(max())
 
 PERMISSION_RULES = {
     "can_search": yes_no_never,
+    "can_search_users": yes_no_never,
     "bypass_search_throttling": yes_no_never,
     "can_use_private_threads": yes_no_never,
     "can_start_private_threads": yes_no_never,
@@ -143,6 +144,7 @@ PERMISSION_DEFAULTS = {
 def _build_user_permissions_action(groups: list[Group]) -> dict:
     groups_permissions = {
         "can_search": set(),
+        "can_search_users": set(),
         "bypass_search_throttling": set(),
         "can_use_private_threads": set(),
         "can_start_private_threads": set(),
@@ -185,6 +187,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
 
     for group in groups:
         groups_permissions["can_search"].add(group.can_search)
+        groups_permissions["can_search_users"].add(group.can_search_users)
         groups_permissions["bypass_search_throttling"].add(
             group.bypass_search_throttling
         )

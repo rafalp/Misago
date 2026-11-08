@@ -67,9 +67,8 @@ from .check_reply_thread_permission import check_reply_thread_permission_hook
 from .check_restore_post_edit_permission import (
     check_restore_post_edit_permission_hook,
 )
-from .check_search_permission import (
-    check_search_permission_hook,
-)
+from .check_search_permission import check_search_permission_hook
+from .check_search_users_permission import check_search_users_permission_hook
 from .check_see_category_permission import check_see_category_permission_hook
 from .check_see_post_edit_history_permission import (
     check_see_post_edit_history_permission_hook,
@@ -83,6 +82,7 @@ from .check_see_private_thread_post_permission import (
 )
 from .check_see_thread_permission import check_see_thread_permission_hook
 from .check_see_thread_post_permission import check_see_thread_post_permission_hook
+from .check_see_user_profile_permission import check_see_user_profile_permission_hook
 from .check_select_thread_solution_permission import (
     check_select_thread_solution_permission_hook,
 )
@@ -171,6 +171,7 @@ __all__ = [
     "check_reply_thread_permission_hook",
     "check_restore_post_edit_permission_hook",
     "check_search_permission_hook",
+    "check_search_users_permission_hook",
     "check_see_category_permission_hook",
     "check_see_post_edit_history_permission_hook",
     "check_see_post_likes_permission_hook",
@@ -178,6 +179,7 @@ __all__ = [
     "check_see_private_thread_post_permission_hook",
     "check_see_thread_permission_hook",
     "check_see_thread_post_permission_hook",
+    "check_see_user_profile_permission_hook",
     "check_select_thread_solution_permission_hook",
     "check_start_poll_permission_hook",
     "check_start_private_threads_permission_hook",

@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckPrivateThreadsPermissionHookAction(Protocol):
+class CheckSearchPermissionHookAction(Protocol):
     """
     Misago function used to check if the user has permission to search the site.
     Raises Django's `PermissionDenied` with an error message if they don't.
@@ -24,13 +24,13 @@ class CheckPrivateThreadsPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckPrivateThreadsPermissionHookFilter(Protocol):
+class CheckSearchPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckPrivateThreadsPermissionHookAction`
+    ## `action: CheckSearchPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -44,15 +44,15 @@ class CheckPrivateThreadsPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckPrivateThreadsPermissionHookAction,
+        action: CheckSearchPermissionHookAction,
         permissions: "UserPermissionsProxy",
     ) -> None: ...
 
 
-class CheckPrivateThreadsPermissionHook(
+class CheckSearchPermissionHook(
     FilterHook[
-        CheckPrivateThreadsPermissionHookAction,
-        CheckPrivateThreadsPermissionHookFilter,
+        CheckSearchPermissionHookAction,
+        CheckSearchPermissionHookFilter,
     ]
 ):
     """
@@ -94,10 +94,10 @@ class CheckPrivateThreadsPermissionHook(
 
     def __call__(
         self,
-        action: CheckPrivateThreadsPermissionHookAction,
+        action: CheckSearchPermissionHookAction,
         permissions: "UserPermissionsProxy",
     ) -> None:
         return super().__call__(action, permissions)
 
 
-check_search_permission_hook = CheckPrivateThreadsPermissionHook()
+check_search_permission_hook = CheckSearchPermissionHook()

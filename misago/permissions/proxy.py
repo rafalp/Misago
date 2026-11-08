@@ -24,6 +24,9 @@ class UserPermissionsProxy:
 
     # Type hints for permissions checks
     categories: dict[str, list[int]]
+    can_search: bool
+    can_search_users: bool
+    bypass_search_throttling: int
     can_use_private_threads: bool
     can_start_private_threads: bool
     private_thread_members_limit: int
@@ -59,8 +62,6 @@ class UserPermissionsProxy:
     username_changes_expire: int
     username_changes_span: int
     can_see_user_profiles: bool
-    can_search: bool
-    bypass_search_throttling: int
 
     def __init__(self, user: Union["User", AnonymousUser], cache_versions: dict):
         self.user = user

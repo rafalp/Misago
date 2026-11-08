@@ -82,8 +82,8 @@ class CheckSeePrivateThreadPostPermissionHook(
 
     # Example
 
-    The code below implements a custom filter function that blocks a user from seeing
-    a specified post if there is a custom flag set on their account.
+    The code below implements a custom filter function that blocks a user from
+    seeing a specified post if there is a custom flag set on their account.
 
     ```python
     from django.core.exceptions import PermissionDenied

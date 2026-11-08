@@ -16,7 +16,7 @@ from misago.permissions.hooks import check_search_permission_hook
 
 ```python
 def custom_check_search_permission_filter(
-    action: CheckPrivateThreadsPermissionHookAction,
+    action: CheckSearchPermissionHookAction,
     permissions: 'UserPermissionsProxy',
 ) -> None:
     ...
@@ -27,7 +27,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CheckPrivateThreadsPermissionHookAction`
+#### `action: CheckSearchPermissionHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
