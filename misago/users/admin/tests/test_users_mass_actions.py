@@ -8,7 +8,7 @@ from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message, assert_not_contains
 from ... import BANS_CACHE
 from ...datadownloads import request_user_data_download
-from ...enums import DefaultGroupId
+from ...enums import DefaultGroupId, DeleteUserContentAction
 from ...models import Ban, DataDownload, DeletedUser
 from ...test import create_test_user
 
@@ -30,6 +30,16 @@ def get_multiple_users_ids(**kwargs):
 @pytest.fixture
 def users_ids(db):
     return get_multiple_users_ids()
+
+
+@pytest.fixture
+def mock_delete_user(mocker):
+    delay = mocker.Mock()
+    mocker.patch(
+        "misago.users.admin.views.users.delete_user",
+        mocker.Mock(delay=delay),
+    )
+    return delay
 
 
 def test_multiple_users_can_be_activated_with_mass_action(
@@ -174,19 +184,33 @@ def test_mass_action_is_not_requesting_data_downloads_for_users_with_existing_re
     assert not DataDownload.objects.exclude(id__in=downloads_ids).exists()
 
 
-def test_multiple_users_can_be_deleted_with_mass_action(admin_client, users_admin_link):
+def test_multiple_users_can_be_deleted_with_mass_action(
+    admin_client, users_admin_link, admin, mock_delete_user
+):
     users = create_multiple_users()
     admin_client.post(
         users_admin_link,
         data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
     )
 
-    for user in users:
-        with pytest.raises(User.DoesNotExist):
-            user.refresh_from_db()
+    calls = [
+        call(
+            u.id,
+            content_action=DeleteUserContentAction.LEAVE,
+            anonymous_username="Deleted",
+            deleted_by_id=admin.id,
+        )
+        for u in users
+    ]
+    mock_delete_user.assert_has_calls(calls, any_order=True)
 
 
-def test_mass_action_records_users_deletion_by_admin(admin_client, users_admin_link):
+def test_mass_action_records_users_deletion_by_admin(
+    admin_client, users_admin_link, mock_delete_user
+):
+    from ...deletesrecord import record_user_deleted_by_staff
+
+    mock_delete_user.side_effect = lambda x, **y: record_user_deleted_by_staff()
     users = create_multiple_users()
     admin_client.post(
         users_admin_link,
@@ -196,6 +220,7 @@ def test_mass_action_records_users_deletion_by_admin(admin_client, users_admin_l
     deleted_count = DeletedUser.objects.filter(
         deleted_by=DeletedUser.DELETED_BY_STAFF
     ).count()
+    mock_delete_user.count_call(deleted_count)
     assert deleted_count == len(users)
 
 
@@ -256,29 +281,26 @@ def test_delete_users_mass_action_fails_if_user_tries_to_delete_root_admins(
         user.refresh_from_db()
 
 
-@pytest.fixture
-def mock_delete_user_with_content(mocker):
-    delay = mocker.Mock()
-    mocker.patch(
-        "misago.users.admin.views.users.delete_user_with_content",
-        mocker.Mock(delay=delay),
-    )
-    return delay
-
-
 def test_multiple_users_can_be_deleted_together_with_content_by_mass_action(
-    admin_client, users_admin_link, users_ids, mock_delete_user_with_content
+    admin_client, users_admin_link, users_ids, admin, mock_delete_user
 ):
     admin_client.post(
         users_admin_link, data={"action": "delete_all", "selected_items": users_ids}
     )
-
-    calls = [call(u) for u in users_ids]
-    mock_delete_user_with_content.assert_has_calls(calls, any_order=True)
+    calls = [
+        call(
+            u,
+            content_action=DeleteUserContentAction.DELETE,
+            anonymous_username="Deleted",
+            deleted_by_id=admin.id,
+        )
+        for u in users_ids
+    ]
+    mock_delete_user.assert_has_calls(calls, any_order=True)
 
 
 def test_deleting_multiple_users_with_content_disables_their_accounts(
-    admin_client, users_admin_link, mock_delete_user_with_content
+    admin_client, users_admin_link, mock_delete_user
 ):
     users = create_multiple_users()
     admin_client.post(
@@ -292,7 +314,7 @@ def test_deleting_multiple_users_with_content_disables_their_accounts(
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_themselves(
-    admin_client, users_admin_link, admin, mock_delete_user_with_content
+    admin_client, users_admin_link, admin, mock_delete_user
 ):
     response = admin_client.post(
         users_admin_link,
@@ -300,14 +322,14 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_the
     )
 
     assert_has_error_message(response)
-    mock_delete_user_with_content.assert_not_called()
+    mock_delete_user.assert_not_called()
 
     admin.refresh_from_db()
     assert admin.is_active
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_admin(
-    admin_client, users_admin_link, mock_delete_user_with_content
+    admin_client, users_admin_link, mock_delete_user
 ):
     users = create_multiple_users(group_id=DefaultGroupId.ADMINS)
     response = admin_client.post(
@@ -316,7 +338,7 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_adm
     )
 
     assert_has_error_message(response)
-    mock_delete_user_with_content.assert_not_called()
+    mock_delete_user.assert_not_called()
 
     for user in users:
         user.refresh_from_db()
@@ -324,7 +346,7 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_adm
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_root_admin(
-    admin_client, users_admin_link, mock_delete_user_with_content
+    admin_client, users_admin_link, mock_delete_user
 ):
     users = create_multiple_users(is_misago_root=True)
     response = admin_client.post(
@@ -333,7 +355,7 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_roo
     )
 
     assert_has_error_message(response)
-    mock_delete_user_with_content.assert_not_called()
+    mock_delete_user.assert_not_called()
 
     for user in users:
         user.refresh_from_db()
@@ -341,7 +363,7 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_roo
 
 
 def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_staff(
-    admin_client, users_admin_link, mock_delete_user_with_content
+    admin_client, users_admin_link, mock_delete_user
 ):
     users = create_multiple_users(is_staff=True)
     response = admin_client.post(
@@ -350,7 +372,7 @@ def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_sta
     )
 
     assert_has_error_message(response)
-    mock_delete_user_with_content.assert_not_called()
+    mock_delete_user.assert_not_called()
 
     for user in users:
         user.refresh_from_db()
