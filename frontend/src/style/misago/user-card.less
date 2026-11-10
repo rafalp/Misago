@@ -1,29 +1,97 @@
-//
-// User Card
-// --------------------------------------------------
-
-// Center card's content on larger displays
 .user-card {
-  @media screen and (min-width: @screen-sm-min) {
+  display: flex;
+  flex-direction: column;
+  gap: @grid-gutter-width;
+
+  height: 100%;
+  padding: @grid-gutter-width;
+
+  border: 1px solid var(--group-color, @gray-300);
+  border-radius: @border-radius-base;
+  box-shadow: 0px 0px 0px 2px var(--group-color, transparent);
+
+  &-start {
     text-align: center;
   }
-}
 
-// Max out small avatar's width
-.user-card-small-avatar img {
-  width: 100%;
-  height: auto;
-}
-
-// Toggle avatar visibility
-@media screen and (min-width: @screen-sm-min) {
-  .user-card-small-avatar {
-    display: none;
+  &-end {
+    flex: 1;
   }
-}
 
-@media screen and (max-width: @screen-xs-max) {
-  .user-card-avatar {
-    display: none;
+  &-avatar {
+    img {
+      width: 128px;
+      height: 128px;
+
+      border-radius: @border-radius-large;
+    }
+  }
+
+  &-identity {
+    text-align: center;
+  }
+
+  &-username {
+    font-size: @font-size-large;
+    font-weight: bold;
+
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:focus {
+      color: var(--group-color, @gray-700);
+    }
+  }
+
+  &-meta,
+  &-stats-meta {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: @padding-small-horizontal;
+
+    max-width: 100%;
+
+    margin: @line-height-computed 0 0 0;
+    padding: 0 @padding-base-horizontal;
+
+    list-style: none;
+
+    &-item {
+      display: flex;
+      align-items: center;
+
+      min-height: 24px;
+
+      overflow-wrap: anywhere;
+
+      &-icon {
+        display: flex;
+        align-items: center;
+
+        margin-right: 6px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+
+          color: @gray-500;
+        }
+      }
+    }
+  }
+
+  &-meta-item-user-group {
+    font-weight: bold;
+  }
+
+  &-stats-meta {
+    color: @gray-500;
+
+    strong {
+      color: @gray-600;
+    }
   }
 }

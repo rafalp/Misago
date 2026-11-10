@@ -5,8 +5,10 @@ from functools import cached_property
 from typing import Any
 
 from django.core.cache import cache
+from django.utils.translation import pgettext
 
 from ..cache.enums import CacheName
+from .enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 from .hooks import serialize_group_plugin_data_hook
 from .models import Group
 
@@ -23,6 +25,26 @@ class GroupProxy:
     is_page: bool
     is_hidden: bool
     plugin_data: dict
+
+    def __str__(self) -> str:
+        return pgettext("default user group", self.name)
+
+    @property
+    def is_admin(self) -> bool:
+        return self.id == DefaultGroupId.ADMINS
+
+    @property
+    def is_protected(self) -> bool:
+        return self.id < CUSTOM_GROUP_ID_START
+
+    @property
+    def is_public(self) -> bool:
+        return not self.is_hidden
+
+    def translated_user_title(self) -> str | None:
+        if self.user_title:
+            return pgettext("default user group", self.user_title)
+        return None
 
     def as_dict(self) -> dict[str, Any]:
         return {

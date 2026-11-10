@@ -476,7 +476,7 @@ class UsersSearchView(BaseSearchView):
     def get_search_results_data(self, form: BaseThreadsSearchForm) -> dict:
         results = search_users(
             self.request.user_permissions,
-            form.cleaned_data["username"],
+            form.cleaned_data["query"],
             include_self=True,
         )
 
@@ -504,8 +504,8 @@ class UsersSearchView(BaseSearchView):
 
         if user.title:
             title = user.title
-        elif group and group.user_title:
-            title = group.user_title
+        elif group.user_title:
+            title = group.translated_user_title()
         else:
             title = None
 
@@ -514,32 +514,79 @@ class UsersSearchView(BaseSearchView):
             "avatars": user.avatars,
             "username": user.username,
             "title": title,
+            "css_suffix": group.css_suffix,
+            "group_color": group.color,
             "url": reverse(
                 "misago:user", kwargs={"user_id": user.id, "slug": user.slug}
             ),
-            "stats": self.get_get_search_result_stats(user),
+            "meta": self.get_search_result_meta_data(user),
+            "stats": self.get_search_result_stats_data(user),
         }
 
-    def get_search_result_stats(self, user: "User") -> list[NumberMetadata]:
-        return [
-            NumberMetadata(
-                id="user-threads",
-                text=npgettext(
-                    "user card threads stat",
-                    "%(number)s thread",
-                    "%(number)s threads",
-                    user.threads,
-                ),
-                number=user.threads,
-            ),
-            NumberMetadata(
-                id="user-posts",
-                text=npgettext(
-                    "user card posts stat",
-                    "%(number)s post",
-                    "%(number)s posts",
-                    user.posts,
-                ),
-                number=user.posts,
-            ),
-        ]
+    def get_search_result_meta_data(self, user: "User") -> dict:
+        items = []
+
+        group = self.request.groups[user.group_id]
+        if group and group.is_public:
+            if group.is_admin:
+                icon = "tabler/shield.svg"
+            else:
+                icon = "tabler/users.svg"
+
+            items.append(
+                TextMetadata(
+                    id="user-group",
+                    text=str(group.name),
+                    icon=icon,
+                )
+            )
+
+        items.append(
+            DatetimeMetadata(
+                id="user-regsitered",
+                text="%(datetime)s",
+                datetime=user.joined_on,
+                icon="tabler/calendar.svg",
+            )
+        )
+
+        return {
+            "template_name": "misago/meta.html",
+            "items": items,
+        }
+
+    def get_search_result_stats_data(self, user: "User") -> dict:
+        items = []
+
+        if user.threads:
+            items.append(
+                NumberMetadata(
+                    id="user-threads",
+                    text=npgettext(
+                        "user card threads stat",
+                        "%(number)s thread",
+                        "%(number)s threads",
+                        user.threads,
+                    ),
+                    number=user.threads,
+                )
+            )
+
+        if user.posts:
+            items.append(
+                NumberMetadata(
+                    id="user-posts",
+                    text=npgettext(
+                        "user card posts stat",
+                        "%(number)s post",
+                        "%(number)s posts",
+                        user.posts,
+                    ),
+                    number=user.posts,
+                )
+            )
+
+        return {
+            "template_name": "misago/meta.html",
+            "items": items,
+        }

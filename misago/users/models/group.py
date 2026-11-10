@@ -106,12 +106,16 @@ class Group(PluginDataModel):
         return pgettext("default user group", self.name)
 
     @property
-    def is_admin(self):
+    def is_admin(self) -> bool:
         return self.id == DefaultGroupId.ADMINS
 
     @property
-    def is_protected(self):
+    def is_protected(self) -> bool:
         return self.id < CUSTOM_GROUP_ID_START
+
+    @property
+    def is_public(self) -> bool:
+        return not self.is_hidden
 
     def translated_user_title(self) -> str | None:
         if self.user_title:

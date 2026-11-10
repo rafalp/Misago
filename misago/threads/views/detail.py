@@ -83,7 +83,7 @@ class DetailView(BaseThreadView):
     template_name: str
     template_partial_name: str
     header_template_name: str
-    header_meta_template_name: str = "misago/header_meta.html"
+    header_meta_template_name: str = "misago/meta.html"
     footer_template_name: str
 
     status_messages_template_name: str = "misago/thread/status_messages.html"
