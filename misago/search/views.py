@@ -533,11 +533,17 @@ class UsersSearchView(BaseSearchView):
             else:
                 icon = "tabler/users.svg"
 
+            if group.is_page:
+                group_url = reverse("misago:users-rank", kwargs={"slug": group.slug})
+            else:
+                group_url = None
+
             items.append(
                 TextMetadata(
                     id="user-group",
                     text=str(group.name),
                     icon=icon,
+                    url=group_url,
                 )
             )
 
