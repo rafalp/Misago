@@ -4,7 +4,7 @@
   gap: @grid-gutter-width;
 
   height: 100%;
-  padding: @grid-gutter-width;
+  padding: @grid-gutter-width ceil(@grid-gutter-width / 2);
 
   border: 1px solid var(--group-color, @gray-300);
   border-radius: @border-radius-base;
@@ -50,7 +50,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    gap: @padding-small-horizontal;
+    gap: @padding-small-vertical @padding-small-horizontal;
 
     max-width: 100%;
 
@@ -66,6 +66,7 @@
       min-height: 24px;
 
       overflow-wrap: anywhere;
+      color: @gray-700;
 
       &-icon {
         display: flex;
@@ -83,8 +84,22 @@
     }
   }
 
-  &-meta-item-user-group {
-    font-weight: bold;
+  &-item-user-group &-item-icon {
+    svg {
+      color: var(--group-color, @gray-500);
+    }
+  }
+
+  &-item-user-group &-item-text {
+    &,
+    &:link,
+    &:visited,
+    &:active,
+    &:hover,
+    &:focus {
+      color: var(--group-color, @gray-700);
+      font-weight: bold;
+    }
   }
 
   &-stats-meta {

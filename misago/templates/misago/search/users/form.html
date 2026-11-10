@@ -5,7 +5,7 @@
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Search:" context "account settings form" %}
     </label>
-    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" {{ field|requiredhtml }}/>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}

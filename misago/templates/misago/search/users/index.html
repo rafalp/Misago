@@ -23,7 +23,7 @@
           </div>
           <div class="panel-body">
 
-            {% with field=form.username %}
+            {% with field=form.query %}
               <div class="form-group{% if field.errors %} has-error{% endif %}">
                 <label class="sr-only" for="{{ field.id_for_label }}">
                   {% translate "Search:" context "search threads form" %}
