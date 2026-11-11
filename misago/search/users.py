@@ -1,5 +1,5 @@
 from functools import cmp_to_key
-from typing import TYPE_CHECKING, Optional, TypedDict
+from typing import TYPE_CHECKING, Optional
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -14,49 +14,21 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-class Stage(TypedDict):
-    min_length: int
-    prefix_length: int
-    length_lt: int
-    length_gt: int
-    thresholds: list[tuple[int, int]]
-    limit: int
-
-
 class UsersSearch:
     limit: int
     use_trigram_lookup: bool
-    stages: list[Stage]
+    min_length: int
+    min_similarity: float
+    max_candidates: int
+    max_differences: dict[int, int]
 
     def __init__(self, options: dict):
         self.limit = max(int(options.get("LIMIT", 0)), 3)
         self.use_trigram_lookup = bool(options.get("USE_TRIGRAM_LOOKUP"))
-
-        self.stages = []
-        for stage in options.get("STAGES", []):
-            self.stages.append(self.get_stage_options(stage))
-
-    def get_stage_options(self, stage: dict) -> Stage:
-        min_length = max(int(stage.get("MIN_LENGTH", 0)), 1)
-        prefix_length = max(int(stage.get("PREFIX_LENGTH", 0)), 0)
-        if prefix_length:
-            prefix_length = min(prefix_length, min_length)
-        length_lt = max(int(stage.get("LENGTH_LT", 0)), 0)
-        length_gt = max(int(stage.get("LENGTH_GT", 0)), 0)
-        thresholds = sorted(
-            ((l, t) for l, t in stage["THRESHOLDS"].items()),
-            key=lambda i: i[0],
-        )
-        limit = max(int(stage.get("LIMIT", 0)), 1)
-
-        return Stage(
-            min_length=min_length,
-            prefix_length=prefix_length,
-            length_lt=length_lt,
-            length_gt=length_gt,
-            thresholds=thresholds,
-            limit=limit,
-        )
+        self.min_length = max(int(options.get("MIN_LENGTH", 0)), 1)
+        self.min_similarity = max(float(options.get("MIN_SIMILARITY", 0)), 0.1)
+        self.max_candidates = max(int(options.get("MAX_CANDIDATES", 0)), 1)
+        self.max_differences = options.get("MAX_DIFFERENCES", {})
 
     def __call__(
         self,
@@ -82,31 +54,13 @@ class UsersSearch:
         # First stage: search for exact match
         if exact_match := self.search_exact_match(queryset, username):
             results.append(exact_match)
+            queryset = queryset.exclude(id=exact_match.id)
 
         if self.use_trigram_lookup:
             queryset = queryset.filter(slug__trigram_similar=username)
 
-        results += list(
-            self.exclude_results(queryset, results)
-            .filter(
-                slug__startswith=username[0],
-            )
-            .annotate(
-                similarity=TrigramSimilarity("slug", username),
-            )
-            .filter(
-                similarity__gte=0.2,
-            )
-            .order_by("-similarity")[:15]
-        )
-
-        results += list(
-            self.exclude_results(queryset, results)
-            .filter(
-                slug__startswith=username,
-            )
-            .order_by("slug")[:15]
-        )
+        results += self.search_candidates(queryset, username)
+        results = self.remove_too_different_candidates(results, username)
 
         return self.sort_results(results, username)[: self.limit]
 
@@ -118,94 +72,68 @@ class UsersSearch:
     ) -> Optional["User"]:
         return queryset.filter(slug=username).first()
 
-    def search_matches(
+    def search_candidates(
         self,
         queryset: QuerySet["User"],
         username: str,
-        min_length: int,
-        prefix_length: int,
-        length_lt: int,
-        length_gt: int,
-        thresholds: list[tuple[int, float]],
-        limit: int,
     ) -> list["User"]:
-        if len(username) < min_length:
+        username_length = len(username)
+
+        if username_length < self.min_length:
             return []
 
-        queryset = self.search_prefix(queryset, username, prefix_length)
-        queryset = self.search_length(queryset, username, length_lt, length_gt)
-        queryset = self.search_similarity(queryset, username, thresholds)
-        return list(queryset.order_by("-similarity")[:limit])
-
-    def exclude_results(
-        self, queryset: QuerySet["User"], exclude: list["User"]
-    ) -> QuerySet["user"]:
-        if exclude:
-            return queryset.exclude(id__in=[user.id for user in exclude])
-
-        return queryset
-
-    def search_prefix(
-        self, queryset: QuerySet["user"], username: str, prefix_length: int
-    ) -> QuerySet["User"]:
-        if prefix_length:
-            print(username[:prefix_length])
-            return queryset.filter(
-                slug__startswith=username[:prefix_length],
+        queryset = (
+            queryset.annotate(
+                similarity=TrigramSimilarity("slug", username),
             )
-
-        return queryset.filter(
-            slug__startswith=username,
+            .filter(
+                similarity__gte=self.min_similarity,
+            )
+            .order_by("similarity")
         )
 
-    def search_length(
-        self, queryset: QuerySet["user"], username: str, lt: int, gt: int
-    ) -> QuerySet["User"]:
+        return list(queryset[: self.max_candidates])
+
+    def remove_too_different_candidates(
+        self, results: list["User"], username: str
+    ) -> list["User"]:
+        max_differences = 0
+
         username_length = len(username)
+        for length, distance in self.max_differences.items():
+            if length <= username_length:
+                max_differences = distance
 
-        queryset = queryset.annotate(
-            length=Length("slug"),
-        )
+        filtered_results: list["User"] = []
+        for result in results:
+            if self.calc_difference(result.slug, username) <= max_differences:
+                filtered_results.append(result)
 
-        if not lt and not gt:
-            return queryset.filter(length=username_length)
+        return filtered_results
 
-        return queryset.filter(
-            length__gte=username_length - lt,
-            length__lte=username_length + gt,
-        )
+    def calc_difference(self, a: str, b: str) -> int:
+        if len(a) > len(b):
+            a, b = b, a
 
-    def search_similarity(
-        self,
-        queryset: QuerySet["user"],
-        username: str,
-        thresholds: list[tuple[int, int]],
-    ) -> QuerySet["User"]:
-        username_length = len(username)
+        distance = 0
+        for i, c in enumerate(a):
+            if c != b[i]:
+                distance += 1
 
-        similarity = 0.3
-        for threshold, threshold_similarity in thresholds:
-            if username_length >= threshold:
-                similarity = threshold_similarity
-
-        return queryset.annotate(
-            similarity=TrigramSimilarity("slug", username),
-        ).filter(
-            similarity__gte=similarity,
-        )
+        return distance
 
     def sort_results(self, results: list["User"], username: str) -> list["User"]:
-        username_len = len(username)
+        username_length = len(username)
 
         return sorted(
             results,
             key=cmp_to_key(
-                lambda a, b: self.compare_results(a, b, username, username_len)
+                lambda a, b: self.compare_results(a, b, username, username_length)
             ),
         )
 
     def compare_results(
-        self, a: "User", b: "User", username: str, username_len: int
+        self, a: "User", b: "User", username: str, username_length: int
     ) -> int:
         # Exact match wins
         if a.slug == username:
@@ -216,21 +144,23 @@ class UsersSearch:
         a_len = len(a.slug)
         b_len = len(b.slug)
 
-        # If both matches have target length, closer match wins
-        if a_len == b_len == username_len:
-            a_similarity = calc_similarity(a.slug, username)
-            b_similarity = calc_similarity(b.slug, username)
+        a_similarity = self.calc_similarity(username, a.slug)
+        b_similarity = self.calc_similarity(username, b.slug)
 
+        # Same length match for
+        if a_len == b_len == username_length:
+            # More similar match winds
             if a_similarity > b_similarity:
                 return -1
             if a_similarity < b_similarity:
                 return 1
 
-        if a_len < b_len:
+        if a_len == username_length:
             return -1
-        if a_len > b_len:
+        if b_len == username_length:
             return 1
 
+        # Prefix match wins
         a_starts_with = a.slug.startswith(username)
         b_starts_with = b.slug.startswith(username)
 
@@ -248,22 +178,27 @@ class UsersSearch:
             return 1
 
         # Match with better prefix similarity wins
-        a_similarity = calc_similarity(username, a.slug)
-        b_similarity = calc_similarity(username, b.slug)
-
         if a_similarity > b_similarity:
             return -1
         if a_similarity < b_similarity:
             return 1
 
+        # Shorter match wins
+        if a_len < b_len:
+            return -1
+        if a_len > b_len:
+            return 1
+
         return 0
+
+    def calc_similarity(self, a: str, b: str) -> int:
+        if len(a) > len(b):
+            a, b = b, a
+
+        similarity = []
+        for i, c in enumerate(a):
+            similarity.append(c == b[i])
+        return sum(i if v else 0 for i, v in enumerate(reversed(similarity), 1))
 
 
 search_users = UsersSearch(settings.MISAGO_USERS_SEARCH)
-
-
-def calc_similarity(a: str, b: str) -> int:
-    similarity = []
-    for i, c in enumerate(a):
-        similarity.append(c == b[i])
-    return sum(i if v else 0 for i, v in enumerate(reversed(similarity), 1))
