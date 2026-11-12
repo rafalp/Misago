@@ -5,7 +5,7 @@ from django.db import transaction
 
 from ..notifications.utils import delete_user_account, delete_user_data
 from ..threads.delete import delete_user_threads
-from ..threads.hide import hide_thread, hide_post
+from ..threads.hide import hide_post, hide_thread
 from ..threads.utils import remove_private_threads_without_members
 from .anonymize import anonymize_user_data
 from .avatars import delete_avatar
@@ -30,17 +30,13 @@ def delete_user(
         user.lock()
 
         if anonymous_username:
-            anonymize_user_data(
-                user,
-                anonymous_username,
-                context = context
-            )
+            anonymize_user_data(user, anonymous_username, context=context)
 
         delete_user_hook(
             _delete_user_action,
             user,
             content_action,
-            context = context,
+            context=context,
         )
 
 
@@ -62,7 +58,6 @@ def _delete_user_action(
     user.delete()
 
 
-
 def delete_user_content(user: User):
     delete_user_data(user)
     delete_user_threads(user)
@@ -72,9 +67,9 @@ def hide_user_content(user: User):
 
     categories_to_sync = set()
 
-    threads = profile.thread_set.select_related(
-        "category", "first_post"
-    ).filter(is_hidden=False)
+    threads = profile.thread_set.select_related("category", "first_post").filter(
+        is_hidden=False
+    )
     for thread in threads.iterator(chunk_size=50):
         categories_to_sync.add(thread.category_id)
         hide_thread(thread, user)

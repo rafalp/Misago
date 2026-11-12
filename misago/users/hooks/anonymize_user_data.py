@@ -129,12 +129,7 @@ class AnonymizeUserDataHook(
         *,
         context: dict[str, Any] | None = None,
     ):
-        return super().__call__(
-            action,
-            user,
-            anonymous_username,
-            context = context
-        )
+        return super().__call__(action, user, anonymous_username, context=context)
 
 
 anonymize_user_data_hook = AnonymizeUserDataHook()

@@ -1,8 +1,8 @@
 from celery import shared_task
 from django.contrib.auth import get_user_model
 
-from . import delete
 from ..permissions.permissionsid import get_permissions_id
+from . import delete
 from .deletesrecord import record_user_deleted_by_self, record_user_deleted_by_staff
 from .enums import DeleteUserContentAction
 

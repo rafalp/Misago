@@ -18,21 +18,20 @@ def delete_data_downloads(user: User, **kwargs):
         data_download.delete()
 
 
-def anonymize_user_data(user: User, anonymous_username: str, *, context: dict[str, Any] | None = None):
+def anonymize_user_data(
+    user: User, anonymous_username: str, *, context: dict[str, Any] | None = None
+):
     anonymize_user_data_hook(
-        _anonymize_user_data_action,
-        user,
-        anonymous_username,
-        context = context
+        _anonymize_user_data_action, user, anonymous_username, context=context
     )
 
 
 def _anonymize_user_data_action(
-            user: User,
-            anonymous_username: str,
-            *,
-            context: dict[str, Any] | None = None,
-    ):
+    user: User,
+    anonymous_username: str,
+    *,
+    context: dict[str, Any] | None = None,
+):
     """Replaces username with anonymized one, then anonymize their user-specific data
     like username or IP addresses.
     """

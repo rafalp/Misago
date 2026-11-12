@@ -14,9 +14,9 @@ User = get_user_model()
 
 logger = logging.getLogger("user.delete")
 
-@delete_user_hook.append_filter def log_delete_user(     action,     user: User,     content_action: DeleteUserContentAction,     *,     context: dict[str, Any] | None = None, ):     action(         user,         content_action=content_action,         context=context,     )
+@delete_user_hook.append_filter def log_delete_user(     action,     user: User,     content_action: DeleteUserContentAction,     *,     context: dict[str, Any] | None = None, ):     action(         user,         content_action = content_action,         context = context,     )
 
-    logger.info(         "Deleted users: %s", user.username,         extra={"user": user},     )```
+    logger.info(         "Deleted users: %s", user.username,         extra = {"user": user},     )```
 
 
 ## Location

@@ -19,8 +19,6 @@ from ...threads.hide import hide_post, hide_thread
 from ...threads.synchronize import synchronize_thread
 from ..bans import get_user_ban
 from ..delete import DeleteUserContentAction
-from ..tasks import delete_user
-
 from ..online.utils import get_user_status
 from ..permissions import (
     allow_browse_users_list,
@@ -33,6 +31,7 @@ from ..permissions import (
 )
 from ..profilefields import profilefields, serialize_profilefields_data
 from ..serializers import BanDetailsSerializer, UserSerializer
+from ..tasks import delete_user
 from ..viewmodels import Followers, Follows, UserPosts, UserThreads
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
@@ -213,7 +212,7 @@ class UserViewSet(viewsets.GenericViewSet):
                 profile.id,
                 content_action=content_action,
                 anonymous_username=request.settings.anonymous_username,
-                deleted_by_id=request.user.id
+                deleted_by_id=request.user.id,
             )
 
         return Response({})

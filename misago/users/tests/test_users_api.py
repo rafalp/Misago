@@ -6,10 +6,10 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from ..enums import DeleteUserContentAction
 from ...acl.test import patch_user_acl
 from ...threads.models import Thread
 from ..activepostersranking import build_active_posters_ranking
+from ..enums import DeleteUserContentAction
 from ..models import Ban, DeletedUser, Rank
 from ..test import AuthenticatedUserTestCase, create_test_user
 
@@ -437,7 +437,12 @@ def test_user_delete_api_deletes_user_with_content(
     )
     assert response.status_code == 200
 
-    mock_delete_user.assert_called_once_with(other_user.id, content_action = DeleteUserContentAction.DELETE, anonymous_username = "Deleted", deleted_by_id = user.id)
+    mock_delete_user.assert_called_once_with(
+        other_user.id,
+        content_action=DeleteUserContentAction.DELETE,
+        anonymous_username="Deleted",
+        deleted_by_id=user.id,
+    )
 
 
 @patch_user_acl(
@@ -454,15 +459,21 @@ def test_user_delete_api_deletes_user_without_content(
     )
     assert response.status_code == 200
 
-    mock_delete_user.assert_called_once_with(other_user.id, content_action=DeleteUserContentAction.HIDE,
-                                             anonymous_username="Deleted", deleted_by_id=user.id)
+    mock_delete_user.assert_called_once_with(
+        other_user.id,
+        content_action=DeleteUserContentAction.HIDE,
+        anonymous_username="Deleted",
+        deleted_by_id=user.id,
+    )
     thread.refresh_from_db()
 
 
 @patch_user_acl(
     {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
 )
-def test_user_delete_api_creates_deleted_user_entry(user_client, other_user, user, mock_delete_user):
+def test_user_delete_api_creates_deleted_user_entry(
+    user_client, other_user, user, mock_delete_user
+):
     from ..deletesrecord import record_user_deleted_by_staff
 
     mock_delete_user.side_effect = lambda x, **y: record_user_deleted_by_staff()
@@ -470,6 +481,10 @@ def test_user_delete_api_creates_deleted_user_entry(user_client, other_user, use
     response = user_client.post(f"/api/users/{other_user.id}/delete/")
     assert response.status_code == 200
 
-    mock_delete_user.assert_called_once_with(other_user.id, content_action=DeleteUserContentAction.HIDE,
-                                             anonymous_username="Deleted", deleted_by_id=user.id)
+    mock_delete_user.assert_called_once_with(
+        other_user.id,
+        content_action=DeleteUserContentAction.HIDE,
+        anonymous_username="Deleted",
+        deleted_by_id=user.id,
+    )
     DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_STAFF)

@@ -14,9 +14,9 @@ User = get_user_model()
 
 logger = logging.getLogger("anonymize_user_data")
 
-@anonymize_user_data_hook.append_filter def log_anonymize_user_data(     action,     user: User,     anonymous_username: str, ):     action(         user,         anonymous_username=anonymous_username     )
+@anonymize_user_data_hook.append_filter def log_anonymize_user_data(     action,     user: User,     anonymous_username: str,     *,     context: dict[str, Any] | None = None, ):     action(         user,         anonymous_username=anonymous_username,         context = context     )
 
-    logger.info(         "Anonymized user's data with a new username: %s", anonymous_username,         extra={"user": user},     )```
+    logger.info(         "Anonymized user's data with a new username: %s", anonymous_username,         extra = {"user": user},     )```
 
 
 ## Location
@@ -35,6 +35,8 @@ def custom_anonymize_user_data_filter(
     action: AnonymizeUserDataHookAction,
     user: User,
     anonymous_username: str,
+    *,
+    context: dict[str, Any] | None=None,
 ):
     ...
 ```
@@ -61,10 +63,20 @@ User instance that data will be anonymized.
 A new username that will replace current username.
 
 
+#### `context: dict[str, Any] | None`
+
+Additional context passed to the anonymize action.
+
+
 ## Action
 
 ```python
-def anonymize_user_data_action(user: User, anonymous_username: str):
+def anonymize_user_data_action(
+    user: User,
+    anonymous_username: str,
+    *,
+    context: dict[str, Any] | None=None,
+):
     ...
 ```
 
@@ -81,3 +93,8 @@ User instance that data will be anonymized.
 #### `anonymous_username: str`
 
 A new user name that will replace current user name.
+
+
+#### `context: dict[str, Any] | None`
+
+Additional context passed to the anonymize action.

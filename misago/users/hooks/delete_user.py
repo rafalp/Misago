@@ -135,7 +135,7 @@ class DeleteUserHook(
             action,
             user,
             content_action,
-            context = context,
+            context=context,
         )
 
 
