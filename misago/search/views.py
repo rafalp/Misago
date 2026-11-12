@@ -474,17 +474,20 @@ class UsersSearchView(BaseSearchView):
         return extended_form_class(self.request.GET, request=self.request)
 
     def get_search_results_data(self, form: BaseThreadsSearchForm) -> dict:
-        results = search_users(
-            self.request.user_permissions,
-            form.cleaned_data["query"],
-            include_self=True,
-        )
+        results = self.search(form)
 
         return {
             "template_name": self.results_template_name,
             "title": self.get_search_results_title(results),
             "results": [self.get_search_result_data(user) for user in results],
         }
+
+    def search(self, form: UsersSearchForm) -> list["User"]:
+        return search_users(
+            self.request.user_permissions,
+            form.cleaned_data["query"],
+            include_self=True,
+        )
 
     def get_search_results_title(self, results: list["User"]) -> str:
         results_num = len(results)

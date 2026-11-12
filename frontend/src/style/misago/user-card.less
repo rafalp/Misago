@@ -90,6 +90,17 @@
     }
   }
 
+  &-meta-item {
+    a,
+    a:link,
+    a:visited,
+    a:active,
+    a:hover,
+    a:focus {
+      color: @gray-700;
+    }
+  }
+
   &-meta-item-user-group &-meta-item-text {
     &,
     &:link,
@@ -102,11 +113,20 @@
     }
   }
 
-  &-stats-meta {
+  &-stats-meta-item {
     color: @gray-500;
 
     strong {
       color: @gray-600;
+    }
+
+    a,
+    a:link,
+    a:visited,
+    a:active,
+    a:hover,
+    &:focus {
+      color: @gray-500;
     }
   }
 }

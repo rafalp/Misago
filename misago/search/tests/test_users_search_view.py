@@ -21,7 +21,7 @@ def test_users_search_view_returns_error_403_if_user_cant_search_users(
     assert_contains(response, "You can&#x27;t search for users.", status_code=403)
 
 
-def test_threads_search_view_shows_search_result(user_client, other_user):
+def test_users_search_view_shows_search_result(user_client, other_user):
     response = user_client.get(
         reverse("misago:users-search") + f"?query={other_user.username}"
     )
@@ -37,7 +37,7 @@ def test_threads_search_view_shows_search_result(user_client, other_user):
     assert_not_contains(response, "No users found")
 
 
-def test_threads_search_view_shows_search_result_with_group(
+def test_users_search_view_shows_search_result_with_group(
     user_client, members_group, other_user
 ):
     members_group.is_page = True
@@ -57,10 +57,13 @@ def test_threads_search_view_shows_search_result_with_group(
             "misago:user", kwargs={"user_id": other_user.id, "slug": other_user.slug}
         ),
     )
+    assert_contains(
+        response, reverse("misago:users-rank", kwargs={"slug": members_group.slug})
+    )
     assert_not_contains(response, "No users found")
 
 
-def test_threads_search_view_shows_search_result_with_stats(user_client, other_user):
+def test_users_search_view_shows_search_result_with_stats(user_client, other_user):
     other_user.threads = 21
     other_user.posts = 15
     other_user.save()
@@ -80,7 +83,7 @@ def test_threads_search_view_shows_search_result_with_stats(user_client, other_u
     assert_not_contains(response, "No users found")
 
 
-def test_threads_search_view_shows_no_results_page(user_client):
+def test_users_search_view_shows_no_results_page(user_client):
     response = user_client.get(reverse("misago:users-search") + f"?query=nothing")
 
     assert_contains(response, "Search users")
