@@ -1,9 +1,8 @@
 from celery import shared_task
 from django.contrib.auth import get_user_model
 
-# from ..conf.shortcuts import get_dynamic_settings
+from . import delete
 from ..permissions.permissionsid import get_permissions_id
-from .delete import delete_user as delete_user_util
 from .deletesrecord import record_user_deleted_by_self, record_user_deleted_by_staff
 from .enums import DeleteUserContentAction
 
@@ -32,7 +31,7 @@ def delete_user(
     if not user:
         return
 
-    delete_user_util(
+    delete.delete_user(
         user,
         content_action=content_action,
         anonymous_username=anonymous_username,
@@ -42,20 +41,3 @@ def delete_user(
         record_user_deleted_by_self()
     else:
         record_user_deleted_by_staff()
-
-
-# @shared_task
-# def delete_user_with_content(id):
-#     try:
-#         user = User.objects.get(id=id)
-#     except User.DoesNotExist:
-#         return
-#     if not user.is_misago_admin and not user.is_staff:
-#
-#         settings = get_dynamic_settings()
-#         delete_user_util(
-#             user,
-#             content_action=DeleteUserContentAction.DELETE,
-#             anonymous_username=settings.anonymous_username,
-#         )
-#         record_user_deleted_by_staff()

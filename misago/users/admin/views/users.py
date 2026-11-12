@@ -242,8 +242,6 @@ class UsersList(UserAdmin, generic.ListView):
                 anonymous_username=request.settings.anonymous_username,
                 deleted_by_id=request.user.id,
             )
-            # TODO: remove because it is in Ctask
-            # record_user_deleted_by_staff()
 
         messages.success(
             request, pgettext("admin users", "Selected users have been deleted.")

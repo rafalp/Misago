@@ -110,13 +110,13 @@ class DeleteUserHook(
     ):
         action(
             user,
-            content_action=content_action,
-            context=context,
+            content_action = content_action,
+            context = context,
         )
 
         logger.info(
             "Deleted users: %s", user.username,
-            extra={"user": user},
+            extra = {"user": user},
         )
     ```
     """
@@ -135,7 +135,7 @@ class DeleteUserHook(
             action,
             user,
             content_action,
-            context=context,
+            context = context,
         )
 
 

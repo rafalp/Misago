@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         for user in queryset.iterator(chunk_size=50):
             if can_delete_own_account(settings, user, user):
-                # TODO: set correct value of content_action
+                # TODO: [SIGNAL] set correct value of content_action
                 delete_user(
                     user,
                     content_action=DeleteUserContentAction.LEAVE,

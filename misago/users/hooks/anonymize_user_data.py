@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Any, Protocol
 
 from django.contrib.auth import get_user_model
 
@@ -20,12 +20,18 @@ class AnonymizeUserDataHookAction(Protocol):
     ## `anonymous_username: str`
 
     A new user name that will replace current user name.
+
+    ## `context: dict[str, Any] | None`
+
+    Additional context passed to the anonymize action.
     """
 
     def __call__(
         self,
         user: User,
         anonymous_username: str,
+        *,
+        context: dict[str, Any] | None = None,
     ): ...
 
 
@@ -50,6 +56,10 @@ class AnonymizeUserDataHookFilter(Protocol):
     ## `anonymous_username: str`
 
     A new username that will replace current username.
+
+    ## `context: dict[str, Any] | None`
+
+    Additional context passed to the anonymize action.
     """
 
     def __call__(
@@ -57,6 +67,8 @@ class AnonymizeUserDataHookFilter(Protocol):
         action: AnonymizeUserDataHookAction,
         user: User,
         anonymous_username: str,
+        *,
+        context: dict[str, Any] | None = None,
     ): ...
 
 
@@ -91,15 +103,18 @@ class AnonymizeUserDataHook(
         action,
         user: User,
         anonymous_username: str,
+        *,
+        context: dict[str, Any] | None = None,
     ):
         action(
             user,
-            anonymous_username=anonymous_username
+            anonymous_username=anonymous_username,
+            context = context
         )
 
         logger.info(
             "Anonymized user's data with a new username: %s", anonymous_username,
-            extra={"user": user},
+            extra = {"user": user},
         )
     ```
     """
@@ -111,11 +126,14 @@ class AnonymizeUserDataHook(
         action: AnonymizeUserDataHookAction,
         user: User,
         anonymous_username: str,
+        *,
+        context: dict[str, Any] | None = None,
     ):
         return super().__call__(
             action,
             user,
             anonymous_username,
+            context = context
         )
 
 

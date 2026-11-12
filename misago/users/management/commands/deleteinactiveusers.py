@@ -34,7 +34,7 @@ class Command(BaseCommand):
         )
 
         for user in queryset.iterator(chunk_size=50):
-            # TODO: set correct value of content_action
+            # TODO: [SIGNAL] set correct value of content_action
             delete_user(
                 user,
                 content_action=DeleteUserContentAction.LEAVE,

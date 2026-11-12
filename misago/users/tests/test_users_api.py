@@ -1,13 +1,13 @@
 import json
 from datetime import timedelta
-from unittest.mock import ANY
+from unittest.mock import ANY, call
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+from ..enums import DeleteUserContentAction
 from ...acl.test import patch_user_acl
-from ...categories.models import Category
 from ...threads.models import Thread
 from ..activepostersranking import build_active_posters_ranking
 from ..models import Ban, DeletedUser, Rank
@@ -413,11 +413,21 @@ def test_user_delete_api_prevents_deletion_if_user_is_self(user_client, user):
     }
 
 
+@pytest.fixture
+def mock_delete_user(mocker):
+    delay = mocker.Mock()
+    mocker.patch(
+        "misago.users.api.users.delete_user",
+        mocker.Mock(delay=delay),
+    )
+    return delay
+
+
 @patch_user_acl(
     {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
 )
 def test_user_delete_api_deletes_user_with_content(
-    user_client, thread_factory, default_category, other_user
+    user_client, thread_factory, default_category, other_user, user, mock_delete_user
 ):
     thread = thread_factory(default_category, starter=other_user)
 
@@ -427,18 +437,14 @@ def test_user_delete_api_deletes_user_with_content(
     )
     assert response.status_code == 200
 
-    with pytest.raises(User.DoesNotExist):
-        other_user.refresh_from_db()
-
-    with pytest.raises(Thread.DoesNotExist):
-        thread.refresh_from_db()
+    mock_delete_user.assert_called_once_with(other_user.id, content_action = DeleteUserContentAction.DELETE, anonymous_username = "Deleted", deleted_by_id = user.id)
 
 
 @patch_user_acl(
     {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 5}
 )
 def test_user_delete_api_deletes_user_without_content(
-    user_client, thread_factory, default_category, other_user
+    user_client, thread_factory, default_category, other_user, user, mock_delete_user
 ):
     thread = thread_factory(default_category, starter=other_user)
 
@@ -448,17 +454,22 @@ def test_user_delete_api_deletes_user_without_content(
     )
     assert response.status_code == 200
 
-    with pytest.raises(User.DoesNotExist):
-        other_user.refresh_from_db()
-
+    mock_delete_user.assert_called_once_with(other_user.id, content_action=DeleteUserContentAction.HIDE,
+                                             anonymous_username="Deleted", deleted_by_id=user.id)
     thread.refresh_from_db()
 
 
 @patch_user_acl(
     {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
 )
-def test_user_delete_api_creates_deleted_user_entry(user_client, other_user):
+def test_user_delete_api_creates_deleted_user_entry(user_client, other_user, user, mock_delete_user):
+    from ..deletesrecord import record_user_deleted_by_staff
+
+    mock_delete_user.side_effect = lambda x, **y: record_user_deleted_by_staff()
+
     response = user_client.post(f"/api/users/{other_user.id}/delete/")
     assert response.status_code == 200
 
+    mock_delete_user.assert_called_once_with(other_user.id, content_action=DeleteUserContentAction.HIDE,
+                                             anonymous_username="Deleted", deleted_by_id=user.id)
     DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_STAFF)
