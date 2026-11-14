@@ -1,6 +1,6 @@
 # `get_watched_thread_context_data_hook`
 
-This hook wraps the standard function that Misago uses to get the template context data for the watch thread HTMX response.
+This hook wraps a Misago function used to get the template context data for the watch thread HTMX response.
 
 
 ## Location

@@ -1,6 +1,6 @@
 # `require_private_thread_approval_hook`
 
-This hook wraps the standard function Misago uses to check if a new private thread should require moderator approval.
+This hook wraps a Misago function used to check if a new private thread should require moderator approval.
 
 
 ## Location
@@ -51,7 +51,7 @@ def require_private_thread_approval_action(state: 'PrivateThreadStartState') -> 
     ...
 ```
 
-A standard function that Misago uses to check if a new private thread should require moderator approval.
+Misago function used to check if a new private thread should require moderator approval.
 
 
 ### Arguments

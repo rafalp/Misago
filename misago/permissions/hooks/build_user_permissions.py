@@ -53,8 +53,7 @@ class BuildUserPermissionsHook(
     FilterHook[BuildUserPermissionsHookAction, BuildUserPermissionsHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to build user permissions
-    from their groups.
+    This hook wraps a Misago function used to build user's permissions from their groups.
 
     # Example
 

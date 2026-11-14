@@ -1,6 +1,6 @@
 # `delete_thread_event_hook`
 
-This hook wraps a standard Misago function used to delete a `ThreadEvent` object.
+This hook wraps a Misago function used to delete a `ThreadEvent` object.
 
 
 ## Location

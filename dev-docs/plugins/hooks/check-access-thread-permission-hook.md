@@ -1,6 +1,6 @@
 # `check_access_thread_permission_hook`
 
-This hook wraps a standard Misago function used to check if a user has permission to access a thread of any type (threads, private threads, or plugin-defined). Raises Django's `Http404` or `PermissionDenied` if they don't.
+This hook wraps a Misago function used to check if a user has permission to access a thread of any type (threads, private threads, or plugin-defined). Raises Django's `Http404` or `PermissionDenied` if they don't.
 
 
 ## Location
@@ -36,7 +36,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -67,7 +67,7 @@ Misago function used to check if a user has permission to access a thread of any
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 

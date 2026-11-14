@@ -1,6 +1,6 @@
 # `save_thread_reply_state_hook`
 
-This hook wraps the standard function that Misago uses to save a new thread reply to the database.
+This hook wraps a Misago function used to save a new thread reply to the database.
 
 
 ## Location
@@ -52,7 +52,7 @@ def save_thread_reply_state_action(request: HttpRequest, state: 'ThreadReplyStat
     ...
 ```
 
-A standard function that Misago uses to save a new thread reply to the database.
+Misago function used to save a new thread reply to the database.
 
 
 ### Arguments

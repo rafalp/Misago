@@ -70,7 +70,7 @@ class GetUserPermissionsHook(
     FilterHook[GetUserPermissionsHookAction, GetUserPermissionsHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to get user permissions.
+    This hook wraps a Misago function used to get user's permissions.
 
     User permissions are a Python `dict`. This `dict` is first retrieved from the cache,
     and if that fails, a new `dict` is built from the user's groups.

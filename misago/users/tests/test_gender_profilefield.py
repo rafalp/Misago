@@ -123,21 +123,21 @@ class GenderProfileFieldTests(AdminTestCase):
         test_link = reverse("misago:admin:users:index")
 
         response = self.client.get("%s?redirected=1&profilefields=female" % test_link)
-        self.assertContains(response, "No users matching criteria exist.")
+        self.assertContains(response, "No users found")
 
         # search by value
         self.user.profile_fields["gender"] = "female"
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=female" % test_link)
-        self.assertNotContains(response, "No users matching criteria exist.")
+        self.assertNotContains(response, "No users found")
 
         # search by choice name
         self.user.profile_fields["gender"] = "secret"
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=telling" % test_link)
-        self.assertNotContains(response, "No users matching criteria exist.")
+        self.assertNotContains(response, "No users found")
 
     def test_field_display(self):
         """field displays on user profile when filled in"""

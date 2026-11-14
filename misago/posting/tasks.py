@@ -9,11 +9,9 @@ logger = getLogger("misago.posting")
 
 
 @shared_task(
-    name="posting.process-post-content",
     autoretry_for=(Post.DoesNotExist,),
     default_retry_delay=10,
     time_limit=20,
-    serializer="json",
 )
 def process_post_content(post_id: int, checksum: str):
     post = Post.objects.get(id=post_id)

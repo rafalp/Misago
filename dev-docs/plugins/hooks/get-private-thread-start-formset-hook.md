@@ -1,6 +1,6 @@
 # `get_private_thread_start_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `PrivateThreadStartFormset` instance with forms for starting a new private thread.
+This hook wraps a Misago function used to create a new `PrivateThreadStartFormset` instance with forms for starting a new private thread.
 
 
 ## Location
@@ -57,7 +57,7 @@ def get_private_thread_start_formset_action(request: HttpRequest, category: Cate
     ...
 ```
 
-A standard function that Misago uses to create a new `PrivateThreadStartFormset` instance with forms for starting a new private thread.
+Misago function used to create a new `PrivateThreadStartFormset` instance with forms for starting a new private thread.
 
 
 ### Arguments

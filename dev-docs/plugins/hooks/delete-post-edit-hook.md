@@ -1,6 +1,6 @@
 # `delete_post_edit_hook`
 
-This hook wraps a standard Misago function used to delete a `PostEdit` object.
+This hook wraps a Misago function used to delete a `PostEdit` object.
 
 
 ## Location

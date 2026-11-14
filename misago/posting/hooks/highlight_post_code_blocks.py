@@ -41,8 +41,8 @@ class HighlightPostCodeBlocksHook(
     FilterHook[HighlightPostCodeBlocksHookAction, HighlightPostCodeBlocksHookFilter]
 ):
     """
-    This hook wraps a standard Misago function used to highlight a post's
-    code blocks after it has been saved.
+    This hook wraps a Misago function used to highlight a post's code blocks
+    after it has been saved.
 
     The standard code highlighting feature runs in a Celery task because Pygments
     can get stuck in an infinite loop due to unknown bugs or malicious input.

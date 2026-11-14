@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetPrivateThreadStartStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `PrivateThreadStartState`
-    instance for starting a new private thread.
+    Misago function used to create a new `PrivateThreadStartState` instance for
+    starting a new private thread.
 
     # Arguments
 
@@ -78,8 +78,8 @@ class GetPrivateThreadStartStateHook(
     ]
 ):
     """
-    This hook wraps the standard function Misago uses to create a new
-    `PrivateThreadStartState` instance for starting a new private thread.
+    This hook wraps a Misago function used to create a new `PrivateThreadStartState`
+    instance for starting a new private thread.
 
     # Example
 

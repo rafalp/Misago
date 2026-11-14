@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class DeleteCategoriesHookAction(Protocol):
     """
-    A standard function used by Misago to delete category and its children.
+    Misago function used to delete category and its children.
 
     # Arguments
 
@@ -50,7 +50,10 @@ class DeleteCategoriesHookFilter(Protocol):
 
     ## `action: DeleteCategoriesHookAction`
 
-    A standard function used by Misago to delete category and its children.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
+
+    See the [action](#action) section for details.
 
     ## `categories: list[Category]`
 
@@ -90,8 +93,7 @@ class DeleteCategoriesHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to delete category
-    and its children.
+    This hook wraps a Misago function used to delete category and its children.
 
     # Example
 

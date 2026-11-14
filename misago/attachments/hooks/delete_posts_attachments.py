@@ -8,8 +8,7 @@ from ...threads.models import Post
 
 class DeletePostsAttachmentsHookAction(Protocol):
     """
-    A standard function used by Misago to delete attachments associated with
-    specified posts.
+    Misago function used to delete attachments associated with specified posts.
 
     # Arguments
 
@@ -42,8 +41,8 @@ class DeletePostsAttachmentsHookFilter(Protocol):
 
     ## `action: DeletePostsAttachmentsHookAction`
 
-    A standard function used by Misago to delete attachments associated with
-    specified posts.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -76,8 +75,8 @@ class DeletePostsAttachmentsHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to delete
-    attachments associated with specified posts.
+    This hook wraps a Misago function used to delete attachments associated
+    with specified posts.
 
     # Example
 

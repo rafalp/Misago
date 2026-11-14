@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("misago_users", "0031_add_user_username_trigram_index"),
+        ("misago_users", "0031_add_user_slug_trigram_index"),
     ]
 
     operations = [

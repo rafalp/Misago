@@ -14,7 +14,7 @@ class CanUploadThreadsAttachmentsHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -47,7 +47,7 @@ class CanUploadThreadsAttachmentsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -75,8 +75,8 @@ class CanUploadThreadsAttachmentsHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function that checks whether a user has
-    permission to upload attachments in a category.
+    This hook wraps a Misago function used to check if a user has permission to
+    upload attachments in a category.
 
     # Example
 

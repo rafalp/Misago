@@ -1,6 +1,6 @@
 # `hide_thread_event_hook`
 
-This hook wraps a standard Misago function used to hide a `ThreadEvent` object.
+This hook wraps a Misago function used to hide a `ThreadEvent` object.
 
 
 ## Location

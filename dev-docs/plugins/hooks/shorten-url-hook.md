@@ -1,6 +1,6 @@
 # `shorten_url_hook`
 
-This hook wraps the standard function that Misago uses to shorten URLs in text.
+This hook wraps a Misago function used to shorten URLs in text.
 
 
 ## Location

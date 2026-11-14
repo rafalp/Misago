@@ -86,8 +86,8 @@ class GetThreadReplyStateHook(
     FilterHook[GetThreadReplyStateHookAction, GetThreadReplyStateHookFilter]
 ):
     """
-    This hook wraps the standard function Misago uses to create a new
-    `ThreadReplyState` instance for the thread reply view.
+    This hook wraps a Misago function used to create a new `ThreadReplyState`
+    instance for the thread reply view.
 
     # Example
 

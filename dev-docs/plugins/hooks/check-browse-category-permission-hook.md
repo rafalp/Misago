@@ -1,6 +1,6 @@
 # `check_browse_category_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to browse a category. It also checks if the user can see the category. It raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't browse it.
+This hook wraps a Misago function used to check if a user has permission to browse a category. It also checks if the user can see the category. It raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't browse it.
 
 
 ## Location
@@ -36,7 +36,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -67,7 +67,7 @@ Misago function used to check if the user has permission to browse a category. I
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 

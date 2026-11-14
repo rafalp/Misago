@@ -88,8 +88,8 @@ class GetThreadPostModerationActionsHook(
     ]
 ):
     """
-    This hook wraps the standard function Misago uses to retrieve available
-    moderation actions for a thread’s post.
+    This hook wraps a Misago function used to retrieve available moderation
+    actions for a thread’s post.
 
     # Example
 

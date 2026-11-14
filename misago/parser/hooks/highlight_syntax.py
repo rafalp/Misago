@@ -62,8 +62,7 @@ class HighlightSyntaxHook(
     FilterHook[HighlightSyntaxHookAction, HighlightSyntaxHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to return HTML with
-    highlighted code.
+    This hook wraps a Misago function used to return HTML with highlighted code.
 
     # Example
 

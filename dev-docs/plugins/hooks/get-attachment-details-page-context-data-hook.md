@@ -1,6 +1,6 @@
 # `get_attachment_details_page_context_data_hook`
 
-This hook wraps the standard function that Misago uses to get the template context data for the attachment details page.
+This hook wraps a Misago function used to get the template context data for the attachment details page.
 
 
 ## Location

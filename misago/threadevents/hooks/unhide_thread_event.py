@@ -75,7 +75,7 @@ class UnhideThreadEventHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to unhide a `ThreadEvent` object.
+    This hook wraps a Misago function used to unhide a `ThreadEvent` object.
 
     # Example
 

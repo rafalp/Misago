@@ -1,6 +1,6 @@
 # `create_parser_hook`
 
-This hook wraps the standard function that Misago uses to create a configured MarkdownIt instance.
+This hook wraps a Misago function used to create a configured MarkdownIt instance.
 
 
 ## Location

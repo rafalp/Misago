@@ -16,7 +16,7 @@ class CheckAccessThreadPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -50,7 +50,7 @@ class CheckAccessThreadPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -79,8 +79,8 @@ class CheckAccessThreadPermissionHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if a user has permission
-    to access a thread of any type (threads, private threads, or plugin-defined).
+    This hook wraps a Misago function used to check if a user has permission to
+    access a thread of any type (threads, private threads, or plugin-defined).
     Raises Django's `Http404` or `PermissionDenied` if they don't.
 
     # Example

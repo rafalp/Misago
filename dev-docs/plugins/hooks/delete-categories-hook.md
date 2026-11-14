@@ -1,6 +1,6 @@
 # `delete_categories_hook`
 
-This hook wraps the standard function that Misago uses to delete category and its children.
+This hook wraps a Misago function used to delete category and its children.
 
 
 ## Location
@@ -33,7 +33,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: DeleteCategoriesHookAction`
 
-A standard function used by Misago to delete category and its children.
+Next function registered in this hook, either a custom function or Misago's standard one.
+
+See the [action](#action) section for details.
 
 
 #### `categories: list[Category]`
@@ -69,7 +71,7 @@ def delete_categories_action(
     ...
 ```
 
-A standard function used by Misago to delete category and its children.
+Misago function used to delete category and its children.
 
 
 ### Arguments

@@ -59,7 +59,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
         response = self.client.get(
             "%s?redirected=1&profilefields=127.0.0.1" % test_link
         )
-        self.assertContains(response, "No users matching criteria exist.")
+        self.assertContains(response, "No users found")
 
     def test_field_display(self):
         """field displays on user profile"""

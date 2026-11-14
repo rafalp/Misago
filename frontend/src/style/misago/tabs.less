@@ -1,0 +1,193 @@
+// Main level tabs
+.main-tab-list {
+  margin-bottom: @line-height-computed;
+  padding: @padding-small-horizontal;
+
+  background-color: @gray-100;
+  border-radius: @border-radius-large;
+
+  a {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+
+    padding: @padding-base-vertical @padding-base-horizontal;
+
+    border-radius: @border-radius-base;
+
+    &,
+    &:link,
+    &:visited {
+      background-color: #fff;
+      border: 1px solid @gray-200;
+      color: @gray-600;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: @gray-200;
+      color: @gray-800;
+      text-decoration: none;
+    }
+
+    &.active {
+      &,
+      &:link,
+      &:visited,
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: @blue-600;
+        border-color: @blue-600;
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.main-tab-list-scroll {
+  display: flex;
+  gap: ceil(@grid-gutter-width / 2);
+
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.main-tab-pane + .main-tab-pane {
+  margin-top: @line-height-computed;
+}
+
+// In-panel tabs
+.panel-tab-list {
+  height: @tab-group-nav-height;
+  margin-bottom: @line-height-computed;
+
+  box-shadow: inset 20px 0 20px -20px #fff, inset -20px 0 20px -20px #fff;
+
+  overflow-y: visible;
+
+  border-bottom: 1px solid @tab-group-nav-border;
+}
+
+.panel-tab-list-scroll {
+  display: flex;
+  align-items: start;
+
+  gap: @tab-group-nav-gap;
+  padding: 0 @tab-group-nav-gap;
+
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.panel-tab-list-item {
+  display: flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+
+  scroll-snap-align: start end;
+
+  height: @tab-group-nav-height;
+  padding: 0 @tab-group-nav-item-padding-horizontal;
+
+  border: 1px solid transparent;
+  font-weight: bold;
+
+  &,
+  &:link,
+  &:visited {
+    color: @tab-group-nav-item-color;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: @tab-group-nav-item-hover;
+    text-decoration: none;
+  }
+
+  &.active {
+    &,
+    &:link,
+    &:visited,
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: @panel-bg;
+      border: 1px solid @tab-group-nav-border;
+      border-bottom-color: @panel-bg;
+      border-radius: @border-radius-small @border-radius-small 0 0;
+      color: @tab-group-nav-item-active;
+      text-decoration: none;
+    }
+  }
+}
+
+.panel-tab-list-bullet-danger {
+  display: block;
+  width: @tab-group-nav-item-bullet;
+  height: @tab-group-nav-item-bullet;
+
+  margin-right: ceil(@tab-group-nav-item-padding-horizontal * 0.66);
+
+  background-color: @brand-danger;
+  border-radius: ceil(@tab-group-nav-item-bullet / 2);
+}
+
+// Tab header is used for visual distinction between tabs for noscript clients
+.panel-tab-pane-header {
+  padding-bottom: ceil(@line-height-computed / 2);
+
+  border-bottom: 1px solid @gray-lighter;
+}
+
+.panel-tab-pane + .panel-tab-pane .panel-tab-pane-header {
+  margin-top: @line-height-computed;
+}
+
+// Hide navs if JS is disabled
+.main-tab-list,
+.panel-tab-list {
+  display: none;
+}
+
+@media (scripting: enabled) {
+  .main-tab-list {
+    display: flex;
+  }
+
+  .panel-tab-list {
+    display: block;
+  }
+}
+
+@media (scripting: enabled) {
+  // Hide all tabs if client has JS
+  .main-tab-pane,
+  .panel-tab-pane,
+  .panel-tab-pane-header {
+    display: none;
+  }
+
+  // Show active tab
+  .main-tab-pane {
+    margin: 0;
+  }
+
+  .main-tab-pane.active,
+  .panel-tab-pane.active {
+    display: block;
+  }
+}

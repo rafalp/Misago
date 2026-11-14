@@ -1,6 +1,6 @@
 # `get_tokens_metadata_hook`
 
-This hook wraps the standard function Misago uses to extract metadata from a token stream.
+This hook wraps a Misago function used to extract metadata from a token stream.
 
 Token stream is a list of the `Token` instances from `markdown_it.tokens` module.
 

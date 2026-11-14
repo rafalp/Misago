@@ -42,8 +42,7 @@ class ProcessPostContentHook(
     FilterHook[ProcessPostContentHookAction, ProcessPostContentHookFilter]
 ):
     """
-    This hook wraps a standard Misago function used to process post content
-    after saving.
+    This hook wraps a Misago function used to process post content after saving.
 
     The process runs in a Celery task scheduled after the post is created or updated,
     allowing slow and costly operations, such as embedding previews of linked

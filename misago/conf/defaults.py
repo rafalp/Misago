@@ -16,7 +16,6 @@ MISAGO_ACL_EXTENSIONS = [
     "misago.users.permissions.moderation",
     "misago.users.permissions.delete",
     "misago.categories.permissions",
-    "misago.search.permissions",
 ]
 
 
@@ -66,13 +65,6 @@ MISAGO_POSTING_MIDDLEWARES = [
 MISAGO_THREAD_TYPES = [
     "misago.threads.threadtypes.thread.Thread",
     "misago.threads.threadtypes.privatethread.PrivateThread",
-]
-
-
-# Search extensions
-
-MISAGO_SEARCH_EXTENSIONS = [
-    "misago.users.search.SearchUsers",
 ]
 
 

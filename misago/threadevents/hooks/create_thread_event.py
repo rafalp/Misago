@@ -148,7 +148,7 @@ class CreateThreadEventHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to create a `ThreadEvent` object.
+    This hook wraps a Misago function used to create a `ThreadEvent` object.
 
     # Example
 

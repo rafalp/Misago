@@ -43,6 +43,9 @@ def _copy_category_permissions_action(
 
 
 COPY_GROUP_PERMISSIONS = (
+    "can_search",
+    "can_search_users",
+    "bypass_search_throttling",
     "can_edit_own_threads",
     "own_threads_edit_time_limit",
     "can_edit_own_posts",

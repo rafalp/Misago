@@ -8,8 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class DeleteCategoriesAttachmentsHookAction(Protocol):
     """
-    A standard function used by Misago to delete attachments associated with
-    specified categories.
+    Misago function used to delete attachments associated with specified categories.
 
     # Arguments
 
@@ -42,8 +41,8 @@ class DeleteCategoriesAttachmentsHookFilter(Protocol):
 
     ## `action: DeleteCategoriesAttachmentsHookAction`
 
-    A standard function used by Misago to delete attachments associated with
-    specified categories.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -76,8 +75,8 @@ class DeleteCategoriesAttachmentsHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to delete
-    attachments associated with specified categories.
+    This hook wraps a Misago function used to delete attachments associated
+    with specified categories.
 
     # Example
 

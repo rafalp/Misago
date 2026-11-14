@@ -1,6 +1,6 @@
 # `get_private_thread_reply_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
+This hook wraps a Misago function used to create a new `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ## Location
@@ -64,7 +64,7 @@ def get_private_thread_reply_formset_action(
     ...
 ```
 
-A standard function that Misago uses to create a new `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
+Misago function used to create a new `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ### Arguments

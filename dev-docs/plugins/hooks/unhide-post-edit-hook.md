@@ -1,6 +1,6 @@
 # `unhide_post_edit_hook`
 
-This hook wraps a standard Misago function used to unhide a `PostEdit` object.
+This hook wraps a Misago function used to unhide a `PostEdit` object.
 
 
 ## Location

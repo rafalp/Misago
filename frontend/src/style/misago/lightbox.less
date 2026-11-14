@@ -185,6 +185,8 @@
 }
 
 // Make cursor pointer for images with JS on
-.misago-javascript img[misago-lightbox-media] {
-  cursor: pointer;
+@media (scripting: enabled) {
+  img[misago-lightbox-media] {
+    cursor: pointer;
+  }
 }

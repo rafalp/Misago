@@ -71,8 +71,8 @@ class GetThreadsUsersHook(
     FilterHook[GetThreadsUsersHookAction, GetThreadsUsersHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to get `User` objects
-    to display on threads list.
+    This hook wraps a Misago function used to get `User` objects to display on
+    threads list.
 
     # Example
 

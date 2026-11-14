@@ -492,7 +492,7 @@ def check_filter_category_threads_queryset_case(
     )
 
     queryset = filter_category_threads_queryset(
-        permissions, categories.categories[category.id], category.thread_set
+        permissions, categories[category.id], category.thread_set
     )
     if thread in queryset:
         assert_category_threads_queryset_contains(user, category, thread)

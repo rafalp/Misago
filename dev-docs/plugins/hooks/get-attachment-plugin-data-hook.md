@@ -1,6 +1,6 @@
 # `get_attachment_plugin_data_hook`
 
-This hook wraps the standard function that Misago uses to create a `dict` to be saved in new attachment's `plugin_data` JSON field.
+This hook wraps a Misago function used to create a `dict` to be saved in new attachment's `plugin_data` JSON field.
 
 
 ## Location
@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetAttachmentPluginDataHookAction`
 
-A standard function that Misago uses to create a `dict` to be saved in new attachment's `plugin_data` JSON field.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -65,7 +65,7 @@ def get_attachment_plugin_data_action(
     ...
 ```
 
-A standard function that Misago uses to create a `dict` to be saved in new attachment's `plugin_data` JSON field.
+Misago function used to create a `dict` to be saved in new attachment's `plugin_data` JSON field.
 
 
 ### Arguments

@@ -320,8 +320,8 @@ def test_user_permissions_is_category_moderator_returns_true_for_global_moderato
     proxy = UserPermissionsProxy(user, cache_versions)
     proxy.permissions
 
-    assert proxy.is_category_moderator(default_category.id)
-    assert proxy.is_category_moderator(other_category.id)
+    assert proxy.is_category_moderator(default_category)
+    assert proxy.is_category_moderator(other_category)
 
 
 def test_user_permissions_is_category_moderator_returns_true_for_category_moderator(
@@ -346,11 +346,11 @@ def test_user_permissions_is_category_moderator_returns_true_for_category_modera
 
     Moderator.objects.create(is_global=False, user=user, categories=[other_category.id])
 
-    assert not proxy.is_category_moderator(default_category.id)
-    assert proxy.is_category_moderator(other_category.id)
+    assert not proxy.is_category_moderator(default_category)
+    assert proxy.is_category_moderator(other_category)
 
 
-def test_user_permissions_is_category_moderator_returns_true_for_category_moderator(
+def test_user_permissions_is_category_moderator_supports_category_id(
     user,
     cache_versions,
     default_category,
@@ -411,4 +411,4 @@ def test_user_permissions_proxy_is_category_moderator_returns_false_for_anonymou
     proxy.permissions
 
     with django_assert_num_queries(0):
-        assert not proxy.is_category_moderator(default_category.id)
+        assert not proxy.is_category_moderator(default_category)

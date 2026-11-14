@@ -13,7 +13,7 @@ class CanUploadPrivateThreadsAttachmentsHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -41,7 +41,7 @@ class CanUploadPrivateThreadsAttachmentsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -64,8 +64,8 @@ class CanUploadPrivateThreadsAttachmentsHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function that checks whether a user has
-    permission to upload attachments in private threads.
+    This hook wraps a Misago function used to check if a user has permission to
+    upload attachments in private threads.
 
     # Example
 

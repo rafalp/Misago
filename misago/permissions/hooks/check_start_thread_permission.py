@@ -15,7 +15,7 @@ class CheckStartThreadInCategoryPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -44,7 +44,7 @@ class CheckStartThreadInCategoryPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,9 +68,9 @@ class CheckStartThreadInCategoryPermissionHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if the user has
-    permission to start a new thread in a category. It raises Django's
-    `PermissionDenied` with an error message if they can't start thread in a category.
+    This hook wraps a Misago function used to check if a user has permission to
+    to start a new thread in a category. It raises Django's `PermissionDenied`
+    with an error message if they can't start thread in a category.
 
     # Example
 

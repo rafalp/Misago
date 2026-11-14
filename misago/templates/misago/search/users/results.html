@@ -1,0 +1,48 @@
+{% load i18n misago_avatars misago_component %}
+
+<section class="section">
+  <div class="search-users">
+    <h2 class="search-users-title">
+      {{ title }}
+    </h2>
+    {% if results %}
+      <ul class="search-users-results">
+        {% for result in results %}
+          <li class="search-users-result">
+            <div class="user-card{% if result.css_suffix %} user-card-{{ result.css_suffix }}{% endif %}"{% if result.group_color %} style="--group-color: {{ result.group_color }}"{% endif %}>
+              <div class="user-card-start">
+                <a class="user-card-avatar" href="{{ result.url }}">
+                  <img src="{{ result|avatar:128 }}" srcset="{{ result|avatar:256 }}" alt="">
+                </a>
+              </div>
+              <div class="user-card-end">
+                <div class="user-card-identity">
+                  <div class="user-card-username">
+                    <a class="user-card-username-link" href="{{ result.url }}">
+                      {{ result.username }}
+                    </a>
+                  </div>
+                  {% if result.title %}
+                    <div class="user-card-title">{{ result.title }}</div>
+                  {% endif %}
+                </div>
+                {% if result.meta and result.meta.items %}
+                  {% includecomponent result.meta css_prefix="user-card" %}
+                {% endif %}
+                {% if result.stats and result.stats.items %}
+                  {% includecomponent result.stats css_prefix="user-card-stats" %}
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="search-users-blankslate">
+        {% blocktranslate trimmed context "search users empty message"%}
+          Check the spelling or try a different username.
+        {% endblocktranslate %}
+      </div>
+    {% endif %}
+  </div>
+</section>

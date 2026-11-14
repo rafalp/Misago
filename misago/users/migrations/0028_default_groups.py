@@ -32,6 +32,9 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=0,
                 # Permissions
+                can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
+                bypass_search_throttling=PermissionValue.YES,
                 can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
@@ -75,6 +78,9 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=1,
                 # Permissions
+                can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
+                bypass_search_throttling=PermissionValue.YES,
                 can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
@@ -115,6 +121,8 @@ def create_default_groups(apps, schema_editor):
                 is_default=True,
                 ordering=2,
                 # Permissions
+                can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
                 can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
@@ -133,7 +141,6 @@ def create_default_groups(apps, schema_editor):
                 can_always_delete_own_attachments=PermissionValue.YES,
                 can_start_polls=PermissionValue.YES,
                 can_edit_own_polls=PermissionValue.YES,
-                can_close_own_polls=PermissionValue.NO,
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=PermissionValue.YES,
                 can_like_posts=PermissionValue.YES,
@@ -155,6 +162,8 @@ def create_default_groups(apps, schema_editor):
                 is_hidden=True,
                 ordering=3,
                 # Permissions
+                can_search=PermissionValue.YES,
+                can_search_users=PermissionValue.YES,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_see_others_post_likes=CanSeePostLikes.USERS,
                 can_see_user_profiles=PermissionValue.YES,

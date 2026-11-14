@@ -4,7 +4,7 @@ from .models import Category
 from .synchronize import synchronize_category
 
 
-@shared_task(name="categories.synchronize", serializer="json")
+@shared_task
 def synchronize_categories(category_ids: list[int]):
     for category in Category.objects.filter(id__in=category_ids):
         synchronize_category(category)

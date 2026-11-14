@@ -81,9 +81,9 @@
 {% block blankslate %}
 <td colspan="{{ 8|add:extra_actions_len }}">
   {% if active_filters %}
-    {% translate "No data downloads matching criteria exist." context "admin data downloads" %}
+    {% translate "No data downloads found" context "admin data downloads" %}
   {% else %}
-    {% translate "No data downloads exist." context "admin data downloads" %}
+    {% translate "No data downloads exist" context "admin data downloads" %}
   {% endif %}
 </td>
 {% endblock blankslate %}

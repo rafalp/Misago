@@ -1,6 +1,6 @@
 # `check_private_threads_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has a permission to access private threads feature. Raises Django's `PermissionDenied` with an error message if they don't.
+This hook wraps a Misago function used to check if a user has permission to access private threads feature. Raises Django's `PermissionDenied` with an error message if they don't.
 
 
 ## Location
@@ -34,7 +34,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -51,7 +51,7 @@ Misago function used to check if the user has a permission to access private thr
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
