@@ -70,8 +70,8 @@ class BaseThreadsSearchForm(SearchForm):
 
     def setup_query_field(self):
         field = self.fields["query"]
-        field.max_length = self.request.settings.max_search_query_length
-        field.min_length = self.request.settings.min_search_term_length
+        field.max_length = self.request.settings.search_query_max_length
+        field.min_length = self.request.settings.search_term_min_length
 
     def setup_users_field(self):
         users_queryset = User.objects
@@ -82,8 +82,8 @@ class BaseThreadsSearchForm(SearchForm):
     def clean_query(self):
         return clean_search_query(
             self.cleaned_data["query"],
-            max_length=self.request.settings.max_search_query_length,
-            min_term_length=self.request.settings.min_search_term_length,
+            max_length=self.request.settings.search_query_max_length,
+            min_term_length=self.request.settings.search_term_min_length,
             request=self.request,
         )
 

@@ -6,21 +6,26 @@ from .base import SettingsForm
 
 class SearchSettingsForm(SettingsForm):
     settings = [
-        "max_search_query_length",
-        "min_search_term_length",
-        "user_min_search_interval",
-        "guest_min_search_interval",
+        "search_query_max_length",
+        "search_term_min_length",
+        "search_min_interval_user",
+        "search_min_interval_guest",
         "search_log_retention",
+        "search_threads_results_per_page",
+        "search_threads_max_offset",
+        "search_users_max_results",
+        "search_users_max_candidates",
+        "search_users_max_suggestions",
     ]
 
-    max_search_query_length = forms.IntegerField(
+    search_query_max_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin search settings form",
             "Maximum length of a search query",
         ),
         min_value=5,
     )
-    min_search_term_length = forms.IntegerField(
+    search_term_min_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin search settings form",
             "Minimum length of a single term in a search query",
@@ -32,7 +37,7 @@ class SearchSettingsForm(SettingsForm):
         min_value=1,
     )
 
-    user_min_search_interval = forms.IntegerField(
+    search_min_interval_user = forms.IntegerField(
         label=pgettext_lazy(
             "admin search settings form",
             "User minimum search interval",
@@ -43,7 +48,7 @@ class SearchSettingsForm(SettingsForm):
         ),
         min_value=0,
     )
-    guest_min_search_interval = forms.IntegerField(
+    search_min_interval_guest = forms.IntegerField(
         label=pgettext_lazy(
             "admin search settings form",
             "Guest minimum search interval",

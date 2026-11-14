@@ -62,7 +62,7 @@ def test_throttle_search_returns_interval_time_for_user_with_old_and_recent_sear
     assert throttle_search(request)
 
 
-@override_dynamic_settings(user_min_search_interval=0)
+@override_dynamic_settings(search_min_interval_user=0)
 def test_throttle_search_user_disables_check_if_interval_is_disabled(
     django_assert_num_queries, dynamic_settings, user
 ):
@@ -153,7 +153,7 @@ def test_throttle_search_returns_interval_time_for_anonymous_user_with_old_and_r
     assert throttle_search(request)
 
 
-@override_dynamic_settings(guest_min_search_interval=0)
+@override_dynamic_settings(search_min_interval_guest=0)
 def test_throttle_search_for_anonymous_user_disables_check_if_interval_is_disabled(
     django_assert_num_queries, dynamic_settings, anonymous_user
 ):

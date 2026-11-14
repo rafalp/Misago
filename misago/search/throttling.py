@@ -14,10 +14,10 @@ def _throttle_search_action(request: HttpRequest) -> int:
     queryset = SearchLog.objects
 
     if request.user.is_authenticated:
-        min_search_interval = request.settings.user_min_search_interval
+        min_search_interval = request.settings.search_min_interval_user
         queryset = queryset.filter(Q(user=request.user) | Q(ip_address=request.user_ip))
     else:
-        min_search_interval = request.settings.guest_min_search_interval
+        min_search_interval = request.settings.search_min_interval_guest
         queryset = queryset.filter(ip_address=request.user_ip)
 
     if not min_search_interval:
