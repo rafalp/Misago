@@ -11,11 +11,12 @@ from ....admin.views import generic
 from ....core.mail import mail_users
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
-from ...deletesrecord import record_user_deleted_by_staff
+from ...enums import DeleteUserContentAction
 from ...models import Ban
 from ...profilefields import profilefields
 from ...setupnewuser import setup_new_user
 from ...signatures import set_user_signature
+from ...tasks import delete_user
 from ..forms.users import (
     BanUsersForm,
     EditUserForm,
@@ -23,7 +24,6 @@ from ..forms.users import (
     create_filter_users_form,
     user_form_factory,
 )
-from ..tasks import delete_user_with_content
 
 User = get_user_model()
 
@@ -236,8 +236,12 @@ class UsersList(UserAdmin, generic.ListView):
                 )
 
         for user in users:
-            user.delete(anonymous_username=request.settings.anonymous_username)
-            record_user_deleted_by_staff()
+            delete_user.delay(
+                user.pk,
+                content_action=DeleteUserContentAction.LEAVE,
+                anonymous_username=request.settings.anonymous_username,
+                deleted_by_id=request.user.id,
+            )
 
         messages.success(
             request, pgettext("admin users", "Selected users have been deleted.")
@@ -266,11 +270,14 @@ class UsersList(UserAdmin, generic.ListView):
                     % {"user": user.username}
                 )
 
-        for user in users:
             user.is_active = False
             user.save()
-
-            delete_user_with_content.delay(user.pk)
+            delete_user.delay(
+                user.pk,
+                content_action=DeleteUserContentAction.DELETE,
+                anonymous_username=request.settings.anonymous_username,
+                deleted_by_id=request.user.id,
+            )
 
         messages.success(
             request,

@@ -11,9 +11,7 @@ from .profilefields import profilefields
 
 User = get_user_model()
 
-anonymize_user_data = Signal()
 archive_user_data = Signal()
-delete_user_content = Signal()
 remove_old_ips = Signal()
 username_changed = Signal()
 
@@ -98,9 +96,3 @@ def remove_old_registrations_ips(sender, *, ip_storage_time, **kwargs):
 def remove_old_audit_trails(sender, *, ip_storage_time, **kwargs):
     removal_cutoff = timezone.now() - timedelta(days=ip_storage_time)
     AuditTrail.objects.filter(created_on__lte=removal_cutoff).delete()
-
-
-@receiver(anonymize_user_data)
-def delete_data_downloads(sender, **kwargs):
-    for data_download in sender.datadownload_set.iterator(chunk_size=50):
-        data_download.delete()

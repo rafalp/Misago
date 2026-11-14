@@ -18,8 +18,7 @@ from ...core.shortcuts import get_int_or_404
 from ...threads.hide import hide_post, hide_thread
 from ...threads.synchronize import synchronize_thread
 from ..bans import get_user_ban
-from ..datadownloads import request_user_data_download, user_has_data_download_request
-from ..deletesrecord import record_user_deleted_by_staff
+from ..delete import DeleteUserContentAction
 from ..online.utils import get_user_status
 from ..permissions import (
     allow_browse_users_list,
@@ -32,13 +31,14 @@ from ..permissions import (
 )
 from ..profilefields import profilefields, serialize_profilefields_data
 from ..serializers import BanDetailsSerializer, UserSerializer
+from ..tasks import delete_user
 from ..viewmodels import Followers, Follows, UserPosts, UserThreads
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
 from .userendpoints.create import create_endpoint
 from .userendpoints.editdetails import edit_details_endpoint
 from .userendpoints.list import list_endpoint
-from .userendpoints.username import moderate_username_endpoint, username_endpoint
+from .userendpoints.username import moderate_username_endpoint
 
 User = get_user_model()
 
@@ -204,35 +204,16 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_delete_user(request.user_acl, profile)
 
         if request.method == "POST":
-            with transaction.atomic():
-                profile.lock()
+            content_action = DeleteUserContentAction.HIDE
+            if request.data.get("with_content"):
+                content_action = DeleteUserContentAction.DELETE
 
-                if request.data.get("with_content"):
-                    profile.delete_content()
-                else:
-                    categories_to_sync = set()
-
-                    threads = profile.thread_set.select_related(
-                        "category", "first_post"
-                    ).filter(is_hidden=False)
-                    for thread in threads.iterator(chunk_size=50):
-                        categories_to_sync.add(thread.category_id)
-                        hide_thread(thread, request.user, request=request)
-
-                    posts = profile.post_set.select_related(
-                        "category", "thread", "thread__category"
-                    ).filter(is_hidden=False)
-                    for post in posts.iterator(chunk_size=50):
-                        categories_to_sync.add(post.category_id)
-                        hide_post(post, request.user, request=request)
-                        synchronize_thread(post.thread)
-
-                    categories = Category.objects.filter(id__in=categories_to_sync)
-                    for category in categories.iterator():
-                        synchronize_category(category)
-
-                profile.delete(anonymous_username=request.settings.anonymous_username)
-                record_user_deleted_by_staff()
+            delete_user.delay(
+                profile.id,
+                content_action=content_action,
+                anonymous_username=request.settings.anonymous_username,
+                deleted_by_id=request.user.id,
+            )
 
         return Response({})
 
