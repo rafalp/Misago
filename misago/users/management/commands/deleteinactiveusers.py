@@ -14,6 +14,16 @@ User = get_user_model()
 class Command(BaseCommand):
     help = "Deletes inactive user accounts older than set time."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "content",
+            nargs="?",
+            type=str,
+            default=DeleteUserContentAction.LEAVE.value,
+            choices=[e.value for e in list(DeleteUserContentAction)],
+            help="What to do with deleted user content",
+        )
+
     def handle(self, *args, **options):
         settings = get_dynamic_settings()
         if not settings.new_inactive_accounts_delete:
@@ -34,10 +44,9 @@ class Command(BaseCommand):
         )
 
         for user in queryset.iterator(chunk_size=50):
-            # TODO: [SIGNAL] set correct value of content_action
             delete_user(
                 user,
-                content_action=DeleteUserContentAction.LEAVE,
+                content_action=DeleteUserContentAction[options["content"]],
                 anonymous_username=settings.anonymous_username,
             )
             record_user_deleted_by_system()
