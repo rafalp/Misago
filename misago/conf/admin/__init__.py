@@ -110,7 +110,7 @@ class MisagoAdminExtension:
             name=pgettext_lazy("admin node", "Search"),
             description=pgettext_lazy(
                 "admin node",
-                "Search query constraints, intervals between searches, and log retention.",
+                "Search query constraints, minimum intervals between searches, result limits, and search log retention.",
             ),
             parent="settings",
             namespace="search",

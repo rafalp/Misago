@@ -5,27 +5,25 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Query constraints" context "admin search settings form" %}</legend>
+    <legend>{% translate "Threads and private threads" context "admin search settings form" %}</legend>
 
-    {% form_row form.max_search_query_length %}
-    {% form_row form.min_search_term_length %}
-
-  </fieldset>
-</div>
-<div class="form-fieldset">
-  <fieldset>
-    <legend>{% translate "Intervals" context "admin search settings form" %}</legend>
-
-    {% form_row form.search_min_interval_user %}
-    {% form_row form.search_min_interval_guest %}
+    {% form_row form.search_threads_query_max_length %}
+    {% form_row form.search_threads_term_min_length %}
+    {% form_row form.search_threads_min_interval_user %}
+    {% form_row form.search_threads_min_interval_guest %}
+    {% form_row form.search_threads_batch_size %}
+    {% form_row form.search_threads_max_offset %}
+    {% form_row form.search_threads_log_retention %}
 
   </fieldset>
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Log retention" context "admin search settings form" %}</legend>
+    <legend>{% translate "Users search" context "admin search settings form" %}</legend>
 
-    {% form_row form.search_log_retention %}
+    {% form_row form.search_users_max_results %}
+    {% form_row form.search_users_max_candidates %}
+    {% form_row form.search_users_max_suggestions %}
 
   </fieldset>
 </div>

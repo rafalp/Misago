@@ -11,5 +11,5 @@ logger = getLogger("misago.search")
 @shared_task()
 def clear_old_search_logs():
     settings = get_dynamic_settings()
-    deleted = delete_old_search_logs(settings.search_log_retention)
+    deleted = delete_old_search_logs(settings.search_threads_log_retention)
     logger.info("Deleted old search logs: %s", deleted)

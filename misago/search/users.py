@@ -15,25 +15,23 @@ if TYPE_CHECKING:
 
 
 class UsersSearch:
-    limit: int
     use_trigram_lookup: bool
     min_length: int
     min_similarity: float
-    max_candidates: int
     max_differences: dict[int, int]
 
     def __init__(self, options: dict):
-        self.limit = max(int(options.get("LIMIT", 0)), 3)
         self.use_trigram_lookup = bool(options.get("USE_TRIGRAM_LOOKUP"))
         self.min_length = max(int(options.get("MIN_LENGTH", 0)), 1)
         self.min_similarity = max(float(options.get("MIN_SIMILARITY", 0)), 0.1)
-        self.max_candidates = max(int(options.get("MAX_CANDIDATES", 0)), 1)
         self.max_differences = options.get("MAX_DIFFERENCES", {})
 
     def __call__(
         self,
         permissions: UserPermissionsProxy,
         username: str,
+        max_results: int,
+        max_candidates: int,
         include_deactivated: bool = False,
         include_self: bool = False,
     ) -> list["User"]:
@@ -59,10 +57,10 @@ class UsersSearch:
         if self.use_trigram_lookup:
             queryset = queryset.filter(slug__trigram_similar=username)
 
-        results += self.search_candidates(queryset, username)
+        results += self.search_candidates(queryset, username, max_candidates)
         results = self.remove_too_different_candidates(results, username)
 
-        return self.sort_results(results, username)[: self.limit]
+        return self.sort_results(results, username)[:max_results]
 
     def normalize_username(self, username: str) -> str:
         return slugify(username)
@@ -76,6 +74,7 @@ class UsersSearch:
         self,
         queryset: QuerySet["User"],
         username: str,
+        limit: int,
     ) -> list["User"]:
         username_length = len(username)
 
@@ -92,7 +91,7 @@ class UsersSearch:
             .order_by("similarity")
         )
 
-        return list(queryset[: self.max_candidates])
+        return list(queryset[:limit])
 
     def remove_too_different_candidates(
         self, results: list["User"], username: str

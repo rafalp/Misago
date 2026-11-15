@@ -271,10 +271,8 @@ MISAGO_THREADS_SEARCH = {
 
 MISAGO_USERS_SEARCH = {
     "USE_TRIGRAM_LOOKUP": False,
-    "LIMIT": 12,
     "MIN_LENGTH": 3,
     "MIN_SIMILARITY": 0.2,
-    "MAX_CANDIDATES": 24,
     "MAX_DIFFERENCES": {
         3: 0,
         4: 1,

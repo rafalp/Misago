@@ -12,32 +12,32 @@ class Migration(migrations.Migration):
 
     operations = [
         CreateSetting(
-            setting="search_query_max_length",
+            setting="search_threads_query_max_length",
             python_type="int",
             dry_value=150,
         ),
         CreateSetting(
-            setting="search_term_min_length",
+            setting="search_threads_term_min_length",
             python_type="int",
             dry_value=4,
         ),
         CreateSetting(
-            setting="search_min_interval_user",
+            setting="search_threads_min_interval_user",
             python_type="int",
             dry_value=5,
         ),
         CreateSetting(
-            setting="search_min_interval_guest",
+            setting="search_threads_min_interval_guest",
             python_type="int",
             dry_value=12,
         ),
         CreateSetting(
-            setting="search_log_retention",
+            setting="search_threads_log_retention",
             python_type="int",
             dry_value=45,
         ),
         CreateSetting(
-            setting="search_threads_results_per_page",
+            setting="search_threads_batch_size",
             python_type="int",
             dry_value=40,
         ),
@@ -59,6 +59,6 @@ class Migration(migrations.Migration):
         CreateSetting(
             setting="search_users_max_suggestions",
             python_type="int",
-            dry_value=12,
+            dry_value=8,
         ),
     ]

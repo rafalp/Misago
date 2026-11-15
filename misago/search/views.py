@@ -483,9 +483,13 @@ class UsersSearchView(BaseSearchView):
         }
 
     def search(self, form: UsersSearchForm) -> list["User"]:
+        request = self.request
+
         return search_users(
-            self.request.user_permissions,
+            request.user_permissions,
             form.cleaned_data["query"],
+            request.settings.search_users_max_results,
+            request.settings.search_users_max_candidates,
             include_self=True,
         )
 

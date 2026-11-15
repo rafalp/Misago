@@ -53,7 +53,7 @@ class Command(BaseCommand):
 
     def delete_old(self, interactive: bool):
         settings = get_dynamic_settings()
-        log_retention = settings.search_log_retention
+        log_retention = settings.search_threads_log_retention
 
         if interactive:
             if log_retention == 1:
