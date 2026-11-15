@@ -7,12 +7,14 @@ from .views import (
     SearchView,
     ThreadsSearchView,
     UsersSearchView,
+    UsersSuggestView,
 )
 
 search_view = extensions.get(SearchView).as_view()
 threads_search_view = extensions.get(ThreadsSearchView).as_view()
 private_threads_search_view = extensions.get(PrivateThreadsSearchView).as_view()
 users_search_view = extensions.get(UsersSearchView).as_view()
+users_suggest_view = extensions.get(UsersSuggestView).as_view()
 
 urlpatterns = [
     path("search/", search_view, name="search"),
@@ -23,4 +25,5 @@ urlpatterns = [
         name="private-threads-search",
     ),
     path("search/users/", users_search_view, name="users-search"),
+    path("search/users/suggest/", users_suggest_view, name="users-suggest"),
 ]

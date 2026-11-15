@@ -21,6 +21,35 @@ def test_search_users_returns_exact_match_user(
     assert results == [admin]
 
 
+def test_search_users_does_simple_fuzzy_search(
+    user_permissions_factory, admin, moderator, user, other_user
+):
+    user_permissions = user_permissions_factory(user)
+    results = search_users(user_permissions, "otherusr")
+
+    assert results == [other_user]
+
+
+def test_search_users_excludes_specified_users(
+    user_permissions_factory, admin, moderator, user, other_user
+):
+    user_permissions = user_permissions_factory(user)
+    results = search_users(user_permissions, other_user.username, exclude=[other_user])
+
+    assert results == []
+
+
+def test_search_users_excludes_specified_user_ids(
+    user_permissions_factory, admin, moderator, user, other_user
+):
+    user_permissions = user_permissions_factory(user)
+    results = search_users(
+        user_permissions, other_user.username, exclude=[other_user.id]
+    )
+
+    assert results == []
+
+
 def test_search_users_excludes_searcher(
     user_permissions_factory, admin, moderator, user, other_user
 ):
@@ -37,15 +66,6 @@ def test_search_users_includes_searcher_when_enabled(
     results = search_users(user_permissions, user.username, include_self=True)
 
     assert results == [user]
-
-
-def test_search_users_does_simple_fuzzy_search(
-    user_permissions_factory, admin, moderator, user, other_user
-):
-    user_permissions = user_permissions_factory(user)
-    results = search_users(user_permissions, "otherusr")
-
-    assert results == [other_user]
 
 
 def test_search_users_excludes_inactive_users(

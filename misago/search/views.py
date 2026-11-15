@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet, prefetch_related_objects
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
@@ -602,4 +602,49 @@ class UsersSearchView(BaseSearchView):
         return {
             "template_name": "misago/meta.html",
             "items": items,
+        }
+
+
+class UsersSuggestView(View):
+    LIMIT_EXCLUDES = 50
+
+    def get(self, request):
+        if query := self.get_search_query():
+            results = self.search_users(query, self.get_excluded_ids())
+        else:
+            results = []
+
+        return JsonResponse({"results": list(map(self.serialize_result, results))})
+
+    def get_search_query(self) -> str:
+        return self.request.GET.get("query", "").strip().lower()
+
+    def get_excluded_ids(self) -> set[int]:
+        excluded_ids: set[int] = set()
+
+        for user_id in self.request.GET.getlist("exclude")[: self.LIMIT_EXCLUDES]:
+            try:
+                excluded_ids.add(int(user_id))
+            except (TypeError, ValueError):
+                pass
+        return excluded_ids
+
+    def search_users(self, query: str, exclude_ids: set[int]) -> list["User"]:
+        request = self.request
+
+        return search_users(
+            request.user_permissions,
+            query,
+            request.settings.search_users_max_suggestions,
+            request.settings.search_users_max_candidates,
+            include_self=True,
+            exclude=exclude_ids,
+        )
+
+    def serialize_result(self, user: "User") -> dict:
+        return {
+            "id": user.id,
+            "username": user.username,
+            "slug": user.slug,
+            "avatar": user.avatars,
         }

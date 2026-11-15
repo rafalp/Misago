@@ -23,7 +23,7 @@ def test_search_view_includes_private_threads_if_user_has_permission(
     user_client, members_group
 ):
     response = user_client.get(reverse("misago:search"))
-    assert_contains(response, reverse("misago:private-threads-search"))
+    assert_contains(response, f'action="{reverse("misago:private-threads-search")}"')
 
 
 def test_search_view_excludes_private_threads_if_user_has_no_permission(
@@ -33,12 +33,14 @@ def test_search_view_excludes_private_threads_if_user_has_no_permission(
     members_group.save()
 
     response = user_client.get(reverse("misago:search"))
-    assert_not_contains(response, reverse("misago:private-threads-search"))
+    assert_not_contains(
+        response, f'action="{reverse("misago:private-threads-search")}"'
+    )
 
 
 def test_search_view_includes_users_if_user_has_permission(user_client, members_group):
     response = user_client.get(reverse("misago:search"))
-    assert_contains(response, reverse("misago:users-search"))
+    assert_contains(response, f'action="{reverse("misago:users-search")}"')
 
 
 def test_search_view_excludes_users_if_user_has_no_permission(
@@ -48,4 +50,4 @@ def test_search_view_excludes_users_if_user_has_no_permission(
     members_group.save()
 
     response = user_client.get(reverse("misago:search"))
-    assert_not_contains(response, reverse("misago:users-search"))
+    assert_not_contains(response, f'action="{reverse("misago:users-search")}"')

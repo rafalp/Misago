@@ -1,5 +1,5 @@
 from functools import cmp_to_key
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -32,10 +32,15 @@ class UsersSearch:
         username: str,
         max_results: int = 4,
         max_candidates: int = 32,
+        exclude: Iterable[Union["User", int]] | None = None,
         include_deactivated: bool = False,
         include_self: bool = False,
     ) -> list["User"]:
         queryset = get_user_model().objects
+
+        if exclude:
+            user_ids = [user if isinstance(user, int) else user.id for user in exclude]
+            queryset = queryset.exclude(id__in=user_ids)
 
         if not include_deactivated:
             queryset = queryset.filter(is_active=True)

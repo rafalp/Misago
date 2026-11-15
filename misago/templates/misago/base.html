@@ -45,7 +45,7 @@
     <script type="text/javascript">
       window.misago_locale = "{{ LANGUAGE_CODE }}"
       window.misago_csrf = {{ CSRF_COOKIE_NAME|safe }}
-      window.misago_suggest_users = "{% url 'misago:suggest-users' %}"
+      window.misago_suggest_users = "{% url 'misago:users-suggest' %}"
     </script>
     {% pluginoutlet HEAD_END %}
     {% includecomponents before_head_close %}
