@@ -30,8 +30,8 @@ class UsersSearch:
         self,
         permissions: UserPermissionsProxy,
         username: str,
-        max_results: int,
-        max_candidates: int,
+        max_results: int = 4,
+        max_candidates: int = 32,
         include_deactivated: bool = False,
         include_self: bool = False,
     ) -> list["User"]:

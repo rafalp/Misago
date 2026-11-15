@@ -249,7 +249,7 @@ class ThreadsSearchView(BaseSearchView):
         }
 
     def get_max_search_offset(self) -> int:
-        return max(settings.MISAGO_THREADS_SEARCH.get("MAX_OFFSET", 0), 20)
+        return self.request.settings.search_threads_max_offset
 
     def get_search_offset(self, max_offset: int) -> int:
         try:
@@ -299,7 +299,7 @@ class ThreadsSearchView(BaseSearchView):
         ]
 
     def get_search_limit(self) -> tuple[int, int]:
-        return max(settings.MISAGO_THREADS_SEARCH.get("RESULT_SIZE", 0), 1)
+        return self.request.settings.search_threads_batch_size
 
     def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
         return Post.objects.filter(id__in=post_ids)

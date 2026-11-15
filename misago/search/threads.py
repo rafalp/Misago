@@ -53,7 +53,7 @@ class ThreadsSearch:
         mode: SearchMode = SearchMode.THREADS,
         order_by: SearchSort = SearchSort.RELEVANCE,
         offset: int = 0,
-        limit: int = 50,
+        limit: int = 40,
         **kwargs,
     ) -> ThreadsSearchResult:
         return self.backend.search_threads(

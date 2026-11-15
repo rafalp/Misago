@@ -1,8 +1,8 @@
 from datetime import date, timedelta
 
-from django.test import override_settings
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ..enums import SearchMode, SearchSort
@@ -280,7 +280,7 @@ def test_private_threads_search_view_returns_404_for_max_offset_in_htmx(user_cli
     assert response.status_code == 404
 
 
-@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
+@override_dynamic_settings(search_threads_batch_size=1)
 def test_private_threads_search_view_shows_results_with_next_page(
     user_client,
     user_private_thread,
@@ -388,7 +388,7 @@ def test_private_threads_search_view_shows_error_if_query_is_invalid(user_client
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
+@override_dynamic_settings(search_threads_batch_size=1)
 def test_private_threads_search_view_keeps_search_query_in_more_url(
     user_client,
     user_private_thread,
@@ -441,7 +441,7 @@ def test_private_threads_search_view_uses_users_search_option(
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
+@override_dynamic_settings(search_threads_batch_size=1)
 def test_private_threads_search_view_keeps_users_in_more_url(
     user_client, user, other_user, user_private_thread, other_user_private_thread
 ):
@@ -568,7 +568,7 @@ def test_private_threads_search_view_uses_date_from_search_option(
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
+@override_dynamic_settings(search_threads_batch_size=1)
 def test_private_threads_search_view_keeps_date_from_in_more_url(
     user_client, user_private_thread, other_user_private_thread
 ):
@@ -634,7 +634,7 @@ def test_private_threads_search_view_uses_date_to_search_option(
     assert_not_contains(response, "No private threads found")
 
 
-@override_settings(MISAGO_THREADS_SEARCH={"RESULT_SIZE": 1})
+@override_dynamic_settings(search_threads_batch_size=1)
 def test_private_threads_search_view_keeps_date_to_in_more_url(
     user_client, user_private_thread, other_user_private_thread
 ):
