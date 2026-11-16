@@ -16,6 +16,7 @@ from ...permissions.threads import (
     check_edit_thread_permission,
     check_edit_thread_post_permission,
 )
+from ...plugins import extensions
 from ...privatethreads.threadtypes import private_thread_type
 from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_data
@@ -36,8 +37,6 @@ from ..state import (
     PostEditState,
     PrivateThreadPostEditState,
     ThreadPostEditState,
-    get_private_thread_post_edit_state,
-    get_thread_post_edit_state,
 )
 from ..validators import validate_posting
 
@@ -98,7 +97,7 @@ class EditView(BaseThreadView):
         if not self.is_valid(formset, state):
             return self.render(request, post, formset)
 
-        state.save()
+        state.save_atomic()
 
         if post_id:
             success_message = pgettext("thread post edited", "Post edited")
@@ -219,7 +218,7 @@ class ThreadPostEditView(EditView):
         return post
 
     def get_state(self, request: HttpRequest, post: Post) -> ThreadPostEditState:
-        return get_thread_post_edit_state(request, post)
+        return extensions.get(ThreadPostEditState)(request, post)
 
     def get_formset(self, request: HttpRequest, post: Post) -> ThreadPostEditFormset:
         return get_thread_post_edit_formset(request, post)
@@ -239,7 +238,7 @@ class PrivateThreadPostEditView(EditView):
         return post
 
     def get_state(self, request: HttpRequest, post: Post) -> PrivateThreadPostEditState:
-        return get_private_thread_post_edit_state(request, post)
+        return extensions.get(PrivateThreadPostEditState)(request, post)
 
     def get_formset(
         self, request: HttpRequest, post: Post
