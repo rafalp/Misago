@@ -11,19 +11,20 @@ from ....admin.views import generic
 from ....core.mail import mail_users
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
-from ...deletesrecord import record_user_deleted_by_staff
+from ...enums import DeleteUserContentAction
 from ...models import Ban
 from ...profilefields import profilefields
 from ...setupnewuser import setup_new_user
 from ...signatures import set_user_signature
+from ...tasks import delete_user
 from ..forms.users import (
     BanUsersForm,
+    DeleteUsersForm,
     EditUserForm,
     NewUserForm,
     create_filter_users_form,
     user_form_factory,
 )
-from ..tasks import delete_user_with_content
 
 User = get_user_model()
 
@@ -64,20 +65,8 @@ class UsersList(UserAdmin, generic.ListView):
             "name": pgettext_lazy("admin users", "Request data download"),
         },
         {
-            "action": "delete_accounts",
-            "name": pgettext_lazy("admin users", "Delete accounts"),
-            "confirmation": pgettext_lazy(
-                "admin users", "Are you sure you want to delete selected users?"
-            ),
-        },
-        {
-            "action": "delete_all",
-            "name": pgettext_lazy("admin users", "Delete with content"),
-            "confirmation": pgettext_lazy(
-                "admin users",
-                "Are you sure you want to delete selected users? This will also delete all content associated with their accounts.",
-            ),
-            "is_atomic": False,
+            "action": "delete_users",
+            "name": pgettext_lazy("admin users", "Delete users"),
         },
     ]
 
@@ -212,7 +201,7 @@ class UsersList(UserAdmin, generic.ListView):
             ),
         )
 
-    def action_delete_accounts(self, request, users):
+    def action_delete_users(self, request, users):
         for user in users:
             if user == request.user:
                 raise generic.MassActionError(
@@ -235,49 +224,32 @@ class UsersList(UserAdmin, generic.ListView):
                     % {"user": user.username}
                 )
 
-        for user in users:
-            user.delete(anonymous_username=request.settings.anonymous_username)
-            record_user_deleted_by_staff()
-
-        messages.success(
-            request, pgettext("admin users", "Selected users have been deleted.")
+        form_initial = {"anonymous_username": request.settings.anonymous_username}
+        form = DeleteUsersForm(
+            request.POST if "finalize" in request.POST else None,
+            initial=form_initial,
         )
+        if "finalize" not in request.POST or not form.is_valid():
+            return self.render(
+                request,
+                {"users": users, "form": form},
+                template_name="misago/admin/users/delete.html",
+            )
 
-    def action_delete_all(self, request, users):
-        for user in users:
-            if user == request.user:
-                raise generic.MassActionError(
-                    pgettext("admin users", "You can't delete yourself.")
-                )
-            if user.is_misago_admin:
-                raise generic.MassActionError(
-                    pgettext(
-                        "admin users",
-                        "%(user)s can't be deleted because they are a Misago administrator.",
-                    )
-                    % {"user": user.username}
-                )
-            if user.is_staff:
-                raise generic.MassActionError(
-                    pgettext(
-                        "admin users",
-                        "%(user)s can't be deleted because they are a Django staff.",
-                    )
-                    % {"user": user.username}
-                )
-
+        content_action = DeleteUserContentAction(form.cleaned_data["content_action"])
+        anonymous_username = form.cleaned_data["anonymous_username"]
         for user in users:
             user.is_active = False
             user.save()
-
-            delete_user_with_content.delay(user.pk)
+            delete_user.delay(
+                user.pk,
+                content_action=content_action,
+                anonymous_username=anonymous_username,
+                deleted_by_id=request.user.id,
+            )
 
         messages.success(
-            request,
-            pgettext(
-                "admin users",
-                "Selected users have been disabled and queued for deletion together with their content.",
-            ),
+            request, pgettext("admin users", "Selected users have been deleted.")
         )
 
 

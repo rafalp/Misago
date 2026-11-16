@@ -49,3 +49,11 @@ def save_user_agreement_acceptance(user, agreement, commit=False):
 
     if commit:
         user.save(update_fields=["agreements"])
+
+
+def update_usernames(user, **kwargs):
+    Agreement.objects.filter(created_by=user).update(created_by_name=user.username)
+
+    Agreement.objects.filter(last_modified_by=user).update(
+        last_modified_by_name=user.username
+    )

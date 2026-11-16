@@ -26,7 +26,6 @@ from ...core.utils import slugify
 from ...notifications.enums import ThreadNotifications
 from ...permissions.permissionsid import get_permissions_id
 from ...plugins.models import PluginDataModel
-from ..avatars import delete_avatar
 from ..avatars import store as avatars_store
 from ..enums import DefaultGroupId, UserNewPrivateThreadsPreference
 from ..signatures import is_user_signature_valid
@@ -362,42 +361,10 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
         """locks user in DB, shortcut for locking user model in views"""
         return User.objects.select_for_update().get(pk=self.pk)
 
-    def delete(self, *args, **kwargs):
-        if kwargs.pop("delete_content", False):
-            self.delete_content()
-
-        username = kwargs.pop("anonymous_username", None)
-        if username:
-            self.anonymize_data(username)
-        else:
-            raise ValueError("user.delete() requires 'anonymous_username' argument")
-
-        delete_avatar(self)
-
-        return super().delete(*args, **kwargs)
-
-    def delete_content(self):
-        from ..signals import delete_user_content
-
-        delete_user_content.send(sender=self)
-
     def mark_for_delete(self):
         self.is_active = False
         self.is_deleting_account = True
         self.save(update_fields=["is_active", "is_deleting_account"])
-
-    def anonymize_data(self, anonymous_username):
-        """Replaces username with anonymized one, then send anonymization signal.
-
-        Items associated with this user then anonymize their user-specific data
-        like username or IP addresses.
-        """
-        self.username = anonymous_username
-        self.slug = slugify(self.username)
-
-        from ..signals import anonymize_user_data
-
-        anonymize_user_data.send(sender=self)
 
     @property
     def is_misago_admin(self):

@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from ....conf.shortcuts import get_dynamic_settings
+from ...delete import DeleteUserContentAction, delete_user
 from ...deletesrecord import record_user_deleted_by_system
 
 User = get_user_model()
@@ -12,6 +13,16 @@ User = get_user_model()
 
 class Command(BaseCommand):
     help = "Deletes inactive user accounts older than set time."
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "content",
+            nargs="?",
+            type=str,
+            default=DeleteUserContentAction.LEAVE.value,
+            choices=[e.value for e in list(DeleteUserContentAction)],
+            help="What to do with deleted user content",
+        )
 
     def handle(self, *args, **options):
         settings = get_dynamic_settings()
@@ -33,7 +44,11 @@ class Command(BaseCommand):
         )
 
         for user in queryset.iterator(chunk_size=50):
-            user.delete(anonymous_username=settings.anonymous_username)
+            delete_user(
+                user,
+                content_action=DeleteUserContentAction[options["content"]],
+                anonymous_username=settings.anonymous_username,
+            )
             record_user_deleted_by_system()
             users_deleted += 1
 

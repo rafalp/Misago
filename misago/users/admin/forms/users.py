@@ -10,11 +10,15 @@ from ....acl.models import Role
 from ....admin.forms import IsoDateTimeField, YesNoField
 from ....notifications.threads import ThreadNotifications
 from ....search.filter_queryset import filter_queryset
-from ...enums import DefaultGroupId, UserNewPrivateThreadsPreference
+from ...enums import (
+    DefaultGroupId,
+    DeleteUserContentAction,
+    UserNewPrivateThreadsPreference,
+)
 from ...models import Group, Rank
 from ...profilefields import profilefields
 from ...utils import slugify_username
-from ...validators import validate_email, validate_username
+from ...validators import validate_email, validate_username, validate_username_content
 
 User = get_user_model()
 
@@ -620,6 +624,37 @@ def create_filter_users_form():
     }
 
     return type("FilterUsersForm", (BaseFilterUsersForm,), extra_fields)
+
+
+class DeleteUsersForm(forms.Form):
+    content_action = forms.ChoiceField(
+        label=pgettext_lazy(
+            "admin delete users form",
+            "What should happen to the members' content after their accounts are deleted?",
+        ),
+        choices=[
+            (
+                DeleteUserContentAction.LEAVE.value,
+                pgettext_lazy("admin delete users form", "Leave"),
+            ),
+            (
+                DeleteUserContentAction.HIDE.value,
+                pgettext_lazy("admin delete users form", "Hide"),
+            ),
+            (
+                DeleteUserContentAction.DELETE.value,
+                pgettext_lazy("admin delete users form", "Delete"),
+            ),
+        ],
+        initial=DeleteUserContentAction.LEAVE.value,
+        widget=forms.RadioSelect,
+    )
+    anonymous_username = forms.CharField(
+        label=pgettext_lazy("admin delete users form", "Anonymize username"),
+        min_length=1,
+        max_length=15,
+        validators=[validate_username_content],
+    )
 
 
 class BanUsersForm(forms.Form):

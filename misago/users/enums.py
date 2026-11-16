@@ -1,4 +1,4 @@
-from enum import IntEnum
+from enum import IntEnum, StrEnum
 
 from django.utils.translation import pgettext_lazy
 
@@ -33,3 +33,9 @@ class UserNewPrivateThreadsPreference(IntEnum):
                 pgettext_lazy("new private threads preference", "Nobody"),
             ),
         )
+
+
+class DeleteUserContentAction(StrEnum):
+    DELETE = "DELETE"
+    HIDE = "HIDE"
+    LEAVE = "LEAVE"
