@@ -7,6 +7,7 @@ from ...categories.models import Category
 from ...plugins import extensions
 from ...polls.models import Poll
 from ...privatethreads.models import PrivateThreadMember
+from ...search.threads import threads_search
 from ...threads.checksums import update_post_checksum
 from ..approval import (
     require_private_thread_approval,
@@ -142,3 +143,10 @@ class PrivateThreadStartState(StartState):
             )
 
         PrivateThreadMember.objects.bulk_create(users)
+
+    def save_search_index(self):
+        super().save_search_index()
+
+        threads_search.update_thread_members(
+            self.thread, [user.id for user in self.members]
+        )

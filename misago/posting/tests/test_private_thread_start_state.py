@@ -49,3 +49,19 @@ def test_private_thread_start_state_saves_unapproved_thread(
 
     assert state.thread.is_unapproved
     assert not state.post.is_unapproved
+
+
+def test_private_thread_start_state_saves_thread_members_search(
+    mocker, user_request, private_threads_category, user, other_user
+):
+    mock_index_members = mocker.patch(
+        "misago.posting.state.start.threads_search.update_thread_members", autospec=True
+    )
+
+    state = PrivateThreadStartState(user_request, private_threads_category)
+    state.set_thread_title("Test thread")
+    state.set_post_content(parse("Hello world"))
+    state.set_members([user, other_user])
+    state.save()
+
+    mock_index_members.assert_called_with(state.thread, [user.id, other_user.id])
