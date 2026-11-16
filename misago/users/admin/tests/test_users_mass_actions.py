@@ -8,7 +8,7 @@ from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message, assert_not_contains
 from ... import BANS_CACHE
 from ...datadownloads import request_user_data_download
-from ...enums import DefaultGroupId, DeleteUserContentAction
+from ...enums import DeleteUserContentAction
 from ...models import Ban, DataDownload, DeletedUser
 from ...test import create_test_user
 
@@ -25,6 +25,24 @@ def create_multiple_users(**kwargs):
 def get_multiple_users_ids(**kwargs):
     users = create_multiple_users(**kwargs)
     return [u.id for u in users]
+
+
+def confirm_delete_users(admin_client, users_admin_link, users_ids, **form_data):
+    response = admin_client.post(
+        users_admin_link,
+        data={"action": "delete_users", "selected_items": users_ids},
+    )
+    assert response.status_code == 200
+
+    data = {
+        "action": "delete_users",
+        "selected_items": users_ids,
+        "finalize": "",
+        "content_action": DeleteUserContentAction.LEAVE.value,
+        "anonymous_username": "Deleted",
+    }
+    data.update(form_data)
+    return admin_client.post(users_admin_link, data=data)
 
 
 @pytest.fixture
@@ -188,10 +206,7 @@ def test_multiple_users_can_be_deleted_with_mass_action(
     admin_client, users_admin_link, admin, mock_delete_user
 ):
     users = create_multiple_users()
-    admin_client.post(
-        users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
-    )
+    confirm_delete_users(admin_client, users_admin_link, [u.id for u in users])
 
     calls = [
         call(
@@ -205,6 +220,48 @@ def test_multiple_users_can_be_deleted_with_mass_action(
     mock_delete_user.assert_has_calls(calls, any_order=True)
 
 
+def test_delete_users_confirmation_page_allows_content_action_and_anonymous_username(
+    admin_client, users_admin_link, admin, mock_delete_user
+):
+    users = create_multiple_users()
+    users_ids = [u.id for u in users]
+
+    response = admin_client.post(
+        users_admin_link,
+        data={"action": "delete_users", "selected_items": users_ids},
+    )
+
+    assert response.status_code == 200
+    for user in users:
+        assert_contains(
+            response,
+            f'name="selected_items" value="{user.pk}" checked',
+        )
+    assert_contains(response, 'name="anonymous_username"')
+    assert_contains(response, 'value="Deleted"')
+    assert response.content.decode("utf-8").count('name="finalize"') == 1
+    mock_delete_user.assert_not_called()
+
+    confirm_delete_users(
+        admin_client,
+        users_admin_link,
+        users_ids,
+        content_action=DeleteUserContentAction.DELETE.value,
+        anonymous_username="Anonymized",
+    )
+
+    calls = [
+        call(
+            user.id,
+            content_action=DeleteUserContentAction.DELETE,
+            anonymous_username="Anonymized",
+            deleted_by_id=admin.id,
+        )
+        for user in users
+    ]
+    mock_delete_user.assert_has_calls(calls, any_order=True)
+
+
 def test_mass_action_records_users_deletion_by_admin(
     admin_client, users_admin_link, mock_delete_user
 ):
@@ -212,10 +269,7 @@ def test_mass_action_records_users_deletion_by_admin(
 
     mock_delete_user.side_effect = lambda x, **y: record_user_deleted_by_staff()
     users = create_multiple_users()
-    admin_client.post(
-        users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
-    )
+    confirm_delete_users(admin_client, users_admin_link, [u.id for u in users])
 
     deleted_count = DeletedUser.objects.filter(
         deleted_by=DeletedUser.DELETED_BY_STAFF
@@ -229,7 +283,7 @@ def test_delete_users_mass_action_fails_if_user_tries_to_delete_themselves(
 ):
     response = admin_client.post(
         users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [admin.id]},
+        data={"action": "delete_users", "selected_items": [admin.id]},
     )
     assert_has_error_message(response)
     admin.refresh_from_db()
@@ -241,7 +295,7 @@ def test_delete_users_mass_action_fails_if_user_tries_to_delete_staff_members(
     users = create_multiple_users(is_staff=True)
     response = admin_client.post(
         users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
+        data={"action": "delete_users", "selected_items": [u.id for u in users]},
     )
     assert_has_error_message(response)
 
@@ -259,7 +313,7 @@ def test_delete_users_mass_action_fails_if_user_tries_to_delete_admins(
 
     response = admin_client.post(
         users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
+        data={"action": "delete_users", "selected_items": [u.id for u in users]},
     )
     assert_has_error_message(response)
 
@@ -273,107 +327,9 @@ def test_delete_users_mass_action_fails_if_user_tries_to_delete_root_admins(
     users = create_multiple_users(is_misago_root=True)
     response = admin_client.post(
         users_admin_link,
-        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
+        data={"action": "delete_users", "selected_items": [u.id for u in users]},
     )
     assert_has_error_message(response)
 
     for user in users:
         user.refresh_from_db()
-
-
-def test_multiple_users_can_be_deleted_together_with_content_by_mass_action(
-    admin_client, users_admin_link, users_ids, admin, mock_delete_user
-):
-    admin_client.post(
-        users_admin_link, data={"action": "delete_all", "selected_items": users_ids}
-    )
-    calls = [
-        call(
-            u,
-            content_action=DeleteUserContentAction.DELETE,
-            anonymous_username="Deleted",
-            deleted_by_id=admin.id,
-        )
-        for u in users_ids
-    ]
-    mock_delete_user.assert_has_calls(calls, any_order=True)
-
-
-def test_deleting_multiple_users_with_content_disables_their_accounts(
-    admin_client, users_admin_link, mock_delete_user
-):
-    users = create_multiple_users()
-    admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": [u.id for u in users]},
-    )
-
-    for user in users:
-        user.refresh_from_db()
-        assert not user.is_active
-
-
-def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_themselves(
-    admin_client, users_admin_link, admin, mock_delete_user
-):
-    response = admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": [admin.id]},
-    )
-
-    assert_has_error_message(response)
-    mock_delete_user.assert_not_called()
-
-    admin.refresh_from_db()
-    assert admin.is_active
-
-
-def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_admin(
-    admin_client, users_admin_link, mock_delete_user
-):
-    users = create_multiple_users(group_id=DefaultGroupId.ADMINS)
-    response = admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": [u.id for u in users]},
-    )
-
-    assert_has_error_message(response)
-    mock_delete_user.assert_not_called()
-
-    for user in users:
-        user.refresh_from_db()
-        assert user.is_active
-
-
-def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_root_admin(
-    admin_client, users_admin_link, mock_delete_user
-):
-    users = create_multiple_users(is_misago_root=True)
-    response = admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": [u.id for u in users]},
-    )
-
-    assert_has_error_message(response)
-    mock_delete_user.assert_not_called()
-
-    for user in users:
-        user.refresh_from_db()
-        assert user.is_active
-
-
-def test_delete_users_with_content_mass_action_fails_if_user_tries_to_delete_staff(
-    admin_client, users_admin_link, mock_delete_user
-):
-    users = create_multiple_users(is_staff=True)
-    response = admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": [u.id for u in users]},
-    )
-
-    assert_has_error_message(response)
-    mock_delete_user.assert_not_called()
-
-    for user in users:
-        user.refresh_from_db()
-        assert user.is_active

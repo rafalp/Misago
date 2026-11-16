@@ -1,0 +1,81 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form misago_avatars %}
+
+
+{% block title %}
+{% translate "Delete users" context "admin delete users form" %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+  <div class="alert alert-warning" role="alert">
+      {% translate "This will immediately delete the accounts. There will be no way to undo this action." context "admin delete users form" %}
+  </div>
+
+    {{ block.super }}
+{% endblock %}
+
+{% block form-header %}
+<div class="d-flex align-items-center justify-content-between">
+  <span>{% translate "Delete selected users - settings" context "admin delete users form" %}</span>
+</div>
+    <div class="form-fieldset">
+  <fieldset>
+    {% form_row form.content_action %}
+    {% form_row form.anonymous_username %}
+  </fieldset>
+</div>
+{% endblock %}
+
+
+{% block form-body %}
+<input type="hidden" name="action" value="delete_users">
+
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Users" context "admin delete users form" %}</legend>
+    <div class="card card-admin-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 1px;">&nbsp;</th>
+            <th>{% translate "User" context "admin delete users list" %}</th>
+            <th style="width: 50%;">{% translate "E-mail" context "admin delete users list" %}</th>
+            <th style="width: 1px;">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+          <tr>
+            <td class="pr-0">
+              <a href="{{ user.get_absolute_url }}">
+                <img src="{{ user|avatar:24 }}" alt="{% translate 'Avatar' context 'admin user avatar' %}" width="24" height="24">
+              </a>
+            </td>
+            <td class="small">
+              <a href="{{ user.get_absolute_url }}" class="item-name">{{ user }}</a>
+            </td>
+            <td class="small">
+              <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+            </td>
+            <td class="row-select">
+              <label>
+                <input type="checkbox" name="selected_items" value="{{ user.pk }}" checked>
+              </label>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </fieldset>
+</div>
+
+{% endblock form-body %}
+
+
+{% block form-footer %}
+<button class="btn btn-primary btn-sm" name="finalize">
+  {% translate "Confirm" context "admin delete users form" %}
+</button>
+{% endblock %}
