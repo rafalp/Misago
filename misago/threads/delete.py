@@ -10,6 +10,7 @@ from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all, delete_one
 from ..privatethreads.models import PrivateThreadMember
 from ..readtracker.models import ReadThread
+from ..search.models import PostSearch, ThreadSearch
 from ..threadevents.models import ThreadEvent
 from .hooks import delete_post_hook, delete_thread_hook
 from .models import Post, Thread
@@ -47,9 +48,11 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
     delete_all(Like, thread_id=thread.id)
     delete_all(Notification, thread_id=thread.id)
     delete_all(PostEdit, thread_id=thread.id)
+    delete_all(PostSearch, thread_id=thread.id)
     delete_all(PrivateThreadMember, thread_id=thread.id)
     delete_all(ReadThread, thread_id=thread.id)
     delete_all(ThreadEvent, thread_id=thread.id)
+    delete_all(ThreadSearch, thread_id=thread.id)
     delete_all(WatchedThread, thread_id=thread.id)
 
     delete_all(Post, thread_id=thread.id)
@@ -75,6 +78,7 @@ def _delete_post_action(post: Post, request: HttpRequest | None = None):
     delete_all(Like, post_id=post.id)
     delete_all(Notification, post_id=post.id)
     delete_all(PostEdit, post_id=post.id)
+    delete_all(PostSearch, post_id=post.id)
 
     save_thread_fields = set()
     if thread.first_post_id == post.id:

@@ -10,6 +10,8 @@ from ...postedits.create import create_post_edit
 from ...postedits.models import PostEdit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ...threadevents.create import (
     create_moved_posts_from_thread_event,
@@ -132,6 +134,25 @@ def test_delete_thread_deletes_thread_post_edit(thread, reply):
 
     with pytest.raises(PostEdit.DoesNotExist):
         post_edit.refresh_from_db()
+
+
+def test_delete_thread_deletes_search_data(thread, reply):
+    threads_search.index_thread(thread)
+    threads_search.index_post(reply, "lorem ipsum")
+
+    ThreadSearch.objects.get()
+    PostSearch.objects.get()
+
+    delete_thread(thread)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    assert not ThreadSearch.objects.exists()
+    assert not PostSearch.objects.exists()
 
 
 def test_delete_thread_deletes_thread_notification(user, thread, reply):

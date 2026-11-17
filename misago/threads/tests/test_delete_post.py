@@ -6,6 +6,8 @@ from ...notifications.models import Notification
 from ...notifications.users import notify_user
 from ...postedits.create import create_post_edit
 from ...postedits.models import PostEdit
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ..delete import delete_post
 from ..models import Post
@@ -48,6 +50,41 @@ def test_delete_post_deletes_thread_post_like(thread, reply):
 
     with pytest.raises(Like.DoesNotExist):
         post_like.refresh_from_db()
+
+
+def test_delete_post_deletes_thread_post_notification(user, thread, reply):
+    notification = notify_user(
+        user, "TEST", "DeletedUser", thread.category, thread, reply
+    )
+
+    delete_post(reply)
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    with pytest.raises(Notification.DoesNotExist):
+        notification.refresh_from_db()
+
+
+def test_delete_post_deletes_search_data(thread, reply):
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "lorem ipsum")
+    threads_search.index_post(reply, "lorem ipsum")
+
+    ThreadSearch.objects.get()
+    assert PostSearch.objects.exists()
+
+    delete_post(reply)
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    ThreadSearch.objects.get()
+
+    PostSearch.objects.get(post_id=thread.first_post_id)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post_id=reply.id)
 
 
 def test_delete_post_deletes_thread_post_notification(user, thread, reply):
