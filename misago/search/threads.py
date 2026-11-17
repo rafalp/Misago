@@ -196,8 +196,14 @@ class ThreadsSearch:
     def delete_thread(self, thread: Thread):
         return self.delete(threads=[thread])
 
+    def bulk_delete_threads(self, threads: Iterable[Thread]):
+        return self.delete(threads=threads)
+
     def delete_post(self, post: Post):
         return self.delete(posts=[post])
+
+    def bulk_delete_posts(self, posts: Iterable[Post]):
+        return self.delete(posts=posts)
 
     def delete(
         self,

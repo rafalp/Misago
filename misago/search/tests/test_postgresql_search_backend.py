@@ -2879,6 +2879,22 @@ def test_postgresql_search_backend_update_posts_raises_exception_if_poster_and_p
     assert post_search.poster_id is None
 
 
+def test_postgresql_search_backend_update_posts_update_thread_title_updates_thread_title(
+    thread_factory,
+    thread_reply_factory,
+    backend,
+    default_category,
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread)
+
+    backend.index_threads([thread])
+    backend.index_posts([(post, post.content)])
+
+    updated = backend.update_posts({"thread_title": "New title"}, posts=[post])
+    assert updated == 1
+
+
 def test_postgresql_search_backend_update_posts_update_is_hidden_is_noop(
     thread_factory,
     thread_reply_factory,

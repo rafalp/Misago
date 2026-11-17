@@ -475,6 +475,24 @@ def test_threads_search_delete_thread_calls_backend(mocker, thread):
     )
 
 
+def test_threads_search_bulk_delete_threads_calls_backend(mocker, thread):
+    mock_delete = mocker.patch.object(
+        threads_search.backend,
+        "delete",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert threads_search.bulk_delete_threads([thread]) == 12
+
+    mock_delete.assert_called_once_with(
+        categories=None,
+        threads=[thread],
+        posts=None,
+        users=None,
+    )
+
+
 def test_threads_search_delete_post_calls_backend(mocker, post):
     mock_delete = mocker.patch.object(
         threads_search.backend,
@@ -484,6 +502,24 @@ def test_threads_search_delete_post_calls_backend(mocker, post):
     )
 
     assert threads_search.delete_post(post) == 12
+
+    mock_delete.assert_called_once_with(
+        categories=None,
+        threads=None,
+        posts=[post],
+        users=None,
+    )
+
+
+def test_threads_search_bulk_delete_posst_calls_backend(mocker, post):
+    mock_delete = mocker.patch.object(
+        threads_search.backend,
+        "delete",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert threads_search.bulk_delete_posts([post]) == 12
 
     mock_delete.assert_called_once_with(
         categories=None,

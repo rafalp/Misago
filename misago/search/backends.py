@@ -64,6 +64,7 @@ class PostsSearchUpdate(TypedDict, total=False):
 
     thread: Thread
     thread_id: int
+    thread_title: str
     thread_is_hidden: bool
     thread_is_unapproved: bool
 
@@ -916,19 +917,8 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
             ),
         )
 
-        updated_count += PostSearch.objects.filter(thread=thread).update(
-            thread_search_vector=(
-                SearchVector(
-                    Value(self.prepare_indexed_value(thread.title)),
-                    config=self.search_config,
-                    weight="A",
-                )
-                + SearchVector(
-                    F("post_search_vector"),
-                    config=self.search_config,
-                    weight="A",
-                )
-            ),
+        updated_count += self.update_posts(
+            {"thread_title": thread.title}, threads=[thread]
         )
 
         return updated_count
@@ -984,6 +974,7 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
         "category_id",
         "thread",
         "thread_id",
+        "thread_title",
         "poster",
         "poster_id",
     }
@@ -1023,6 +1014,17 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
 
         if not clean_update:
             return 0
+
+        if thread_title := clean_update.pop("thread_title", None):
+            clean_update["thread_search_vector"] = SearchVector(
+                Value(self.prepare_indexed_value(thread_title)),
+                config=self.search_config,
+                weight="A",
+            ) + SearchVector(
+                F("post_search_vector"),
+                config=self.search_config,
+                weight="A",
+            )
 
         return self._select_posts(
             categories=categories,
