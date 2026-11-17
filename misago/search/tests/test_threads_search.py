@@ -8,7 +8,7 @@ from ..query import parse_search_query
 from ..threads import threads_search
 
 
-def test_threads_search_search_threads_delegates_call_to_backend(
+def test_threads_search_search_threads_calls_backend(
     mocker, user_permissions, user, default_category, thread
 ):
     mock_search_threads = mocker.patch.object(
@@ -55,7 +55,7 @@ def test_threads_search_search_threads_delegates_call_to_backend(
     )
 
 
-def test_threads_search_search_private_threads_delegates_call_to_backend(
+def test_threads_search_search_private_threads_calls_backend(
     mocker, user_permissions, user, thread
 ):
     mock_search_private_threads = mocker.patch.object(
@@ -100,7 +100,7 @@ def test_threads_search_search_private_threads_delegates_call_to_backend(
     )
 
 
-def test_threads_search_index_thread_delegates_call_to_backend(mocker, thread):
+def test_threads_search_index_thread_calls_backend(mocker, thread):
     mock_index_threads = mocker.patch.object(
         threads_search.backend,
         "index_threads",
@@ -112,9 +112,7 @@ def test_threads_search_index_thread_delegates_call_to_backend(mocker, thread):
     mock_index_threads.assert_called_once_with([thread])
 
 
-def test_threads_search_bulk_index_threads_delegates_call_to_backend(
-    mocker, thread, user_thread
-):
+def test_threads_search_bulk_index_threads_calls_backend(mocker, thread, user_thread):
     mock_index_threads = mocker.patch.object(
         threads_search.backend,
         "index_threads",
@@ -126,7 +124,7 @@ def test_threads_search_bulk_index_threads_delegates_call_to_backend(
     mock_index_threads.assert_called_once_with([thread, user_thread])
 
 
-def test_threads_search_index_post_delegates_call_to_backend(mocker, post):
+def test_threads_search_index_post_calls_backend(mocker, post):
     mock_index_posts = mocker.patch.object(
         threads_search.backend,
         "index_posts",
@@ -138,7 +136,7 @@ def test_threads_search_index_post_delegates_call_to_backend(mocker, post):
     mock_index_posts.assert_called_once_with([(post, "Search document")])
 
 
-def test_threads_search_bulk_index_posts_delegates_call_to_backend(mocker, post, reply):
+def test_threads_search_bulk_index_posts_calls_backend(mocker, post, reply):
     mock_index_posts = mocker.patch.object(
         threads_search.backend,
         "index_posts",
@@ -164,9 +162,7 @@ def test_threads_search_bulk_index_posts_delegates_call_to_backend(mocker, post,
     )
 
 
-def test_threads_search_update_thread_first_post_delegates_call_to_backend(
-    mocker, thread
-):
+def test_threads_search_update_thread_first_post_calls_backend(mocker, thread):
     mock_update_thread_first_post = mocker.patch.object(
         threads_search.backend,
         "update_thread_first_post",
@@ -178,7 +174,7 @@ def test_threads_search_update_thread_first_post_delegates_call_to_backend(
     mock_update_thread_first_post.assert_called_once_with(thread)
 
 
-def test_threads_search_update_thread_title_delegates_call_to_backend(mocker, thread):
+def test_threads_search_update_thread_title_calls_backend(mocker, thread):
     mock_update_thread_title = mocker.patch.object(
         threads_search.backend,
         "update_thread_title",
@@ -190,7 +186,7 @@ def test_threads_search_update_thread_title_delegates_call_to_backend(mocker, th
     mock_update_thread_title.assert_called_once_with(thread)
 
 
-def test_threads_search_update_thread_members_delegates_call_to_backend(
+def test_threads_search_update_thread_members_calls_backend(
     mocker, thread, user, other_user
 ):
     # We are using a mock because in default search backend this is noop
@@ -203,6 +199,122 @@ def test_threads_search_update_thread_members_delegates_call_to_backend(
 
     assert threads_search.update_thread_members(thread, [user.id, other_user.id]) == 12
     mock_update_thread_members.assert_called_once_with(thread, [user.id, other_user.id])
+
+
+def test_threads_search_update_thread_calls_backend(mocker, thread):
+    mock_update_threads = mocker.patch.object(
+        threads_search.backend,
+        "update_threads",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert (
+        threads_search.update_thread(
+            thread, {"is_unapproved": False, "is_hidden": False}
+        )
+        == 12
+    )
+
+    mock_update_threads.assert_called_once_with(
+        {"is_unapproved": False, "is_hidden": False},
+        categories=None,
+        threads=[thread],
+        starters=None,
+    )
+
+
+def test_threads_search_update_post_calls_backend(mocker, post):
+    mock_update_posts = mocker.patch.object(
+        threads_search.backend,
+        "update_posts",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert (
+        threads_search.update_post(post, {"is_unapproved": False, "is_hidden": False})
+        == 12
+    )
+
+    mock_update_posts.assert_called_once_with(
+        {"is_unapproved": False, "is_hidden": False},
+        categories=None,
+        threads=None,
+        posts=[post],
+        posters=None,
+    )
+
+
+def test_threads_search_bulk_update_thread_posts_calls_backend(mocker, thread):
+    mock_update_posts = mocker.patch.object(
+        threads_search.backend,
+        "update_posts",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert (
+        threads_search.bulk_update_thread_posts(
+            thread, {"is_unapproved": False, "is_hidden": False}
+        )
+        == 12
+    )
+
+    mock_update_posts.assert_called_once_with(
+        {"is_unapproved": False, "is_hidden": False},
+        categories=None,
+        threads=[thread],
+        posts=None,
+        posters=None,
+    )
+
+
+def test_threads_search_bulk_update_threads_calls_backend(mocker, thread):
+    mock_update_threads = mocker.patch.object(
+        threads_search.backend,
+        "update_threads",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert (
+        threads_search.bulk_update_threads(
+            {"is_unapproved": False, "is_hidden": False}, threads=[thread]
+        )
+        == 12
+    )
+
+    mock_update_threads.assert_called_once_with(
+        {"is_unapproved": False, "is_hidden": False},
+        categories=None,
+        threads=[thread],
+        starters=None,
+    )
+
+
+def test_threads_search_bulk_update_posts_calls_backend(mocker, thread):
+    mock_update_posts = mocker.patch.object(
+        threads_search.backend,
+        "update_posts",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert (
+        threads_search.bulk_update_posts(
+            {"is_unapproved": False, "is_hidden": False}, threads=[thread]
+        )
+        == 12
+    )
+
+    mock_update_posts.assert_called_once_with(
+        {"is_unapproved": False, "is_hidden": False},
+        categories=None,
+        threads=[thread],
+        posts=None,
+        posters=None,
+    )
 
 
 def test_threads_search_move_category_data_updates_related_search_data(
@@ -279,9 +391,7 @@ def test_threads_search_bulk_move_categories_data_updates_related_search_data(
     PostSearch.objects.get(post=other_post, category=other_category)
 
 
-def test_threads_search_delete_category_data_delegates_call_to_backend(
-    mocker, default_category
-):
+def test_threads_search_delete_category_data_calls_backend(mocker, default_category):
     mock_delete = mocker.patch.object(
         threads_search.backend,
         "delete",
@@ -290,10 +400,15 @@ def test_threads_search_delete_category_data_delegates_call_to_backend(
     )
 
     assert threads_search.delete_category_data(default_category) == 12
-    mock_delete.assert_called_once_with(categories=[default_category])
+    mock_delete.assert_called_once_with(
+        categories=[default_category],
+        threads=None,
+        posts=None,
+        users=None,
+    )
 
 
-def test_threads_search_bulk_delete_categories_data_delegates_call_to_backend(
+def test_threads_search_bulk_delete_categories_data_calls_backend(
     mocker, default_category, sibling_category
 ):
     mock_delete = mocker.patch.object(
@@ -317,11 +432,68 @@ def test_threads_search_bulk_delete_categories_data_delegates_call_to_backend(
         categories=[
             default_category,
             sibling_category,
-        ]
+        ],
+        threads=None,
+        posts=None,
+        users=None,
     )
 
 
-def test_threads_search_clear_delegates_call_to_backend(mocker):
+def test_threads_search_delete_user_data_calls_backend(mocker, user):
+    mock_delete = mocker.patch.object(
+        threads_search.backend,
+        "delete",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert threads_search.delete_user_data(user) == 12
+
+    mock_delete.assert_called_once_with(
+        categories=None,
+        threads=None,
+        posts=None,
+        users=[user],
+    )
+
+
+def test_threads_search_delete_thread_calls_backend(mocker, thread):
+    mock_delete = mocker.patch.object(
+        threads_search.backend,
+        "delete",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert threads_search.delete_thread(thread) == 12
+
+    mock_delete.assert_called_once_with(
+        categories=None,
+        threads=[thread],
+        posts=None,
+        users=None,
+    )
+
+
+def test_threads_search_delete_post_calls_backend(mocker, post):
+    mock_delete = mocker.patch.object(
+        threads_search.backend,
+        "delete",
+        autospec=True,
+        return_value=12,
+    )
+
+    assert threads_search.delete_post(post) == 12
+
+    mock_delete.assert_called_once_with(
+        categories=None,
+        threads=None,
+        posts=[post],
+        users=None,
+    )
+
+
+def test_threads_search_clear_calls_backend(mocker):
     mock_clear = mocker.patch.object(
         threads_search.backend,
         "clear",

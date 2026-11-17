@@ -8,7 +8,7 @@ from ..categories.models import Category
 from ..categories.proxy import CategoryProxy
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
-from .backends import ThreadsSearchBackend
+from .backends import PostsSearchUpdate, ThreadsSearchBackend, ThreadsSearchUpdate
 from .enums import SearchMode, SearchSort
 from .query import SearchQuery
 from .types import ThreadsSearchResult
@@ -120,6 +120,47 @@ class ThreadsSearch:
     def update_thread_members(self, thread: Thread, members: Iterable[int]):
         return self.backend.update_thread_members(thread, members)
 
+    def update_thread(self, thread: Thread, update: ThreadsSearchUpdate):
+        return self.bulk_update_threads(update, threads=[thread])
+
+    def bulk_update_thread_posts(self, thread: Thread, update: PostsSearchUpdate):
+        return self.bulk_update_posts(update, threads=[thread])
+
+    def update_post(self, post: Post, update: PostsSearchUpdate):
+        return self.bulk_update_posts(update, posts=[post])
+
+    def bulk_update_threads(
+        self,
+        update: ThreadsSearchUpdate,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        starters: Iterable["User"] | None = None,
+    ):
+        return self.backend.update_threads(
+            update,
+            categories=categories,
+            threads=threads,
+            starters=starters,
+        )
+
+    def bulk_update_posts(
+        self,
+        update: PostsSearchUpdate,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        posts: Iterable[Post] | None = None,
+        posters: Iterable["User"] | None = None,
+    ):
+        return self.backend.update_posts(
+            update,
+            categories=categories,
+            threads=threads,
+            posts=posts,
+            posters=posters,
+        )
+
     def move_category_data(
         self, category: Category | CategoryProxy, new_category: Category | CategoryProxy
     ):
@@ -131,11 +172,11 @@ class ThreadsSearch:
         new_category: Category | CategoryProxy,
     ):
         return (
-            self.backend.update_threads(
+            self.bulk_update_threads(
                 {"category": new_category},
                 categories=categories,
             ),
-            self.backend.update_posts(
+            self.bulk_update_posts(
                 {"category": new_category},
                 categories=categories,
             ),
@@ -147,7 +188,31 @@ class ThreadsSearch:
     def bulk_delete_categories_data(
         self, categories: Iterable[Category | CategoryProxy]
     ):
-        return self.backend.delete(categories=categories)
+        return self.delete(categories=categories)
+
+    def delete_user_data(self, user: "User"):
+        return self.delete(users=[user])
+
+    def delete_thread(self, thread: Thread):
+        return self.delete(threads=[thread])
+
+    def delete_post(self, post: Post):
+        return self.delete(posts=[post])
+
+    def delete(
+        self,
+        *,
+        categories: Iterable[Category | CategoryProxy] | None = None,
+        threads: Iterable[Thread] | None = None,
+        posts: Iterable[Post] | None = None,
+        users: Iterable["User"] | None = None,
+    ):
+        return self.backend.delete(
+            categories=categories,
+            threads=threads,
+            posts=posts,
+            users=users,
+        )
 
     def clear(self):
         return self.backend.clear()

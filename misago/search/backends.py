@@ -49,7 +49,10 @@ if TYPE_CHECKING:
 
 class ThreadsSearchUpdate(TypedDict, total=False):
     category: Category
+    category_id: int
+
     starter: "User"
+    starter_id: int
 
     is_hidden: bool
     is_unapproved: bool
@@ -58,8 +61,12 @@ class ThreadsSearchUpdate(TypedDict, total=False):
 class PostsSearchUpdate(TypedDict, total=False):
     category: Category
     category_id: int
+
     thread: Thread
     thread_id: int
+    thread_is_hidden: bool
+    thread_is_unapproved: bool
+
     poster: "User | None"
     poster_id: int | None
 
@@ -1032,9 +1039,6 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
         posts: Iterable[Post] | None = None,
         users: Iterable["User"] | None = None,
     ) -> int:
-        if not any((categories, threads, posts, users)):
-            raise ValueError("Provide at least one filter.")
-
         deleted_total = 0
 
         if any((categories, threads, users)):
@@ -1046,14 +1050,17 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
 
             deleted_total += deleted_threads
 
-        deleted_posts, _ = self._select_posts(
-            categories=categories,
-            threads=threads,
-            posts=posts,
-            users=users,
-        ).delete()
+        if any((categories, threads, posts, users)):
+            deleted_posts, _ = self._select_posts(
+                categories=categories,
+                threads=threads,
+                posts=posts,
+                users=users,
+            ).delete()
 
-        return deleted_total + deleted_posts
+            deleted_total += deleted_posts
+
+        return deleted_total
 
     def _select_threads(
         self,

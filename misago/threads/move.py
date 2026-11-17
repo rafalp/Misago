@@ -7,6 +7,7 @@ from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
+from ..search.threads import threads_search
 from ..threadevents.models import ThreadEvent
 from .hooks import move_post_hook, move_thread_hook
 from .models import Post, Thread
@@ -42,6 +43,9 @@ def _move_thread_action(
     ReadThread.objects.filter(thread=thread).update(category=new_category)
     ThreadEvent.objects.filter(thread=thread).update(category=new_category)
     WatchedThread.objects.filter(thread=thread).update(category=new_category)
+
+    threads_search.update_thread(thread, {"category": new_category})
+    threads_search.bulk_update_thread_posts(thread, {"category": new_category})
 
     if commit:
         thread.save()
@@ -80,6 +84,8 @@ def _move_post_action(
         thread=new_thread, category=new_category
     )
     PostEdit.objects.filter(post=post).update(thread=new_thread, category=new_category)
+
+    threads_search.update_post(post, {"category": new_category, "thread": new_thread})
 
     if commit:
         post.save()
