@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ...test import assert_contains
+from ...test import UNORDERED, assert_contains
 from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
 from ..models import PrivateThreadMember
@@ -45,6 +45,7 @@ def test_private_thread_members_add_view_renders_form_in_htmx(
 
 def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_already(
     mock_notify_on_new_private_thread,
+    mock_update_thread_members,
     user,
     user_client,
     user_private_thread,
@@ -71,11 +72,18 @@ def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_a
 
     assert not ThreadEvent.objects.exists()
 
+    mock_update_thread_members.assert_not_called()
+
     mock_notify_on_new_private_thread.delay.assert_not_called()
 
 
 def test_private_thread_members_add_view_adds_new_thread_members(
-    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+    mock_notify_on_new_private_thread,
+    mock_update_thread_members,
+    user,
+    user_client,
+    user_private_thread,
+    admin,
 ):
     response = user_client.post(
         reverse(
@@ -102,13 +110,23 @@ def test_private_thread_members_add_view_adds_new_thread_members(
         detail=admin.username,
     )
 
+    member_ids = UNORDERED(
+        PrivateThreadMember.objects.values_list("user_id", flat=True)
+    )
+    mock_update_thread_members.assert_called_with(user_private_thread, member_ids)
+
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
         user.id, user_private_thread.id, [admin.id]
     )
 
 
 def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
-    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+    mock_notify_on_new_private_thread,
+    mock_update_thread_members,
+    user,
+    user_client,
+    user_private_thread,
+    admin,
 ):
     response = user_client.post(
         reverse(
@@ -132,6 +150,11 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
         event_type=ThreadEventTypeName.ADDED_MEMBER,
         detail=admin.username,
     )
+
+    member_ids = UNORDERED(
+        PrivateThreadMember.objects.values_list("user_id", flat=True)
+    )
+    mock_update_thread_members.assert_called_with(user_private_thread, member_ids)
 
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
         user.id, user_private_thread.id, [admin.id]
@@ -289,6 +312,7 @@ def test_private_thread_members_add_view_checks_locked_thread_permission(
 
 def test_private_thread_members_add_view_adds_new_thread_members_in_locked_thread(
     mock_notify_on_new_private_thread,
+    mock_update_thread_members,
     moderator_client,
     moderator,
     user,
@@ -322,6 +346,11 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_locked_threa
         event_type=ThreadEventTypeName.ADDED_MEMBER,
         detail=admin.username,
     )
+
+    member_ids = UNORDERED(
+        PrivateThreadMember.objects.values_list("user_id", flat=True)
+    )
+    mock_update_thread_members.assert_called_with(user_private_thread, member_ids)
 
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
         moderator.id, user_private_thread.id, [admin.id]

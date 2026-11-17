@@ -14,6 +14,7 @@ from ..privatethreads.members import (
     prefetch_private_thread_member_ids,
     set_private_thread_owner,
 )
+from ..search.threads import threads_search
 from ..threadevents.create import (
     create_approved_thread_event,
     create_hidden_thread_event,
@@ -358,6 +359,8 @@ class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationA
         add_private_thread_member(thread, user)
         set_private_thread_owner(thread, user, request=request)
         thread.private_thread_owner = user
+
+        threads_search.update_thread_members(thread, thread.private_thread_member_ids)
 
         thread_event = create_took_ownership_thread_event(thread, user, request=request)
         ensure_thread_has_events(thread)

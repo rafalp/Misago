@@ -55,7 +55,12 @@ def test_private_thread_leave_view_displays_confirm_page_on_get_for_moderator(
 
 
 def test_private_thread_leave_view_removes_thread_owner(
-    user_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    user_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = user_client.post(
         reverse(
@@ -82,9 +87,18 @@ def test_private_thread_leave_view_removes_thread_owner(
     user_private_thread.refresh_from_db()
     assert user_private_thread.has_events
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_leave_view_removes_thread_member(
-    other_user_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    other_user_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = other_user_client.post(
         reverse(
@@ -111,9 +125,18 @@ def test_private_thread_leave_view_removes_thread_member(
     user_private_thread.refresh_from_db()
     assert user_private_thread.has_events
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_leave_view_removes_thread_moderator(
-    moderator_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = moderator_client.post(
         reverse(
@@ -139,6 +162,10 @@ def test_private_thread_leave_view_removes_thread_moderator(
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.has_events
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
 
 
 def test_private_thread_member_deletes_thread_when_last_member_leaves(

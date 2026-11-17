@@ -47,7 +47,12 @@ def test_private_thread_member_remove_view_displays_confirm_page_on_get_for_mode
 
 
 def test_private_thread_member_remove_view_removes_thread_member(
-    user_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    user_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = user_client.post(
         reverse(
@@ -81,9 +86,18 @@ def test_private_thread_member_remove_view_removes_thread_member(
     user_private_thread.refresh_from_db()
     assert user_private_thread.has_events
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
-    moderator_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = moderator_client.post(
         reverse(
@@ -116,6 +130,10 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.has_events
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
 
 
 def test_private_thread_member_remove_view_returns_redirect_to_next_url(
@@ -179,7 +197,12 @@ def test_private_thread_member_remove_view_returns_redirect_to_thread_if_next_ur
 
 
 def test_private_thread_member_remove_view_removes_thread_member_in_htmx(
-    user_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    user_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = user_client.post(
         reverse(
@@ -205,9 +228,18 @@ def test_private_thread_member_remove_view_removes_thread_member_in_htmx(
         event_type=ThreadEventTypeName.REMOVED_MEMBER,
     )
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_member_remove_view_does_nothing_if_user_tries_to_delete_themselves(
-    user_client, user, other_user, moderator, user_private_thread
+    mock_update_thread_members,
+    user_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
 ):
     response = user_client.post(
         reverse(
@@ -233,6 +265,8 @@ def test_private_thread_member_remove_view_does_nothing_if_user_tries_to_delete_
     assert members == [user, other_user, moderator]
 
     assert not ThreadEvent.objects.exists()
+
+    mock_update_thread_members.assert_not_called()
 
 
 def test_private_thread_member_remove_view_returns_403_if_user_cant_use_private_threads(
@@ -355,7 +389,12 @@ def test_private_thread_member_remove_view_returns_403_for_user_if_thread_is_loc
 
 
 def test_private_thread_member_remove_view_removes_member_for_moderator_if_thread_is_locked(
-    moderator_client, moderator, user, other_user, user_private_thread
+    mock_update_thread_members,
+    moderator_client,
+    moderator,
+    user,
+    other_user,
+    user_private_thread,
 ):
     user_private_thread.is_locked = True
     user_private_thread.save()
@@ -391,6 +430,10 @@ def test_private_thread_member_remove_view_removes_member_for_moderator_if_threa
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.has_events
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
 
 
 def test_private_thread_member_remove_view_returns_403_if_member_cant_be_removed(

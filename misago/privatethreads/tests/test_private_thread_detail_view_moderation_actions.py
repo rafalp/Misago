@@ -218,6 +218,7 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
 
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -263,10 +264,15 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
+    )
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
     )
 
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_in_htmx(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -312,8 +318,13 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
     )
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_and_member(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -368,8 +379,13 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
     )
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_and_member_in_htmx(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -420,6 +436,10 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
+    )
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
     )
 
 
