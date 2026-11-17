@@ -786,7 +786,9 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
 
     @transaction.atomic
     def _index_posts_batch(self, posts: Iterable[tuple[Post, str]]):
-        PostSearch.objects.filter(post_id__in=[post.id for post, _ in posts]).delete()
+        d = PostSearch.objects.filter(
+            post_id__in=[post.id for post, _ in posts]
+        ).delete()
         PostSearch.objects.bulk_create(
             [
                 self._create_post_search(post, search_document)

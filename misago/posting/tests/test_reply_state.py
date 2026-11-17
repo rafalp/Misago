@@ -1,4 +1,8 @@
+import pytest
+
 from ...parser.parse import parse
+from ...search.models import PostSearch
+from ...search.threads import threads_search
 from ..state import ReplyState
 
 
@@ -177,3 +181,36 @@ def test_reply_state_schedules_post_upgrade_for_post_with_code_block(
     mock_process_post_content.delay.assert_called_once_with(
         state.post.id, state.post.sha256_checksum
     )
+
+
+def test_reply_state_updates_search_index(user_request, user_thread):
+    state = ReplyState(user_request, user_thread)
+    state.set_post_content(parse("Test reply"))
+    state.save()
+
+    PostSearch.objects.get(
+        category=state.category,
+        thread=state.thread,
+        post=state.post,
+        poster=state.user,
+        content="Test reply",
+        posted_at=state.timestamp,
+        is_first_post=False,
+    )
+
+
+def test_reply_state_updates_existing_post_search_index(
+    user, user_request, user_thread
+):
+    post = user_thread.first_post
+    post_content = post.content
+
+    threads_search.index_post(post, "lorem ipsum")
+    post_search = PostSearch.objects.get()
+
+    state = ReplyState(user_request, user_thread, post)
+    state.set_post_content(parse("Test reply"))
+    state.save()
+
+    post_search.refresh_from_db()
+    assert post_search.content == f"{post_content} Test reply"

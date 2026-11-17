@@ -1,4 +1,6 @@
 from ...parser.parse import parse
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...threadevents.create import create_split_posts_from_thread_event
 from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
@@ -221,3 +223,37 @@ def test_post_edit_state_save_updates_detail_in_existing_thread_events(
     thread_event.refresh_from_db()
     assert thread_event.detail == "Updated title"
     assert thread_event.get_object_id_for_type(Thread) == other_user_thread.id
+
+
+def test_start_state_updates_search_index_for_changed_title(
+    user_request, other_user_thread
+):
+    threads_search.index_thread(other_user_thread)
+    thread_search = ThreadSearch.objects.get()
+
+    state = PostEditState(user_request, other_user_thread.first_post)
+    state.set_thread_title("Updated title")
+    state.save()
+
+    thread_search.refresh_from_db()
+    assert thread_search.title == "Updated title"
+
+    assert not PostSearch.objects.exists()
+
+
+def test_start_state_updates_search_index_for_changed_post(
+    user, user_request, other_user_thread
+):
+    post = other_user_thread.first_post
+
+    threads_search.index_post(post, "lorem ipsum")
+    post_search = PostSearch.objects.get()
+
+    state = PostEditState(user_request, post)
+    state.set_post_content(parse("Edit reply"))
+    state.save()
+
+    post_search.refresh_from_db()
+    assert post_search.content == "Edit reply"
+
+    assert not ThreadSearch.objects.exists()

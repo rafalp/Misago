@@ -153,7 +153,7 @@ def test_start_state_schedules_post_upgrade_for_post_with_code_block(
     )
 
 
-def test_start_state_saves_thread_search(
+def test_start_state_updates_search_index(
     mock_process_post_content, user_request, default_category
 ):
     state = StartState(user_request, default_category)
