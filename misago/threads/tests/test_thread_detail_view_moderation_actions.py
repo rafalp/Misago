@@ -3348,7 +3348,8 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
-    assert not PostSearch.objects.exists()
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -3361,6 +3362,8 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
 def test_thread_detail_view_delete_posts_moderation_action_deletes_posts_in_htmx(
     moderator_client, default_category, thread, reply, mock_posts_synchronize_categories
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "delete", "posts": [reply.id]},
@@ -3381,6 +3384,9 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts_in_htmx
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
 
     ThreadEvent.objects.get(
         thread=thread,

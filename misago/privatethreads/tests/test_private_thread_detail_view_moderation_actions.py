@@ -1502,7 +1502,8 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
-    assert not PostSearch.objects.exists()
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -1521,6 +1522,8 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
     mock_posts_synchronize_categories,
 ):
     reply = thread_reply_factory(user_private_thread)
+
+    threads_search.index_post(reply, "lorem ipsum")
 
     response = moderator_client.post(
         reverse(
@@ -1554,6 +1557,9 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
