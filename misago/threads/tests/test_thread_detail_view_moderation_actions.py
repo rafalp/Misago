@@ -5,7 +5,7 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...polls.models import Poll
 from ...postedits.models import PostEdit
-from ...search.models import PostSearch
+from ...search.models import PostSearch, ThreadSearch
 from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
@@ -1855,6 +1855,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -1888,6 +1890,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -1909,6 +1914,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_in_htmx(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -1940,6 +1947,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -1961,6 +1971,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_redi
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -1995,6 +2007,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_redi
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -2016,6 +2031,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_mode
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -2054,6 +2071,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_mode
 
     reply.refresh_from_db()
     assert reply.thread == new_thread
+
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
 
     ThreadEvent.objects.get(
         thread=new_thread,
@@ -3497,6 +3517,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3530,6 +3552,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -3551,6 +3576,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_in_htmx(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3582,6 +3609,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -3603,6 +3633,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_redire
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3637,6 +3669,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_redire
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -3658,6 +3693,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_modera
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3696,6 +3733,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_modera
 
     reply.refresh_from_db()
     assert reply.thread == new_thread
+
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
 
     ThreadEvent.objects.get(
         thread=new_thread,

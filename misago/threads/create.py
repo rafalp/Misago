@@ -71,9 +71,21 @@ def _create_thread_action(
 
     if is_hidden:
         if request:
-            hide_thread(thread, request.user, commit=False, request=request)
+            hide_thread(
+                thread,
+                request.user,
+                update_search=False,
+                commit=False,
+                request=request,
+            )
         else:
-            hide_thread(thread, None, commit=False, request=request)
+            hide_thread(
+                thread,
+                None,
+                update_search=False,
+                commit=False,
+                request=request,
+            )
 
     if commit:
         thread.save()

@@ -319,7 +319,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
-        posts = self.posts
+        posts = list(self.posts)
         posts_count = len(posts)
 
         new_thread = create_thread(
@@ -344,9 +344,8 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_thread(thread, request=request)
         synchronize_thread(new_thread, request=request)
 
-        threads_search.index_thread(thread)
-        threads_search.bulk_update_thread_posts(
-            new_thread,
+        threads_search.index_thread(new_thread)
+        threads_search.bulk_update_posts(
             {
                 "category": new_thread.category,
                 "thread": new_thread,
@@ -354,6 +353,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                 "thread_is_hidden": new_thread.is_hidden,
                 "thread_is_unapproved": new_thread.is_unapproved,
             },
+            posts=posts,
         )
         threads_search.update_thread_first_post(new_thread)
 

@@ -2334,6 +2334,27 @@ def test_postgresql_search_backend_update_thread_first_post_updates_thread_first
     assert new_first_post_index.is_first_post
 
 
+def test_postgresql_search_backend_update_thread_first_post_updates_thread_only_post(
+    thread_factory, thread_reply_factory, backend, default_category
+):
+    thread = thread_factory(default_category, title="Lorem ipsum")
+    first_post = thread.first_post
+
+    backend.index_threads([thread])
+    backend.index_posts([(first_post, first_post.content)])
+
+    PostSearch.objects.update(is_first_post=False)
+
+    first_post_search = PostSearch.objects.get(post=first_post)
+    assert not first_post_search.is_first_post
+
+    updated = backend.update_thread_first_post(thread)
+    assert updated == 1
+
+    first_post_search = PostSearch.objects.get(post=first_post)
+    assert first_post_search.is_first_post
+
+
 def test_postgresql_search_backend_update_thread_first_post_doesnt_update_thread_first_post(
     thread_factory, backend, default_category
 ):

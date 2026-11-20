@@ -892,7 +892,13 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
     def update_thread_first_post(self, thread: Thread) -> 0:
         first_post_id = thread.first_post_id
 
-        updated_posts = (
+        updated_posts = PostSearch.objects.filter(
+            thread=thread,
+            post_id=first_post_id,
+            is_first_post=False,
+        ).update(is_first_post=True)
+
+        updated_posts += (
             PostSearch.objects.filter(
                 thread=thread,
                 is_first_post=True,
@@ -900,11 +906,6 @@ class PostgreSQLSearchBackend(ThreadsSearchBackend):
             .exclude(post_id=first_post_id)
             .update(is_first_post=False)
         )
-
-        if updated_posts:
-            return updated_posts + PostSearch.objects.filter(
-                thread=thread, post_id=first_post_id
-            ).update(is_first_post=True)
 
         return updated_posts
 
