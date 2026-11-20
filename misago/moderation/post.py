@@ -482,6 +482,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
+        thread_first_post_id = thread.first_post_id
         post = self.post
         other_post = form.cleaned_data["other_post"]
         edit_reason = form.cleaned_data["edit_reason"]
@@ -542,8 +543,6 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             )
 
         synchronize_thread(thread, request=request)
-
-        threads_search.update_thread_first_post(thread)
 
         for attachment in attachments:
             # A bit of black magic: by unsetting attachment post relations

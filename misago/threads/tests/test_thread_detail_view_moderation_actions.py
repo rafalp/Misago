@@ -2830,6 +2830,9 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts(
     target_post = thread_reply_factory(thread, poster=user, content="Target body")
     other_post = thread_reply_factory(thread, poster=user, content="Other body")
 
+    threads_search.index_post(target_post, "lorem ipsum")
+    threads_search.index_post(target_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
@@ -2867,6 +2870,11 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts(
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=target_post, thread=thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -2881,6 +2889,9 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_in_htmx(
 ):
     target_post = thread_reply_factory(thread, poster=user, content="Target body")
     other_post = thread_reply_factory(thread, poster=user, content="Other body")
+
+    threads_search.index_post(target_post, "lorem ipsum")
+    threads_search.index_post(target_post, "lorem ipsum")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -2912,6 +2923,11 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_in_htmx(
 
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
+
+    PostSearch.objects.get(post=target_post, thread=thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
 
     mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
 
@@ -4559,6 +4575,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     current_post = user_thread.first_post
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
 
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
+
     current_post_content = current_post.content
 
     response = moderator_client.post(
@@ -4616,6 +4635,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=True)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4632,6 +4656,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
 
     current_post_content = current_post.content
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4682,6 +4709,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=True)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4698,6 +4730,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4755,6 +4790,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
     with pytest.raises(Post.DoesNotExist):
         current_post.refresh_from_db()
 
+    PostSearch.objects.get(post=other_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=current_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4771,6 +4811,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4822,6 +4865,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
     with pytest.raises(Post.DoesNotExist):
         current_post.refresh_from_db()
 
+    PostSearch.objects.get(post=other_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=current_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4838,6 +4886,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4895,6 +4946,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4911,6 +4967,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4961,6 +5020,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
 
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
+
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
 
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 

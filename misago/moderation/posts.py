@@ -523,6 +523,7 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
+        thread_first_post_id = thread.first_post_id
         edit_reason = form.cleaned_data["edit_reason"]
         posts = sorted(self.posts, key=lambda i: i.id)
         target, posts = posts[0], posts[1:]
@@ -564,6 +565,11 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
         )
 
         synchronize_thread(thread, request=request)
+
+        if thread.first_post_id != thread_first_post_id:
+            threads_search.index_thread(thread)
+            threads_search.update_thread_first_post(thread)
+
         synchronize_categories.delay([thread.category_id])
 
         messages.success(
