@@ -1800,12 +1800,17 @@ def test_thread_detail_view_unhide_posts_moderation_action_validates_posts(
 
 
 def test_thread_detail_view_approve_posts_moderation_action_approves_posts(
+    mocker,
     post_factory,
     moderator_client,
     thread,
     mock_posts_synchronize_categories,
     mock_posts_notify_on_new_thread_reply,
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply = post_factory(thread, is_unapproved=True)
 
     response = moderator_client.post(
@@ -1826,6 +1831,10 @@ def test_thread_detail_view_approve_posts_moderation_action_approves_posts(
 
     thread.refresh_from_db()
     assert thread.last_post == reply
+
+    mock_threads_search.bulk_update_posts.assert_called_with(
+        {"is_unapproved": False}, posts=[reply]
+    )
 
     mock_posts_synchronize_categories.delay.assert_called_with([thread.category_id])
     mock_posts_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
@@ -3539,6 +3548,7 @@ def test_thread_detail_view_approve_post_moderation_action_approves_post(
 
 
 def test_thread_detail_view_split_post_moderation_action_splits_post(
+    mocker,
     moderator_client,
     default_category,
     thread,

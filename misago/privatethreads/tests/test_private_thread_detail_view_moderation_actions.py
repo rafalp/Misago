@@ -862,6 +862,7 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_validates_pos
 
 
 def test_private_thread_detail_view_approve_posts_moderation_action_approves_posts(
+    mocker,
     post_factory,
     moderator_client,
     user_private_thread,
@@ -869,6 +870,10 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     mock_posts_notify_on_new_thread_reply,
 ):
     reply = post_factory(user_private_thread, is_unapproved=True)
+
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
 
     response = moderator_client.post(
         reverse(
@@ -900,6 +905,10 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
+
+    mock_threads_search.bulk_update_posts.assert_called_with(
+        {"is_unapproved": False}, posts=[reply]
+    )
 
     mock_posts_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
