@@ -8,6 +8,7 @@ from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import delete_duplicate_watched_threads
 from ..permissions.proxy import UserPermissionsProxy
+from ..search.threads import threads_search
 from ..threadevents.create import (
     create_approved_thread_event,
     create_hidden_thread_event,
@@ -612,6 +613,8 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         synchronize_thread(new_thread, request=request)
 
+        threads_search.update_thread_first_post(new_thread)
+
         synchronize_categories.delay(list(categories))
         delete_duplicate_watched_threads.delay(new_thread.id)
 
@@ -638,9 +641,11 @@ class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
 
         categories = set()
 
+        threads_search.delete(threads=threads)
+
         for thread in threads:
             categories.add(thread.category_id)
-            delete_thread(thread, request=request)
+            delete_thread(thread, update_search=False, request=request)
 
         synchronize_categories.delay(list(categories))
 

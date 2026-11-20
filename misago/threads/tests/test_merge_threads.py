@@ -8,6 +8,8 @@ from ...polls.models import Poll, PollVote
 from ...postedits.create import create_post_edit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ...threadevents.create import create_test_thread_event
 from ..create import create_thread
@@ -465,7 +467,61 @@ def test_merge_threads_deletes_old_threads(
     assert default_category.last_thread is None
 
 
-def test_merge_threads_save_target_if_commit_is_false(
+def test_merge_threads_updates_search_data(
+    sibling_category, thread, user_thread, other_user_thread
+):
+    thread_post = thread.first_post
+    user_thread_post = user_thread.first_post
+    other_user_thread_post = other_user_thread.first_post
+
+    threads_search.bulk_index_threads([thread, other_user_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread_post, "thread post"),
+            (user_thread_post, "user thread post"),
+            (other_user_thread_post, "other user thread post"),
+        ]
+    )
+
+    thread_post_search = PostSearch.objects.get(post=thread_post)
+    user_thread_post_search = PostSearch.objects.get(post=user_thread_post)
+    other_user_thread_post_search = PostSearch.objects.get(post=other_user_thread_post)
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    assert not ThreadSearch.objects.exists()
+
+    thread_post_search.refresh_from_db()
+    assert thread_post_search.category == sibling_category
+    assert thread_post_search.thread == new_thread
+
+    user_thread_post_search.refresh_from_db()
+    assert thread_post_search.category == sibling_category
+    assert user_thread_post_search.thread == new_thread
+
+    other_user_thread_post_search.refresh_from_db()
+    assert thread_post_search.category == sibling_category
+    assert other_user_thread_post_search.thread == new_thread
+
+
+def test_merge_threads_doesnt_update_search_if_update_search_is_false(
+    mocker, sibling_category, thread, user_thread, other_user_thread
+):
+    mock_threads_search = mocker.patch(
+        "misago.threads.merge.threads_search", autospec=True
+    )
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(
+        new_thread, [thread, user_thread, other_user_thread], {}, update_search=False
+    )
+
+    mock_threads_search.bulk_update_posts.assert_not_called()
+    mock_threads_search.bulk_delete_threads.assert_not_called()
+
+
+def test_merge_threads_doesnt_save_target_if_commit_is_false(
     thread_reply_factory, sibling_category, thread, user_thread, other_user_thread
 ):
     user_thread_solution = thread_reply_factory(thread, poster="PosterB")

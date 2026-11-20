@@ -16,15 +16,19 @@ from .models import Post, Thread
 def move_thread(
     thread: Thread,
     new_category: Category,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    return move_thread_hook(_move_thread_action, thread, new_category, commit, request)
+    return move_thread_hook(
+        _move_thread_action, thread, new_category, update_search, commit, request
+    )
 
 
 def _move_thread_action(
     thread: Thread,
     new_category: Category,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
@@ -44,11 +48,12 @@ def _move_thread_action(
     ThreadEvent.objects.filter(thread=thread).update(category=new_category)
     WatchedThread.objects.filter(thread=thread).update(category=new_category)
 
-    threads_search.update_thread(thread, {"category": new_category})
-    threads_search.bulk_update_thread_posts(thread, {"category": new_category})
-
     if commit:
         thread.save()
+
+    if update_search:
+        threads_search.update_thread(thread, {"category": new_category})
+        threads_search.bulk_update_thread_posts(thread, {"category": new_category})
 
     return True
 
@@ -56,15 +61,19 @@ def _move_thread_action(
 def move_post(
     post: Post,
     new_thread: Thread,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    return move_post_hook(_move_post_action, post, new_thread, commit, request)
+    return move_post_hook(
+        _move_post_action, post, new_thread, update_search, commit, request
+    )
 
 
 def _move_post_action(
     post: Post,
     new_thread: Thread,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
@@ -85,9 +94,19 @@ def _move_post_action(
     )
     PostEdit.objects.filter(post=post).update(thread=new_thread, category=new_category)
 
-    threads_search.update_post(post, {"category": new_category, "thread": new_thread})
-
     if commit:
         post.save()
+
+    if update_search:
+        threads_search.update_post(
+            post,
+            {
+                "category": new_category,
+                "thread": new_thread,
+                "thread_title": new_thread.title,
+                "thread_is_hidden": new_thread.is_hidden,
+                "thread_is_unapproved": new_thread.is_unapproved,
+            },
+        )
 
     return True

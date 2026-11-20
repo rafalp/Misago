@@ -19,6 +19,7 @@ def custom_move_thread_filter(
     action: MoveThreadHookAction,
     thread: Thread,
     new_category: Category,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -47,6 +48,13 @@ A `Thread` to move.
 The `Category` to move the thread to.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
@@ -72,6 +80,7 @@ The request object, or `None` if not provided.
 def move_thread_action(
     thread: Thread,
     new_category: Category,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -91,6 +100,13 @@ A `Thread` to move.
 #### `new_category: Category`
 
 The `Category` to move the thread to.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -130,10 +146,11 @@ def move_plugin_models_to_new_category(
     action,
     thread: Thread,
     new_category: Category,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
-    if not action(thread, new_category, commit, request):
+    if not action(thread, new_category, update_search, commit, request):
         return False
 
     PluginModel.objects.filter(

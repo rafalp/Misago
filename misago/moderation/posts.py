@@ -9,6 +9,7 @@ from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
 from ..postedits.create import create_post_edit
+from ..search.threads import threads_search
 from ..threadevents.create import (
     create_deleted_posts_thread_event,
     create_moved_posts_from_thread_event,
@@ -335,6 +336,8 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_thread(thread, request=request)
         synchronize_thread(new_thread, request=request)
 
+        threads_search.update_thread_first_post(new_thread)
+
         sync_categories_ids = list({thread.category_id, new_thread.category_id})
         synchronize_categories.delay(sync_categories_ids)
 
@@ -410,6 +413,9 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
 
         synchronize_thread(thread, request=request)
         synchronize_thread(target_thread, request=request)
+
+        threads_search.index_thread(target_thread)
+        threads_search.update_thread_first_post(target_thread)
 
         sync_categories_ids = list({thread.category_id, target_thread.category_id})
         synchronize_categories.delay(sync_categories_ids)
@@ -563,8 +569,10 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
         thread = self.thread
         posts = self.posts
 
+        threads_search.delete(posts=posts)
+
         for post in posts:
-            delete_post(post)
+            delete_post(post, update_search=False, request=request)
 
         thread_event = create_deleted_posts_thread_event(
             thread, len(posts), request.user, request=request

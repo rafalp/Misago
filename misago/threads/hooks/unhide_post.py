@@ -16,6 +16,12 @@ class UnhidePostHookAction(Protocol):
 
     A `Post` to unhide.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -34,6 +40,7 @@ class UnhidePostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -56,6 +63,12 @@ class UnhidePostHookFilter(Protocol):
 
     A `Post` to unhide.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -75,6 +88,7 @@ class UnhidePostHookFilter(Protocol):
         self,
         action: UnhidePostHookAction,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -104,10 +118,11 @@ class UnhidePostHook(
     def register_user_that_unhidden_post(
         action,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(post, commit=False, request=request):
+        if not action(post, update_search, commit=False, request=request):
             return False
 
         if request:
@@ -125,12 +140,14 @@ class UnhidePostHook(
         self,
         action: UnhidePostHookAction,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
             post,
+            update_search,
             commit,
             request,
         )

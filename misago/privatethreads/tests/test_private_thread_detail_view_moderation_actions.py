@@ -4,6 +4,8 @@ from django.urls import reverse
 from ...postedits.models import PostEdit
 from ...privatethreads.members import get_private_thread_members
 from ...privatethreads.models import PrivateThreadMember
+from ...search.models import PostSearch
+from ...search.threads import threads_search
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
@@ -1417,6 +1419,8 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 ):
     reply = thread_reply_factory(user_private_thread)
 
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse(
             "misago:private-thread",
@@ -1452,6 +1456,8 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+    assert not PostSearch.objects.exists()
 
     ThreadEvent.objects.get(
         thread=user_private_thread,

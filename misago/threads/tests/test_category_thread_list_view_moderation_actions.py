@@ -3,6 +3,8 @@ import pytest
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...polls.models import Poll
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
@@ -1486,5 +1488,8 @@ def test_category_thread_list_view_delete_moderation_action_deletes_threads(
 
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
+
+    assert not ThreadSearch.objects.exists()
+    assert not PostSearch.objects.exists()
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])

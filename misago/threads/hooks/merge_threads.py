@@ -27,6 +27,12 @@ class MergeThreadsHookAction(Protocol):
 
     A `dict` with the conflict resolutions to use during the merge.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -47,6 +53,7 @@ class MergeThreadsHookAction(Protocol):
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread: ...
@@ -79,6 +86,12 @@ class MergeThreadsHookFilter(Protocol):
 
     A `dict` with the conflict resolutions to use during the merge.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -100,6 +113,7 @@ class MergeThreadsHookFilter(Protocol):
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread: ...
@@ -137,6 +151,7 @@ class MergeThreadsHook(
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread:
@@ -144,7 +159,7 @@ class MergeThreadsHook(
             category=target.category, thread=target
         )
 
-        return action(target, threads, conflicts, commit, request)
+        return action(target, threads, conflicts, update_search, commit, request)
     """
 
     __slots__ = FilterHook.__slots__
@@ -155,10 +170,19 @@ class MergeThreadsHook(
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread:
-        return super().__call__(action, target, threads, conflicts, commit, request)
+        return super().__call__(
+            action,
+            target,
+            threads,
+            conflicts,
+            update_search,
+            commit,
+            request,
+        )
 
 
 merge_threads_hook = MergeThreadsHook()

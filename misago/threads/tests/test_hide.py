@@ -90,6 +90,30 @@ def test_hide_thread_doesnt_hide_hidden_thread(django_assert_num_queries, thread
     assert thread.hide_reason is None
 
 
+def test_hide_thread_updates_search(mocker, thread):
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert hide_thread(thread)
+
+    mock_threads_search.update_thread.assert_called_with(thread, {"is_hidden": True})
+    mock_threads_search.bulk_update_thread_posts.assert_called_with(
+        thread, {"thread_is_hidden": True}
+    )
+
+
+def test_hide_thread_doesnt_update_search_if_update_search_is_false(mocker, thread):
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert hide_thread(thread, update_search=False)
+
+    mock_threads_search.update_thread.assert_not_called()
+    mock_threads_search.bulk_update_thread_posts.assert_not_called()
+
+
 def test_hide_thread_doesnt_save_thread_if_commit_is_false(
     django_assert_num_queries, thread, user
 ):
@@ -139,6 +163,34 @@ def test_unhide_thread_doesnt_unhide_unhidden_thread(django_assert_num_queries, 
 
     thread.refresh_from_db()
     assert not thread.is_hidden
+
+
+def test_unhide_thread_updates_search(mocker, hidden_thread):
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert unhide_thread(hidden_thread)
+
+    mock_threads_search.update_thread.assert_called_with(
+        hidden_thread, {"is_hidden": False}
+    )
+    mock_threads_search.bulk_update_thread_posts.assert_called_with(
+        hidden_thread, {"thread_is_hidden": False}
+    )
+
+
+def test_unhide_thread_doesnt_update_search_if_update_search_is_false(
+    mocker, hidden_thread
+):
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert unhide_thread(hidden_thread, update_search=False)
+
+    mock_threads_search.update_thread.assert_not_called()
+    mock_threads_search.bulk_update_thread_posts.assert_not_called()
 
 
 def test_unhide_thread_doesnt_save_thread_if_commit_is_false(
@@ -237,6 +289,26 @@ def test_hide_post_hides_post_with_reason(post, user):
     assert post.hide_reason == "Lorem ipsum"
 
 
+def test_hide_post_updates_search(mocker, post):
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert hide_post(post)
+
+    mock_threads_search.update_post.assert_called_with(post, {"is_hidden": True})
+
+
+def test_hide_post_doesnt_update_search_if_update_search_is_false(mocker, post):
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert hide_post(post, update_search=False)
+
+    mock_threads_search.update_post.assert_not_called()
+
+
 def test_hide_post_doesnt_hide_hidden_post(django_assert_num_queries, post, user):
     post.is_hidden = True
     post.save()
@@ -303,6 +375,30 @@ def test_unhide_post_doesnt_unhide_unhidden_post(django_assert_num_queries, post
 
     post.refresh_from_db()
     assert not post.is_hidden
+
+
+def test_unhide_post_updates_search(mocker, post, user):
+    hide_post(post, user, "Reason")
+
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert unhide_post(post)
+
+    mock_threads_search.update_post.assert_called_with(post, {"is_hidden": False})
+
+
+def test_unhide_post_doesnt_update_search_if_update_search_is_false(mocker, post, user):
+    hide_post(post, user, "Reason")
+
+    mock_threads_search = mocker.patch(
+        "misago.threads.hide.threads_search", autospec=True
+    )
+
+    assert unhide_post(post, update_search=False)
+
+    mock_threads_search.update_post.assert_not_called()
 
 
 def test_unhide_post_doesnt_save_post_if_commit_is_false(

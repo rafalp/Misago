@@ -155,6 +155,18 @@ def test_delete_thread_deletes_search_data(thread, reply):
     assert not PostSearch.objects.exists()
 
 
+def test_delete_thread_doesnt_delete_search_if_update_search_is_false(
+    mocker, thread, reply
+):
+    mock_search_delete = mocker.patch(
+        "misago.search.threads.threads_search.delete", autospec=True
+    )
+
+    delete_thread(thread, update_search=False)
+
+    mock_search_delete.assert_not_called()
+
+
 def test_delete_thread_deletes_thread_notification(user, thread, reply):
     notification = notify_user(user, "TEST", "DeletedUser", thread.category, thread)
 

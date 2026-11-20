@@ -587,28 +587,30 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
             categories.append(other_thread.category_id)
 
         if form.cleaned_data["direction"] == "other":
-            final_thread, other_thread = other_thread, thread
+            target_thread, other_thread = other_thread, thread
         else:
-            final_thread = thread
+            target_thread = thread
 
         merge_threads(
-            final_thread, [other_thread], conflicts_resolutions, request=request
+            target_thread, [other_thread], conflicts_resolutions, request=request
         )
         create_merged_thread_event(
-            final_thread, other_thread, request.user, request=request
+            target_thread, other_thread, request.user, request=request
         )
 
-        synchronize_thread(final_thread, request=request)
+        synchronize_thread(target_thread, request=request)
+
+        threads_search.update_thread_first_post(target_thread)
 
         synchronize_categories.delay(list(categories))
-        delete_duplicate_watched_threads.delay(final_thread.id)
+        delete_duplicate_watched_threads.delay(target_thread.id)
 
         messages.success(
             request,
             pgettext("thread moderation success", "Threads merged"),
         )
 
-        return self.get_result(final_thread, other_thread)
+        return self.get_result(target_thread, other_thread)
 
     def get_conflicts_form_result(self, merge_form: Form, conflicts_form: Form):
         return ModerationActionTemplateResult(
@@ -620,16 +622,16 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         )
 
     def get_result(
-        self, final_thread: Thread, other_thread: Thread
+        self, target_thread: Thread, other_thread: Thread
     ) -> ModerationResult:
         refresh = False
-        redirect_to = self.get_redirect_url(final_thread)
+        redirect_to = self.get_redirect_url(target_thread)
 
-        if final_thread == self.thread:
+        if target_thread == self.thread:
             refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
 
         return ModerationResult(
-            updated_items=[final_thread],
+            updated_items=[target_thread],
             deleted_items=[other_thread],
             refresh=refresh,
             redirect_to=redirect_to,

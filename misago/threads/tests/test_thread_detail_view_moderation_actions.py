@@ -5,6 +5,8 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...polls.models import Poll
 from ...postedits.models import PostEdit
+from ...search.models import PostSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
@@ -3248,6 +3250,8 @@ def test_thread_detail_view_merge_posts_moderation_action_validates_posts_are_by
 def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
     moderator_client, default_category, thread, reply, mock_posts_synchronize_categories
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "delete", "posts": [reply.id]},
@@ -3270,6 +3274,8 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+    assert not PostSearch.objects.exists()
 
     ThreadEvent.objects.get(
         thread=thread,
