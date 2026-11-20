@@ -417,6 +417,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
         request = self.request
         thread = self.thread
         target_thread = form.cleaned_data["target_thread"]
+        target_first_post_id = target_thread.first_post_id
         posts = list(self.posts)
         posts_count = len(posts)
 
@@ -443,7 +444,10 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
             },
             posts=posts,
         )
-        threads_search.update_thread_first_post(target_thread)
+
+        if post.id < target_first_post_id:
+            threads_search.index_thread(target_thread)
+            threads_search.update_thread_first_post(target_thread)
 
         sync_categories_ids = list({thread.category_id, target_thread.category_id})
         synchronize_categories.delay(sync_categories_ids)

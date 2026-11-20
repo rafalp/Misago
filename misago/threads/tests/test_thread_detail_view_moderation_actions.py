@@ -2352,6 +2352,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "move", "posts": [reply.id]},
@@ -2387,6 +2389,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -2409,6 +2413,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_in_htmx(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "move", "posts": [reply.id]},
@@ -2442,6 +2448,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -2464,6 +2472,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_with_redire
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "move", "posts": [reply.id]},
@@ -2499,6 +2509,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_with_redire
 
     reply.refresh_from_db()
     assert reply.thread == other_thread
+
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
 
     ThreadEvent.objects.get(
         thread=other_thread,
@@ -4004,6 +4016,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "move", "post": reply.id},
@@ -4039,6 +4053,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -4061,6 +4077,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_in_htmx(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "move", "post": reply.id},
@@ -4094,6 +4112,73 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
+    ThreadEvent.objects.get(
+        thread=other_thread,
+        event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
+    )
+    ThreadEvent.objects.get(
+        thread=thread,
+        event_type=ThreadEventTypeName.MOVED_POSTS_TO,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_move_post_moderation_action_moves_post_replacing_first_post(
+    thread_factory,
+    moderator_client,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    # Edge case: when a post is moved to a thread newer than it, it will replace
+    # original post as a first post because of Misago using post IDs for post ordering
+    other_thread = thread_factory(default_category)
+
+    threads_search.index_post(reply, "lorem ipsum")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "move", "post": reply.id},
+    )
+    assert_contains(response, "Move post")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "move",
+            "post": reply.id,
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 1
+
+    reply.refresh_from_db()
+    assert reply.thread == other_thread
+
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -4116,6 +4201,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_with_redirect
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "move", "post": reply.id},
@@ -4142,6 +4229,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_with_redirect
         "misago:thread",
         kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
     )
+
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
 
     thread.refresh_from_db()
     assert thread.replies == 0
