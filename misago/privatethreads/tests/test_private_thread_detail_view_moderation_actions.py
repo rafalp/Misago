@@ -718,8 +718,12 @@ def test_private_thread_detail_view_unlock_posts_moderation_action_validates_pos
 
 
 def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
-    thread_reply_factory, moderator_client, moderator, user_private_thread
+    mocker, thread_reply_factory, moderator_client, moderator, user_private_thread
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply = thread_reply_factory(user_private_thread)
 
     response = moderator_client.post(
@@ -771,6 +775,10 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
     assert reply.hidden_by_slug == moderator.slug
     assert reply.hide_reason == "Lorem ipsum"
 
+    mock_threads_search.bulk_update_posts.assert_called_with(
+        {"is_hidden": True}, posts=[reply]
+    )
+
 
 def test_private_thread_detail_view_hide_posts_moderation_action_validates_posts(
     thread_reply_factory, moderator_client, user_private_thread
@@ -807,8 +815,12 @@ def test_private_thread_detail_view_hide_posts_moderation_action_validates_first
 
 
 def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
-    thread_reply_factory, moderator_client, user_private_thread
+    mocker, thread_reply_factory, moderator_client, user_private_thread
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply = thread_reply_factory(user_private_thread, is_hidden=True)
 
     response = moderator_client.post(
@@ -841,6 +853,10 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
+
+    mock_threads_search.bulk_update_posts.assert_called_with(
+        {"is_hidden": False}, posts=[reply]
+    )
 
 
 def test_private_thread_detail_view_unhide_posts_moderation_action_validates_posts(
