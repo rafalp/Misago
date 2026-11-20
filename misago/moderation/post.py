@@ -335,7 +335,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
             request=request,
         )
 
-        move_post(post, new_thread)
+        move_post(post, new_thread, request=request)
 
         thread_event = create_split_posts_from_thread_event(
             new_thread, thread, 1, request.user, request=request
@@ -347,6 +347,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
         synchronize_thread(thread, request=request)
         synchronize_thread(new_thread, request=request)
 
+        threads_search.index_thread(new_thread)
         threads_search.update_thread_first_post(new_thread)
 
         sync_categories_ids = list({thread.category_id, new_thread.category_id})
@@ -412,7 +413,7 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
         target_thread = form.cleaned_data["target_thread"]
         post = self.post
 
-        move_post(post, target_thread)
+        move_post(post, target_thread, request=request)
 
         thread_event = create_moved_posts_from_thread_event(
             target_thread, thread, 1, request.user, request=request
@@ -424,7 +425,6 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
         synchronize_thread(thread, request=request)
         synchronize_thread(target_thread, request=request)
 
-        threads_search.index_thread(target_thread)
         threads_search.update_thread_first_post(target_thread)
 
         sync_categories_ids = list({thread.category_id, target_thread.category_id})
@@ -539,6 +539,8 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             )
 
         synchronize_thread(thread, request=request)
+
+        threads_search.update_thread_first_post(thread)
 
         for attachment in attachments:
             # A bit of black magic: by unsetting attachment post relations

@@ -124,10 +124,10 @@ class LockPostsModerationAction(FormMixin, PostsModerationAction):
 
     def form_valid(self, form) -> ModerationResult:
         request = self.request
-        valid_posts = [post for post in self.posts if not post.is_locked]
+        posts = [post for post in self.posts if not post.is_locked]
         lock_reason = form.cleaned_data["lock_reason"]
 
-        for post in valid_posts:
+        for post in posts:
             lock_post(post, request.user, lock_reason, request=request)
 
         messages.success(
@@ -135,7 +135,7 @@ class LockPostsModerationAction(FormMixin, PostsModerationAction):
             pgettext("posts moderation success", "Posts locked"),
         )
 
-        return ModerationResult(updated_items=valid_posts)
+        return ModerationResult(updated_items=posts)
 
 
 class UnlockPostsModerationAction(PostsModerationAction):
@@ -153,9 +153,9 @@ class UnlockPostsModerationAction(PostsModerationAction):
 
     def execute(self) -> ModerationResult:
         request = self.request
-        valid_posts = [post for post in self.posts if post.is_locked]
+        posts = [post for post in self.posts if post.is_locked]
 
-        for post in valid_posts:
+        for post in posts:
             unlock_post(post, request=request)
 
         messages.success(
@@ -163,7 +163,7 @@ class UnlockPostsModerationAction(PostsModerationAction):
             pgettext("posts moderation success", "Posts unlocked"),
         )
 
-        return ModerationResult(updated_items=valid_posts)
+        return ModerationResult(updated_items=posts)
 
 
 class HidePostsModerationAction(FormMixin, PostsModerationAction):
@@ -194,18 +194,22 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
 
     def form_valid(self, form) -> ModerationResult:
         request = self.request
-        valid_posts = [post for post in self.posts if not post.is_hidden]
+        posts = [post for post in self.posts if not post.is_hidden]
         hide_reason = form.cleaned_data["hide_reason"]
 
-        for post in valid_posts:
-            hide_post(post, request.user, hide_reason, request=request)
+        for post in posts:
+            hide_post(
+                post, request.user, hide_reason, update_search=False, request=request
+            )
+
+        threads_search.bulk_update_posts({"is_hidden": True}, posts=posts)
 
         messages.success(
             request,
             pgettext("posts moderation success", "Posts hidden"),
         )
 
-        return ModerationResult(updated_items=valid_posts)
+        return ModerationResult(updated_items=posts)
 
 
 class UnhidePostsModerationAction(PostsModerationAction):
@@ -223,17 +227,19 @@ class UnhidePostsModerationAction(PostsModerationAction):
 
     def execute(self) -> ModerationResult:
         request = self.request
-        valid_posts = [post for post in self.posts if post.is_hidden]
+        posts = [post for post in self.posts if post.is_hidden]
 
-        for post in valid_posts:
-            unhide_post(post, request=request)
+        for post in posts:
+            unhide_post(post, update_search=False, request=request)
+
+        threads_search.bulk_update_posts({"is_hidden": False}, posts=posts)
 
         messages.success(
             request,
             pgettext("posts moderation success", "Posts unhidden"),
         )
 
-        return ModerationResult(updated_items=valid_posts)
+        return ModerationResult(updated_items=posts)
 
 
 class ApprovePostsModerationAction(PostsModerationAction):
@@ -252,14 +258,16 @@ class ApprovePostsModerationAction(PostsModerationAction):
     def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
-        valid_posts = [post for post in self.posts if post.is_unapproved]
+        posts = [post for post in self.posts if post.is_unapproved]
 
-        for post in valid_posts:
-            approve_post(post, request=request)
+        for post in posts:
+            approve_post(post, update_search=False, request=request)
 
         synchronize_thread(thread, request=request)
 
-        for post in valid_posts:
+        threads_search.bulk_update_posts({"is_unapproved": False}, posts=posts)
+
+        for post in posts:
             notify_on_new_thread_reply.delay(post.id)
 
         synchronize_categories.delay([thread.category_id])
@@ -269,7 +277,7 @@ class ApprovePostsModerationAction(PostsModerationAction):
             pgettext("posts moderation success", "Posts approved"),
         )
 
-        return ModerationResult(updated_items=valid_posts)
+        return ModerationResult(updated_items=posts)
 
 
 class SplitPostsModerationAction(FormMixin, PostsModerationAction):
@@ -324,7 +332,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         )
 
         for post in posts:
-            move_post(post, new_thread)
+            move_post(post, new_thread, update_search=False, request=request)
 
         thread_event = create_split_posts_from_thread_event(
             new_thread, thread, posts_count, request.user, request=request
@@ -336,6 +344,17 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_thread(thread, request=request)
         synchronize_thread(new_thread, request=request)
 
+        threads_search.index_thread(thread)
+        threads_search.bulk_update_thread_posts(
+            new_thread,
+            {
+                "category": new_thread.category,
+                "thread": new_thread,
+                "thread_title": new_thread.title,
+                "thread_is_hidden": new_thread.is_hidden,
+                "thread_is_unapproved": new_thread.is_unapproved,
+            },
+        )
         threads_search.update_thread_first_post(new_thread)
 
         sync_categories_ids = list({thread.category_id, new_thread.category_id})
@@ -398,11 +417,11 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
         request = self.request
         thread = self.thread
         target_thread = form.cleaned_data["target_thread"]
-        posts = self.posts
+        posts = list(self.posts)
         posts_count = len(posts)
 
         for post in posts:
-            move_post(post, target_thread)
+            move_post(post, target_thread, update_search=False, request=request)
 
         thread_event = create_moved_posts_from_thread_event(
             target_thread, thread, posts_count, request.user, request=request
@@ -414,7 +433,16 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_thread(thread, request=request)
         synchronize_thread(target_thread, request=request)
 
-        threads_search.index_thread(target_thread)
+        threads_search.bulk_update_posts(
+            {
+                "category": target_thread.category,
+                "thread": target_thread,
+                "thread_title": target_thread.title,
+                "thread_is_hidden": target_thread.is_hidden,
+                "thread_is_unapproved": target_thread.is_unapproved,
+            },
+            posts=posts,
+        )
         threads_search.update_thread_first_post(target_thread)
 
         sync_categories_ids = list({thread.category_id, target_thread.category_id})

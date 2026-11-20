@@ -509,7 +509,9 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
         new_category = form.cleaned_data["category"]
 
         ensure_thread_has_events(thread, commit=False)
+
         move_thread(thread, new_category, request=request)
+
         thread_event = create_moved_thread_event(
             thread, old_category, request.user, request=request
         )
@@ -594,6 +596,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         merge_threads(
             target_thread, [other_thread], conflicts_resolutions, request=request
         )
+
         create_merged_thread_event(
             target_thread, other_thread, request.user, request=request
         )

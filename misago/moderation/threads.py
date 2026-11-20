@@ -320,8 +320,13 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            hide_thread(thread, request.user, hide_reason, request=request)
+            hide_thread(
+                thread, request.user, hide_reason, update_search=False, request=request
+            )
             create_hidden_thread_event(thread, request.user, request=request)
+
+        threads_search.bulk_update_threads({"is_hidden": True}, threads=threads)
+        threads_search.bulk_update_posts({"thread_is_hidden": True}, threads=threads)
 
         synchronize_categories.delay(categories)
 
@@ -353,8 +358,11 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            unhide_thread(thread, request=request)
+            unhide_thread(thread, update_search=False, request=request)
             create_unhidden_thread_event(thread, request.user, request=request)
+
+        threads_search.bulk_update_threads({"is_hidden": False}, threads=threads)
+        threads_search.bulk_update_posts({"thread_is_hidden": False}, threads=threads)
 
         synchronize_categories.delay(categories)
 
@@ -386,8 +394,13 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            approve_thread(thread, request=request)
+            approve_thread(thread, update_search=False, request=request)
             create_approved_thread_event(thread, request.user, request=request)
+
+        threads_search.bulk_update_threads({"is_unapproved": False}, threads=threads)
+        threads_search.bulk_update_posts(
+            {"thread_is_unapproved": False}, threads=threads
+        )
 
         synchronize_categories.delay(categories)
 
@@ -531,10 +544,13 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
             categories.add(old_category.id)
 
             ensure_thread_has_events(thread, commit=False)
-            move_thread(thread, new_category, request=request)
+            move_thread(thread, new_category, update_search=False, request=request)
             create_moved_thread_event(
                 thread, old_category, request.user, request=request
             )
+
+        threads_search.bulk_update_threads({"category": new_category}, threads=threads)
+        threads_search.bulk_update_posts({"category": new_category}, threads=threads)
 
         synchronize_categories.delay(list(categories))
 
@@ -613,6 +629,7 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         synchronize_thread(new_thread, request=request)
 
+        threads_search.index_thread(new_thread)
         threads_search.update_thread_first_post(new_thread)
 
         synchronize_categories.delay(list(categories))
