@@ -1591,6 +1591,9 @@ def test_thread_detail_view_merge_thread_moderation_action_validates_conflict_re
 def test_thread_detail_view_delete_thread_moderation_action_deletes_thread(
     moderator_client, default_category, thread, mock_thread_synchronize_categories
 ):
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "delete"},
@@ -1612,6 +1615,12 @@ def test_thread_detail_view_delete_thread_moderation_action_deletes_thread(
 
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get()
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
         [default_category.id]

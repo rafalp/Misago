@@ -357,8 +357,8 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         )
         threads_search.update_thread_first_post(new_thread)
 
-        sync_categories_ids = list({thread.category_id, new_thread.category_id})
-        synchronize_categories.delay(sync_categories_ids)
+        categories_to_sync = list({thread.category_id, new_thread.category_id})
+        synchronize_categories.delay(categories_to_sync)
 
         messages.success(
             request,

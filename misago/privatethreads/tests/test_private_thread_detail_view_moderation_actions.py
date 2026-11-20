@@ -558,6 +558,9 @@ def test_private_thread_detail_view_remove_reply_approval_thread_moderation_acti
 def test_private_thread_detail_view_delete_thread_moderation_action_deletes_thread(
     moderator_client, user_private_thread, mock_thread_synchronize_categories
 ):
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(user_private_thread.first_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse(
             "misago:private-thread",
@@ -588,6 +591,12 @@ def test_private_thread_detail_view_delete_thread_moderation_action_deletes_thre
 
     with pytest.raises(Thread.DoesNotExist):
         user_private_thread.refresh_from_db()
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get()
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]

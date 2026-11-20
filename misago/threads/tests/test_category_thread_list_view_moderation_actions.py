@@ -1468,6 +1468,9 @@ def test_category_thread_list_view_delete_moderation_action_deletes_threads(
 ):
     thread = thread_factory(default_category, is_unapproved=True)
 
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "lorem ipsum")
+
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {"moderation": "delete", "threads": [thread.id]},
@@ -1489,7 +1492,10 @@ def test_category_thread_list_view_delete_moderation_action_deletes_threads(
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
 
-    assert not ThreadSearch.objects.exists()
-    assert not PostSearch.objects.exists()
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get()
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
