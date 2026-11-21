@@ -782,6 +782,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -818,6 +826,13 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     other_thread.refresh_from_db()
     assert other_thread.replies == 1
 
+    ThreadSearch.objects.get(thread=other_thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=thread)
+
+    assert PostSearch.objects.filter(thread=other_thread).count() == 2
+
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
@@ -840,6 +855,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -877,6 +900,16 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     other_thread.refresh_from_db()
     assert other_thread.replies == 1
 
+    ThreadSearch.objects.get(thread=other_thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=thread)
+
+    assert PostSearch.objects.filter(thread=other_thread).count() == 2
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(thread=thread)
+
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
@@ -899,6 +932,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -930,6 +971,16 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     thread.refresh_from_db()
     assert thread.replies == 1
 
+    ThreadSearch.objects.get(thread=thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=other_thread)
+
+    assert PostSearch.objects.filter(thread=thread).count() == 2
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(thread=other_thread)
+
     assert (
         ThreadEvent.objects.filter(
             thread=thread,
@@ -952,6 +1003,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -981,6 +1040,16 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
 
     thread.refresh_from_db()
     assert thread.replies == 1
+
+    ThreadSearch.objects.get(thread=thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=other_thread)
+
+    assert PostSearch.objects.filter(thread=thread).count() == 2
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(thread=other_thread)
 
     assert (
         ThreadEvent.objects.filter(

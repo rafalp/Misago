@@ -957,6 +957,14 @@ def test_thread_list_view_merge_moderation_action_merges_threads(
     mock_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {"moderation": "merge", "threads": [thread.id, other_thread.id]},
@@ -984,6 +992,21 @@ def test_thread_list_view_merge_moderation_action_merges_threads(
 
     merged_thread = Thread.objects.get(slug="merged-thread")
     assert merged_thread.replies == 1
+
+    ThreadSearch.objects.get(thread=merged_thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=other_thread)
+
+    PostSearch.objects.get(
+        post=thread.first_post, thread=merged_thread, is_first_post=True
+    )
+    PostSearch.objects.get(
+        post=other_thread.first_post, thread=merged_thread, is_first_post=False
+    )
 
     assert (
         ThreadEvent.objects.filter(
