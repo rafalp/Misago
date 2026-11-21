@@ -588,6 +588,9 @@ def test_thread_list_view_move_moderation_action_moves_threads(
 
     thread = thread_factory(default_category)
 
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {"moderation": "move", "threads": [thread.id]},
@@ -609,6 +612,9 @@ def test_thread_list_view_move_moderation_action_moves_threads(
     thread.refresh_from_db()
     assert thread.category == sibling_category
     assert thread.has_events
+
+    ThreadSearch.objects.get(thread=thread, category=sibling_category)
+    PostSearch.objects.get(thread=thread, category=sibling_category)
 
     ThreadEvent.objects.get(
         thread=thread,
