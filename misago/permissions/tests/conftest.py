@@ -16,7 +16,7 @@ def threads_filter_factory(cache_versions):
     def filter_factory_function(user):
         permissions = UserPermissionsProxy(user, cache_versions)
         categories = CategoriesProxy(permissions, cache_versions)
-        return ThreadsQuerysetFilter(permissions, categories.category_list)
+        return ThreadsQuerysetFilter(permissions, categories.values())
 
     return filter_factory_function
 
@@ -26,11 +26,11 @@ def category_threads_filter_factory(cache_versions):
     def filter_factory_function(user, category):
         permissions = UserPermissionsProxy(user, cache_versions)
         categories = CategoriesProxy(permissions, cache_versions)
-        categories_data = categories.get_category_descendants(category.id)
+        categories_data = categories.get_descendants(category, include_self=True)
 
         return CategoryThreadsQuerysetFilter(
             permissions,
-            categories.category_list,
+            categories.values(),
             current_category=categories_data[0],
             child_categories=categories_data[1:],
             include_children=category.list_children_threads,

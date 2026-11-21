@@ -13,6 +13,8 @@ from ..polls.models import Poll, PollVote
 from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
+from ..search.models import PostSearch, ThreadSearch
+from ..search.threads import threads_search
 from ..threadevents.create import create_test_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threads.enums import ThreadPinned
@@ -112,6 +114,9 @@ def thread_relations_factory(user, other_user):
     def _thread_relations_factory(thread: Thread) -> "ThreadRelations":
         post = thread.first_post
 
+        threads_search.index_thread(thread)
+        threads_search.index_post(post, "lorem ipsum")
+
         post_edit = create_post_edit(post=thread.first_post, user=other_user)
 
         attachment = Attachment.objects.create(
@@ -157,6 +162,8 @@ def thread_relations_factory(user, other_user):
             voter_slug=user.slug,
         )
 
+        post_search = PostSearch.objects.get(post_id=post.id)
+
         read_thread = ReadThread.objects.create(
             user=user,
             category=thread.category,
@@ -164,6 +171,7 @@ def thread_relations_factory(user, other_user):
         )
 
         thread_event = create_test_thread_event(thread, other_user)
+        thread_search = ThreadSearch.objects.get(thread_id=thread.id)
 
         watched_thread = WatchedThread.objects.create(
             user=user,
@@ -179,8 +187,10 @@ def thread_relations_factory(user, other_user):
             poll_vote=poll_vote,
             post=post,
             post_edit=post_edit,
+            post_search=post_search,
             read_thread=read_thread,
             thread_event=thread_event,
+            thread_search=thread_search,
             watched_thread=watched_thread,
         )
 
@@ -196,8 +206,10 @@ class ThreadRelations:
     poll_vote: PollVote
     post: Post
     post_edit: PostEdit
+    post_search: PostSearch
     read_thread: ReadThread
     thread_event: ThreadEvent
+    thread_search: ThreadSearch
     watched_thread: WatchedThread
 
     def assert_category(self, category: Category):
@@ -225,8 +237,14 @@ class ThreadRelations:
         self.post_edit.refresh_from_db()
         assert self.post_edit.category_id == category.id
 
+        self.post_search.refresh_from_db()
+        assert self.post_search.category_id == category.id
+
         self.thread_event.refresh_from_db()
         assert self.thread_event.category_id == category.id
+
+        self.thread_search.refresh_from_db()
+        assert self.thread_search.category_id == category.id
 
         self.watched_thread.refresh_from_db()
         assert self.watched_thread.category_id == category.id

@@ -1,11 +1,16 @@
 import htmx from "htmx.org"
 import { Autocomplete, AnchorInput, SelectUser, sources } from "./Autocomplete"
 
-const DATA_ATTRIBUTE_ELEMENT = "m-user-multiple-choice"
-const DATA_ATTRIBUTE_INPUT = "m-user-multiple-choice-input"
+const ATTRIBUTE_ACTIVE = "m-user-multiple-choice-active"
+const ATTRIBUTE_CHIPS = "m-user-multiple-choice"
+const ATTRIBUTE_SEARCH = "m-user-multiple-choice-search"
+const ATTRIBUTE_USER_ID = "m-user-id"
+const ATTRIBUTE_USER_NAME = "m-user-name"
 
-const SELECTOR_ELEMENT = `[${DATA_ATTRIBUTE_ELEMENT}]`
-const SELECTOR_INPUT = `[${DATA_ATTRIBUTE_INPUT}]`
+const SELECTOR_CHIPS = `[${ATTRIBUTE_CHIPS}]`
+const SELECTOR_SEARCH = `[${ATTRIBUTE_SEARCH}]`
+const SELECTOR_USER_ID = `[${ATTRIBUTE_USER_ID}]`
+const SELECTOR_USER_NAME = `[${ATTRIBUTE_USER_NAME}]`
 
 const TEMPLATE_ID = "m-user-multiple-choice-template"
 
@@ -23,31 +28,52 @@ const KEY_OVERRIDE = {
 class UserMultipleChoice {
   constructor() {
     this.autocomplete = null
-    this.element = null
     this.input = null
+    this.chips = null
+    this.search = null
     this.template = null
   }
 
-  activate = (element) => {
-    if (element.getAttribute(DATA_ATTRIBUTE_ELEMENT) === "true") {
+  activate = (chips) => {
+    if (chips.getAttribute(ATTRIBUTE_ACTIVE)) {
+      return
+    } else {
+      chips.setAttribute(ATTRIBUTE_ACTIVE, "true")
+    }
+
+    const inputId = chips.getAttribute(ATTRIBUTE_CHIPS)
+
+    if (!inputId) {
+      console.warn(
+        `${SELECTOR_CHIPS} attribute must be an ID of input element.`
+      )
       return
     }
 
-    element.setAttribute(DATA_ATTRIBUTE_ELEMENT, "true")
+    this.input = document.getElementById(inputId)
+    if (!this.input) {
+      console.warn(`Element with id="${inputId}" doesn't exist.`)
+      return
+    }
 
-    this.element = element
-    this.maxChoices = Number(element.getAttribute("maxchoices") || 1)
-    this.input = document.querySelector(SELECTOR_INPUT)
+    this.input.type = "hidden"
+
+    this.chips = chips
+    this.maxChoices = Number(chips.getAttribute("maxchoices") || 1)
+    this.search = document.querySelector(SELECTOR_SEARCH)
     this.template = document.getElementById(TEMPLATE_ID)
 
-    this.updateInputDisabled()
+    this.input.removeAttribute("id")
+    this.search.setAttribute("id", inputId)
+
+    this.updateSearchDisabled()
 
     function getQuery(control) {
       const value = control.value.trim().replace(/\s+/, "")
       if (value.length) {
         const exclude = []
-        element.querySelectorAll("[m-user-id]").forEach(function (item) {
-          exclude.push(item.getAttribute("m-user-id"))
+        chips.querySelectorAll(SELECTOR_USER_ID).forEach(function (item) {
+          exclude.push(item.getAttribute(ATTRIBUTE_USER_ID))
         })
         return { exclude, value }
       }
@@ -57,8 +83,10 @@ class UserMultipleChoice {
     const onSelect = (choice) => {
       const item = this.template.content.cloneNode(true)
 
-      item.querySelector("li").setAttribute("m-user-id", choice.id)
-      item.querySelector("input").value = choice.slug
+      item.querySelector("li").setAttribute(ATTRIBUTE_USER_ID, choice.id)
+      item
+        .querySelector("li")
+        .setAttribute(ATTRIBUTE_USER_NAME, choice.username)
       item.querySelector('slot[name="username"]').replaceWith(choice.username)
 
       const avatars = choice.avatar
@@ -74,23 +102,25 @@ class UserMultipleChoice {
         img.remove()
       }
 
-      this.input.value = ""
-      this.input.parentElement.before(item)
-      this.updateInputDisabled()
+      this.search.value = ""
+      this.search.parentElement.before(item)
 
-      if (!this.input.disabled) {
-        this.input.focus()
+      this.updateInputValue()
+      this.updateSearchDisabled()
+
+      if (!this.search.disabled) {
+        this.search.focus()
       }
 
       this.focus()
     }
 
     this.autocomplete = new Autocomplete({
-      control: this.input,
+      control: this.search,
       keyOverride: KEY_OVERRIDE,
       source: sources.users,
       select: new SelectUser({
-        anchor: new AnchorInput(this.input),
+        anchor: new AnchorInput(this.search),
         placement: "bottom-start",
       }),
       getQuery,
@@ -98,13 +128,13 @@ class UserMultipleChoice {
     })
 
     EVENT_FOCUS.forEach((eventName) => {
-      element.addEventListener(eventName, this.focus)
+      chips.addEventListener(eventName, this.focus)
     })
 
     EVENT_FOCUS.forEach((eventName) => {
       document.addEventListener(eventName, (event) => {
         if (
-          !element.contains(event.target) &&
+          !chips.contains(event.target) &&
           !this.autocomplete.isEventTarget(event)
         ) {
           this.blur()
@@ -112,7 +142,7 @@ class UserMultipleChoice {
       })
     })
 
-    this.element.addEventListener("click", (event) => {
+    this.chips.addEventListener("click", (event) => {
       const button = event.target.closest("button")
       if (button) {
         this.deleteItem(button.closest("li"))
@@ -122,7 +152,7 @@ class UserMultipleChoice {
 
     let backspacePressed = false
 
-    this.input.addEventListener("keydown", (event) => {
+    this.search.addEventListener("keydown", (event) => {
       if (event.key === "Backspace") {
         if (!backspacePressed) {
           backspacePressed = true
@@ -136,7 +166,7 @@ class UserMultipleChoice {
       }
     })
 
-    this.input.addEventListener("keyup", function (event) {
+    this.search.addEventListener("keyup", function (event) {
       if (event.key === "Backspace") {
         backspacePressed = false
       }
@@ -144,30 +174,39 @@ class UserMultipleChoice {
   }
 
   focus = () => {
-    this.element.classList.add(CLASS_NAME_FOCUS)
+    this.chips.classList.add(CLASS_NAME_FOCUS)
   }
 
   blur = () => {
-    this.element.classList.remove(CLASS_NAME_FOCUS)
+    this.chips.classList.remove(CLASS_NAME_FOCUS)
   }
 
   deleteItem = (element) => {
     element.remove()
-    this.updateInputDisabled()
+    this.updateSearchDisabled()
+    this.updateInputValue()
   }
 
-  updateInputDisabled = () => {
-    this.input.disabled =
-      this.element.querySelectorAll("li").length - 1 >= this.maxChoices
+  updateSearchDisabled = () => {
+    this.search.disabled =
+      this.chips.querySelectorAll("li").length - 1 >= this.maxChoices
+  }
+
+  updateInputValue = () => {
+    const usernames = []
+    this.chips.querySelectorAll(SELECTOR_USER_NAME).forEach((chip) => {
+      usernames.push(chip.getAttribute(ATTRIBUTE_USER_NAME))
+    })
+    this.input.value = usernames.join(", ")
   }
 }
 
 const singleton = new UserMultipleChoice()
 
 htmx.onLoad(function () {
-  const element = document.querySelector(SELECTOR_ELEMENT)
-  if (element) {
-    singleton.activate(element)
+  const chips = document.querySelector(SELECTOR_CHIPS)
+  if (chips) {
+    singleton.activate(chips)
   }
 })
 

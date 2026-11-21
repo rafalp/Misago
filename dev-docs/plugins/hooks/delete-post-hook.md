@@ -18,6 +18,7 @@ from misago.threads.hooks import delete_post_hook
 def custom_delete_post_filter(
     action: DeletePostHookAction,
     post: Post,
+    update_search: bool=True,
     request: HttpRequest | None=None,
 ) -> None:
     ...
@@ -40,6 +41,13 @@ See the [action](#action) section for details.
 A `Post` to delete.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `request: HttpRequest | None`
 
 The request object, or `None` if not provided.
@@ -53,7 +61,9 @@ The request object, or `None` if not provided.
 ## Action
 
 ```python
-def delete_post_action(post: Post, request: HttpRequest | None=None) -> None:
+def delete_post_action(
+    post: Post, update_search: bool=True, request: HttpRequest | None=None
+) -> None:
     ...
 ```
 
@@ -65,6 +75,13 @@ Misago function for deleting a post.
 #### `post: Post`
 
 A `Post` to delete.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -88,8 +105,9 @@ from my_plugin.models import PostBoost
 def delete_post_boosts(
     action,
     post: Post,
+    update_search: bool = True,
     request: HttpRequest | None = None,
 ) -> None:
     # Skip Django's delete collector logic
     delete_all(PostBoost, post_id=post.id)
-    action(post, request)
+    action(post, update_search, request)

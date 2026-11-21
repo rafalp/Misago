@@ -1,17 +1,13 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
+from ...plugins import extensions
 from ...postedits.create import create_post_edit
+from ...search.threads import threads_search
 from ...threadevents.create import create_changed_title_thread_event
 from ...threadevents.models import ThreadEvent
 from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Post
-from ..hooks import (
-    get_private_thread_post_edit_state_hook,
-    get_thread_post_edit_state_hook,
-    save_private_thread_post_edit_state_hook,
-    save_thread_post_edit_state_hook,
-)
 from .base import State
 
 
@@ -63,11 +59,14 @@ class PostEditState(State):
 
         return False
 
-    @transaction.atomic()
-    def save(self):
-        self.save_action(self.request, self)
+    @transaction.atomic
+    def save_atomic(self):
+        self.save()
 
-    def save_action(self, request: HttpRequest, state: "PostEditState"):
+    def save(self):
+        changed_post_body = False
+        changed_thread_title = self.thread_title != self.thread.title
+
         if self.is_post_changed():
             post_edits = self.post.edits + 1
 
@@ -75,6 +74,7 @@ class PostEditState(State):
             if self.post_original != self.post.content:
                 # Full post update
                 self.save_post()
+                changed_post_body = True
             else:
                 self.update_object(self.post)
 
@@ -96,7 +96,7 @@ class PostEditState(State):
             # Prevents inline HTMX edit from breaking
             self.post.edits = post_edits + 1
 
-        if self.thread_title != self.thread.title:
+        if changed_thread_title:
             ensure_thread_has_events(self.thread, commit=False)
 
             self.save_thread()
@@ -107,23 +107,19 @@ class PostEditState(State):
             create_changed_title_thread_event(
                 self.thread,
                 self.thread_title,
-                request.user,
-                request=request,
+                self.request.user,
+                request=self.request,
             )
 
             ThreadEvent.objects.content_object(self.thread).update(
                 detail=self.thread.title
             )
 
+        self.save_search_index(changed_post_body, changed_thread_title)
         self.save_attachments()
 
     def save_post(self):
-        self.post.set_search_document(self.thread, self.parsing_result.text)
         self.update_object(self.post)
-
-        self.post.set_search_vector()
-        self.update_object(self.post)
-
         self.schedule_post_content_upgrade()
 
     def save_thread(self):
@@ -134,40 +130,17 @@ class PostEditState(State):
         self.category.last_thread_slug = self.thread.slug
         self.update_object(self.category)
 
+    def save_search_index(self, update_post: bool, update_thread_title: bool):
+        if update_thread_title:
+            threads_search.update_thread_title(self.thread)
+
+        if update_post:
+            super().index_post()
+
 
 class ThreadPostEditState(PostEditState):
-    @transaction.atomic()
-    def save(self):
-        save_thread_post_edit_state_hook(self.save_action, self.request, self)
+    pass
 
 
 class PrivateThreadPostEditState(PostEditState):
-    @transaction.atomic()
-    def save(self):
-        save_private_thread_post_edit_state_hook(self.save_action, self.request, self)
-
-
-def get_thread_post_edit_state(request: HttpRequest, post: Post) -> ThreadPostEditState:
-    return get_thread_post_edit_state_hook(
-        _get_thread_post_edit_state_action, request, post
-    )
-
-
-def _get_thread_post_edit_state_action(
-    request: HttpRequest, post: Post
-) -> ThreadPostEditState:
-    return ThreadPostEditState(request, post)
-
-
-def get_private_thread_post_edit_state(
-    request: HttpRequest, post: Post
-) -> PrivateThreadPostEditState:
-    return get_private_thread_post_edit_state_hook(
-        _get_private_thread_post_edit_state_action, request, post
-    )
-
-
-def _get_private_thread_post_edit_state_action(
-    request: HttpRequest, post: Post
-) -> PrivateThreadPostEditState:
-    return PrivateThreadPostEditState(request, post)
+    pass

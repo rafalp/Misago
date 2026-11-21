@@ -16,6 +16,12 @@ class DeleteThreadHookAction(Protocol):
 
     A `Thread` to delete.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
@@ -24,6 +30,7 @@ class DeleteThreadHookAction(Protocol):
     def __call__(
         self,
         thread: Thread,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -45,6 +52,12 @@ class DeleteThreadHookFilter(Protocol):
 
     A `Thread` to delete.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
@@ -58,6 +71,7 @@ class DeleteThreadHookFilter(Protocol):
         self,
         action: DeleteThreadHookAction,
         thread: Thread,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -88,11 +102,12 @@ class DeleteThreadHook(
     def delete_thread_boosts(
         action,
         thread: Thread,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None:
         # Skip Django's delete collector logic
         delete_all(ThreadBoost, thread_id=thread.id)
-        action(thread, request)
+        action(thread, update_search, request)
     """
 
     __slots__ = FilterHook.__slots__
@@ -101,9 +116,10 @@ class DeleteThreadHook(
         self,
         action: DeleteThreadHookAction,
         thread: Thread,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None:
-        return super().__call__(action, thread, request)
+        return super().__call__(action, thread, update_search, request)
 
 
 delete_thread_hook = DeleteThreadHook()

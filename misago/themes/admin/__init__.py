@@ -93,6 +93,6 @@ class MisagoAdminExtension:
         site.add_node(
             name=pgettext_lazy("admin node", "Themes"),
             icon="fa fa-paint-brush",
-            after="attachments:index",
+            after="searchlogs:index",
             namespace="themes",
         )

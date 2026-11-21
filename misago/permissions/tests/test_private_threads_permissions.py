@@ -18,6 +18,7 @@ from ..privatethreads import (
     check_see_private_thread_post_permission,
     check_start_private_threads_permission,
     filter_private_thread_posts_queryset,
+    filter_private_threads_posts_queryset,
     filter_private_threads_queryset,
 )
 from ..proxy import UserPermissionsProxy
@@ -1177,6 +1178,252 @@ def test_filter_private_threads_queryset_shows_thread_with_unapproved_posts_to_m
         permissions, private_threads_category.thread_set
     )
     assert queryset.exists()
+
+
+def test_filter_private_threads_posts_queryset_shows_user_post_to_moderator(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    moderator,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=user)
+
+    permissions = user_permissions_factory(moderator)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_shows_unapproved_user_post_to_moderator(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    moderator,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=user, is_unapproved=True)
+
+    permissions = user_permissions_factory(moderator)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_shows_hidden_user_post_to_moderator(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    moderator,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=user, is_hidden=True)
+
+    permissions = user_permissions_factory(moderator)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_shows_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=user)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_shows_unapproved_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=user, is_unapproved=True)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_doesnt_show_hidden_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=user, is_hidden=True)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post not in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_shows_other_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+    other_user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=other_user)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_doesnt_show_unapproved_other_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+    other_user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=other_user, is_unapproved=True)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post not in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_doesnt_show_hidden_other_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+    other_user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster=other_user, is_hidden=True)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post not in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_shows_deleted_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster="Deleted")
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_doesnt_show_unapproved_deleted_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster="Deleted", is_unapproved=True)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post not in list(queryset)
+
+
+def test_filter_private_threads_posts_queryset_doesnt_show_hidden_deleted_user_post_to_user(
+    user_permissions_factory,
+    thread_factory,
+    thread_reply_factory,
+    private_threads_category,
+    user,
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    post = thread_reply_factory(thread, poster="Deleted", is_hidden=True)
+
+    permissions = user_permissions_factory(user)
+    queryset = filter_private_threads_posts_queryset(
+        permissions, private_threads_category.post_set
+    )
+
+    assert post not in list(queryset)
 
 
 def test_filter_private_thread_posts_queryset_returns_approved_posts(

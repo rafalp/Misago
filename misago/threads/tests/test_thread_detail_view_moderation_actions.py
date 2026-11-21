@@ -5,6 +5,8 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...polls.models import Poll
 from ...postedits.models import PostEdit
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
@@ -780,6 +782,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -816,6 +826,13 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     other_thread.refresh_from_db()
     assert other_thread.replies == 1
 
+    ThreadSearch.objects.get(thread=other_thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=thread)
+
+    assert PostSearch.objects.filter(thread=other_thread).count() == 2
+
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
@@ -838,6 +855,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -875,6 +900,16 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     other_thread.refresh_from_db()
     assert other_thread.replies == 1
 
+    ThreadSearch.objects.get(thread=other_thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=thread)
+
+    assert PostSearch.objects.filter(thread=other_thread).count() == 2
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(thread=thread)
+
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
@@ -897,6 +932,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -928,6 +971,16 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     thread.refresh_from_db()
     assert thread.replies == 1
 
+    ThreadSearch.objects.get(thread=thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=other_thread)
+
+    assert PostSearch.objects.filter(thread=thread).count() == 2
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(thread=other_thread)
+
     assert (
         ThreadEvent.objects.filter(
             thread=thread,
@@ -950,6 +1003,14 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
+    threads_search.bulk_index_threads([thread, other_thread])
+    threads_search.bulk_index_posts(
+        [
+            (thread.first_post, "lorem ipsum"),
+            (other_thread.first_post, "lorem ipsum"),
+        ]
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "merge"},
@@ -979,6 +1040,16 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
 
     thread.refresh_from_db()
     assert thread.replies == 1
+
+    ThreadSearch.objects.get(thread=thread)
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get(thread=other_thread)
+
+    assert PostSearch.objects.filter(thread=thread).count() == 2
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(thread=other_thread)
 
     assert (
         ThreadEvent.objects.filter(
@@ -1589,6 +1660,9 @@ def test_thread_detail_view_merge_thread_moderation_action_validates_conflict_re
 def test_thread_detail_view_delete_thread_moderation_action_deletes_thread(
     moderator_client, default_category, thread, mock_thread_synchronize_categories
 ):
+    threads_search.index_thread(thread)
+    threads_search.index_post(thread.first_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "delete"},
@@ -1610,6 +1684,12 @@ def test_thread_detail_view_delete_thread_moderation_action_deletes_thread(
 
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get()
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
         [default_category.id]
@@ -1700,8 +1780,12 @@ def test_thread_detail_view_unlock_posts_moderation_action_validates_posts(
 
 
 def test_thread_detail_view_hide_posts_moderation_action_hides_posts(
-    moderator_client, moderator, thread, reply
+    mocker, moderator_client, moderator, thread, reply
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "hide", "posts": [reply.id]},
@@ -1735,6 +1819,10 @@ def test_thread_detail_view_hide_posts_moderation_action_hides_posts(
     assert reply.hidden_by_slug == moderator.slug
     assert reply.hide_reason == "Lorem ipsum"
 
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"is_hidden": True}, posts=[reply]
+    )
+
 
 def test_thread_detail_view_hide_posts_moderation_action_validates_posts(
     moderator_client, thread, reply
@@ -1760,8 +1848,12 @@ def test_thread_detail_view_hide_posts_moderation_action_validates_first_post(
 
 
 def test_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
-    moderator_client, thread, reply
+    mocker, moderator_client, thread, reply
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply.is_hidden = True
     reply.save()
 
@@ -1786,6 +1878,10 @@ def test_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
 
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"is_hidden": False}, posts=[reply]
+    )
+
 
 def test_thread_detail_view_unhide_posts_moderation_action_validates_posts(
     moderator_client, thread, reply
@@ -1798,12 +1894,17 @@ def test_thread_detail_view_unhide_posts_moderation_action_validates_posts(
 
 
 def test_thread_detail_view_approve_posts_moderation_action_approves_posts(
+    mocker,
     post_factory,
     moderator_client,
     thread,
     mock_posts_synchronize_categories,
     mock_posts_notify_on_new_thread_reply,
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply = post_factory(thread, is_unapproved=True)
 
     response = moderator_client.post(
@@ -1824,6 +1925,10 @@ def test_thread_detail_view_approve_posts_moderation_action_approves_posts(
 
     thread.refresh_from_db()
     assert thread.last_post == reply
+
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"is_unapproved": False}, posts=[reply]
+    )
 
     mock_posts_synchronize_categories.delay.assert_called_with([thread.category_id])
     mock_posts_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
@@ -1853,6 +1958,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -1886,6 +1993,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -1907,6 +2017,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_in_htmx(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -1938,6 +2050,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -1959,6 +2074,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_redi
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -1993,6 +2110,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_redi
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -2014,6 +2134,8 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_mode
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [reply.id]},
@@ -2052,6 +2174,9 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_mode
 
     reply.refresh_from_db()
     assert reply.thread == new_thread
+
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
 
     ThreadEvent.objects.get(
         thread=new_thread,
@@ -2330,6 +2455,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "move", "posts": [reply.id]},
@@ -2365,6 +2492,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -2387,6 +2516,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_in_htmx(
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "move", "posts": [reply.id]},
@@ -2420,6 +2551,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -2442,6 +2575,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_with_redire
     reply,
     mock_posts_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "move", "posts": [reply.id]},
@@ -2477,6 +2612,8 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_with_redire
 
     reply.refresh_from_db()
     assert reply.thread == other_thread
+
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
 
     ThreadEvent.objects.get(
         thread=other_thread,
@@ -2796,6 +2933,9 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts(
     target_post = thread_reply_factory(thread, poster=user, content="Target body")
     other_post = thread_reply_factory(thread, poster=user, content="Other body")
 
+    threads_search.index_post(target_post, "lorem ipsum")
+    threads_search.index_post(target_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
@@ -2833,6 +2973,11 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts(
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=target_post, thread=thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -2847,6 +2992,9 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_in_htmx(
 ):
     target_post = thread_reply_factory(thread, poster=user, content="Target body")
     other_post = thread_reply_factory(thread, poster=user, content="Other body")
+
+    threads_search.index_post(target_post, "lorem ipsum")
+    threads_search.index_post(target_post, "lorem ipsum")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -2878,6 +3026,11 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_in_htmx(
 
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
+
+    PostSearch.objects.get(post=target_post, thread=thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
 
     mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
 
@@ -3248,6 +3401,8 @@ def test_thread_detail_view_merge_posts_moderation_action_validates_posts_are_by
 def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
     moderator_client, default_category, thread, reply, mock_posts_synchronize_categories
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "delete", "posts": [reply.id]},
@@ -3271,6 +3426,9 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
+
     ThreadEvent.objects.get(
         thread=thread,
         event_type=ThreadEventTypeName.DELETED_POSTS,
@@ -3282,6 +3440,8 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
 def test_thread_detail_view_delete_posts_moderation_action_deletes_posts_in_htmx(
     moderator_client, default_category, thread, reply, mock_posts_synchronize_categories
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "delete", "posts": [reply.id]},
@@ -3302,6 +3462,9 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts_in_htmx
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -3485,12 +3648,15 @@ def test_thread_detail_view_approve_post_moderation_action_approves_post(
 
 
 def test_thread_detail_view_split_post_moderation_action_splits_post(
+    mocker,
     moderator_client,
     default_category,
     thread,
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3524,6 +3690,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -3545,6 +3714,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_in_htmx(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3576,6 +3747,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -3597,6 +3771,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_redire
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3631,6 +3807,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_redire
     reply.refresh_from_db()
     assert reply.thread == new_thread
 
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=new_thread,
         event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
@@ -3652,6 +3831,8 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_modera
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "split", "post": reply.id},
@@ -3690,6 +3871,9 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_modera
 
     reply.refresh_from_db()
     assert reply.thread == new_thread
+
+    ThreadSearch.objects.get(thread=new_thread)
+    PostSearch.objects.get(post=reply, thread=new_thread, is_first_post=True)
 
     ThreadEvent.objects.get(
         thread=new_thread,
@@ -3958,6 +4142,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "move", "post": reply.id},
@@ -3993,6 +4179,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -4015,6 +4203,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_in_htmx(
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "move", "post": reply.id},
@@ -4048,6 +4238,73 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_in_htmx(
     reply.refresh_from_db()
     assert reply.thread == other_thread
 
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
+
+    ThreadEvent.objects.get(
+        thread=other_thread,
+        event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
+    )
+    ThreadEvent.objects.get(
+        thread=thread,
+        event_type=ThreadEventTypeName.MOVED_POSTS_TO,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_move_post_moderation_action_moves_post_replacing_first_post(
+    thread_factory,
+    moderator_client,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    # Edge case: when a post is moved to a thread newer than it, it will replace
+    # original post as a first post because of Misago using post IDs for post ordering
+    other_thread = thread_factory(default_category)
+
+    threads_search.index_post(reply, "lorem ipsum")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "move", "post": reply.id},
+    )
+    assert_contains(response, "Move post")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "move",
+            "post": reply.id,
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 1
+
+    reply.refresh_from_db()
+    assert reply.thread == other_thread
+
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=True)
+
     ThreadEvent.objects.get(
         thread=other_thread,
         event_type=ThreadEventTypeName.MOVED_POSTS_FROM,
@@ -4070,6 +4327,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_with_redirect
     reply,
     mock_post_synchronize_categories,
 ):
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "move", "post": reply.id},
@@ -4096,6 +4355,8 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_with_redirect
         "misago:thread",
         kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
     )
+
+    PostSearch.objects.get(post=reply, thread=other_thread, is_first_post=False)
 
     thread.refresh_from_db()
     assert thread.replies == 0
@@ -4424,6 +4685,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     current_post = user_thread.first_post
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
 
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
+
     current_post_content = current_post.content
 
     response = moderator_client.post(
@@ -4481,6 +4745,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=True)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4497,6 +4766,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
 
     current_post_content = current_post.content
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4547,6 +4819,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=True)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4563,6 +4840,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4620,6 +4900,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
     with pytest.raises(Post.DoesNotExist):
         current_post.refresh_from_db()
 
+    PostSearch.objects.get(post=other_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=current_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4636,6 +4921,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4687,6 +4975,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_current_post_int
     with pytest.raises(Post.DoesNotExist):
         current_post.refresh_from_db()
 
+    PostSearch.objects.get(post=other_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=current_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4703,6 +4996,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4760,6 +5056,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
@@ -4776,6 +5077,9 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
         user_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(user_thread, poster=user, content="Other body")
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -4826,6 +5130,11 @@ def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_
 
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
+
+    PostSearch.objects.get(post=current_post, thread=user_thread, is_first_post=False)
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
 
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
 

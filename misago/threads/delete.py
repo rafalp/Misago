@@ -10,17 +10,22 @@ from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all, delete_one
 from ..privatethreads.models import PrivateThreadMember
 from ..readtracker.models import ReadThread
+from ..search.threads import threads_search
 from ..threadevents.models import ThreadEvent
 from .hooks import delete_post_hook, delete_thread_hook
 from .models import Post, Thread
 
 
 @transaction.atomic
-def delete_thread(thread: Thread, request: HttpRequest | None = None):
-    delete_thread_hook(_delete_thread_action, thread, request)
+def delete_thread(
+    thread: Thread, update_search: bool = True, request: HttpRequest | None = None
+):
+    delete_thread_hook(_delete_thread_action, thread, update_search, request)
 
 
-def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
+def _delete_thread_action(
+    thread: Thread, update_search, request: HttpRequest | None = None
+):
     category = thread.category
 
     if category.last_thread_id == thread.id:
@@ -41,6 +46,9 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
 
     ThreadEvent.objects.content_object(thread).clear_content_objects()
 
+    if update_search:
+        threads_search.delete_thread(thread)
+
     delete_all(PollVote, thread_id=thread.id)
     delete_all(Poll, thread_id=thread.id)
 
@@ -58,11 +66,15 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
 
 
 @transaction.atomic
-def delete_post(post: Post, request: HttpRequest | None = None):
-    delete_post_hook(_delete_post_action, post, request)
+def delete_post(
+    post: Post, update_search: bool = True, request: HttpRequest | None = None
+):
+    delete_post_hook(_delete_post_action, post, update_search, request)
 
 
-def _delete_post_action(post: Post, request: HttpRequest | None = None):
+def _delete_post_action(
+    post: Post, update_search: bool = True, request: HttpRequest | None = None
+):
     thread = post.thread
 
     Attachment.objects.filter(post=post).update(
@@ -71,6 +83,9 @@ def _delete_post_action(post: Post, request: HttpRequest | None = None):
         post=None,
         is_deleted=True,
     )
+
+    if update_search:
+        threads_search.delete_post(post)
 
     delete_all(Like, post_id=post.id)
     delete_all(Notification, post_id=post.id)

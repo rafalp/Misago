@@ -16,7 +16,7 @@ def test_categories_list_renders_empty(admin_client, root_category):
         child.delete()
 
     response = admin_client.get(categories_list)
-    assert_contains(response, "No categories are set.")
+    assert_contains(response, "No categories exist")
 
 
 def test_categories_list_renders_category(admin_client, default_category):

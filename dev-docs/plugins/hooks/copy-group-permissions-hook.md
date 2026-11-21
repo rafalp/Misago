@@ -1,6 +1,6 @@
 # `copy_group_permissions_hook`
 
-This hook wraps the standard function that Misago uses to copy group permissions.
+This hook wraps a Misago function used to copy group permissions.
 
 
 ## Location

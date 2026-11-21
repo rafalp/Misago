@@ -92,7 +92,7 @@ class HidePostEditHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to hide a `PostEdit` object.
+    This hook wraps a Misago function used to hide a `PostEdit` object.
 
     # Example
 

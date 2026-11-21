@@ -12,6 +12,7 @@ from ...categories.models import Category
 from ...core.utils import slugify
 from ...parser.parse import ParsingResult
 from ...permissions.proxy import UserPermissionsProxy
+from ...search.threads import threads_search
 from ...threads.models import Post, Thread
 from ..processcontent import should_process_post_content
 from ..tasks import process_post_content
@@ -155,3 +156,9 @@ class State:
 
         if self.delete_attachments:
             delete_attachments(self.delete_attachments, request=self.request)
+
+    def index_thread(self):
+        threads_search.index_thread(self.thread)
+
+    def index_post(self):
+        threads_search.index_post(self.post, self.parsing_result.text)

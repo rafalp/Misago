@@ -22,10 +22,8 @@ logger = getLogger("misago.notifications")
 
 
 @shared_task(
-    name="notifications.new-thread-reply",
     autoretry_for=(Post.DoesNotExist,),
     default_retry_delay=settings.MISAGO_NOTIFICATIONS_RETRY_DELAY,
-    serializer="json",
 )
 def notify_on_new_thread_reply(reply_id: int):
     post = Post.objects.select_related("poster", "thread", "category").get(id=reply_id)
@@ -56,10 +54,8 @@ def notify_on_new_thread_reply(reply_id: int):
 
 
 @shared_task(
-    name="notifications.new-private-thread",
     autoretry_for=(Thread.DoesNotExist,),
     default_retry_delay=settings.MISAGO_NOTIFICATIONS_RETRY_DELAY,
-    serializer="json",
 )
 def notify_on_new_private_thread(
     actor_id: int,
@@ -89,7 +85,7 @@ def notify_on_new_private_thread(
             logger.exception("Unexpected error in 'notify_user_on_new_private_thread'")
 
 
-@shared_task(serializer="json")
+@shared_task
 def delete_duplicate_watched_threads(thread_id: int):
     queryset = (
         WatchedThread.objects.filter(

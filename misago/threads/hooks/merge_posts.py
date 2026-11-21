@@ -38,6 +38,12 @@ class MergePostsHookAction(Protocol):
 
     A `str` with a reason for merging posts, or `None`.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -60,6 +66,7 @@ class MergePostsHookAction(Protocol):
         conflicts: dict[str, Model],
         merged_by: Union["User", str],
         edit_reason: str | None = None,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Post: ...
@@ -100,6 +107,12 @@ class MergePostsHookFilter(Protocol):
 
     A `str` with a reason for merging posts, or `None`.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -123,6 +136,7 @@ class MergePostsHookFilter(Protocol):
         conflicts: dict[str, Model],
         merged_by: Union["User", str],
         edit_reason: str | None = None,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Post: ...
@@ -160,6 +174,7 @@ class MergePostsHook(
         conflicts: dict[str, Model],
         merged_by: Union["User", str],
         edit_reason: str | None = None,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Post:
@@ -173,6 +188,7 @@ class MergePostsHook(
             conflicts,
             merged_by,
             edit_reason,
+            update_search,
             commit,
             request,
         )
@@ -188,11 +204,20 @@ class MergePostsHook(
         conflicts: dict[str, Model],
         merged_by: Union["User", str],
         edit_reason: str | None = None,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Post:
         return super().__call__(
-            action, target, posts, conflicts, merged_by, edit_reason, commit, request
+            action,
+            target,
+            posts,
+            conflicts,
+            merged_by,
+            edit_reason,
+            update_search,
+            commit,
+            request,
         )
 
 

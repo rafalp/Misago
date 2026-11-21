@@ -2,17 +2,12 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...parser.parse import ParsingResult, parse
+from ...plugins import extensions
 from ...postedits.create import create_post_edit
 from ...threads.models import Post, Thread
 from ..approval import (
     require_private_thread_reply_approval,
     require_thread_reply_approval,
-)
-from ..hooks import (
-    get_private_thread_reply_state_hook,
-    get_thread_reply_state_hook,
-    save_private_thread_reply_state_hook,
-    save_thread_reply_state_hook,
 )
 from .base import State
 
@@ -47,22 +42,22 @@ class ReplyState(State):
     def require_approval(self) -> bool:
         return False
 
-    @transaction.atomic()
-    def save(self):
-        self.save_action(self.request, self)
+    @transaction.atomic
+    def save_atomic(self):
+        self.save()
 
-    def save_action(self, request: HttpRequest, state: "ReplyState"):
+    def save(self):
         self.save_post()
         self.save_attachments()
 
         self.save_thread()
+        self.save_search_index()
 
         self.save_category()
         self.save_user()
 
     def save_post(self):
         self.post.is_unapproved = not self.post.id and self.require_approval()
-        self.post.set_search_document(self.thread, self.parsing_result.text)
 
         post_edits = self.post.edits
 
@@ -84,11 +79,7 @@ class ReplyState(State):
                 edited_at=self.timestamp,
                 request=self.request,
             )
-        else:
-            # Save new post so it exists before search vector setup
-            self.post.save()
 
-        self.post.set_search_vector()
         self.post.save()
 
         # Replace edits attr with integer
@@ -107,6 +98,9 @@ class ReplyState(State):
             self.thread.has_unapproved_posts = True
 
         self.update_object(self.thread)
+
+    def save_search_index(self):
+        self.index_post()
 
     def save_category(self):
         if not self.is_merged and not self.post.is_unapproved:
@@ -129,43 +123,7 @@ class ThreadReplyState(ReplyState):
     def require_approval(self) -> bool:
         return require_thread_reply_approval(self)
 
-    @transaction.atomic()
-    def save(self):
-        save_thread_reply_state_hook(self.save_action, self.request, self)
-
 
 class PrivateThreadReplyState(ReplyState):
     def require_approval(self) -> bool:
         return require_private_thread_reply_approval(self)
-
-    @transaction.atomic()
-    def save(self):
-        save_private_thread_reply_state_hook(self.save_action, self.request, self)
-
-
-def get_thread_reply_state(
-    request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ThreadReplyState:
-    return get_thread_reply_state_hook(
-        _get_thread_reply_state_action, request, thread, post
-    )
-
-
-def _get_thread_reply_state_action(
-    request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ThreadReplyState:
-    return ThreadReplyState(request, thread, post)
-
-
-def get_private_thread_reply_state(
-    request: HttpRequest, thread: Thread, post: Post | None = None
-) -> PrivateThreadReplyState:
-    return get_private_thread_reply_state_hook(
-        _get_private_thread_reply_state_action, request, thread, post
-    )
-
-
-def _get_private_thread_reply_state_action(
-    request: HttpRequest, thread: Thread, post: Post | None = None
-) -> PrivateThreadReplyState:
-    return PrivateThreadReplyState(request, thread, post)

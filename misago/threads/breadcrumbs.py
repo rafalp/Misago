@@ -55,15 +55,18 @@ def _get_category_breadcrumbs_action(
         }
     ]
 
-    for item in request.categories.get_category_path(category.id, include_category):
+    for item in request.categories.get_ancestors(category, include_category):
         items.append(
             {
                 "type": "category",
-                "label": item["name"],
-                "short_label": item["short_name"],
-                "color": item["color"],
-                "css_class": item["css_class"],
-                "url": item["url"],
+                "label": item.name,
+                "short_label": item.short_name,
+                "color": item.color,
+                "css_class": item.css_class,
+                "url": reverse(
+                    "misago:category-thread-list",
+                    kwargs={"category_id": item.id, "slug": item.slug},
+                ),
             }
         )
 
@@ -87,15 +90,18 @@ def _get_thread_breadcrumbs_action(request: HttpRequest, thread: Thread) -> dict
         }
     ]
 
-    for item in request.categories.get_category_path(thread.category_id, True):
+    for item in request.categories.get_ancestors(thread.category_id, True):
         items.append(
             {
                 "type": "category",
-                "label": item["name"],
-                "short_label": item["short_name"],
-                "color": item["color"],
-                "css_class": item["css_class"],
-                "url": item["url"],
+                "label": item.name,
+                "short_label": item.short_name,
+                "color": item.color,
+                "css_class": item.css_class,
+                "url": reverse(
+                    "misago:category-thread-list",
+                    kwargs={"category_id": item.id, "slug": item.slug},
+                ),
             }
         )
 

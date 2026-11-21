@@ -56,6 +56,9 @@ pylint.txt
 *.log
 *.pot
 
+# Celery Beat
+celerybeat-schedule
+
 # Docker Compose Override
 docker-compose.override.yml
 

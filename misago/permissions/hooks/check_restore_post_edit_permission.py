@@ -14,7 +14,7 @@ class CheckRestorePostEditPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -43,7 +43,7 @@ class CheckRestorePostEditPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -67,9 +67,8 @@ class CheckRestorePostEditPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard Misago function used to check whether a user has
-    permission to restore a post from a post edit.
-    Raises Django's `PermissionDenied` if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    restore a post from a post edit. Raises Django's `PermissionDenied` if they don't.
 
     # Example
 

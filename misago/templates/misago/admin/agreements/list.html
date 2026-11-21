@@ -121,9 +121,9 @@
 {% block blankslate %}
 <td colspan="8">
   {% if active_filters %}
-    {% translate "No agreements matching criteria exist." context "admin agreements" %}
+    {% translate "No agreements found" context "admin agreements" %}
   {% else %}
-    {% translate "No agreements are set." context "admin agreements" %}
+    {% translate "No agreements exist" context "admin agreements" %}
   {% endif %}
 </td>
 {% endblock blankslate %}

@@ -16,7 +16,7 @@ class CheckEditThreadPostPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -55,7 +55,7 @@ class CheckEditThreadPostPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -89,9 +89,9 @@ class CheckEditThreadPostPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to check if the user
-    has permission to edit a post in a thread. It raises Django's
-    `PermissionDenied` with an error message if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    edit a post in a thread. It raises Django's `PermissionDenied` with an error
+    message if they don't.
 
     # Example
 

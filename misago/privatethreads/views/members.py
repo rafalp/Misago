@@ -18,6 +18,7 @@ from ...permissions.privatethreads import (
 )
 from ...permissions.proxy import UserPermissionsProxy
 from ...plugins import extensions
+from ...search.threads import threads_search
 from ...threadevents.create import (
     create_added_member_thread_event,
     create_changed_owner_thread_event,
@@ -48,6 +49,9 @@ class PrivateThreadManageMembersView(BaseThreadView):
 
     def get_thread(self, request: HttpRequest, thread_id: int, **kwargs) -> Thread:
         return super().get_thread(request, thread_id, select_members=True, **kwargs)
+
+    def index_private_thread_members(self, thread: Thread):
+        threads_search.update_thread_members(thread, thread.private_thread_member_ids)
 
     def get_htmx_response(
         self, request: HttpRequest, thread: Thread
@@ -106,6 +110,8 @@ class PrivateThreadMembersAddView(PrivateThreadManageMembersView):
                     thread, member, self.request.user, request=request
                 )
                 thread_events.append(thread_event)
+
+            self.index_private_thread_members(thread)
 
             ensure_thread_has_events(thread)
 
@@ -293,6 +299,8 @@ class PrivateThreadMemberRemoveView(PrivateThreadManageMemberView):
             request.user, thread, member, request
         )
 
+        self.index_private_thread_members(thread)
+
         messages.success(
             request,
             pgettext("private thread member remove view", "Member removed"),
@@ -318,6 +326,7 @@ class PrivateThreadLeaveView(PrivateThreadManageMembersView):
         self.check_permissions(request, thread)
 
         if remove_private_thread_member(request.user, thread, request.user, request):
+            self.index_private_thread_members(thread)
             ensure_thread_has_events(thread)
 
         messages.success(

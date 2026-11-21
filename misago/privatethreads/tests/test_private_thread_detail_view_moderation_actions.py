@@ -4,6 +4,8 @@ from django.urls import reverse
 from ...postedits.models import PostEdit
 from ...privatethreads.members import get_private_thread_members
 from ...privatethreads.models import PrivateThreadMember
+from ...search.models import PostSearch, ThreadSearch
+from ...search.threads import threads_search
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
@@ -218,6 +220,7 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
 
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -263,10 +266,15 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
+    )
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
     )
 
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_in_htmx(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -312,8 +320,13 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
     )
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_and_member(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -368,8 +381,13 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
     )
 
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
+    )
+
 
 def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_and_member_in_htmx(
+    mock_update_thread_members,
     moderator_client,
     user,
     other_user,
@@ -420,6 +438,10 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.TOOK_OWNERSHIP,
+    )
+
+    mock_update_thread_members.assert_called_with(
+        user_private_thread, [user.id for user in members]
     )
 
 
@@ -536,6 +558,9 @@ def test_private_thread_detail_view_remove_reply_approval_thread_moderation_acti
 def test_private_thread_detail_view_delete_thread_moderation_action_deletes_thread(
     moderator_client, user_private_thread, mock_thread_synchronize_categories
 ):
+    threads_search.index_thread(user_private_thread)
+    threads_search.index_post(user_private_thread.first_post, "lorem ipsum")
+
     response = moderator_client.post(
         reverse(
             "misago:private-thread",
@@ -566,6 +591,12 @@ def test_private_thread_detail_view_delete_thread_moderation_action_deletes_thre
 
     with pytest.raises(Thread.DoesNotExist):
         user_private_thread.refresh_from_db()
+
+    with pytest.raises(ThreadSearch.DoesNotExist):
+        ThreadSearch.objects.get()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get()
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
@@ -696,8 +727,12 @@ def test_private_thread_detail_view_unlock_posts_moderation_action_validates_pos
 
 
 def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
-    thread_reply_factory, moderator_client, moderator, user_private_thread
+    mocker, thread_reply_factory, moderator_client, moderator, user_private_thread
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply = thread_reply_factory(user_private_thread)
 
     response = moderator_client.post(
@@ -749,6 +784,10 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
     assert reply.hidden_by_slug == moderator.slug
     assert reply.hide_reason == "Lorem ipsum"
 
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"is_hidden": True}, posts=[reply]
+    )
+
 
 def test_private_thread_detail_view_hide_posts_moderation_action_validates_posts(
     thread_reply_factory, moderator_client, user_private_thread
@@ -785,8 +824,12 @@ def test_private_thread_detail_view_hide_posts_moderation_action_validates_first
 
 
 def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
-    thread_reply_factory, moderator_client, user_private_thread
+    mocker, thread_reply_factory, moderator_client, user_private_thread
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
+
     reply = thread_reply_factory(user_private_thread, is_hidden=True)
 
     response = moderator_client.post(
@@ -820,6 +863,10 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
 
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"is_hidden": False}, posts=[reply]
+    )
+
 
 def test_private_thread_detail_view_unhide_posts_moderation_action_validates_posts(
     thread_reply_factory, moderator_client, user_private_thread
@@ -840,6 +887,7 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_validates_pos
 
 
 def test_private_thread_detail_view_approve_posts_moderation_action_approves_posts(
+    mocker,
     post_factory,
     moderator_client,
     user_private_thread,
@@ -847,6 +895,10 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     mock_posts_notify_on_new_thread_reply,
 ):
     reply = post_factory(user_private_thread, is_unapproved=True)
+
+    mock_threads_search = mocker.patch(
+        "misago.moderation.posts.threads_search", autospec=True
+    )
 
     response = moderator_client.post(
         reverse(
@@ -878,6 +930,10 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
+
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"is_unapproved": False}, posts=[reply]
+    )
 
     mock_posts_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
@@ -924,6 +980,9 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts(
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(target_post, "lorem ipsum")
+    threads_search.index_post(target_post, "lorem ipsum")
 
     response = moderator_client.post(
         reverse(
@@ -978,6 +1037,13 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts(
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(
+        post=target_post, thread=user_private_thread, is_first_post=False
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_posts_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
     )
@@ -997,6 +1063,9 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_i
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(target_post, "lorem ipsum")
+    threads_search.index_post(target_post, "lorem ipsum")
 
     response = moderator_client.post(
         reverse(
@@ -1040,6 +1109,13 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_i
 
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
+
+    PostSearch.objects.get(
+        post=target_post, thread=user_private_thread, is_first_post=False
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
 
     mock_posts_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
@@ -1397,6 +1473,8 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 ):
     reply = thread_reply_factory(user_private_thread)
 
+    threads_search.index_post(reply, "lorem ipsum")
+
     response = moderator_client.post(
         reverse(
             "misago:private-thread",
@@ -1433,6 +1511,9 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
+
     ThreadEvent.objects.get(
         thread=user_private_thread,
         event_type=ThreadEventTypeName.DELETED_POSTS,
@@ -1450,6 +1531,8 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
     mock_posts_synchronize_categories,
 ):
     reply = thread_reply_factory(user_private_thread)
+
+    threads_search.index_post(reply, "lorem ipsum")
 
     response = moderator_client.post(
         reverse(
@@ -1483,6 +1566,9 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=reply)
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -1752,6 +1838,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
         user_private_thread, poster=user, content="Other body"
     )
 
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
+
     current_post_content = current_post.content
 
     response = moderator_client.post(
@@ -1818,6 +1907,13 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(
+        post=current_post, thread=user_private_thread, is_first_post=True
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
     )
@@ -1835,6 +1931,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     current_post_content = current_post.content
 
@@ -1893,6 +1992,13 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(
+        post=current_post, thread=user_private_thread, is_first_post=True
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
     )
@@ -1912,6 +2018,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -1978,6 +2087,13 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     with pytest.raises(Post.DoesNotExist):
         current_post.refresh_from_db()
 
+    PostSearch.objects.get(
+        post=other_post, thread=user_private_thread, is_first_post=False
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=current_post)
+
     mock_post_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
     )
@@ -1997,6 +2113,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -2054,6 +2173,13 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(
+        post=current_post, thread=user_private_thread, is_first_post=False
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
     )
@@ -2073,6 +2199,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -2139,6 +2268,13 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     with pytest.raises(Post.DoesNotExist):
         other_post.refresh_from_db()
 
+    PostSearch.objects.get(
+        post=current_post, thread=user_private_thread, is_first_post=False
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=other_post)
+
     mock_post_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
     )
@@ -2158,6 +2294,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     other_post = thread_reply_factory(
         user_private_thread, poster=user, content="Other body"
     )
+
+    threads_search.index_post(current_post, "lorem ipsum")
+    threads_search.index_post(other_post, "dolor met")
 
     response = moderator_client.post(
         reverse(
@@ -2214,6 +2353,13 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
 
     with pytest.raises(Post.DoesNotExist):
         current_post.refresh_from_db()
+
+    PostSearch.objects.get(
+        post=other_post, thread=user_private_thread, is_first_post=False
+    )
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post=current_post)
 
     mock_post_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]

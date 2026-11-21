@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 class GetThreadPostEditFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ThreadPostEditFormset`
-    instance with forms for editing a thread post.
+    Misago function used to create a new `ThreadPostEditFormset` instance with
+    forms for editing a thread post.
 
     # Arguments
 
@@ -77,8 +77,8 @@ class GetThreadPostEditFormsetHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a new
-    `ThreadPostEditFormset` instance with forms for editing a thread post.
+    This hook wraps a Misago function used to create a new `ThreadPostEditFormset`
+    instance with forms for editing a thread post.
 
     # Example
 

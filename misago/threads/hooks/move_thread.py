@@ -21,6 +21,12 @@ class MoveThreadHookAction(Protocol):
 
     The `Category` to move the thread to.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -43,6 +49,7 @@ class MoveThreadHookAction(Protocol):
         self,
         thread: Thread,
         new_category: Category,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -69,6 +76,12 @@ class MoveThreadHookFilter(Protocol):
 
     The `Category` to move the thread to.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -92,6 +105,7 @@ class MoveThreadHookFilter(Protocol):
         action: MoveThreadHookAction,
         thread: Thread,
         new_category: Category,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -125,10 +139,11 @@ class MoveThreadHook(
         action,
         thread: Thread,
         new_category: Category,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        if not action(thread, new_category, commit, request):
+        if not action(thread, new_category, update_search, commit, request):
             return False
 
         PluginModel.objects.filter(
@@ -145,6 +160,7 @@ class MoveThreadHook(
         action: MoveThreadHookAction,
         thread: Thread,
         new_category: Category,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
@@ -152,6 +168,7 @@ class MoveThreadHook(
             action,
             thread,
             new_category,
+            update_search,
             commit,
             request,
         )

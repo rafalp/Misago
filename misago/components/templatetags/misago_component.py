@@ -6,13 +6,15 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def includecomponents(context, data):
+def includecomponents(context, data, **kwargs):
     if not data:
         return ""
 
     html = []
     for child_component in data:
         component_context = context.flatten()
+        if kwargs:
+            component_context.update(kwargs)
         component_context.update(child_component)
         template = get_template(child_component["template_name"])
         html.append(template.render(component_context))
@@ -21,7 +23,7 @@ def includecomponents(context, data):
 
 
 @register.simple_tag(takes_context=True)
-def includecomponent(context, data, required=True):
+def includecomponent(context, data, required=True, **kwargs):
     if not data:
         if required:
             raise ValueError("Component is required")
@@ -29,6 +31,10 @@ def includecomponent(context, data, required=True):
         return ""
 
     component_context = context.flatten()
+
+    if kwargs:
+        component_context.update(kwargs)
+
     component_context.update(data)
     template = get_template(data["template_name"])
     return mark_safe(template.render(component_context))

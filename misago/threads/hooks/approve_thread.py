@@ -16,6 +16,12 @@ class ApproveThreadHookAction(Protocol):
 
     A `Thread` to approve.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -34,6 +40,7 @@ class ApproveThreadHookAction(Protocol):
     def __call__(
         self,
         thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -56,6 +63,12 @@ class ApproveThreadHookFilter(Protocol):
 
     A `Thread` to approve.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -75,6 +88,7 @@ class ApproveThreadHookFilter(Protocol):
         self,
         action: ApproveThreadHookAction,
         thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -103,10 +117,11 @@ class ApproveThreadHook(
     def register_user_that_approved_thread(
         action,
         thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(thread, commit=False, request=request):
+        if not action(thread, update_search, commit=False, request=request):
             return False
 
         if request:
@@ -124,12 +139,14 @@ class ApproveThreadHook(
         self,
         action: ApproveThreadHookAction,
         thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
             thread,
+            update_search,
             commit,
             request,
         )

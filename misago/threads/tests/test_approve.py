@@ -25,6 +25,34 @@ def test_approve_thread_doesnt_approve_approved_thread(
     assert not thread.is_unapproved
 
 
+def test_approve_thread_updates_search(mocker, unapproved_thread):
+    mock_threads_search = mocker.patch(
+        "misago.threads.approve.threads_search", autospec=True
+    )
+
+    assert approve_thread(unapproved_thread)
+
+    mock_threads_search.update_thread.assert_called_with(
+        unapproved_thread, {"is_unapproved": False}
+    )
+    mock_threads_search.bulk_update_thread_posts.assert_called_once_with(
+        unapproved_thread, {"thread_is_unapproved": False}
+    )
+
+
+def test_approve_thread_doesnt_update_search_if_update_search_is_false(
+    mocker, unapproved_thread
+):
+    mock_threads_search = mocker.patch(
+        "misago.threads.approve.threads_search", autospec=True
+    )
+
+    assert approve_thread(unapproved_thread, update_search=False)
+
+    mock_threads_search.update_thread.assert_not_called()
+    mock_threads_search.bulk_update_thread_posts.assert_not_called()
+
+
 def test_approve_thread_doesnt_save_thread_if_commit_is_false(
     django_assert_num_queries, unapproved_thread
 ):
@@ -34,6 +62,58 @@ def test_approve_thread_doesnt_save_thread_if_commit_is_false(
 
     unapproved_thread.refresh_from_db()
     assert unapproved_thread.is_unapproved
+
+
+def test_approve_post_approves_post(unapproved_reply):
+    assert approve_post(unapproved_reply)
+    assert not unapproved_reply.is_unapproved
+
+    unapproved_reply.refresh_from_db()
+    assert not unapproved_reply.is_unapproved
+
+
+def test_approve_post_doesnt_approve_approved_post(django_assert_num_queries, post):
+    with django_assert_num_queries(0):
+        assert not approve_post(post)
+        assert not post.is_unapproved
+
+    post.refresh_from_db()
+    assert not post.is_unapproved
+
+
+def test_approve_post_updates_search(mocker, unapproved_reply):
+    mock_threads_search = mocker.patch(
+        "misago.threads.approve.threads_search", autospec=True
+    )
+
+    assert approve_post(unapproved_reply)
+
+    mock_threads_search.update_post.assert_called_with(
+        unapproved_reply, {"is_unapproved": False}
+    )
+
+
+def test_approve_post_doesnt_update_search_if_update_search_is_false(
+    mocker, unapproved_reply
+):
+    mock_threads_search = mocker.patch(
+        "misago.threads.approve.threads_search", autospec=True
+    )
+
+    assert approve_post(unapproved_reply, update_search=False)
+
+    mock_threads_search.update_post.assert_not_called()
+
+
+def test_approve_post_doesnt_save_post_if_commit_is_false(
+    django_assert_num_queries, unapproved_reply
+):
+    with django_assert_num_queries(0):
+        assert approve_post(unapproved_reply, commit=False)
+        assert not unapproved_reply.is_unapproved
+
+    unapproved_reply.refresh_from_db()
+    assert unapproved_reply.is_unapproved
 
 
 def test_require_thread_reply_approval_sets_reply_approval_requirement(thread):
@@ -103,31 +183,3 @@ def test_remove_thread_reply_approval_doesnt_save_thread_if_commit_is_false(
 
     thread.refresh_from_db()
     assert thread.require_reply_approval
-
-
-def test_approve_post_approves_post(unapproved_reply):
-    assert approve_post(unapproved_reply)
-    assert not unapproved_reply.is_unapproved
-
-    unapproved_reply.refresh_from_db()
-    assert not unapproved_reply.is_unapproved
-
-
-def test_approve_post_doesnt_approve_approved_post(django_assert_num_queries, post):
-    with django_assert_num_queries(0):
-        assert not approve_post(post)
-        assert not post.is_unapproved
-
-    post.refresh_from_db()
-    assert not post.is_unapproved
-
-
-def test_approve_post_doesnt_save_post_if_commit_is_false(
-    django_assert_num_queries, unapproved_reply
-):
-    with django_assert_num_queries(0):
-        assert approve_post(unapproved_reply, commit=False)
-        assert not unapproved_reply.is_unapproved
-
-    unapproved_reply.refresh_from_db()
-    assert unapproved_reply.is_unapproved

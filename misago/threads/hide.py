@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from ..core.utils import slugify
+from ..search.threads import threads_search
 from .hooks import (
     hide_post_hook,
     hide_thread_hook,
@@ -20,11 +21,18 @@ def hide_thread(
     thread: Thread,
     hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
     return hide_thread_hook(
-        _hide_thread_action, thread, hidden_by, hide_reason, commit, request
+        _hide_thread_action,
+        thread,
+        hidden_by,
+        hide_reason,
+        update_search,
+        commit,
+        request,
     )
 
 
@@ -32,6 +40,7 @@ def _hide_thread_action(
     thread: Thread,
     hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
@@ -53,17 +62,33 @@ def _hide_thread_action(
     if commit:
         thread.save()
 
+    if update_search:
+        threads_search.update_thread(thread, {"is_hidden": True})
+        threads_search.bulk_update_thread_posts(thread, {"thread_is_hidden": True})
+
     return True
 
 
 def unhide_thread(
-    thread: Thread, commit: bool = True, request: HttpRequest | None = None
+    thread: Thread,
+    update_search: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
-    return unhide_thread_hook(_unhide_thread_action, thread, commit, request)
+    return unhide_thread_hook(
+        _unhide_thread_action,
+        thread,
+        update_search,
+        commit,
+        request,
+    )
 
 
 def _unhide_thread_action(
-    thread: Thread, commit: bool = True, request: HttpRequest | None = None
+    thread: Thread,
+    update_search: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
     if not thread.is_hidden:
         return False
@@ -78,6 +103,10 @@ def _unhide_thread_action(
     if commit:
         thread.save()
 
+    if update_search:
+        threads_search.update_thread(thread, {"is_hidden": False})
+        threads_search.bulk_update_thread_posts(thread, {"thread_is_hidden": False})
+
     return True
 
 
@@ -85,11 +114,18 @@ def hide_post(
     post: Post,
     hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
     return hide_post_hook(
-        _hide_post_action, post, hidden_by, hide_reason, commit, request
+        _hide_post_action,
+        post,
+        hidden_by,
+        hide_reason,
+        update_search,
+        commit,
+        request,
     )
 
 
@@ -97,6 +133,7 @@ def _hide_post_action(
     post: Post,
     hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
@@ -118,17 +155,32 @@ def _hide_post_action(
     if commit:
         post.save()
 
+    if update_search:
+        threads_search.update_post(post, {"is_hidden": True})
+
     return True
 
 
 def unhide_post(
-    post: Post, commit: bool = True, request: HttpRequest | None = None
+    post: Post,
+    update_search: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
-    return unhide_post_hook(_unhide_post_action, post, commit, request)
+    return unhide_post_hook(
+        _unhide_post_action,
+        post,
+        update_search,
+        commit,
+        request,
+    )
 
 
 def _unhide_post_action(
-    post: Post, commit: bool = True, request: HttpRequest | None = None
+    post: Post,
+    update_search: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
     if not post.is_hidden:
         return False
@@ -142,5 +194,8 @@ def _unhide_post_action(
 
     if commit:
         post.save()
+
+    if update_search:
+        threads_search.update_post(post, {"is_hidden": False})
 
     return True

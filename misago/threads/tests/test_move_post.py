@@ -3,6 +3,8 @@ import pytest
 from ...likes.like import like_post
 from ...notifications.users import notify_user
 from ...postedits.create import create_post_edit
+from ...search.models import PostSearch
+from ...search.threads import threads_search
 from ..move import move_post
 
 
@@ -71,6 +73,30 @@ def test_move_post_moves_post_edit(new_thread, reply):
     post_edit.refresh_from_db()
     assert post_edit.category == new_thread.category
     assert post_edit.thread == new_thread
+
+
+def test_move_post_moves_post_search_data(new_thread, reply):
+    threads_search.index_post(reply, "lorem ipsum")
+    post_search = PostSearch.objects.get()
+
+    move_post(reply, new_thread)
+
+    post_search.refresh_from_db()
+    assert post_search.category == new_thread.category
+    assert post_search.thread == new_thread
+
+
+def test_move_post_doesnt_update_search_if_update_search_is_false(new_thread, reply):
+    old_thread = reply.thread
+
+    threads_search.index_post(reply, "lorem ipsum")
+    post_search = PostSearch.objects.get()
+
+    move_post(reply, new_thread, update_search=False)
+
+    post_search.refresh_from_db()
+    assert post_search.category == old_thread.category
+    assert post_search.thread == old_thread
 
 
 def test_move_post_doesnt_save_post_if_commit_is_false(new_thread, thread, reply):

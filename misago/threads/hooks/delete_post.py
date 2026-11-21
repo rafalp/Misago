@@ -16,6 +16,12 @@ class DeletePostHookAction(Protocol):
 
     A `Post` to delete.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
@@ -24,6 +30,7 @@ class DeletePostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -45,6 +52,12 @@ class DeletePostHookFilter(Protocol):
 
     A `Post` to delete.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
@@ -58,6 +71,7 @@ class DeletePostHookFilter(Protocol):
         self,
         action: DeletePostHookAction,
         post: Post,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -88,11 +102,12 @@ class DeletePostHook(
     def delete_post_boosts(
         action,
         post: Post,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None:
         # Skip Django's delete collector logic
         delete_all(PostBoost, post_id=post.id)
-        action(post, request)
+        action(post, update_search, request)
     """
 
     __slots__ = FilterHook.__slots__
@@ -101,9 +116,10 @@ class DeletePostHook(
         self,
         action: DeletePostHookAction,
         post: Post,
+        update_search: bool = True,
         request: HttpRequest | None = None,
     ) -> None:
-        return super().__call__(action, post, request)
+        return super().__call__(action, post, update_search, request)
 
 
 delete_post_hook = DeletePostHook()

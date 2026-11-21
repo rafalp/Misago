@@ -22,6 +22,7 @@ from ...permissions.threads import (
     check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
+from ...plugins import extensions
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...privatethreads.threadtypes import private_thread_type
 from ...readtracker.privatethreads import unread_private_threads_exist
@@ -47,8 +48,6 @@ from ..state import (
     PrivateThreadReplyState,
     ReplyState,
     ThreadReplyState,
-    get_private_thread_reply_state,
-    get_thread_reply_state,
 )
 from ..validators import validate_flood_control, validate_posting
 
@@ -87,7 +86,7 @@ class ReplyView(BaseThreadView):
         if not self.is_valid(formset, state):
             return self.render(request, thread, formset)
 
-        state.save()
+        state.save_atomic()
 
         self.post_state_save(request, state, formset)
 
@@ -350,7 +349,7 @@ class ThreadReplyView(ReplyView):
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
     ) -> ThreadReplyState:
-        return get_thread_reply_state(request, thread, post)
+        return extensions.get(ThreadReplyState)(request, thread, post)
 
     def get_formset(
         self, request: HttpRequest, thread: Thread, initial: dict | None = None
@@ -399,7 +398,7 @@ class PrivateThreadReplyView(ReplyView):
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
     ) -> PrivateThreadReplyState:
-        return get_private_thread_reply_state(request, thread, post)
+        return extensions.get(PrivateThreadReplyState)(request, thread, post)
 
     def get_formset(
         self, request: HttpRequest, thread: Thread, initial: dict | None = None

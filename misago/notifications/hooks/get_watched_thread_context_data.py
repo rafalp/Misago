@@ -76,8 +76,8 @@ class GetWatchedThreadContextDataHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get
-    the template context data for the watch thread HTMX response.
+    This hook wraps a Misago function used to get the template context data for
+    the watch thread HTMX response.
 
     # Example
 
