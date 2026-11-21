@@ -98,7 +98,7 @@ def test_hide_thread_updates_search(mocker, thread):
     assert hide_thread(thread)
 
     mock_threads_search.update_thread.assert_called_with(thread, {"is_hidden": True})
-    mock_threads_search.bulk_update_thread_posts.assert_called_with(
+    mock_threads_search.bulk_update_thread_posts.assert_called_once_with(
         thread, {"thread_is_hidden": True}
     )
 
@@ -175,7 +175,7 @@ def test_unhide_thread_updates_search(mocker, hidden_thread):
     mock_threads_search.update_thread.assert_called_with(
         hidden_thread, {"is_hidden": False}
     )
-    mock_threads_search.bulk_update_thread_posts.assert_called_with(
+    mock_threads_search.bulk_update_thread_posts.assert_called_once_with(
         hidden_thread, {"thread_is_hidden": False}
     )
 

@@ -35,7 +35,7 @@ def test_approve_thread_updates_search(mocker, unapproved_thread):
     mock_threads_search.update_thread.assert_called_with(
         unapproved_thread, {"is_unapproved": False}
     )
-    mock_threads_search.bulk_update_thread_posts.assert_called_with(
+    mock_threads_search.bulk_update_thread_posts.assert_called_once_with(
         unapproved_thread, {"thread_is_unapproved": False}
     )
 

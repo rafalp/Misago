@@ -303,12 +303,17 @@ def test_thread_list_view_unlock_moderation_action_validates_threads(
 
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_hide_moderation_action_hides_threads(
+    mocker,
     thread_factory,
     moderator_client,
     moderator,
     default_category,
     mock_synchronize_categories,
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.threads.threads_search", autospec=True
+    )
+
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
@@ -344,6 +349,13 @@ def test_thread_list_view_hide_moderation_action_hides_threads(
         event_type=ThreadEventTypeName.HIDDEN,
     )
 
+    mock_threads_search.bulk_update_threads.assert_called_once_with(
+        {"is_hidden": True}, threads=[thread]
+    )
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"thread_is_hidden": True}, threads=[thread]
+    )
+
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
 
 
@@ -366,8 +378,16 @@ def test_thread_list_view_hide_moderation_action_validates_threads(
 
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_unhide_moderation_action_unhides_threads(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    mocker,
+    thread_factory,
+    moderator_client,
+    default_category,
+    mock_synchronize_categories,
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.threads.threads_search", autospec=True
+    )
+
     thread = thread_factory(default_category, is_hidden=True)
 
     response = moderator_client.post(
@@ -389,6 +409,13 @@ def test_thread_list_view_unhide_moderation_action_unhides_threads(
     ThreadEvent.objects.get(
         thread=thread,
         event_type=ThreadEventTypeName.UNHIDDEN,
+    )
+
+    mock_threads_search.bulk_update_threads.assert_called_once_with(
+        {"is_hidden": False}, threads=[thread]
+    )
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
+        {"thread_is_hidden": False}, threads=[thread]
     )
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
@@ -413,8 +440,16 @@ def test_thread_list_view_unhide_moderation_action_validates_threads(
 
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_approve_moderation_action_approves_threads(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    mocker,
+    thread_factory,
+    moderator_client,
+    default_category,
+    mock_synchronize_categories,
 ):
+    mock_threads_search = mocker.patch(
+        "misago.moderation.threads.threads_search", autospec=True
+    )
+
     thread = thread_factory(default_category, is_unapproved=True)
 
     response = moderator_client.post(
@@ -431,6 +466,11 @@ def test_thread_list_view_approve_moderation_action_approves_threads(
     ThreadEvent.objects.get(
         thread=thread,
         event_type=ThreadEventTypeName.APPROVED,
+    )
+
+    mock_threads_search.bulk_update_threads({"is_unapproved": False}, threads=[thread])
+    mock_threads_search.bulk_update_posts(
+        {"thread_is_unapproved": False}, threads=[thread]
     )
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
@@ -546,7 +586,7 @@ def test_thread_list_view_move_moderation_action_moves_threads(
         CategoryPermission.START,
     )
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -587,7 +627,7 @@ def test_thread_list_view_move_moderation_action_validates_other_category_choice
     default_category,
     mock_synchronize_categories,
 ):
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -621,7 +661,7 @@ def test_thread_list_view_move_moderation_action_requires_category(
         CategoryPermission.START,
     )
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -665,7 +705,7 @@ def test_thread_list_view_move_moderation_action_validates_category_value(
         CategoryPermission.START,
     )
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -715,7 +755,7 @@ def test_thread_list_view_move_moderation_action_validates_category_browse_permi
         CategoryPermission.SEE,
     )
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -773,7 +813,7 @@ def test_thread_list_view_move_moderation_action_validates_category_moderator_pe
         categories=[default_category.id, sibling_category.id],
     )
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = user_client.post(
         reverse("misago:thread-list"),
@@ -829,7 +869,7 @@ def test_thread_list_view_move_moderation_action_validates_category_type(
     other_category.is_vanilla = True
     other_category.save()
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -874,7 +914,7 @@ def test_thread_list_view_move_moderation_action_validates_category_is_new(
         CategoryPermission.START,
     )
 
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -1509,7 +1549,7 @@ def test_thread_list_view_merge_moderation_action_validates_conflict_resolution(
 def test_thread_list_view_delete_moderation_action_deletes_threads(
     thread_factory, moderator_client, default_category, mock_synchronize_categories
 ):
-    thread = thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category)
 
     threads_search.index_thread(thread)
     threads_search.index_post(thread.first_post, "lorem ipsum")

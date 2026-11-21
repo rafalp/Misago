@@ -784,7 +784,7 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
     assert reply.hidden_by_slug == moderator.slug
     assert reply.hide_reason == "Lorem ipsum"
 
-    mock_threads_search.bulk_update_posts.assert_called_with(
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
         {"is_hidden": True}, posts=[reply]
     )
 
@@ -863,7 +863,7 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
 
-    mock_threads_search.bulk_update_posts.assert_called_with(
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
         {"is_hidden": False}, posts=[reply]
     )
 
@@ -931,7 +931,7 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     assert reply.hidden_by_slug is None
     assert reply.hide_reason is None
 
-    mock_threads_search.bulk_update_posts.assert_called_with(
+    mock_threads_search.bulk_update_posts.assert_called_once_with(
         {"is_unapproved": False}, posts=[reply]
     )
 
