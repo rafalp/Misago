@@ -1,0 +1,129 @@
+.quick-search-form {
+  border-bottom: 2px solid @gray-200;
+}
+
+.quick-search-control {
+  display: flex;
+  align-items: center;
+  gap: ceil(@grid-gutter-width / 4);
+
+  padding: @padding-large-horizontal;
+
+  border: none;
+
+  &:has(input:focus),
+  &:has(button:focus) {
+    border-color: @input-border-focus;
+  }
+}
+
+.quick-search-input {
+  display: block;
+
+  width: 100%;
+  height: @input-height-base;
+
+  padding: 0 @padding-large-vertical;
+
+  border: none;
+  box-shadow: none;
+
+  font-size: @font-size-large;
+
+  &:focus-visible {
+    background-color: @gray-100;
+    border-radius: @border-radius-small;
+    outline: none;
+  }
+}
+
+.quick-search-btn {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  height: @input-height-base;
+  width: @input-height-base;
+
+  padding: 0;
+  margin: 0;
+
+  background-color: @gray-100;
+  border: none;
+  border-radius: @border-radius-small;
+  box-shadow: none;
+  color: @gray-600;
+
+  &,
+  &:active {
+    &:focus,
+    &.focus {
+      .tab-focus();
+    }
+  }
+
+  &:hover,
+  &:focus {
+    background-color: @gray-200;
+    color: @gray-600;
+    text-decoration: none;
+  }
+
+  &:active {
+    background-image: none;
+    outline: 0;
+    background-color: @gray-300;
+    color: @gray-600;
+  }
+
+  &[disabled] {
+    cursor: @cursor-disabled;
+    opacity: 0.65;
+    box-shadow: none;
+  }
+}
+
+.quick-search-tabs {
+  display: flex;
+  gap: ceil(@grid-gutter-width / 2);
+
+  margin-bottom: -2px;
+  padding: 0 (@padding-large-vertical + @padding-base-vertical);
+
+  list-style: none;
+}
+
+.quick-search-tab {
+  margin: 0;
+  padding: @padding-base-vertical @padding-small-horizontal;
+
+  color: @gray-600;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  input {
+    display: none;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: @gray-100;
+    border-bottom: 2px solid @gray-300;
+    border-radius: @border-radius-small @border-radius-small 0 0;
+    color: @gray-700;
+  }
+
+  &:has(input:checked) {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      border-bottom: 2px solid @blue-500;
+      color: @gray-700;
+    }
+  }
+}

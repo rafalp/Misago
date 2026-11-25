@@ -23,6 +23,7 @@ import editor, { activateEditors } from "./editor"
 import "./pagination"
 import activatePollChoicesControl from "./PollChoicesControl"
 import quote from "./Quote"
+import QuickSearch from "./quick-search"
 import "./richtext"
 import * as snackbars from "./snackbars"
 import { updateTabGroups } from "./tabs"
@@ -46,6 +47,7 @@ export class Misago {
     this.editor = editor
     this.lightbox = lightbox
     this.quote = quote
+    this.quickSearch = null
     this.feed = new Feed()
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement
@@ -53,6 +55,13 @@ export class Misago {
     this.activatePollChoicesControl = activatePollChoicesControl
     this.tabGroups = updateTabGroups
     this.userMultipleChoice = userMultipleChoice
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const element = document.getElementById("misago-quick-search")
+      if (!!element) {
+        this.quickSearch = new QuickSearch(element)
+      }
+    })
   }
 
   addInitializer(initializer) {

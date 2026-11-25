@@ -1,0 +1,15 @@
+<div class="quick-search-users">
+  {% if results %}
+    <ul>
+      {% for result in results %}
+        <li>
+          <a href="{{ result.get_absolute_url }}">
+            {{ result.username }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>NO RESULTS</p>
+  {% endif %}
+</div>

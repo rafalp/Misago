@@ -9,8 +9,7 @@ import NavbarExtraMenu from "./NavbarExtraMenu"
 import NavbarNotificationsDropdown from "./NavbarNotificationsDropdown"
 import NavbarNotificationsToggle from "./NavbarNotificationsToggle"
 import NavbarPrivateThreads from "./NavbarPrivateThreads"
-import NavbarSearchDropdown from "./NavbarSearchDropdown"
-import NavbarSearchToggle from "./NavbarSearchToggle"
+import NavbarSearch from "./NavbarSearch"
 import NavbarSiteNavDropdown from "./NavbarSiteNavDropdown"
 import NavbarSiteNavToggle from "./NavbarSiteNavToggle"
 import NavbarUserNavDropdown from "./NavbarUserNavDropdown"
@@ -26,6 +25,7 @@ export function Navbar({
   notificationsUrl,
   privateThreadsUrl,
   showSearch,
+  showQuickSearch,
   showPrivateThreads,
 }) {
   return (
@@ -36,16 +36,10 @@ export function Navbar({
           <NavbarExtraMenu items={extraMenuItems} />
         )}
         {!!showSearch && (
-          <NavbarSearchDropdown id="navbar-search-dropdown" url={searchUrl} />
-        )}
-        {!!showSearch && (
-          <NavbarSearchToggle
-            id="navbar-search-overlay"
+          <NavbarSearch
+            id="navbar-search"
+            showQuickSearch={showQuickSearch}
             url={searchUrl}
-            onClick={(event) => {
-              dispatch(overlay.openSearch())
-              event.preventDefault()
-            }}
           />
         )}
         <NavbarSiteNavDropdown id="navbar-site-nav-dropdown" />
@@ -133,7 +127,8 @@ function select(state) {
     privateThreadsUrl: misago.get("PRIVATE_THREADS_URL"),
 
     authDelegated: settings.enable_oauth2_client,
-    showSearch: !!user.acl.can_search,
+    showSearch: !!user.permissions.can_search,
+    showQuickSearch: !!misago.get("can_quick_search"),
     showPrivateThreads: !!user && !!user.permissions.can_use_private_threads,
   }
 }

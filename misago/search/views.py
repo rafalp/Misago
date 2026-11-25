@@ -298,7 +298,7 @@ class ThreadsSearchView(BaseSearchView):
             if category.id in searchable_categories
         ]
 
-    def get_search_limit(self) -> tuple[int, int]:
+    def get_search_limit(self) -> int:
         return self.request.settings.search_threads_batch_size
 
     def get_posts_queryset(self, post_ids: list[int]) -> QuerySet[Post]:
@@ -603,6 +603,131 @@ class UsersSearchView(BaseSearchView):
             "template_name": "misago/meta.html",
             "items": items,
         }
+
+
+class QuickSearchView(View):
+    form_class: SearchForm
+    no_results_template_name: str
+
+    def get(self, request: HttpRequest):
+        self.check_permissions()
+
+        form = self.get_search_form()
+
+        if error := self.get_validation_error(form):
+            raise PermissionDenied(error)
+
+        results = self.search(form)
+        context_data = self.get_context_data(results)
+
+        return render(request, self.template_name, context_data)
+
+    def check_permissions(self):
+        check_search_permission(self.request.user_permissions)
+
+    def get_search_form(self) -> ThreadsSearchForm:
+        extended_form_class = extensions.get(self.form_class)
+        return extended_form_class(
+            {"query": self.request.GET.get("query")}, request=self.request
+        )
+
+    def get_validation_error(self, form: SearchForm) -> str | None:
+        if form.is_valid():
+            return None
+
+        if query_errors := form.errors.get("query"):
+            return query_errors[0]
+
+        if form.non_field_errors():
+            return form.non_field_errors[0]
+
+        return pgettext("quick search unexpected error", "Unexpected error")
+
+    def search(self, form: SearchForm) -> list:
+        raise NotImplementedError()
+
+    def get_context_data(self, results: list) -> dict:
+        raise NotImplementedError()
+
+
+class ThreadsQuickSearchView(QuickSearchView):
+    form_class = ThreadsSearchForm
+    template_name = "misago/quick_search/threads.html"
+
+    def search(self, form: SearchForm) -> list["User"]:
+        request = self.request
+
+        return threads_search.search_threads(
+            form.cleaned_data["search_query"],
+            request.user_permissions,
+            categories=self.get_searchable_categories(),
+            mode=SearchMode.THREADS,
+            order_by=SearchSort.RELEVANCE,
+            limit=self.get_search_limit(),
+        )
+
+    def get_searchable_categories(self) -> list[CategoryProxy]:
+        request = self.request
+
+        searchable_categories = get_searchable_category_ids(
+            request.user_permissions, request.categories
+        )
+
+        return [
+            category
+            for category in request.categories.values()
+            if category.id in searchable_categories
+        ]
+
+    def get_search_limit(self) -> int:
+        return self.request.settings.search_threads_batch_size
+
+    def get_context_data(self, results: list["User"]) -> dict:
+        return {"results": results}
+
+
+class PrivateThreadsQuickSearchView(ThreadsQuickSearchView):
+    form_class = PrivateThreadsSearchForm
+
+    def check_permissions(self):
+        super().check_permissions()
+
+        check_private_threads_permission(self.request.user_permissions)
+
+    def search(self, form: SearchForm) -> list["User"]:
+        request = self.request
+
+        return threads_search.search_private_threads(
+            form.cleaned_data["search_query"],
+            request.user_permissions,
+            mode=SearchMode.THREADS,
+            order_by=SearchSort.RELEVANCE,
+            limit=self.get_search_limit(),
+        )
+
+
+class UsersQuickSearchView(QuickSearchView):
+    form_class = UsersSearchForm
+    template_name = "misago/quick_search/users.html"
+
+    def check_permissions(self):
+        super().check_permissions()
+
+        check_search_users_permission(self.request.user_permissions)
+
+    def search(self, form: SearchForm) -> list["User"]:
+        request = self.request
+
+        return search_users(
+            request.user_permissions,
+            form.cleaned_data["query"],
+            request.settings.search_users_max_results,
+            request.settings.search_users_max_candidates,
+            include_self=True,
+        )
+
+    def get_context_data(self, results: list["User"]) -> dict:
+        return {"results": results}
 
 
 class UsersSuggestView(View):

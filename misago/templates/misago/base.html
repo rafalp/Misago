@@ -112,6 +112,11 @@
     {% block modals %}{% endblock modals %}
     {% include "misago/modal_loader.html" %}
     {% include "misago/modal_error.html" %}
+
+    {% if quick_search and quick_search.scopes %}
+      {% includecomponent quick_search %}
+    {% endif %}
+
     {% block javascript %}{% endblock javascript %}
 
     {% pluginoutlet BODY_END %}

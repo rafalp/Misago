@@ -29,7 +29,6 @@ function updateTabsElement(hash, target) {
   if (newTab && newPane && newTab != oldTab && newPane !== oldPane) {
     newTab.classList.add("active")
     newPane.classList.add("active")
-    console.log(newPane)
 
     if (oldTab) {
       oldTab.classList.remove("active")
