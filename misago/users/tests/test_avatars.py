@@ -170,7 +170,7 @@ class AvatarSetterTests(TestCase):
         set_default_avatar_from_url(self.user, "http://dummyimage.com/500/500")
         self.assertAvatarWasSet()
 
-    def test_default_avatar_downloaded(self):
+    def test_default_avatar_download_fails_but_fallback_dynamic_works(self):
         """default download fails but fallback dynamic works"""
         self.assertNoAvatarIsSet()
         set_default_avatar_from_url(self.user, "https://example.com/404")

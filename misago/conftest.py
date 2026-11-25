@@ -29,13 +29,12 @@ from .test import (
     IMAGE_SMALL,
     TEXT_FILE,
     MisagoClient,
-    teardown_attachments,
 )
 from .test.categories import category_relations_factory
 from .test.polls import *
 from .test.posts import *
 from .test.threadevents import *
-from .test.threads import thread_factory, thread_relations_factory
+from .test.threads import thread_relations_factory
 from .test.time import *
 from .test.userpermissions import *
 from .themes import THEME_CACHE

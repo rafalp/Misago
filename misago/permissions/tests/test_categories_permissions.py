@@ -5,7 +5,6 @@ from django.http import Http404
 from ...categories.models import Category
 from ...testutils import grant_category_group_permissions
 from ..categories import (
-    PermissionDenied,
     check_browse_category_permission,
     check_see_category_permission,
 )
@@ -214,23 +213,6 @@ def test_check_browse_category_permission_fails_if_user_cant_see_parent(
         check_see_category_permission(permissions, child_category)
 
 
-def test_check_browse_category_permission_fails_if_user_cant_see_parent(
-    user, root_category, cache_versions
-):
-    parent_category = Category(name="Category", slug="category")
-    parent_category.insert_at(root_category, position="last-child", save=True)
-
-    child_category = Category(name="Child Category", slug="child-category")
-    child_category.insert_at(parent_category, position="last-child", save=True)
-
-    grant_category_group_permissions(
-        child_category, user.group, CategoryPermission.SEE, CategoryPermission.BROWSE
-    )
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(Http404):
-        check_see_category_permission(permissions, child_category)
 
 
 def test_check_browse_category_permission_fails_if_user_cant_browse_parent(

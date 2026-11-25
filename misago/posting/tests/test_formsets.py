@@ -234,9 +234,6 @@ def test_tabbed_formset_is_request_upload_method_returns_false_for_not_post_requ
     assert not formset.is_request_upload(request)
 
 
-class UploadForm(PostingForm):
-    def is_request_upload(self, request: HttpRequest) -> bool:
-        return PostForm.is_request_upload(request)
 
 
 def test_tabbed_formset_is_request_upload_method_returns_false_for_post_request_without_upload(

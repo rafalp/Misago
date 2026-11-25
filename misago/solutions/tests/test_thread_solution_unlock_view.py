@@ -318,7 +318,7 @@ def test_thread_solution_unlock_view_returns_error_404_if_user_has_no_category_p
     assert response.status_code == 404
 
 
-def test_thread_solution_unlock_view_returns_error_404_if_user_has_no_category_permission(
+def test_thread_solution_unlock_view_returns_error_404_if_user_has_no_category_permission_with_solutions_enabled(
     user_client, default_category, user_thread
 ):
     default_category.enable_solutions = True

@@ -367,7 +367,7 @@ def test_private_thread_post_edit_delete_view_deletes_last_post_edit_on_post_in_
         post_edit.refresh_from_db()
 
 
-def test_private_thread_post_edit_delete_view_deletes_last_post_edit_on_post(
+def test_private_thread_post_edit_delete_view_deletes_middle_post_edit_on_post(
     thread_reply_factory, user_client, members_group, user, other_user_private_thread
 ):
     members_group.can_hide_own_post_edits = CanHideOwnPostEdits.DELETE
@@ -420,7 +420,7 @@ def test_private_thread_post_edit_delete_view_deletes_last_post_edit_on_post(
         post_edit.refresh_from_db()
 
 
-def test_private_thread_post_edit_delete_view_deletes_last_post_edit_on_post_in_htmx(
+def test_private_thread_post_edit_delete_view_deletes_middle_post_edit_on_post_in_htmx(
     thread_reply_factory, user_client, members_group, user, other_user_private_thread
 ):
     members_group.can_hide_own_post_edits = CanHideOwnPostEdits.DELETE

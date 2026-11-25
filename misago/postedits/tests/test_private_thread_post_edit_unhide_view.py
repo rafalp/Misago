@@ -361,21 +361,6 @@ def test_private_thread_post_edit_unhide_view_returns_error_404_if_thread_post_d
     assert response.status_code == 404
 
 
-def test_private_thread_post_edit_unhide_view_returns_error_404_if_thread_post_doesnt_exist(
-    user_client, other_user_private_thread
-):
-    response = user_client.post(
-        reverse(
-            "misago:private-thread-post-edit-unhide",
-            kwargs={
-                "thread_id": other_user_private_thread.id,
-                "slug": other_user_private_thread.slug,
-                "post_id": 1,
-                "post_edit_id": 1,
-            },
-        ),
-    )
-    assert response.status_code == 404
 
 
 def test_private_thread_post_edit_unhide_view_returns_error_404_if_thread_post_belongs_to_other_thread(

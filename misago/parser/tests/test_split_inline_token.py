@@ -95,7 +95,7 @@ def test_split_inline_token_strips_softbreaks(parse_to_raw_tokens):
     assert split_tokens[3].children[0].content == "met"
 
 
-def test_split_inline_token_strips_hardbreaks(parse_to_raw_tokens):
+def test_split_inline_token_strips_hardbreaks_with_extra_spaces(parse_to_raw_tokens,):
     tokens = parse_to_raw_tokens("lorem   @ipsum  \n  @dolor   met")
     assert tokens[1].type == "inline"
 

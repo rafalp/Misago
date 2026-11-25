@@ -417,7 +417,7 @@ def test_poll_voters_shows_poll_voters(
     assert_contains(response, other_user.username)
 
 
-def test_poll_voters_shows_poll_voters(
+def test_poll_voters_shows_poll_voters_in_htmx(
     user_client, other_user, thread, poll, poll_vote_factory
 ):
     poll_vote_factory(poll, other_user, "choice1")
