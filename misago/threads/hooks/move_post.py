@@ -21,6 +21,12 @@ class MovePostHookAction(Protocol):
 
     The `Thread` to move the post to.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -43,6 +49,7 @@ class MovePostHookAction(Protocol):
         self,
         post: Post,
         new_thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -69,6 +76,12 @@ class MovePostHookFilter(Protocol):
 
     The `Thread` to move the post to.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -92,6 +105,7 @@ class MovePostHookFilter(Protocol):
         action: MovePostHookAction,
         post: Post,
         new_thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -124,10 +138,11 @@ class MovePostHook(
         action,
         post: Post,
         new_thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        if not action(post, new_thread, commit, request):
+        if not action(post, new_thread, update_search, commit, request):
             return False
 
         PluginModel.objects.filter(
@@ -144,6 +159,7 @@ class MovePostHook(
         action: MovePostHookAction,
         post: Post,
         new_thread: Thread,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
@@ -151,6 +167,7 @@ class MovePostHook(
             action,
             post,
             new_thread,
+            update_search,
             commit,
             request,
         )

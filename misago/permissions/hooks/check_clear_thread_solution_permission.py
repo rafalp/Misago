@@ -15,7 +15,7 @@ class CheckClearThreadSolutionPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -44,7 +44,7 @@ class CheckClearThreadSolutionPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,9 +68,9 @@ class CheckClearThreadSolutionPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard Misago function used to check whether the user
-    has permission to clear the thread’s selected solution.
-    Raises `PermissionDenied` with an error message if they do not.
+    This hook wraps a Misago function used to check if a user has permission to
+    clear the thread’s selected solution. Raises `PermissionDenied` with an error
+    message if they do not.
 
     # Example
 

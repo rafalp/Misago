@@ -8,8 +8,7 @@ if TYPE_CHECKING:
 
 class RequireThreadApprovalHookAction(Protocol):
     """
-    A standard function that Misago uses to check if
-    a new thread should require moderator approval.
+    Misago function used to check if a new thread should require moderator approval.
 
     # Arguments
 
@@ -61,8 +60,8 @@ class RequireThreadApprovalHook(
     FilterHook[RequireThreadApprovalHookAction, RequireThreadApprovalHookFilter]
 ):
     """
-    This hook wraps the standard function Misago uses to check if
-    a new thread should require moderator approval.
+    This hook wraps a Misago function used to check if a new thread should
+    require moderator approval.
 
     # Example
 

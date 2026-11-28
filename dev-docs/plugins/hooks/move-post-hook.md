@@ -19,6 +19,7 @@ def custom_move_post_filter(
     action: MovePostHookAction,
     post: Post,
     new_thread: Thread,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -47,6 +48,13 @@ A `Post` to move.
 The `Thread` to move the post to.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated post instance should be saved to the database.
@@ -72,6 +80,7 @@ The request object, or `None` if not provided.
 def move_post_action(
     post: Post,
     new_thread: Thread,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -91,6 +100,13 @@ A `Post` to move.
 #### `new_thread: Thread`
 
 The `Thread` to move the post to.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -129,10 +145,11 @@ def move_plugin_models_to_new_thread(
     action,
     post: Post,
     new_thread: Thread,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
-    if not action(post, new_thread, commit, request):
+    if not action(post, new_thread, update_search, commit, request):
         return False
 
     PluginModel.objects.filter(

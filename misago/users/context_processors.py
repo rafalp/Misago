@@ -43,6 +43,7 @@ def preload_user_json(request):
 
     serialized_user = serializer(request.user, context={"acl": request.user_acl}).data
     serialized_user["permissions"] = {
+        "can_search": request.user_permissions.can_search,
         "can_use_private_threads": request.user_permissions.can_use_private_threads,
     }
 

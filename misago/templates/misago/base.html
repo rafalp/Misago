@@ -45,15 +45,12 @@
     <script type="text/javascript">
       window.misago_locale = "{{ LANGUAGE_CODE }}"
       window.misago_csrf = {{ CSRF_COOKIE_NAME|safe }}
-      window.misago_suggest_users = "{% url 'misago:suggest-users' %}"
+      window.misago_suggest_users = "{% url 'misago:users-suggest' %}"
     </script>
     {% pluginoutlet HEAD_END %}
     {% includecomponents before_head_close %}
   </head>
   <body class="misago-{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}{% if misago_agreement %} agreement-overlay-visible{% endif %}">
-    <script type="text/javascript">
-      document.body.classList.add("misago-javascript")
-    </script>
     {% if settings.google_tracking_id %}
     {% include "misago/analytics.html" %}
     {% endif %}
@@ -115,6 +112,11 @@
     {% block modals %}{% endblock modals %}
     {% include "misago/modal_loader.html" %}
     {% include "misago/modal_error.html" %}
+
+    {% if quick_search and quick_search.scopes %}
+      {% includecomponent quick_search %}
+    {% endif %}
+
     {% block javascript %}{% endblock javascript %}
 
     {% pluginoutlet BODY_END %}

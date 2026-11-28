@@ -6,8 +6,7 @@ from ..models import Attachment
 
 class SerializeAttachmentHookAction(Protocol):
     """
-    A standard function that Misago uses to create a JSON-serializable `dict`
-    for an attachment.
+    Misago function used to create a JSON-serializable `dict` for an attachment.
 
     # Arguments
 
@@ -31,8 +30,8 @@ class SerializeAttachmentHookFilter(Protocol):
 
     ## `action: SerializeAttachmentHookAction`
 
-    A standard function that Misago uses to create a JSON-serializable `dict`
-    for an attachment.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -59,8 +58,8 @@ class SerializeAttachmentHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to create a
-    JSON-serializable `dict` for an attachment.
+    This hook wraps a Misago function used to create a JSON-serializable `dict`
+    for an attachment.
 
     # Example
 

@@ -3,6 +3,8 @@ import pytest
 from ...likes.like import like_post
 from ...notifications.users import notify_user
 from ...postedits.create import create_post_edit
+from ...search.models import PostSearch
+from ...search.threads import threads_search
 from ...solutions.select import select_thread_solution
 from ..merge import (
     get_post_merge_conflicts,
@@ -18,13 +20,11 @@ def posts(thread_reply_factory, thread):
         thread,
         content="Lorem ipsum",
         content_parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
     )
     other_post = thread_reply_factory(
         thread,
         content="Dolor met",
         content_parsed="<p>Dolor met</p>",
-        search_document="Dolor",
     )
 
     return (target, other_post)
@@ -55,7 +55,6 @@ def test_get_merge_posts_merges_posts_contents(user, target, other_post):
 
     assert target.content == "Lorem ipsum\n\nDolor met"
     assert target.content_parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
-    assert target.search_document == "Lorem\n\nDolor"
 
 
 def test_get_merge_posts_merges_posts_contents_chronologically(
@@ -65,7 +64,6 @@ def test_get_merge_posts_merges_posts_contents_chronologically(
 
     assert other_post.content == "Lorem ipsum\n\nDolor met"
     assert other_post.content_parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
-    assert other_post.search_document == "Lorem\n\nDolor"
 
 
 def test_get_merge_posts_merges_posts_metadata(user, target, other_post):
@@ -222,6 +220,38 @@ def test_get_merge_posts_updates_target_last_edit_data_for_deleted_user(
     assert target.last_editor is None
     assert target.last_editor_name == "AutoMod"
     assert target.last_editor_slug == "automod"
+
+
+def test_merge_posts_updates_search_data(user, target, other_post):
+    threads_search.index_post(target, "lorem ipsum")
+    threads_search.index_post(other_post, "lorem ipsum")
+
+    target_post_search = PostSearch.objects.get(post=target)
+    other_post_search = PostSearch.objects.get(post=other_post)
+
+    assert merge_posts(target, [other_post], {}, user)
+
+    target_post_search.refresh_from_db()
+    assert target_post_search.content == "Lorem ipsum Dolor met"
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        other_post_search.refresh_from_db()
+
+
+def test_merge_posts_doesnt_update_search_if_update_search_is_false(
+    mocker, user, target, other_post
+):
+    mock_threads_search = mocker.patch(
+        "misago.threads.merge.threads_search", autospec=True
+    )
+
+    threads_search.index_post(target, "Lorem ipsum")
+    target_post_search = PostSearch.objects.get(post=target)
+
+    assert merge_posts(target, [other_post], {}, user, update_search=False)
+
+    target_post_search.refresh_from_db()
+    assert target_post_search.content == "Lorem ipsum"
 
 
 def test_merge_posts_doesnt_save_target_if_commit_is_false(user, target, other_post):

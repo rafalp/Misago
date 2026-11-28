@@ -4,18 +4,14 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...categories.models import Category
+from ...plugins import extensions
 from ...polls.models import Poll
 from ...privatethreads.models import PrivateThreadMember
+from ...search.threads import threads_search
 from ...threads.checksums import update_post_checksum
 from ..approval import (
     require_private_thread_approval,
     require_thread_approval,
-)
-from ..hooks import (
-    get_private_thread_start_state_hook,
-    get_thread_start_state_hook,
-    save_private_thread_start_state_hook,
-    save_thread_start_state_hook,
 )
 from .base import State
 
@@ -36,15 +32,18 @@ class StartState(State):
     def require_approval(self) -> bool:
         return False
 
-    @transaction.atomic()
+    @transaction.atomic
+    def save_atomic(self):
+        self.save()
+
     def save(self):
         self.thread.save()
         self.post.save()
 
-    def save_action(self, request: HttpRequest, state: "StartState"):
         self.save_thread()
         self.save_post()
         self.save_attachments()
+        self.save_search_index()
 
         self.save_category()
         self.save_user()
@@ -55,13 +54,12 @@ class StartState(State):
         self.thread.save()
 
     def save_post(self):
-        self.post.set_search_document(self.thread, self.parsing_result.text)
         update_post_checksum(self.post)
-
-        self.post.set_search_vector()
-        self.post.save()
-
         self.schedule_post_content_upgrade()
+
+    def save_search_index(self):
+        self.index_thread()
+        self.index_post()
 
     def save_category(self):
         if self.thread.is_unapproved:
@@ -96,14 +94,8 @@ class ThreadStartState(StartState):
     def require_approval(self) -> bool:
         return require_thread_approval(self)
 
-    @transaction.atomic()
     def save(self):
         super().save()
-
-        save_thread_start_state_hook(self.save_action, self.request, self)
-
-    def save_action(self, request: HttpRequest, state: "ThreadStartState"):
-        super().save_action(request, state)
 
         if self.poll:
             self.save_poll()
@@ -126,14 +118,8 @@ class PrivateThreadStartState(StartState):
     def require_approval(self) -> bool:
         return require_private_thread_approval(self)
 
-    @transaction.atomic()
     def save(self):
         super().save()
-
-        save_private_thread_start_state_hook(self.save_action, self.request, self)
-
-    def save_action(self, request: HttpRequest, state: "PrivateThreadStartState"):
-        super().save_action(request, state)
 
         self.save_members()
 
@@ -158,30 +144,9 @@ class PrivateThreadStartState(StartState):
 
         PrivateThreadMember.objects.bulk_create(users)
 
+    def save_search_index(self):
+        super().save_search_index()
 
-def get_thread_start_state(
-    request: HttpRequest, category: Category
-) -> ThreadStartState:
-    return get_thread_start_state_hook(
-        _get_thread_start_state_action, request, category
-    )
-
-
-def _get_thread_start_state_action(
-    request: HttpRequest, category: Category
-) -> ThreadStartState:
-    return ThreadStartState(request, category)
-
-
-def get_private_thread_start_state(
-    request: HttpRequest, category: Category
-) -> PrivateThreadStartState:
-    return get_private_thread_start_state_hook(
-        _get_private_thread_start_state_action, request, category
-    )
-
-
-def _get_private_thread_start_state_action(
-    request: HttpRequest, category: Category
-) -> PrivateThreadStartState:
-    return PrivateThreadStartState(request, category)
+        threads_search.update_thread_members(
+            self.thread, [user.id for user in self.members]
+        )

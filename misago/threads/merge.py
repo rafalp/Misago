@@ -11,10 +11,12 @@ from ..core.utils import slugify
 from ..likes.models import Like
 from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
+from ..parser.parse import parse_to_plaintext
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadThread
+from ..search.threads import threads_search
 from ..threadevents.models import ThreadEvent
 from .hooks import (
     get_post_merge_conflicts_hook,
@@ -106,6 +108,7 @@ def merge_threads(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
@@ -114,6 +117,7 @@ def merge_threads(
         target,
         threads,
         conflicts,
+        update_search,
         commit,
         request,
     )
@@ -123,6 +127,7 @@ def _merge_threads_action(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
@@ -182,6 +187,19 @@ def _merge_threads_action(
     delete_all(Poll, thread=thread_ids)
     delete_all(ReadThread, thread=thread_ids)
 
+    if update_search:
+        threads_search.bulk_update_posts(
+            {
+                "category": new_category,
+                "thread": target,
+                "thread_title": target.title,
+                "thread_is_hidden": target.is_hidden,
+                "thread_is_unapproved": target.is_unapproved,
+            },
+            threads=threads,
+        )
+        threads_search.bulk_delete_threads(threads)
+
     delete_all(Thread, id=thread_ids)
 
     if commit:
@@ -227,6 +245,7 @@ def merge_posts(
     conflicts: dict[str, Model],
     merged_by: Union["User", str],
     edit_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Post:
@@ -237,6 +256,7 @@ def merge_posts(
         conflicts,
         merged_by,
         edit_reason,
+        update_search,
         commit,
         request,
     )
@@ -256,6 +276,7 @@ def _merge_posts_action(
     conflicts: dict[str, Model],
     merged_by: Union["User", str],
     edit_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Post:
@@ -265,13 +286,9 @@ def _merge_posts_action(
         if post.id > target.id:
             target.content += f"\n\n{post.content}"
             target.content_parsed += f"\n{post.content_parsed}"
-            target.search_document += f"\n\n{post.search_document}"
         else:
             target.content = f"{post.content}\n\n{target.content}"
             target.content_parsed = f"{post.content_parsed}\n{target.content_parsed}"
-            target.search_document = (
-                f"{post.search_document}\n\n{target.search_document}"
-            )
 
         target.edits += post.edits
 
@@ -295,6 +312,10 @@ def _merge_posts_action(
 
     post_ids = [post.id for post in posts]
 
+    if update_search:
+        threads_search.index_post(target, parse_to_plaintext(target.content))
+        threads_search.bulk_delete_posts(posts)
+
     delete_all(Post, id=post_ids)
 
     synchronize_post_likes(target, commit=False, request=request)
@@ -310,8 +331,6 @@ def _merge_posts_action(
         target.last_editor = merged_by
         target.last_editor_name = merged_by.username
         target.last_editor_slug = merged_by.slug
-
-    target.set_search_vector()
 
     if commit:
         target.save()

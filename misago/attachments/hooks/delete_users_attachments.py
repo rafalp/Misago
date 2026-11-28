@@ -10,8 +10,7 @@ if TYPE_CHECKING:
 
 class DeleteUsersAttachmentsHookAction(Protocol):
     """
-    A standard function used by Misago to delete attachments associated with
-    specified users.
+    Misago function used to delete attachments associated with specified users.
 
     # Arguments
 
@@ -44,8 +43,8 @@ class DeleteUsersAttachmentsHookFilter(Protocol):
 
     ## `action: DeleteUsersAttachmentsHookAction`
 
-    A standard function used by Misago to delete attachments associated with
-    specified users.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -78,8 +77,8 @@ class DeleteUsersAttachmentsHook(
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to delete
-    attachments associated with specified users.
+    This hook wraps a Misago function used to delete attachments associated
+    with specified users.
 
     # Example
 

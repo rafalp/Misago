@@ -15,6 +15,7 @@ from ...permissions.privatethreads import (
     check_start_private_threads_permission,
 )
 from ...permissions.threads import check_start_thread_permission
+from ...plugins import extensions
 from ...privatethreads.threadtypes import private_thread_type
 from ...threads.prefetch import prefetch_post_feed_data
 from ...threads.threadtypes import thread_type
@@ -31,8 +32,6 @@ from ..state.start import (
     PrivateThreadStartState,
     StartState,
     ThreadStartState,
-    get_private_thread_start_state,
-    get_thread_start_state,
 )
 from ..validators import validate_flood_control, validate_posting
 
@@ -72,7 +71,7 @@ class StartView(BaseThreadView):
                 self.get_context_data(request, category, formset),
             )
 
-        state.save()
+        state.save_atomic()
 
         self.post_state_save(request, state, formset)
 
@@ -168,7 +167,7 @@ class ThreadStartView(StartView):
         return get_thread_start_formset(request, category)
 
     def get_state(self, request: HttpRequest, category: Category) -> ThreadStartState:
-        return get_thread_start_state(request, category)
+        return extensions.get(ThreadStartState)(request, category)
 
 
 class PrivateThreadStartView(StartView):
@@ -189,7 +188,7 @@ class PrivateThreadStartView(StartView):
     def get_state(
         self, request: HttpRequest, category: Category
     ) -> PrivateThreadStartState:
-        return get_private_thread_start_state(request, category)
+        return extensions.get(PrivateThreadStartState)(request, category)
 
     def post_state_save(
         self,

@@ -1,6 +1,6 @@
 # `build_user_permissions_hook`
 
-This hook wraps the standard function that Misago uses to build user permissions from their groups.
+This hook wraps a Misago function used to build user's permissions from their groups.
 
 
 ## Location

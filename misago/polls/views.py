@@ -222,7 +222,7 @@ class EditThreadPollView(ThreadPollView):
         return {
             "template_name": self.header_template_name,
             "meta": {
-                "template_name": "misago/header_meta.html",
+                "template_name": "misago/meta.html",
                 "items": items,
             },
         }

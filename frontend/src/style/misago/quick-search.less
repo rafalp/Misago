@@ -1,0 +1,234 @@
+.quick-search-form {
+  border-bottom: 2px solid @gray-200;
+}
+
+.quick-search-input-group {
+  display: flex;
+  align-items: center;
+  gap: ceil(@grid-gutter-width / 4);
+
+  padding: @padding-large-horizontal;
+
+  border: none;
+
+  &:has(input:focus),
+  &:has(button:focus) {
+    border-color: @input-border-focus;
+  }
+}
+
+.quick-search-input {
+  display: block;
+
+  width: 100%;
+  height: @input-height-base;
+
+  padding: 0 @padding-large-vertical;
+
+  border: 2px solid @input-border;
+  border-radius: @input-border-radius;
+  box-shadow: none;
+
+  font-size: @font-size-large;
+
+  &:focus-visible {
+    border: 2px solid @input-border-focus;
+    border-radius: @border-radius-small;
+    outline: none;
+  }
+}
+
+.quick-search-btn {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  height: @input-height-base;
+  width: @input-height-base;
+
+  padding: 0;
+  margin: 0;
+
+  background-color: @gray-100;
+  border: 2px solid @gray-200;
+  border-radius: @border-radius-small;
+  box-shadow: none;
+  color: @gray-600;
+
+  &,
+  &:active {
+    &:focus,
+    &.focus {
+      .tab-focus();
+    }
+  }
+
+  &:hover,
+  &:focus {
+    background-color: @gray-200;
+    border: 2px solid @gray-300;
+    color: @gray-600;
+    text-decoration: none;
+  }
+
+  &:active {
+    background-image: none;
+    outline: 0;
+    background-color: @gray-300;
+    border: 2px solid @gray-300;
+    color: @gray-600;
+  }
+
+  &[disabled] {
+    cursor: @cursor-disabled;
+    opacity: 0.65;
+    box-shadow: none;
+  }
+}
+
+.quick-search-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: ceil(@grid-gutter-width / 2);
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+
+  margin-bottom: -2px;
+  padding: 0 (@padding-large-vertical + @padding-base-vertical);
+
+  list-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.quick-search-tab {
+  margin: 0;
+  padding: @padding-base-vertical @padding-small-horizontal;
+
+  color: @gray-600;
+  font-weight: bold;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  input {
+    display: none;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: @gray-100;
+    border-bottom: 2px solid @gray-300;
+    border-radius: @border-radius-small @border-radius-small 0 0;
+    color: @gray-700;
+  }
+
+  &:has(input:checked) {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      border-bottom: 2px solid @blue-500;
+      color: @gray-700;
+    }
+  }
+}
+
+.quick-search-placeholder {
+  padding: @padding-large-vertical * 2;
+
+  p {
+    text-align: center;
+  }
+
+  p:last-child {
+    margin: 0;
+  }
+}
+
+.quick-search-placeholder-message {
+  color: @gray-500;
+  font-size: @font-size-large;
+  font-weight: 500;
+}
+
+.quick-search-placeholder-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  font-weight: bold;
+
+  &,
+  &:link,
+  &:visited {
+    color: @gray-700;
+    text-decoration: none;
+  }
+
+  &:hover,
+  &:active {
+    color: @gray-700;
+    text-decoration: underline;
+  }
+}
+
+.quick-search-results {
+  padding: @padding-large-vertical @padding-large-vertical * 2
+    @padding-large-vertical * 2 @padding-large-vertical * 2;
+}
+
+.quick-search-results-title {
+  font-size: @font-size-base;
+  font-weight: 500;
+}
+
+.quick-search-results-empty {
+  padding: @padding-large-vertical * 2;
+
+  text-align: center;
+}
+
+.quick-search-results-blankslate {
+  color: @gray-500;
+  font-size: @font-size-large;
+  font-weight: 500;
+}
+
+.quick-search-results-go-advanced {
+  margin: @padding-large-vertical 0 0 0;
+
+  text-align: center;
+  font-weight: bold;
+
+  a,
+  a:link,
+  a:visited {
+    color: @gray-700;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:active {
+    color: @gray-700;
+    text-decoration: underline;
+  }
+}
+
+.quick-search-results-users {
+  margin: @padding-large-vertical 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.quick-search-result-user {
+  margin-bottom: @line-height-computed;
+}

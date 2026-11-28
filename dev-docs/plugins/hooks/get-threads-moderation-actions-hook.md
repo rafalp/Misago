@@ -1,6 +1,6 @@
 # `get_threads_moderation_actions_hook`
 
-This hook wraps the standard function that Misago uses to get available moderation actions for the threads list.
+This hook wraps a Misago function used to get available moderation actions for the threads list.
 
 
 ## Location

@@ -66,7 +66,7 @@ def context_processor_action(request: HttpRequest) -> dict:
     ...
 ```
 
-A standard function that Misago uses to create an empty context data dict for plugins to extend.
+Misago function used to create an empty context data dict for plugins to extend.
 
 
 ### Arguments

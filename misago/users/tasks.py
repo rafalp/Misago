@@ -10,7 +10,7 @@ NOTIFY_CHUNK_SIZE = 20
 User = get_user_model()
 
 
-@shared_task(name="users.remove-group", serializer="json")
+@shared_task
 def remove_group_from_users_groups_ids(group_id: int):
     queryset = User.objects.filter(groups_ids__contains=[group_id])
     for user in queryset.iterator(chunk_size=50):
@@ -19,7 +19,7 @@ def remove_group_from_users_groups_ids(group_id: int):
         user.save(update_fields=["groups_ids", "permissions_id"])
 
 
-@shared_task(name="users.delete", serializer="json")
+@shared_task
 def delete_user(user_id: int):
     user = User.objects.filter(id=user_id).first()
     if not user:

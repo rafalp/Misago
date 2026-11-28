@@ -86,7 +86,7 @@ class UpdateGroupHookFilter(Protocol):
 
 class UpdateGroupHook(FilterHook[UpdateGroupHookAction, UpdateGroupHookFilter]):
     """
-    This hook wraps the standard function that Misago uses to update user group.
+    This hook wraps a Misago function used to update user group.
 
     # Example
 

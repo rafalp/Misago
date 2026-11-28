@@ -15,7 +15,7 @@ class CheckSeePrivateThreadPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -44,7 +44,7 @@ class CheckSeePrivateThreadPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -68,13 +68,13 @@ class CheckSeePrivateThreadPermissionHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if the user has
-    a permission to see a private thread. Raises Django's `Http404` if they don't.
+    This hook wraps a Misago function used to check if a user has permission to
+    see a private thread. Raises Django's `Http404` if they don't.
 
     # Example
 
-    The code below implements a custom filter function that blocks a user from seeing
-    a specified thread if there is a custom flag set on their account.
+    The code below implements a custom filter function that blocks a user from
+    seeing a specified thread if there is a custom flag set on their account.
 
     ```python
     from django.core.exceptions import PermissionDenied

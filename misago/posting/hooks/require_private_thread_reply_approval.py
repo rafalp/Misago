@@ -8,8 +8,8 @@ if TYPE_CHECKING:
 
 class RequirePrivateThreadReplyApprovalHookAction(Protocol):
     """
-    A standard function that Misago uses to check if
-    a new private thread reply should require moderator approval.
+    Misago function used to check if a new private thread reply should require
+    moderator approval.
 
     # Arguments
 
@@ -64,8 +64,8 @@ class RequirePrivateThreadReplyApprovalHook(
     ]
 ):
     """
-    This hook wraps the standard function Misago uses to check if
-    a new private thread reply should require moderator approval.
+    This hook wraps a Misago function used to check if a new private thread
+    reply should require moderator approval.
 
     # Example
 

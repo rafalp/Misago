@@ -1,6 +1,6 @@
 # `create_prefetch_post_feed_data_hook`
 
-This hook wraps the standard function Misago uses to create a `PrefetchPostFeedData` object, which is used to prefetch data for a post feed.
+This hook wraps a Misago function used to create a `PrefetchPostFeedData` object, which is used to prefetch data for a post feed.
 
 The object itself does not implement prefetch logic, but instead contains a list of prefetch operations to be executed to fetch data from the database.
 

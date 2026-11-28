@@ -18,6 +18,7 @@ from misago.threads.hooks import delete_thread_hook
 def custom_delete_thread_filter(
     action: DeleteThreadHookAction,
     thread: Thread,
+    update_search: bool=True,
     request: HttpRequest | None=None,
 ) -> None:
     ...
@@ -40,6 +41,13 @@ See the [action](#action) section for details.
 A `Thread` to delete.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `request: HttpRequest | None`
 
 The request object, or `None` if not provided.
@@ -53,7 +61,11 @@ The request object, or `None` if not provided.
 ## Action
 
 ```python
-def delete_thread_action(thread: Thread, request: HttpRequest | None=None) -> None:
+def delete_thread_action(
+    thread: Thread,
+    update_search: bool=True,
+    request: HttpRequest | None=None,
+) -> None:
     ...
 ```
 
@@ -65,6 +77,13 @@ Misago function for deleting a thread.
 #### `thread: Thread`
 
 A `Thread` to delete.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -88,8 +107,9 @@ from my_plugin.models import ThreadBoost
 def delete_thread_boosts(
     action,
     thread: Thread,
+    update_search: bool = True,
     request: HttpRequest | None = None,
 ) -> None:
     # Skip Django's delete collector logic
     delete_all(ThreadBoost, thread_id=thread.id)
-    action(thread, request)
+    action(thread, update_search, request)

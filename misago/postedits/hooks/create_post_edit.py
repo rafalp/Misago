@@ -189,7 +189,7 @@ class CreatePostEditHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to create a `PostEdit` object.
+    This hook wraps a Misago function used to create a `PostEdit` object.
 
     # Example
 

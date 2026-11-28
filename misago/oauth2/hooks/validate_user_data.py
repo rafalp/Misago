@@ -137,8 +137,8 @@ class ValidateUserDataHook(
     FilterHook[ValidateUserDataHookAction, ValidateUserDataHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to validate a Python
-    `dict` containing the user data extracted from the OAuth 2 server's response.
+    This hook wraps a Misago function used to validate a Python `dict` containing
+    the user data extracted from the OAuth2 server's response.
 
     Should raise a Django's `ValidationError` if data is invalid.
 

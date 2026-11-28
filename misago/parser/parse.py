@@ -29,3 +29,9 @@ def parse(markup: str) -> ParsingResult:
         text=render_tokens_to_plaintext(tokens),
         metadata=get_tokens_metadata(tokens),
     )
+
+
+def parse_to_plaintext(markup: str) -> str:
+    parser = create_parser()
+    tokens = tokenize(parser, markup)
+    return render_tokens_to_plaintext(tokens)

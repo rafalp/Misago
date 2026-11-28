@@ -142,4 +142,4 @@ def _filter_accessible_thread_posts_action(
         return filter_private_thread_posts_queryset(permissions, thread, queryset)
 
     else:
-        return queryset.empty()
+        return queryset.none()

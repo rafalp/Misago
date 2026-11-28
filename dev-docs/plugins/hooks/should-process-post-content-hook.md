@@ -1,8 +1,8 @@
 # `should_process_post_content_hook`
 
-This hook wraps a standard Misago function used to determine whether post content should be processed.
+This hook wraps a Misago function used to determine whether post content should be processed.
 
-If True is returned, a Celery task will be scheduled to process the post content.
+If `True` is returned, a Celery task will be scheduled to process the post content.
 
 
 ## Location

@@ -18,6 +18,7 @@ from misago.threads.hooks import approve_post_hook
 def custom_approve_post_filter(
     action: ApprovePostHookAction,
     post: Post,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -41,6 +42,13 @@ See the [action](#action) section for details.
 A `Post` to approve.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated post instance should be saved to the database.
@@ -62,7 +70,10 @@ The request object, or `None` if not provided.
 
 ```python
 def approve_post_action(
-    post: Post, commit: bool=True, request: HttpRequest | None=None
+    post: Post,
+    update_search: bool=True,
+    commit: bool=True,
+    request: HttpRequest | None=None,
 ) -> bool:
     ...
 ```
@@ -75,6 +86,13 @@ Misago function for approving a post.
 #### `post: Post`
 
 A `Post` to approve.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -108,10 +126,11 @@ from misago.posts.models import Post
 def register_user_that_approved_post(
     action,
     post: Post,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(post, commit=False, request=request):
+    if not action(post, update_search, commit=False, request=request):
         return False
 
     if request:

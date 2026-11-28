@@ -20,6 +20,7 @@ def custom_hide_thread_filter(
     thread: Thread,
     hidden_by: Union['User', str, None]=None,
     hide_reason: str | None=None,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -53,6 +54,13 @@ The user who hid the thread, or `None` if not provided.
 A `str` with a short description of why the thread was hidden, or `None`.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
@@ -77,6 +85,7 @@ def hide_thread_action(
     thread: Thread,
     hidden_by: Union['User', str, None]=None,
     hide_reason: str | None=None,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -101,6 +110,13 @@ The user who hid the thread, or `None` if not provided.
 #### `hide_reason: str | None`
 
 A `str` with a short description of why the thread was hidden, or `None`.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -137,10 +153,13 @@ def register_user_that_hid_thread(
     thread: Thread,
     hidden_by: User | str | None = None,
     hide_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(thread, hidden_by, hide_reason, commit=False, request=request):
+    if not action(
+        thread, hidden_by, hide_reason, update_search, commit=False, request=request
+    ):
         return False
 
     if request:

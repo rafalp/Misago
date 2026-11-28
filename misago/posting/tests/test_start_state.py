@@ -1,4 +1,5 @@
 from ...parser.parse import parse
+from ...search.models import PostSearch, ThreadSearch
 from ..state import StartState
 
 
@@ -33,7 +34,6 @@ def test_start_state_save_saves_thread_and_post(user_request, default_category):
     state.set_thread_title("Test thread")
     state.set_post_content(parse("Hello world"))
     state.save()
-    state.save_action(user_request, state)
 
     assert state.thread.id
     assert state.post.id
@@ -42,22 +42,11 @@ def test_start_state_save_saves_thread_and_post(user_request, default_category):
     assert state.post.thread == state.thread
 
 
-def test_start_state_save_saves_post_search_document(user_request, default_category):
-    state = StartState(user_request, default_category)
-    state.set_thread_title("Test thread")
-    state.set_post_content(parse("Hello world"))
-    state.save()
-    state.save_action(user_request, state)
-
-    assert state.post.search_document == "Test thread\n\nHello world"
-
-
 def test_start_state_updates_category(user_request, default_category):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_content(parse("Hello world"))
     state.save()
-    state.save_action(user_request, state)
 
     default_category.refresh_from_db()
     assert default_category.threads == 1
@@ -76,7 +65,6 @@ def test_start_state_updates_user(user_request, default_category, user):
     state.set_thread_title("Test thread")
     state.set_post_content(parse("Hello world"))
     state.save()
-    state.save_action(user_request, state)
 
     user.refresh_from_db()
     assert user.threads == 1
@@ -97,7 +85,6 @@ def test_start_state_assigns_attachments_to_category_thread_and_post(
     state.set_post_content(parse("Hello world"))
     state.set_attachments([attachment])
     state.save()
-    state.save_action(user_request, state)
 
     attachment.refresh_from_db()
     assert attachment.category == default_category
@@ -120,7 +107,6 @@ def test_start_state_deletes_unused_attachments(
     state.set_attachments([attachment])
     state.set_delete_attachments([attachment])
     state.save()
-    state.save_action(user_request, state)
 
     attachment.refresh_from_db()
     assert not attachment.category
@@ -142,7 +128,6 @@ def test_start_state_delete_attachments_excludes_unknown_attachments(
     state.set_post_content(parse("Hello world"))
     state.set_delete_attachments([attachment])
     state.save()
-    state.save_action(user_request, state)
 
     attachment.refresh_from_db()
     assert attachment.category == post.category
@@ -158,7 +143,6 @@ def test_start_state_schedules_post_upgrade_for_post_with_code_block(
     state.set_thread_title("Test thread")
     state.set_post_content(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
-    state.save_action(user_request, state)
 
     assert state.thread.id
     assert state.post.id
@@ -166,4 +150,31 @@ def test_start_state_schedules_post_upgrade_for_post_with_code_block(
 
     mock_process_post_content.delay.assert_called_once_with(
         state.post.id, state.post.sha256_checksum
+    )
+
+
+def test_start_state_updates_search_index(
+    mock_process_post_content, user_request, default_category
+):
+    state = StartState(user_request, default_category)
+    state.set_thread_title("Test thread")
+    state.set_post_content(parse("Hello world\n[code=python]add(1, 3)[/code]"))
+    state.save()
+
+    ThreadSearch.objects.get(
+        category=state.category,
+        thread=state.thread,
+        starter=state.user,
+        title="Test thread",
+        started_at=state.timestamp,
+    )
+
+    PostSearch.objects.get(
+        category=state.category,
+        thread=state.thread,
+        post=state.post,
+        poster=state.user,
+        content="Hello world python: add(1, 3)",
+        posted_at=state.timestamp,
+        is_first_post=True,
     )

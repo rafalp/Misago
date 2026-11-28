@@ -17,7 +17,7 @@ User = get_user_model()
 
 class ProfileView(View):
     def get(self, request, *args, **kwargs):
-        profile = self.get_profile(request, kwargs.pop("pk"), kwargs.pop("slug"))
+        profile = self.get_profile(request, kwargs.pop("user_id"), kwargs.pop("slug"))
 
         # resolve that we can display requested section
         sections = user_profile.get_sections(request, profile)
@@ -102,10 +102,10 @@ class ProfileView(View):
 
 class LandingView(ProfileView):
     def get(self, request, *args, **kwargs):
-        profile = self.get_profile(request, kwargs.pop("pk"), kwargs.pop("slug"))
+        profile = self.get_profile(request, kwargs.pop("user_id"), kwargs.pop("slug"))
 
         return redirect(
-            user_profile.get_default_link(), slug=profile.slug, pk=profile.pk
+            user_profile.get_default_link(), slug=profile.slug, user_id=profile.id
         )
 
 

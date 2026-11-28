@@ -8,6 +8,7 @@ from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import delete_duplicate_watched_threads
 from ..permissions.proxy import UserPermissionsProxy
+from ..search.threads import threads_search
 from ..threadevents.create import (
     create_approved_thread_event,
     create_hidden_thread_event,
@@ -106,7 +107,7 @@ def _get_category_threads_moderation_actions_action(
     category: Category,
     request: HttpRequest | None = None,
 ) -> list[type[ThreadsModerationAction]]:
-    if not user_permissions.is_category_moderator(category.id):
+    if not user_permissions.is_category_moderator(category):
         return []
 
     actions = []
@@ -315,14 +316,19 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
         request = self.request
         threads = [thread for thread in self.threads if not thread.is_hidden]
         hide_reason = form.cleaned_data["hide_reason"]
-        categories = list(set(thread.category_id for thread in threads))
+        categories_to_sync = list(set(thread.category_id for thread in threads))
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            hide_thread(thread, request.user, hide_reason, request=request)
+            hide_thread(
+                thread, request.user, hide_reason, update_search=False, request=request
+            )
             create_hidden_thread_event(thread, request.user, request=request)
 
-        synchronize_categories.delay(categories)
+        threads_search.bulk_update_threads({"is_hidden": True}, threads=threads)
+        threads_search.bulk_update_posts({"thread_is_hidden": True}, threads=threads)
+
+        synchronize_categories.delay(categories_to_sync)
 
         messages.success(
             request,
@@ -348,14 +354,17 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
     def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.is_hidden]
-        categories = list(set(thread.category_id for thread in threads))
+        categories_to_sync = list(set(thread.category_id for thread in threads))
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            unhide_thread(thread, request=request)
+            unhide_thread(thread, update_search=False, request=request)
             create_unhidden_thread_event(thread, request.user, request=request)
 
-        synchronize_categories.delay(categories)
+        threads_search.bulk_update_threads({"is_hidden": False}, threads=threads)
+        threads_search.bulk_update_posts({"thread_is_hidden": False}, threads=threads)
+
+        synchronize_categories.delay(categories_to_sync)
 
         messages.success(
             request,
@@ -381,14 +390,19 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
     def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.is_unapproved]
-        categories = list(set(thread.category_id for thread in threads))
+        categories_to_sync = list(set(thread.category_id for thread in threads))
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            approve_thread(thread, request=request)
+            approve_thread(thread, update_search=False, request=request)
             create_approved_thread_event(thread, request.user, request=request)
 
-        synchronize_categories.delay(categories)
+        threads_search.bulk_update_threads({"is_unapproved": False}, threads=threads)
+        threads_search.bulk_update_posts(
+            {"thread_is_unapproved": False}, threads=threads
+        )
+
+        synchronize_categories.delay(categories_to_sync)
 
         messages.success(
             request,
@@ -520,22 +534,25 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
             thread for thread in self.threads if thread.category_id != new_category.id
         ]
 
-        categories = set()
-        categories.add(new_category.id)
+        categories_to_sync = set()
+        categories_to_sync.add(new_category.id)
 
         prefetch_related_objects(threads, "category")
 
         for thread in threads:
             old_category = thread.category
-            categories.add(old_category.id)
+            categories_to_sync.add(old_category.id)
 
             ensure_thread_has_events(thread, commit=False)
-            move_thread(thread, new_category, request=request)
+            move_thread(thread, new_category, update_search=False, request=request)
             create_moved_thread_event(
                 thread, old_category, request.user, request=request
             )
 
-        synchronize_categories.delay(list(categories))
+        threads_search.bulk_update_threads({"category": new_category}, threads=threads)
+        threads_search.bulk_update_posts({"category": new_category}, threads=threads)
+
+        synchronize_categories.delay(list(categories_to_sync))
 
         messages.success(
             request,
@@ -585,13 +602,13 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
         new_category = form.cleaned_data["category"]
         threads = self.threads
 
-        categories = set()
-        categories.add(new_category.id)
+        categories_to_sync = set()
+        categories_to_sync.add(new_category.id)
 
         prefetch_related_objects(threads, "category")
 
         for thread in threads:
-            categories.add(thread.category_id)
+            categories_to_sync.add(thread.category_id)
 
         conflicts = form.get_conflicts_resolutions()
         new_thread = create_thread(
@@ -612,7 +629,10 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         synchronize_thread(new_thread, request=request)
 
-        synchronize_categories.delay(list(categories))
+        threads_search.index_thread(new_thread)
+        threads_search.update_thread_first_post(new_thread)
+
+        synchronize_categories.delay(list(categories_to_sync))
         delete_duplicate_watched_threads.delay(new_thread.id)
 
         messages.success(
@@ -636,13 +656,15 @@ class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
         request = self.request
         threads = self.threads
 
-        categories = set()
+        categories_to_sync = set()
+
+        threads_search.delete(threads=threads)
 
         for thread in threads:
-            categories.add(thread.category_id)
-            delete_thread(thread, request=request)
+            categories_to_sync.add(thread.category_id)
+            delete_thread(thread, update_search=False, request=request)
 
-        synchronize_categories.delay(list(categories))
+        synchronize_categories.delay(list(categories_to_sync))
 
         messages.success(
             request,

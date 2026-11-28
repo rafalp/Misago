@@ -8,7 +8,6 @@ from ..views import (
     forgottenpassword,
     lists,
     profile,
-    suggest,
 )
 
 urlpatterns = [
@@ -34,7 +33,6 @@ urlpatterns = [
         forgottenpassword.reset_password_form,
         name="forgotten-password-change-form",
     ),
-    path("users/suggest/", suggest.suggest_users, name="suggest-users"),
 ]
 
 urlpatterns += [
@@ -64,6 +62,41 @@ urlpatterns += [
 ]
 
 urlpatterns += [
+    path(
+        "u/<slug:slug>/<int:user_id>/",
+        include(
+            [
+                path("", profile.LandingView.as_view(), name="user"),
+                path("posts/", profile.UserPostsView.as_view(), name="user-posts"),
+                path(
+                    "threads/",
+                    profile.UserThreadsView.as_view(),
+                    name="user-threads",
+                ),
+                path(
+                    "followers/",
+                    profile.UserFollowersView.as_view(),
+                    name="user-followers",
+                ),
+                path(
+                    "follows/",
+                    profile.UserFollowsView.as_view(),
+                    name="user-follows",
+                ),
+                path(
+                    "details/",
+                    profile.UserProfileDetailsView.as_view(),
+                    name="user-details",
+                ),
+                path(
+                    "username-history/",
+                    profile.UserUsernameHistoryView.as_view(),
+                    name="username-history",
+                ),
+                path("ban-details/", profile.UserBanView.as_view(), name="user-ban"),
+            ]
+        ),
+    ),
     path(
         "u/<slug:slug>/<int:pk>/",
         include(
@@ -98,7 +131,7 @@ urlpatterns += [
                 path("ban-details/", profile.UserBanView.as_view(), name="user-ban"),
             ]
         ),
-    )
+    ),
 ]
 
 urlpatterns += [

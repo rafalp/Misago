@@ -19,3 +19,24 @@ def grant_category_group_permissions(
 
 def remove_category_group_permissions(category: Category, user_group: Group):
     CategoryGroupPermission.objects.filter(category=category, group=user_group).delete()
+
+
+def grant_group_all_category_permissions(user_group: Group, category: Category):
+    grant_category_group_permissions(
+        category,
+        user_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+        CategoryPermission.REPLY,
+        CategoryPermission.ATTACHMENTS,
+    )
+
+
+def grant_group_see_browse_category_permissions(user_group: Group, category: Category):
+    grant_category_group_permissions(
+        category,
+        user_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )

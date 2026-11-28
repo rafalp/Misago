@@ -16,6 +16,12 @@ class ApprovePostHookAction(Protocol):
 
     A `Post` to approve.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -34,6 +40,7 @@ class ApprovePostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -56,6 +63,12 @@ class ApprovePostHookFilter(Protocol):
 
     A `Post` to approve.
 
+    ## `update_search: bool = True`
+
+    Whether to update the search index.
+
+    Defaults to `True`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -75,6 +88,7 @@ class ApprovePostHookFilter(Protocol):
         self,
         action: ApprovePostHookAction,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -103,10 +117,11 @@ class ApprovePostHook(
     def register_user_that_approved_post(
         action,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(post, commit=False, request=request):
+        if not action(post, update_search, commit=False, request=request):
             return False
 
         if request:
@@ -124,12 +139,14 @@ class ApprovePostHook(
         self,
         action: ApprovePostHookAction,
         post: Post,
+        update_search: bool = True,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
             post,
+            update_search,
             commit,
             request,
         )

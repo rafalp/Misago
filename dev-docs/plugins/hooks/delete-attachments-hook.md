@@ -1,6 +1,6 @@
 # `delete_attachments_hook`
 
-This hook wraps the standard function that Misago uses to delete specified attachments.
+This hook wraps a Misago function used to delete specified attachments.
 
 
 ## Location
@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: DeleteAttachmentsHookAction`
 
-A standard function used by Misago to delete specified attachments.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -62,7 +62,7 @@ def delete_attachments_action(
     ...
 ```
 
-A standard function used by Misago to delete specified attachments.
+Misago function used to delete specified attachments.
 
 
 ### Arguments

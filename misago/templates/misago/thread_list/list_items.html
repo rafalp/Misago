@@ -39,7 +39,7 @@
             <div class="threads-list-item-row-categories">
               {% for category in thread_data.categories %}
                 <a
-                  href="{{ category.url }}"
+                  href="{% url 'misago:category-thread-list' category_id=category.id slug=category.slug %}"
                   class="threads-list-category-link{% if category.color %} threads-list-category-link-color{% endif %}"
                   {% if category.color %}style="--color: {{ category.color }}"{% endif %}
                 >
@@ -61,7 +61,7 @@
               <div class="threads-list-item-col-category-labels">
                 {% for category in thread_data.categories %}
                   <a
-                    href="{{ category.url }}"
+                    href="{% url 'misago:category-thread-list' category_id=category.id slug=category.slug %}"
                     class="threads-list-category-label{% if category.color %} threads-list-category-label-color{% endif %}"
                     {% if category.color %}style="--label-color: {{ category.color }}"{% endif %}
                     {% if category.short_name %}title="{{ category.name }}"{% endif %}
@@ -75,7 +75,7 @@
               <div class="threads-list-item-col-categories">
                 {% for category in thread_data.categories %}
                   <a
-                    href="{{ category.url }}"
+                    href="{% url 'misago:category-thread-list' category_id=category.id slug=category.slug %}"
                     class="threads-list-category-link{% if category.color %} threads-list-category-link-color{% endif %}"
                     {% if category.color %}style="--color: {{ category.color }}"{% endif %}
                     {% if category.short_name %}title="{{ category.name }}"{% endif %}

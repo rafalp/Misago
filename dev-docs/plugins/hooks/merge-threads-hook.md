@@ -22,6 +22,7 @@ def custom_merge_threads_filter(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Thread:
@@ -57,6 +58,13 @@ These threads are deleted during the merge.
 A `dict` with the conflict resolutions to use during the merge.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
@@ -81,6 +89,7 @@ def merge_threads_action(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Thread:
@@ -107,6 +116,13 @@ These threads are deleted during the merge.
 #### `conflicts: dict[str, Model]`
 
 A `dict` with the conflict resolutions to use during the merge.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -146,6 +162,7 @@ def get_plugin_merge_conflicts(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
@@ -153,4 +170,4 @@ def get_plugin_merge_conflicts(
         category=target.category, thread=target
     )
 
-    return action(target, threads, conflicts, commit, request)
+    return action(target, threads, conflicts, update_search, commit, request)

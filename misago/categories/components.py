@@ -139,7 +139,7 @@ def can_see_last_thread(
 
     if (
         category.show_started_only
-        and not permissions.is_category_moderator(category.id)
+        and not permissions.is_category_moderator(category)
         and (user.is_anonymous or category.last_poster_id != user.id)
     ):
         return False

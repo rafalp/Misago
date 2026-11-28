@@ -18,6 +18,7 @@ from misago.threads.hooks import approve_thread_hook
 def custom_approve_thread_filter(
     action: ApproveThreadHookAction,
     thread: Thread,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -41,6 +42,13 @@ See the [action](#action) section for details.
 A `Thread` to approve.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
@@ -62,7 +70,10 @@ The request object, or `None` if not provided.
 
 ```python
 def approve_thread_action(
-    thread: Thread, commit: bool=True, request: HttpRequest | None=None
+    thread: Thread,
+    update_search: bool=True,
+    commit: bool=True,
+    request: HttpRequest | None=None,
 ) -> bool:
     ...
 ```
@@ -75,6 +86,13 @@ Misago function for approving a thread.
 #### `thread: Thread`
 
 A `Thread` to approve.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -108,10 +126,11 @@ from misago.threads.models import Thread
 def register_user_that_approved_thread(
     action,
     thread: Thread,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(thread, commit=False, request=request):
+    if not action(thread, update_search, commit=False, request=request):
         return False
 
     if request:

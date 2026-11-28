@@ -22,6 +22,7 @@ def custom_merge_posts_filter(
     conflicts: dict[str, Model],
     merged_by: Union['User', str],
     edit_reason: str | None=None,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Post:
@@ -67,6 +68,13 @@ The user who performed the merge, a `User` instance or a `str` with the user's n
 A `str` with a reason for merging posts, or `None`.
 
 
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
+
+
 #### `commit: bool = True`
 
 Whether the updated post instance should be saved to the database.
@@ -93,6 +101,7 @@ def merge_posts_action(
     conflicts: dict[str, Model],
     merged_by: Union['User', str],
     edit_reason: str | None=None,
+    update_search: bool=True,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Post:
@@ -129,6 +138,13 @@ The user who performed the merge, a `User` instance or a `str` with the user's n
 #### `edit_reason: str | None = None`
 
 A `str` with a reason for merging posts, or `None`.
+
+
+#### `update_search: bool = True`
+
+Whether to update the search index.
+
+Defaults to `True`.
 
 
 #### `commit: bool = True`
@@ -171,6 +187,7 @@ def get_plugin_merge_conflicts(
     conflicts: dict[str, Model],
     merged_by: Union["User", str],
     edit_reason: str | None = None,
+    update_search: bool = True,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Post:
@@ -184,6 +201,7 @@ def get_plugin_merge_conflicts(
         conflicts,
         merged_by,
         edit_reason,
+        update_search,
         commit,
         request,
     )
