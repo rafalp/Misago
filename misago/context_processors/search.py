@@ -8,4 +8,7 @@ def quick_search(request: HttpRequest) -> dict:
 
     request.frontend_context["can_quick_search"] = bool(quick_search)
 
-    return {"quick_search": quick_search}
+    return {
+        "quick_search": quick_search,
+        "quick_search_extra_scopes": [],
+    }

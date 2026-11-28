@@ -556,7 +556,7 @@ class UsersSearchView(BaseSearchView):
 
         items.append(
             DatetimeMetadata(
-                id="user-regsitered",
+                id="user-registered",
                 text="%(datetime)s",
                 datetime=user.joined_on,
                 icon="tabler/calendar.svg",
@@ -726,8 +726,105 @@ class UsersQuickSearchView(QuickSearchView):
             include_self=True,
         )
 
+    def search(self, form: UsersSearchForm) -> list["User"]:
+        request = self.request
+
+        return search_users(
+            request.user_permissions,
+            form.cleaned_data["query"],
+            request.settings.search_users_max_results,
+            request.settings.search_users_max_candidates,
+            include_self=True,
+        )
+
     def get_context_data(self, results: list["User"]) -> dict:
-        return {"results": results}
+        return {
+            "title": self.get_search_results_title(results),
+            "results": [self.get_search_result_data(user) for user in results],
+        }
+
+    def get_search_results_title(self, results: list["User"]) -> str:
+        results_num = len(results)
+
+        if not results_num:
+            return pgettext("search users results title", "No users found")
+
+        return npgettext(
+            "search users results title",
+            "Found %(results)s user",
+            "Found %(results)s users",
+            results_num,
+        ) % {"results": results_num}
+
+    def get_search_result_data(self, user: "User") -> dict:
+        group = self.request.groups[user.group_id]
+
+        if user.title:
+            title = user.title
+        elif group.user_title:
+            title = group.translated_user_title()
+        else:
+            title = None
+
+        return {
+            "id": user.id,
+            "avatars": user.avatars,
+            "username": user.username,
+            "title": title,
+            "css_suffix": group.css_suffix,
+            "group_color": group.color,
+            "url": reverse(
+                "misago:user", kwargs={"user_id": user.id, "slug": user.slug}
+            ),
+            "meta": self.get_search_result_meta_data(user),
+        }
+
+    def get_search_result_meta_data(self, user: "User") -> dict:
+        items = []
+
+        group = self.request.groups[user.group_id]
+        if group and group.is_public:
+            if group.is_admin:
+                icon = "tabler/shield.svg"
+            else:
+                icon = "tabler/users.svg"
+
+            items.append(
+                TextMetadata(
+                    id="user-group",
+                    text=str(group.name),
+                    icon=icon,
+                )
+            )
+
+        if user.posts:
+            items.append(
+                NumberMetadata(
+                    id="user-posts",
+                    text=npgettext(
+                        "user card posts stat",
+                        "%(number)s post",
+                        "%(number)s posts",
+                        user.posts,
+                    ),
+                    number=user.posts,
+                    icon="tabler/messages.svg",
+                )
+            )
+
+        items.append(
+            DatetimeMetadata(
+                id="user-registered",
+                text="%(datetime)s",
+                datetime=user.joined_on,
+                icon="tabler/calendar.svg",
+            )
+        )
+
+        return {
+            "template_name": "misago/meta.html",
+            "items": items,
+        }
 
 
 class UsersSuggestView(View):

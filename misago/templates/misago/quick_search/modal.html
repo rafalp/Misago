@@ -6,7 +6,7 @@
       <form
         id="misago-quick-search"
         method="GET"
-        hx-target="#misago-quick-search-results"
+        hx-target="#misago-quick-search-htmx"
         hx-swap="innerHtml"
         hx-params="query"
       >
@@ -14,14 +14,14 @@
           {% translate "Search" context "quick search modal title" %}
         </h4>
         <div class="quick-search-form">
-          <div class="quick-search-control">
+          <div class="quick-search-input-group">
             <input class="quick-search-input" type="text" name="query" placeholder="{% translate 'Search...' context 'quick search modal placeholder' %}" required>
             <button type="submit" class="quick-search-btn" aria-label="{% translate 'Search' context 'quick search modal btn' %}">
               {% include "tabler/search.svg" %}
             </button>
           </div>
           <ul class="quick-search-tabs">
-            {% for scope in scopes %}
+            {% for scope in quick_search_extra_scopes|add:scopes %}
               <li>
                 <label class="quick-search-tab">
                   <input name="action" value="{{ scope.url }}" type="radio"{% if forloop.first %} checked{% endif %}>
@@ -31,10 +31,19 @@
             {% endfor %}
           </ul>
         </div>
-        <div id="misago-quick-search-results">
-          <p class="quick-search-cta">
-            {% translate "Lorem ipsum dolor met" context "quick search modal cta" %}
-          </p>
+        <div id="misago-quick-search-htmx">
+          <div class="quick-search-placeholder">
+            <p class="quick-search-placeholder-message">
+              {% blocktranslate trimmed context "quick search modal placeholder" %}
+                Search results will appear here
+              {% endblocktranslate %}
+            </p>
+            <p>
+              <a href="{% url 'misago:search' %}" class="quick-search-placeholder-link">
+                {% translate "Advanced search" context "quick search modal placeholder" %}
+              </a>
+            </p>
+          </div>
         </div>
       </form>
     </div>

@@ -1,15 +1,43 @@
-<div class="quick-search-users">
+{% load i18n misago_avatars misago_component %}
+
+<div class="quick-search-results{% if not results %} quick-search-results-empty{% endif %}">
   {% if results %}
-    <ul>
+    <h5 class="quick-search-results-title">{{ title }}</h5>
+    <ul class="quick-search-results-users">
       {% for result in results %}
-        <li>
-          <a href="{{ result.get_absolute_url }}">
-            {{ result.username }}
+        <li class="quick-search-result-user">
+          <a href="{{ result.url }}" class="user-card-sm{% if result.css_suffix %} user-card-sm-{{ result.css_suffix }}{% endif %}"{% if result.group_color %} style="--group-color: {{ result.group_color }}"{% endif %}>
+            <div class="user-card-sm-start">
+              <span class="user-card-sm-avatar">
+                <img src="{{ result|avatar:50 }}" srcset="{{ result|avatar:100 }}" alt="">
+              </span>
+            </div>
+            <div class="user-card-sm-end">
+              <div class="user-card-sm-identity">
+                <span class="user-card-sm-username">
+                  {{ result.username }}
+                </span>
+                {% if result.title %}
+                  <span class="user-card-sm-identity-separator">&bull;</span>
+                  <span class="user-card-sm-title">{{ result.title }}</span>
+                {% endif %}
+              </div>
+              {% if result.meta and result.meta.items %}
+                {% includecomponent result.meta css_prefix="user-card-sm" %}
+              {% endif %}
+            </div>
           </a>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p>NO RESULTS</p>
+    <p class="quick-search-results-blankslate">
+      {{ title }}
+    </p>
   {% endif %}
+  <p class="quick-search-results-go-advanced">
+    <a href="{% url 'misago:users-search' %}">
+      {% translate "Advanced search" context "quick search go advanced" %}
+    </a>
+  </p>
 </div>
